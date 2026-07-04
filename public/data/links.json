@@ -11,6 +11,12 @@
       "icon": "https://csec.jxufe.edu.cn/favicon.svg",
       "desc": "网安 * 领域",
       "website": "https://csec.jxufe.edu.cn"
+    },
+    {
+      "name": "江西财经大学数智技术协会",
+      "icon": "https://www.jxufe-tech.top/logo.jpg",
+      "desc": "数智协会程设部",
+      "website": "https://www.jxufe-tech.top/"
     }
   ],
   "members": [
@@ -48,6 +54,14 @@
       "role": "我喜欢喝雪碧",
       "desc": "全栈开发（with AI）",
       "website": "https://woodfish.site/",
+      "linkText": "我喜欢你"
+    },
+     {
+      "name": "MIUMA",
+      "avatar": "https://www.miuma.top/images/jt.svg",
+      "role": "我喜欢woodfish",
+      "desc": "啥也不会",
+      "website": "https://www.miuma.top/",
       "linkText": "我喜欢你"
     }
   ],
