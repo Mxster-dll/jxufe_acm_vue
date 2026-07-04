@@ -28,10 +28,12 @@ if %errorlevel% neq 0 (
     goto :upload
 )
 
-:: Compare current HEAD against last deployed commit
+:: Compare current HEAD against last deployed commit (committed changes)
 git diff --name-only _deployed HEAD > "%TEMP%\deploy_diff.txt"
+:: Also capture uncommitted / untracked changes
+git status --porcelain >> "%TEMP%\deploy_diff.txt"
 
-:: If diff is empty, nothing changed
+:: If both diffs are empty, nothing changed
 set DIFF_SIZE=0
 for %%A in ("%TEMP%\deploy_diff.txt") do set DIFF_SIZE=%%~zA
 if %DIFF_SIZE% equ 0 (
@@ -50,12 +52,15 @@ set UPLOAD_PKG=0
 
 for /f "usebackq delims=" %%f in ("%TEMP%\deploy_diff.txt") do (
     set "line=%%f"
+    :: git status --porcelain lines have "XY " prefix (2 status chars + space); strip it
+    set "chk=!line:~2,1!"
+    if "!chk!"==" " set "line=!line:~3!"
     if "!line:~0,4!"=="src/"        set UPLOAD_SRC=1
     if "!line:~0,7!"=="public/"     set UPLOAD_PUBLIC=1
-    if "!line!"=="package.json"      set UPLOAD_PKG=1
+    if "!line!"=="package.json"     set UPLOAD_PKG=1
     if "!line!"=="package-lock.json" set UPLOAD_PKG=1
-    if "!line!"=="vite.config.js"    set UPLOAD_PKG=1
-    if "!line!"=="index.html"        set UPLOAD_PKG=1
+    if "!line!"=="vite.config.js"   set UPLOAD_PKG=1
+    if "!line!"=="index.html"       set UPLOAD_PKG=1
 )
 
 del "%TEMP%\deploy_diff.txt"
@@ -72,6 +77,16 @@ echo.
 :: ---- 1. Upload ----
 :upload
 echo [1/3] Uploading...
+
+:: Clean remote directories before upload so renamed/deleted files don't linger
+if !UPLOAD_SRC! equ 1 (
+    echo [CLEAN] Removing remote src/ ...
+    ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "rm -rf %REMOTE_PATH%/src"
+)
+if !UPLOAD_PUBLIC! equ 1 (
+    echo [CLEAN] Removing remote public/ ...
+    ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "rm -rf %REMOTE_PATH%/public"
+)
 
 :: Build upload list based on what changed
 set "FILES="

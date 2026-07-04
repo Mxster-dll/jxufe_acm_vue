@@ -3,5 +3,6 @@ dist
 dist-ssr
 *.local
 .DS_Store
+public/share/
 .vscode/*
 !.vscode/extensions.json
