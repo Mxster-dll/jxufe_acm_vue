@@ -18,83 +18,19 @@ echo   jxufe ACM Deploy Script
 echo ============================================
 echo.
 
-:: ---- 0. Detect changed files via git ----
-git rev-parse _deployed >nul 2>nul
+:: ---- 1. Clean & Upload ----
+echo [1/3] Cleaning remote and uploading...
+
+:: Clean remote directories
+ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "rm -rf %REMOTE_PATH%/src %REMOTE_PATH%/public"
 if %errorlevel% neq 0 (
-    echo [INFO] First deploy - full upload
-    set UPLOAD_SRC=1
-    set UPLOAD_PUBLIC=1
-    set UPLOAD_PKG=1
-    goto :upload
+    echo [ERROR] Failed to clean remote directories!
+    pause
+    exit /b 1
 )
 
-:: Compare current HEAD against last deployed commit (committed changes)
-git diff --name-only _deployed HEAD > "%TEMP%\deploy_diff.txt"
-:: Also capture uncommitted / untracked changes
-git status --porcelain >> "%TEMP%\deploy_diff.txt"
-
-:: If both diffs are empty, nothing changed
-set DIFF_SIZE=0
-for %%A in ("%TEMP%\deploy_diff.txt") do set DIFF_SIZE=%%~zA
-if %DIFF_SIZE% equ 0 (
-    echo [INFO] No changes since last deploy - skipping
-    goto :reload_only
-)
-
-echo [INFO] Changed files:
-type "%TEMP%\deploy_diff.txt"
-echo.
-
-:: Check which directories have changes
-set UPLOAD_SRC=0
-set UPLOAD_PUBLIC=0
-set UPLOAD_PKG=0
-
-for /f "usebackq delims=" %%f in ("%TEMP%\deploy_diff.txt") do (
-    set "line=%%f"
-    :: git status --porcelain lines have "XY " prefix (2 status chars + space); strip it
-    set "chk=!line:~2,1!"
-    if "!chk!"==" " set "line=!line:~3!"
-    if "!line:~0,4!"=="src/"        set UPLOAD_SRC=1
-    if "!line:~0,7!"=="public/"     set UPLOAD_PUBLIC=1
-    if "!line!"=="package.json"     set UPLOAD_PKG=1
-    if "!line!"=="package-lock.json" set UPLOAD_PKG=1
-    if "!line!"=="vite.config.js"   set UPLOAD_PKG=1
-    if "!line!"=="index.html"       set UPLOAD_PKG=1
-)
-
-del "%TEMP%\deploy_diff.txt"
-
-:: If nothing relevant changed, skip
-if !UPLOAD_SRC! equ 0 if !UPLOAD_PUBLIC! equ 0 if !UPLOAD_PKG! equ 0 (
-    echo [INFO] No source files changed - skip upload
-    goto :save_hash
-)
-
-echo [INFO] Upload plan: src=!UPLOAD_SRC!  public=!UPLOAD_PUBLIC!  config=!UPLOAD_PKG!
-echo.
-
-:: ---- 1. Upload ----
-:upload
-echo [1/3] Uploading...
-
-:: Clean remote directories before upload so renamed/deleted files don't linger
-if !UPLOAD_SRC! equ 1 (
-    echo [CLEAN] Removing remote src/ ...
-    ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "rm -rf %REMOTE_PATH%/src"
-)
-if !UPLOAD_PUBLIC! equ 1 (
-    echo [CLEAN] Removing remote public/ ...
-    ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "rm -rf %REMOTE_PATH%/public"
-)
-
-:: Build upload list based on what changed
-set "FILES="
-if !UPLOAD_SRC! equ 1    set "FILES=!FILES! src"
-if !UPLOAD_PUBLIC! equ 1 set "FILES=!FILES! public"
-if !UPLOAD_PKG! equ 1    set "FILES=!FILES! package.json package-lock.json vite.config.js index.html"
-
-scp -P %SERVER_PORT% -r !FILES! %SERVER_USER%@%SERVER_IP%:%REMOTE_PATH%
+:: Upload everything
+scp -P %SERVER_PORT% -r src public package.json package-lock.json vite.config.js index.html %SERVER_USER%@%SERVER_IP%:%REMOTE_PATH%
 if %errorlevel% neq 0 (
     echo.
     echo [ERROR] Upload failed! Check network / SSH connection.
@@ -116,12 +52,7 @@ if %errorlevel% neq 0 (
 echo [OK] Build completed
 echo.
 
-:: ---- 3. Mark deployed & reload ----
-:save_hash
-git tag -f _deployed >nul 2>nul
-echo [INFO] Tagged current commit as _deployed
-
-:reload_only
+:: ---- 3. Reload Nginx ----
 echo [3/3] Reload Nginx...
 ssh -p %SERVER_PORT% %SERVER_USER%@%SERVER_IP% "systemctl reload nginx"
 if %errorlevel% neq 0 (

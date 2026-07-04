@@ -105,7 +105,7 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
       <div class="info-card" v-for="(c, i) in block.cards" :key="i">
         <i :class="`fas ${c.icon}`"></i>
         <h3>{{ c.title }}</h3>
-        <p>{{ c.desc }}</p>
+        <p v-html="html(c.desc)"></p>
       </div>
     </div>
   </section>
