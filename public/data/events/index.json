@@ -1,0 +1,8 @@
+[
+  { "slug": "icpc", "name": "ICPC程序设计竞赛" },
+  { "slug": "ccpc", "name": "CCPC程序设计竞赛" },
+  { "slug": "gplt", "name": "团体程序设计天梯赛" },
+  { "slug": "lanqiao", "name": "蓝桥杯" },
+  { "slug": "baidu", "name": "百度之星" },
+  { "slug": "chuanzhi", "name": "传智杯" }
+]

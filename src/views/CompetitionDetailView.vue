@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useJson } from '../composables/useJson'
 
@@ -12,6 +12,24 @@ const comp = computed(
   () => (competitions.value || []).find((c) => c.slug === route.params.slug)
 )
 
+// 举办时间数据：/data/events/<slug>.json（与大事记共用同一数据源）
+const events = ref([])
+watch(
+  () => route.params.slug,
+  async (slug) => {
+    if (!slug) return
+    try {
+      const res = await fetch(`/data/events/${slug}.json`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      events.value = (await res.json()).events || []
+    } catch (e) {
+      console.error(`加载 /data/events/${slug}.json 失败:`, e)
+      events.value = []
+    }
+  },
+  { immediate: true }
+)
+
 // 将按年分组的 history 展平为表格行（按年份降序）
 const historyRows = computed(() => {
   if (!comp.value?.history) return []
@@ -20,6 +38,19 @@ const historyRows = computed(() => {
     (g.entries || []).map((e) => ({ year: g.year, ...e }))
   )
 })
+
+// 日期列：优先取该年份的赛事举办时间（date），缺省回退为年份
+function rowDate(row) {
+  const evs = (events.value || []).filter((e) => String(e.year) === String(row.year))
+  if (!evs.length) return row.year
+  const hit =
+    evs.find(
+      (e) =>
+        e.title &&
+        (row.title.includes(e.title) || e.title.includes(row.title))
+    ) || evs[0]
+  return hit.date || row.year
+}
 
 // 奖牌颜色
 function medalClass(desc) {
@@ -93,7 +124,7 @@ function entryLevel(entry) {
             <table class="history-table">
               <thead>
                 <tr>
-                  <th>年份</th>
+                  <th>日期</th>
                   <th>等级</th>
                   <th>赛事</th>
                   <th>成绩</th>
@@ -102,7 +133,7 @@ function entryLevel(entry) {
               </thead>
               <tbody>
                 <tr v-for="(row, i) in historyRows" :key="i">
-                  <td class="cell-year">{{ row.year }}</td>
+                  <td class="cell-year">{{ rowDate(row) }}</td>
                   <td class="cell-level" :class="'level-' + entryLevel(row).replace('级','')">{{ entryLevel(row) }}</td>
                   <td class="cell-title">{{ row.title }}</td>
                   <td class="cell-desc" :class="medalClass(row.desc)">{{ row.desc }}</td>

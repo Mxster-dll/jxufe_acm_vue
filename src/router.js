@@ -7,6 +7,11 @@ const routes = [
   { path: '/action/:slug', name: 'action', component: () => import('./views/ActionDetailView.vue') },
   { path: '/contest', name: 'contest', component: () => import('./views/ContestView.vue') },
   {
+    path: '/competition/:slug/:year',
+    name: 'competition-event',
+    component: () => import('./views/CompetitionEventView.vue')
+  },
+  {
     path: '/competition/:slug',
     name: 'competition',
     component: () => import('./views/CompetitionDetailView.vue')

@@ -1,8 +1,12 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useTimeline } from "../composables/useTimeline";
+import { useCompetitionEvents } from "../composables/useCompetitionEvents";
 
 const { topEvents, yearGroups, loading } = useTimeline();
+const { eventsByYear, loading: eventsLoading } = useCompetitionEvents();
+
+const ready = computed(() => !loading.value && !eventsLoading.value);
 
 // ── 搜索 ──
 const searchQuery = ref("");
@@ -11,11 +15,20 @@ const searchQuery = ref("");
 const selectedYear = ref(null);   // null = 全部
 const selectedMonth = ref(null);  // null = 该年全部月份
 
-// 提取所有 (year, month) 组合，按年分组
+// 提取所有 (year, month) 组合（含比赛节点），按年分组
 const yearMonthTree = computed(() => {
   const map = {};
   for (const g of yearGroups.value) {
     for (const item of g.items) {
+      const y = item.date.getFullYear();
+      const m = item.date.getMonth() + 1;
+      if (!map[y]) map[y] = new Set();
+      map[y].add(m);
+    }
+  }
+  for (const g of eventsByYear.value) {
+    for (const item of g.items) {
+      if (!item.date) continue; // 无具体日期的比赛节点（如 2018 届）不参与月份筛选
       const y = item.date.getFullYear();
       const m = item.date.getMonth() + 1;
       if (!map[y]) map[y] = new Set();
@@ -48,6 +61,37 @@ function resetAll() {
   searchQuery.value = "";
   selectedYear.value = null;
   selectedMonth.value = null;
+}
+
+// 某年的新闻条目 / 比赛节点（用于按年渲染）
+function yearNews(year) {
+  const g = filteredYearGroups.value.find((g) => Number(g.year) === year);
+  return g ? g.items : [];
+}
+function yearEvents(year) {
+  const g = filteredEventsByYear.value.find((g) => Number(g.year) === year);
+  return g ? g.items : [];
+}
+
+// 合并某年的新闻与比赛节点，按日期倒序（无具体日期的比赛节点排在该年最后）
+function yearItems(year) {
+  const items = [
+    ...yearNews(year).map((it) => ({ kind: "news", ...it })),
+    ...yearEvents(year).map((ev) => ({ kind: "event", ...ev })),
+  ];
+  items.sort((a, b) => {
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return b.date - a.date;
+  });
+  return items;
+}
+
+// 比赛节点/新闻 → 详情页地址（比赛节点进入该届比赛详情页）
+function itemTo(item) {
+  return item.kind === "event"
+    ? `/competition/${item.slug}/${item.year}`
+    : `/action/${item.slug}`;
 }
 
 // ── 综合筛选 + 搜索 ──
@@ -96,6 +140,29 @@ const filteredTopEvents = computed(() => {
       it.title.toLowerCase().includes(q) ||
       (it.summary || "").toLowerCase().includes(q)
   );
+});
+
+// ── 比赛节点：按年份/月份/搜索过滤 ──
+const filteredEventsByYear = computed(() => {
+  return eventsByYear.value
+    .filter((g) => selectedYear.value === null || Number(g.year) === selectedYear.value)
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) => {
+        if (selectedMonth.value !== null && it.date && it.date.getMonth() + 1 !== selectedMonth.value) return false;
+        const q = searchQuery.value.trim().toLowerCase();
+        if (q && !it.name.toLowerCase().includes(q) && !(it.title || "").toLowerCase().includes(q) && !(it.summary || "").toLowerCase().includes(q)) return false;
+        return true;
+      }),
+    }))
+    .filter((g) => g.items.length > 0);
+});
+
+// 过滤后仍有内容的年份（新闻 + 比赛节点）
+const filteredYears = computed(() => {
+  const years = new Set(filteredYearGroups.value.map((g) => Number(g.year)));
+  for (const g of filteredEventsByYear.value) years.add(Number(g.year));
+  return [...years].sort((a, b) => b - a);
 });
 </script>
 
@@ -186,7 +253,7 @@ const filteredTopEvents = computed(() => {
 
       <!-- 右侧：内容 -->
       <div class="tl-content">
-        <div v-if="loading" class="skeleton-list">
+        <div v-if="!ready" class="skeleton-list">
           <div
             v-for="n in 4"
             :key="n"
@@ -221,7 +288,7 @@ const filteredTopEvents = computed(() => {
 
           <!-- 无结果 -->
           <div
-            v-if="isFiltering && !filteredYearGroups.length && !filteredTopEvents.length"
+            v-if="isFiltering && !filteredYearGroups.length && !filteredTopEvents.length && !filteredEventsByYear.length"
             class="empty-state"
           >
             <i class="fas fa-inbox"></i>
@@ -231,8 +298,8 @@ const filteredTopEvents = computed(() => {
 
           <!-- 时间轴 -->
           <section
-            v-for="(g, gi) in filteredYearGroups"
-            :key="g.year"
+            v-for="(year, gi) in filteredYears"
+            :key="year"
             class="year-section"
           >
             <h2
@@ -240,15 +307,16 @@ const filteredTopEvents = computed(() => {
               :style="{ '--reveal-index': gi }"
               class="year-heading"
             >
-              <span class="year-num">{{ g.year }}</span>
-              <span class="year-count">{{ g.items.length }} 件事</span>
+              <span class="year-num">{{ year }}</span>
+              <span class="year-count">{{ yearNews(year).length + yearEvents(year).length }} 件事</span>
             </h2>
 
-            <div class="timeline">
+            <!-- 时间轴（新闻 + 比赛节点，按日期倒序） -->
+            <div v-if="yearItems(year).length" class="timeline">
               <RouterLink
-                v-for="(item, idx) in g.items"
-                :key="item.slug"
-                :to="`/action/${item.slug}`"
+                v-for="(item, idx) in yearItems(year)"
+                :key="item.kind + '-' + (item.slug || item.title)"
+                :to="itemTo(item)"
                 v-reveal="'fade-up'"
                 :style="{ '--reveal-index': idx }"
                 class="tl-item"
@@ -686,6 +754,7 @@ const filteredTopEvents = computed(() => {
   font-size: var(--font-size-sm);
   color: var(--text-light);
   line-height: 1.6;
+  white-space: pre-line; /* 说明文本中的换行（国赛/省赛分行） */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

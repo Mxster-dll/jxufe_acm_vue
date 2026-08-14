@@ -1,0 +1,17 @@
+{
+  "slug": "gplt",
+  "year": "2016",
+  "edition": "第一届",
+  "title": "第一届团体程序设计天梯赛",
+  "date": "2016-07-16",
+  "scale": "来自全国 24 个省级行政区、79 所高校、204 支队伍、2000 多位参赛学生",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": []
+  },
+  "provincial": {
+    "university": ["江西省分省冠军"],
+    "teams": []
+  }
+}
