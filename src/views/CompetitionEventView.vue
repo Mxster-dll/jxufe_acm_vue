@@ -138,6 +138,14 @@ function awardClass(award) {
                     </tbody>
                   </table>
                 </div>
+                <!-- 移动端：双列卡片 -->
+                <div class="personal-grid">
+                  <div v-for="(p, i) in edition.national.personal" :key="'g' + i" class="p-chip">
+                    <span class="p-name" :class="awardClass(p.award)">{{ p.name }}</span>
+                    <span class="p-award">{{ p.award.replace(/^个人/, '') }}</span>
+                    <span class="p-score">{{ p.score }}</span>
+                  </div>
+                </div>
               </div>
             </template>
           </section>
@@ -445,6 +453,37 @@ function awardClass(award) {
   color: var(--primary);
 }
 
+/* ── 移动端个人奖卡片（≤768px 替代表格）── */
+.personal-grid {
+  display: none;
+}
+.p-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+.p-name {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.p-award {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  flex: 1;
+  text-align: center;
+}
+.p-score {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--primary);
+  font-size: var(--font-size-xs);
+}
+
 /* ── 底部链接 ── */
 .event-links {
   display: flex;
@@ -491,5 +530,12 @@ function awardClass(award) {
   .event-hero h1 { font-size: 1.7rem; }
   .scale-card { flex-direction: column; text-align: center; }
   .team-grid { grid-template-columns: 1fr; }
+  /* 个人奖：表格切双列卡片 */
+  .table-wrap { display: none; }
+  .personal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
 }
 </style>

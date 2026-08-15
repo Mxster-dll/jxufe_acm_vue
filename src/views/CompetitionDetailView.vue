@@ -52,6 +52,152 @@ function rowDate(row) {
   return hit.date || row.year
 }
 
+// ==========================================================================
+// 天梯赛式参赛历史表（队名/国赛/省赛/成员奖牌色）：
+// 由 events（届数+日期）与 editions（获奖明细）数据驱动，无需在 competitions.json 重复维护
+// ==========================================================================
+const useTeamTable = ref(false)
+const eventsList = ref([])
+const editionsByYear = ref({})
+
+watch(
+  comp,
+  async (c) => {
+    useTeamTable.value = false
+    if (!c) return
+    try {
+      const evRes = await fetch(`/data/events/${c.slug}.json`)
+      if (!evRes.ok) throw new Error(`HTTP ${evRes.status}`)
+      const evData = await evRes.json()
+      const evs = evData.events || []
+      if (!evs.length) throw new Error('无届次数据')
+      // 探测是否存在单届详情数据（editions/<slug>/<year>.json）
+      const probe = await fetch(`/data/editions/${c.slug}/${evs[0].year}.json`)
+      if (!probe.ok) throw new Error(`HTTP ${probe.status}`)
+      const map = {}
+      await Promise.all(
+        evs.map(async (ev) => {
+          try {
+            const r = await fetch(`/data/editions/${c.slug}/${ev.year}.json`)
+            if (r.ok) map[String(ev.year)] = await r.json()
+          } catch (e) {
+            console.error(`加载 /data/editions/${c.slug}/${ev.year}.json 失败:`, e)
+          }
+        })
+      )
+      eventsList.value = evs
+      editionsByYear.value = map
+      useTeamTable.value = true
+    } catch (e) {
+      console.error('该赛事无单届详情数据，使用通用参赛历史表:', e)
+      useTeamTable.value = false
+    }
+  },
+  { immediate: true }
+)
+
+// 日期 → yyyy.mm.dd（无日期回退为年份）
+function dateTextOf(date, year) {
+  if (!date) return String(year)
+  const [y, m, d] = String(date).split('-')
+  return `${y}.${String(m).padStart(2, '0')}.${String(d).padStart(2, '0')}`
+}
+
+// 队名归一化（去空格，兼容"JXUFE_IM_1 队"与"JXUFE_IM_1队"）
+function normName(name) {
+  return (name || '').replace(/\s+/g, '')
+}
+
+// 奖项 → 等级（"全国团队一等奖"/"分省团队一等奖" → "一等奖"）
+function awardLevel(award) {
+  if (!award) return ''
+  return award.replace(/^(全国|分省)(团队|高校)/, '')
+}
+
+// 奖项 → 排名（用于队伍/成员按奖次排序；未获奖排最后）
+function awardRank(award) {
+  if (!award) return 4
+  if (/一等奖|金奖|冠军/.test(award)) return 1
+  if (/二等奖|银奖|亚军/.test(award)) return 2
+  if (/三等奖|铜奖|季军/.test(award)) return 3
+  return 4
+}
+
+// 届数简称（"第十一届团体程序设计天梯赛" → "第十一届"）
+function editionShort(title, ed) {
+  if (ed?.edition) return ed.edition
+  const m = (title || '').match(/第[一二三四五六七八九十百]+届/)
+  return m ? m[0] : title || ''
+}
+
+// 汇总各届获奖团队（国赛 ∪ 省赛），成员按个人奖标注
+const teamRows = computed(() => {
+  if (!useTeamTable.value) return []
+  const rows = []
+  const evs = [...(eventsList.value || [])].sort((a, b) => Number(b.year) - Number(a.year))
+  for (const ev of evs) {
+    const ed = editionsByYear.value[String(ev.year)]
+    if (!ed) continue
+    const nationalTeams = ed.national?.teams || []
+    const provincialTeams = ed.provincial?.teams || []
+    const personalMap = {}
+    for (const p of ed.national?.personal || []) personalMap[p.name] = p.award
+
+    const byName = new Map()
+    for (const t of nationalTeams) {
+      byName.set(normName(t.name), {
+        name: t.name,
+        national: t.award,
+        provincial: null,
+        members: (t.members || '')
+          .split('、')
+          .filter(Boolean)
+          .map((n) => ({ name: n, award: personalMap[n] || '' }))
+      })
+    }
+    for (const t of provincialTeams) {
+      const k = normName(t.name)
+      if (byName.has(k)) byName.get(k).provincial = t.award
+      else byName.set(k, { name: t.name, national: null, provincial: t.award, members: [] })
+    }
+    let teams = [...byName.values()]
+    if (!teams.length) continue
+    // 队伍按奖次排名：先国赛再省赛，未获奖排后
+    teams.sort(
+      (a, b) =>
+        awardRank(a.national) - awardRank(b.national) ||
+        awardRank(a.provincial) - awardRank(b.provincial)
+    )
+    // 成员按个人奖次排名：一/二/三等奖在前，未获奖在后（同级保持原顺序）
+    for (const t of teams) {
+      t.members.sort((a, b) => awardRank(a.award) - awardRank(b.award))
+    }
+    rows.push({
+      year: ev.year,
+      edition: editionShort(ev.title, ed),
+      dateText: dateTextOf(ev.date, ev.year),
+      teams
+    })
+  }
+  return rows
+})
+
+// 成员个人奖 → 奖牌色（未获奖为浅灰，与银奖拉开区分度）
+function memberAwardClass(m) {
+  if (!m.award) return 'member-plain'
+  if (/一等奖|金牌/.test(m.award)) return 'medal-gold'
+  if (/二等奖|银牌/.test(m.award)) return 'medal-silver'
+  if (/三等奖|铜牌/.test(m.award)) return 'medal-bronze'
+  return 'member-plain'
+}
+
+// 两字姓名中间插入全角空格，与三字姓名对齐（仅显示，不影响数据）
+function alignName(name) {
+  return /^[\u4e00-\u9fff]{2}$/.test(name || '')
+    ? name[0] + '\u3000' + name[1]
+    : name
+}
+
 // 奖牌颜色
 function medalClass(desc) {
   if (!desc) return ''
@@ -119,28 +265,98 @@ function entryLevel(entry) {
         <!-- 参赛历史 -->
         <section class="comp-history">
           <h2 class="section-label"><i class="fas fa-timeline"></i> 我校参赛历史</h2>
-          <p v-if="!historyRows.length" class="empty">暂无参赛记录</p>
+          <p v-if="!historyRows.length && !teamRows.length" class="empty">暂无参赛记录</p>
           <div v-else class="history-table-wrap" v-reveal="'fade-up'">
-            <table class="history-table">
+            <table class="history-table" :class="teamRows.length ? 'team-table-desktop' : ''">
               <thead>
                 <tr>
-                  <th>日期</th>
-                  <th>等级</th>
-                  <th>赛事</th>
-                  <th>成绩</th>
-                  <th>参赛成员</th>
+                  <template v-if="teamRows.length">
+                    <th>日期</th>
+                    <th>届数</th>
+                    <th>队名</th>
+                    <th>国赛</th>
+                    <th>省赛</th>
+                    <th>参赛成员</th>
+                  </template>
+                  <template v-else>
+                    <th>日期</th>
+                    <th>等级</th>
+                    <th>赛事</th>
+                    <th>成绩</th>
+                    <th>参赛成员</th>
+                  </template>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(row, i) in historyRows" :key="i">
-                  <td class="cell-year">{{ rowDate(row) }}</td>
-                  <td class="cell-level" :class="'level-' + entryLevel(row).replace('级','')">{{ entryLevel(row) }}</td>
-                  <td class="cell-title">{{ row.title }}</td>
-                  <td class="cell-desc" :class="medalClass(row.desc)">{{ row.desc }}</td>
-                  <td class="cell-members">{{ row.members || '—' }}</td>
-                </tr>
+                <!-- 天梯赛式：按届分组，合并相同年份/届数的格子 -->
+                <template v-if="teamRows.length">
+                  <template v-for="g in teamRows" :key="g.year">
+                    <tr v-for="(t, ti) in g.teams" :key="t.name">
+                      <td v-if="ti === 0" class="cell-year" :rowspan="g.teams.length">{{ g.dateText }}</td>
+                      <td v-if="ti === 0" class="cell-edition" :rowspan="g.teams.length">{{ g.edition }}</td>
+                      <td class="cell-team">{{ t.name }}</td>
+                      <td class="cell-award" :class="medalClass(t.national)">{{ awardLevel(t.national) || '—' }}</td>
+                      <td class="cell-award" :class="medalClass(t.provincial)">{{ awardLevel(t.provincial) || '—' }}</td>
+                      <td class="cell-members">
+                        <template v-if="t.members.length">
+                          <span
+                            v-for="(m, mi) in t.members"
+                            :key="mi"
+                            class="member-name"
+                            :class="memberAwardClass(m)"
+                            :title="m.award || '未获个人奖'"
+                          >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
+                        </template>
+                        <span v-else class="member-name">—</span>
+                      </td>
+                    </tr>
+                  </template>
+                </template>
+                <!-- 通用式 -->
+                <template v-else>
+                  <tr v-for="(row, i) in historyRows" :key="i">
+                    <td class="cell-year">{{ rowDate(row) }}</td>
+                    <td class="cell-level" :class="'level-' + entryLevel(row).replace('级','')">{{ entryLevel(row) }}</td>
+                    <td class="cell-title">{{ row.title }}</td>
+                    <td class="cell-desc" :class="medalClass(row.desc)">{{ row.desc }}</td>
+                    <td class="cell-members">{{ row.members || '—' }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
+
+            <!-- 移动端：每队一张卡片（≤768px 时替代六列表格） -->
+            <div v-if="teamRows.length" class="team-cards-mobile">
+              <div v-for="g in teamRows" :key="'m' + g.year" class="m-group">
+                <div class="m-group-head">
+                  <span class="m-edition">{{ g.edition }}</span>
+                  <span class="m-date">{{ g.dateText }}</span>
+                </div>
+                <div v-for="t in g.teams" :key="t.name" class="m-team-card">
+                  <div class="m-team-name">{{ t.name }}</div>
+                  <div class="m-awards">
+                    <span class="m-award" :class="medalClass(t.national)">
+                      <i class="fa-solid fa-flag"></i> 国赛 {{ awardLevel(t.national) || '—' }}
+                    </span>
+                    <span class="m-award" :class="medalClass(t.provincial)">
+                      <i class="fa-solid fa-map-location-dot"></i> 省赛 {{ awardLevel(t.provincial) || '—' }}
+                    </span>
+                  </div>
+                  <div class="m-members">
+                    <template v-if="t.members.length">
+                      <span
+                        v-for="(m, mi) in t.members"
+                        :key="mi"
+                        class="member-name"
+                        :class="memberAwardClass(m)"
+                        :title="m.award || '未获个人奖'"
+                      >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
+                    </template>
+                    <span v-else class="member-name member-plain">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -369,6 +585,95 @@ function entryLevel(entry) {
   white-space: nowrap;
   width: 1%;
 }
+.cell-edition {
+  font-weight: 700;
+  white-space: nowrap;
+  width: 1%;
+}
+.cell-team {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cell-award {
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+.member-name {
+  white-space: nowrap;
+}
+/* 未获个人奖：浅灰，与银奖(中灰蓝)明显区分 */
+.member-plain {
+  color: #a8b0b8;
+  font-weight: 400;
+}
+
+/* ── 移动端参赛历史卡片（≤768px 替代六列表格）── */
+.team-cards-mobile {
+  display: none;
+}
+.m-group {
+  margin-bottom: var(--space-lg);
+}
+.m-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 2px 10px;
+  border-bottom: 2px solid rgba(26,115,232,0.12);
+  margin-bottom: var(--space-sm);
+}
+.m-edition {
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: var(--font-size-base);
+}
+.m-date {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--primary);
+}
+.m-team-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-sm);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.m-team-name {
+  font-weight: 700;
+  color: var(--text);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--space-sm);
+}
+.m-awards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--space-sm);
+}
+.m-award {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(26,115,232,0.05);
+  border: 1px solid rgba(26,115,232,0.08);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+.m-award i {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+.m-members {
+  font-size: var(--font-size-sm);
+  line-height: 1.9;
+  color: var(--text-light);
+}
 .cell-level {
   white-space: nowrap;
   font-weight: 650;
@@ -448,6 +753,13 @@ function entryLevel(entry) {
   }
   .comp-logo {
     width: 140px;
+  }
+  /* 参赛历史：表格切卡片 */
+  .team-table-desktop {
+    display: none;
+  }
+  .team-cards-mobile {
+    display: block;
   }
 }
 @media (max-width: 576px) {
