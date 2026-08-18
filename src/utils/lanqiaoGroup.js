@@ -48,7 +48,11 @@ export function lanqiaoGroup(rows) {
   const groups = []
   for (const g of byKey.values()) {
     const awards = [...g.byAward.entries()]
-      .map(([award, persons]) => ({ award, persons }))
+      .map(([award, persons]) => ({
+        award,
+        // 表格内按排名升序排列（无排名者排最后）
+        persons: persons.slice().sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity)),
+      }))
       .sort((a, b) => (AWARD_RANK[a.award] ?? 9) - (AWARD_RANK[b.award] ?? 9))
     groups.push({ lang: g.lang, level: g.level, awards })
   }

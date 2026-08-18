@@ -34,10 +34,9 @@ function alignName(name) {
           <tbody>
             <tr v-for="(row, ri) in chunk(aw.persons, CELLS)" :key="ri">
               <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell">
-                <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>{{ alignName(p.name) }}
+                <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>
+                <span class="lq-name">{{ alignName(p.name) }}</span>
               </td>
-              <!-- 末行补齐空单元格，保持 6 列完整网格 -->
-              <td v-for="n in CELLS - row.length" :key="'e' + n" class="lq-name-cell lq-empty"></td>
             </tr>
           </tbody>
         </table>
@@ -98,24 +97,33 @@ function alignName(name) {
   overflow-x: auto;
   background: var(--card-bg, #fff);
 }
-/* 格子定宽（而非总宽固定）：表格宽度 = 6 列 × 单元格宽度（max-content），
-   超出容器时由 .lq-table-wrap 横向滚动 */
+/* 格子定宽（而非总宽固定）：表格宽度 = 列数 × 单元格宽度（max-content），
+   列数随人数自适应（仅 2 人时只有 2 列），超出容器时由 .lq-table-wrap 横向滚动 */
 .lq-name-table {
   width: max-content;
   table-layout: fixed;
   border-collapse: collapse;
 }
 .lq-name-table td {
-  width: 96px;
-  padding: 4px 6px;
-  text-align: center;
+  width: 108px;
+  padding: 6px 8px;
   font-size: var(--font-size-xs);
   color: var(--text);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* 格内布局：排名右对齐、姓名左对齐 */
+.lq-name-cell {
+  display: flex;
+  align-items: baseline;
+  text-align: left;
+}
+.lq-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .lq-name-table td:last-child {
   border-right: none;
@@ -123,17 +131,20 @@ function alignName(name) {
 .lq-name-table tr:last-child td {
   border-bottom: none;
 }
-/* 排名胶囊（蓝桥杯 Finder 数据：省赛=省内组排名、国赛=全国组排名） */
+/* 排名（蓝桥杯 Finder 数据：省赛=省内组排名、国赛=全国组排名）：
+   固定宽度内数字右对齐，不同位数排名右缘对齐 */
 .lq-rank-pill {
-  display: inline-block;
+  flex-shrink: 0;
+  width: 40px;
   margin-right: 4px;
-  padding: 0 6px;
+  padding: 0 4px;
   border-radius: var(--radius-full);
   background: rgba(57, 73, 171, 0.1);
   color: var(--primary-dark);
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1.5;
-  vertical-align: 1px;
+  text-align: right;
+  box-sizing: border-box;
 }
 </style>
