@@ -1,0 +1,23 @@
+{
+  "slug": "icpc",
+  "year": "2020",
+  "edition": null,
+  "title": "2020年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 2 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "地球往事",
+        "award": "铜奖 · ICPC亚洲区域赛 南京站",
+        "members": "刘力溯、王安、黄友民"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

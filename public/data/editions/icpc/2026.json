@@ -1,0 +1,63 @@
+{
+  "slug": "icpc",
+  "year": "2026",
+  "edition": null,
+  "title": "2026年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 5 场、获奖 9 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "喜欢只是错觉",
+        "award": "银奖 · ICPC全国邀请赛（西安）",
+        "members": "万俊哲、张云菲、衷铭川"
+      },
+      {
+        "name": "服务器未响应",
+        "award": "铜奖 · ICPC全国邀请赛（西安）",
+        "members": "杨镇宁、陈帆、陈煜仕"
+      },
+      {
+        "name": "喜欢只是错觉",
+        "award": "铜奖 · ICPC全国邀请赛（沈阳）",
+        "members": "万俊哲、张云菲、衷铭川"
+      },
+      {
+        "name": "三人驭六丸",
+        "award": "银奖 · ICPC全国邀请赛（沈阳）",
+        "members": "周君、彭俊杰、詹宇飞"
+      },
+      {
+        "name": "服务器未响应",
+        "award": "银奖 · ICPC全国邀请赛（沈阳）",
+        "members": "杨镇宁、陈帆、陈煜仕"
+      },
+      {
+        "name": "~到了赛场上就要拿出真本事~",
+        "award": "银奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "喻芷珊、曹京顺、王翔"
+      },
+      {
+        "name": "天空之矛",
+        "award": "银奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "彭俊杰、李鑫、肖俊杰"
+      },
+      {
+        "name": "天空之矛",
+        "award": "铜奖 · ICPC全国邀请赛（深圳）",
+        "members": "彭俊杰、李鑫、肖俊杰"
+      },
+      {
+        "name": "别开香槟开早了",
+        "award": "铜奖 · ICPC全国邀请赛（武汉）暨湖北省赛",
+        "members": "孙天成、杨源鑫、罗文轩"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

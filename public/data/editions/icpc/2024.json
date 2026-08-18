@@ -1,0 +1,58 @@
+{
+  "slug": "icpc",
+  "year": "2024",
+  "edition": null,
+  "title": "2024年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 11 场、获奖 8 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "彩虹海",
+        "award": "铜奖 · ICPC全国邀请赛（昆明）",
+        "members": "喻琰、肖丛宇、郭宇航"
+      },
+      {
+        "name": "志在必得!",
+        "award": "铜奖 · ICPC全国邀请赛（昆明）",
+        "members": "彭俊杰、林俊坤、王海峰"
+      },
+      {
+        "name": "彩虹海",
+        "award": "铜奖 · ICPC亚洲区域赛 昆明站",
+        "members": "喻琰、张瑞杰、肖丛宇"
+      },
+      {
+        "name": "她还爱我对不队",
+        "award": "铜奖 · ICPC亚洲区域赛 昆明站",
+        "members": "王玛琪、石翰林、黄亦诚"
+      },
+      {
+        "name": "我队友自带三金",
+        "award": "铜奖 · ICPC亚洲区域赛 上海站",
+        "members": "彭俊杰、李鑫、王海峰"
+      },
+      {
+        "name": "志在必得！",
+        "award": "铜奖 · ICPC全国邀请赛（西安）",
+        "members": "彭俊杰、林俊坤、王海峰"
+      },
+      {
+        "name": "三只小猪",
+        "award": "铜奖 · ICPC全国邀请赛（武汉）",
+        "members": "王海峰、王玛琪、石翰林"
+      },
+      {
+        "name": "她还爱我对不队",
+        "award": "铜奖 · ICPC亚洲区域赛 杭州站",
+        "members": "王玛琪、石翰林、黄亦诚"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

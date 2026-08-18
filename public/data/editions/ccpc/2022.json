@@ -1,0 +1,23 @@
+{
+  "slug": "ccpc",
+  "year": "2022",
+  "edition": null,
+  "title": "2022年CCPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 3 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": [
+      {
+        "name": "会写的一把过",
+        "award": "铜奖 · CCPC女生专场",
+        "members": "宋嘉荟、徐雅、高莉婷"
+      }
+    ]
+  }
+}

@@ -13,12 +13,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["全年不定期", "分为网络预选赛、邀请赛、区域赛"]
+        "lines": [
+          "全年不定期",
+          "分为网络预选赛、邀请赛、区域赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["3人一队", "5小时现场编程"]
+        "lines": [
+          "3人一队",
+          "5小时现场编程"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -37,31 +43,85 @@
             "title": "ICPC全国邀请赛（深圳）",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、李鑫"
+            "members": "彭俊杰、李鑫、肖俊杰"
           },
           {
-            "title": "ICPC全国邀请赛（南昌）",
-            "desc": "银牌",
+            "title": "ICPC全国邀请赛（深圳）",
+            "desc": "—",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、李鑫"
+            "members": "孙天成、杨源鑫、罗文轩"
           },
           {
             "title": "ICPC全国邀请赛（西安）",
             "desc": "银牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "members": "万俊哲、张云菲、衷铭川"
           },
           {
             "title": "ICPC全国邀请赛（西安）",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
+            "members": "杨镇宁、陈帆、陈煜仕"
           },
           {
-            "title": "ICPC全国邀请赛（南昌）",
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "李鑫、彭俊杰、肖俊杰"
+            "members": "喻芷珊、曹京顺、王翔"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴穹宇、肖依婷、黄志豪"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "ICPC全国邀请赛（武汉）暨湖北省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "孙天成、杨源鑫、罗文轩"
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "周君、彭俊杰、詹宇飞"
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "杨镇宁、陈帆、陈煜仕"
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "—",
+            "level": "国家级",
+            "members": "孙天成、杨源鑫、罗文轩"
           }
         ]
       },
@@ -72,11 +132,978 @@
             "title": "ICPC全国邀请赛（西安）",
             "desc": "金牌",
             "level": "国家级",
-            "members": "黄亦诚、石翰林、王玛琪"
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "周政、喻琰、肖丛宇"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、孙天成、罗文轩"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "谢乐乐、钟俊、陈帆"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘庆栋、胡峻珲、蒋必成"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "孙天成、罗文轩、肖源"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、杨源鑫、肖丛宇"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘文浩、王征、胡剑东"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、衷铭川、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张思宏、曾林、李志文"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王天浩、胡强、黄辉"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "杨镇宁、钟俊、陈帆"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘庆栋、胡峻珲、蒋必成"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "孙天成、罗文轩、肖源"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、杨源鑫、肖丛宇"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘文浩、王征、胡剑东"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、衷铭川、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张思宏、曾林、李志文"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王天浩、胡强、黄辉"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "杨镇宁、钟俊、陈帆"
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、黄亦诚"
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、杨源鑫、肖丛宇"
+          },
+          {
+            "title": "ICPC亚洲区域赛 成都站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "张瑞杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 武汉站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "周政、孙天成、罗文轩"
+          },
+          {
+            "title": "ICPC亚洲区域赛 武汉站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、肖俊杰、黄亦诚"
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 香港站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          }
+        ]
+      },
+      {
+        "year": "2024",
+        "entries": [
+          {
+            "title": "ICPC全国邀请赛（武汉）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "王海峰、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC全国邀请赛（西安）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、林俊坤、王海峰"
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、林俊坤、王海峰"
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王俊杰、陈雨希、韩家欢"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "罗昊、肖俊杰、谢乐乐"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶遇乐、徐晓律、陈帆"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王俊杰、陈雨希、韩家欢"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘星、曾毅、牛志义"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖源"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、王海峰"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "罗昊、肖俊杰、谢乐乐"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶遇乐、徐晓律、陈帆"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘星、曾毅、牛志义"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖源"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、王海峰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 成都站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、王海峰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、喻琰、肖丛宇"
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、王海峰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "喻琰、张瑞杰、肖丛宇"
+          }
+        ]
+      },
+      {
+        "year": "2023",
+        "entries": [
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘文强、方郑轶、潘登"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "林俊坤、邓一帆、陈世坤"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、崔煜杭、欧阳岩"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴子祥、周忠政、陈则鹏"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王俊杰、陈雨希、韩家欢"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘焕、王敏磊、辛思伟"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘文强、方郑轶、潘登"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "林俊坤、邓一帆、陈世坤"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴子祥、周忠政、陈则鹏"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "徐雅、罗晓香鑫、陈知会"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王俊杰、陈雨希、韩家欢"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘焕、王敏磊、辛思伟"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "ICPC亚洲区域赛 合肥站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、欧阳岩、潘登"
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、欧阳岩、陈则鹏"
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          }
+        ]
+      },
+      {
+        "year": "2022",
+        "entries": [
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "曾斌、欧阳岩、詹温温"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、林俊坤、陈楠"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "宋嘉荟、徐雅、高莉婷"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张悦、王雨轩、高颖"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶倖燚、尧海标、管一鸣"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "曾斌、欧阳岩、詹温温"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶倖燚、尧海标、管一鸣"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "施小雨、熊卓来、陈富乐"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "徐佳佳、李欣怡、肖艳玲"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周伟杰、崔煜杭、赖子卓"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "倪超骏、彭佳俊、蔡建怿"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、王俊杰、韩家欢"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何胜彰、孙加海、赖城铖"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "余子俊、杨雨萌、毛文浩"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、林俊坤、陈楠"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、胡衍滨"
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李至立、舒钧、陈名杰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "倪超骏、彭佳俊、蔡建怿"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "徐雅、王雨轩、高莉婷"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "尧海标、管一鸣、艾荣贵"
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "ouyang yan、叶倖燚、徐雅"
+          },
+          {
+            "title": "ICPC亚洲区域赛 合肥站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周伟杰、喻琰、胡衍滨"
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、喻琰、欧阳岩"
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、胡衍滨"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          }
+        ]
+      },
+      {
+        "year": "2021",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "倪超骏、李一、蔡建怿"
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴浩邦、周子沛、罗文浩"
+          },
+          {
+            "title": "ICPC亚洲区域赛 银川站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张睿诠、敖凸、盛静宇"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴卓成、操祉豪、王子超"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、何胜彰、王玛琪"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭佳俊、陈航、龚俊杰"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘紫璇、蒋悦、蓝伊"
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘紫璇、蒋悦、蓝伊"
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘江、朱政、钟志清"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "倪超骏、李梦豪、罗文浩"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、何胜彰、王玛琪"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘江、朱政、钟志清"
+          }
+        ]
+      },
+      {
+        "year": "2020",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "刘力溯、王安、黄友民"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张睿诠、敖凸、盛静宇"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李梦豪、樊雨萌、胡烨保"
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "唐文卓、艾荣贵、邓祖鹏"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴浩邦、周子沛、梁云钦"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "倪超骏、李一、蔡建怿"
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张涛、罗文浩、黄友民"
+          }
+        ]
+      },
+      {
+        "year": "2016",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 北京站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "li wanrong、mao ying tang、xin liao"
           }
         ]
       }
-    ]
+    ],
+    "mode": "history"
   },
   {
     "slug": "ccpc",
@@ -92,12 +1119,19 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年3月-12月", "分为网络赛、省赛、分站赛和总决赛"]
+        "lines": [
+          "每年3月-12月",
+          "分为网络赛、省赛、分站赛和总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["3人一队", "5小时现场编程", "使用C/C++/Java/Python"]
+        "lines": [
+          "3人一队",
+          "5小时现场编程",
+          "使用C/C++/Java/Python"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -113,82 +1147,130 @@
         "year": "2026",
         "entries": [
           {
-            "title": "CCPC全国邀请赛（南昌）",
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "杨镇宁、陈帆、陈煜仕"
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "彭俊杰、王翔、肖俊杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴穹宇、喻芷珊、黄志豪"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "孙天成、杨源鑫、罗文轩"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "李鑫、曹京顺、张瑞杰"
+            "members": "张瑞杰、曹京顺、李鑫"
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "CCPC全国邀请赛（福州）暨福建省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、王翔"
+            "members": "万俊哲、张云菲、衷铭川"
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
+            "title": "CCPC全国邀请赛（福州）暨福建省赛",
+            "desc": "—",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "members": "李承志、李润卓、陶金杰"
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
-          },
-          {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "陶金杰、李承志、李润卓"
-          },
-          {
-            "title": "CCPC全国邀请赛（福建）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
-          },
-          {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "金牌",
             "level": "国家级",
-            "members": "彭俊杰、王翔、李鑫"
+            "members": "彭俊杰、李鑫、王翔"
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "金牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "members": "万俊哲、张云菲、衷铭川"
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
+            "members": "杨镇宁、陈帆、陈煜仕"
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "陶金杰、李承志、李润卓"
+            "members": "孙天成、杨源鑫、罗文轩"
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "吴穹宇、喻芷珊、黄志豪"
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "钟俊、蒋滔、龚铭浩"
+            "members": "蒋滔、钟俊、龚铭浩"
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "万涛涛、周子诺、严雨睿"
+            "members": "万涛涛、严雨睿、周子诺"
           },
           {
-            "title": "CCPC全国邀请赛（贵州）",
+            "title": "CCPC全国邀请赛（贵州）暨贵州省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "CCPC全国邀请赛（贵州）暨贵州省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
           }
         ]
       },
@@ -196,10 +1278,172 @@
         "year": "2025",
         "entries": [
           {
-            "title": "CCPC全国邀请赛（郑州）",
+            "title": "CCPC全国邀请赛（东北）暨东北地区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "周政、孙天成、罗文轩"
+          },
+          {
+            "title": "CCPC全国邀请赛（东北）暨东北地区赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "广西区赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "喻琰、杨源鑫、肖丛宇"
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
             "desc": "银牌",
             "level": "国家级",
             "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、罗潇彬、钟明皓"
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "CCPC全国邀请赛（福建）暨福建省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "周政、喻琰、肖丛宇"
+          },
+          {
+            "title": "CCPC全国邀请赛（福建）暨福建省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "杨镇宁、钟俊、陈帆"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "孙天成、罗文轩、肖源"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "喻芷珊、张瑞杰、杨源鑫"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张思宏、曾林、李志文"
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "杨镇宁、钟俊、陈帆"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周君、詹宇飞、钟明皓"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "孙天成、罗文轩、肖源"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "万俊哲、张云菲、衷铭川"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻芷珊、杨源鑫、武瑞雪"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、李鑫、肖俊杰"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张思宏、曾林、李志文"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "吴星乐、王翔、肖辅霖"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李承志、李润卓、陶金杰"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "杨镇宁、钟俊、陈帆"
+          },
+          {
+            "title": "CCPC全国赛 哈尔滨站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李鑫、王翔、肖辅霖"
           },
           {
             "title": "CCPC全国邀请赛（长春）",
@@ -208,8 +1452,375 @@
             "members": "衷铭川、万俊哲、张云菲"
           }
         ]
+      },
+      {
+        "year": "2024",
+        "entries": [
+          {
+            "title": "河南省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "河南省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "CCPC全国邀请赛（长春）暨吉林省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "广西区赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "潘登、董泓毅、邓燕翔"
+          },
+          {
+            "title": "CCPC全国邀请赛（山东）暨山东省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "CCPC全国邀请赛（山东）暨山东省赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "members": "徐晓律、荣应琪、陈世坤"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "罗昊、肖俊杰、谢乐乐"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "张瑞杰、杨源鑫、罗潇彬"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶遇乐、徐晓律、陈帆"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘星、曾毅、牛志义"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、李鑫、王海峰"
+          },
+          {
+            "title": "CCPC全国赛 郑州站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "王玛琪、石翰林、黄亦诚"
+          },
+          {
+            "title": "CCPC全国赛 郑州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、喻琰、肖丛宇"
+          }
+        ]
+      },
+      {
+        "year": "2023",
+        "entries": [
+          {
+            "title": "广东省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "members": "曾斌、舒钧、陈名杰"
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "members": "徐雅、王雨轩、高莉婷"
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、胡衍滨"
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "—",
+            "level": "国家级",
+            "members": "叶倖燚、喻琰、管一鸣"
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、尧海标、欧阳岩"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、欧阳岩、肖丛宇"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘梓贤、潘登、陈知会"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘文强、方郑轶、董泓毅"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "members": "徐雅、王雨轩、陈知会"
+          },
+          {
+            "title": "CCPC全国赛 桂林站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "喻琰、肖丛宇、郭宇航"
+          },
+          {
+            "title": "CCPC全国赛 深圳站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "CCPC全国赛 深圳站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "廖凌翔、王海峰、黄亦诚"
+          }
+        ]
+      },
+      {
+        "year": "2022",
+        "entries": [
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "曾斌、舒钧、陈名杰"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "尧海标、管一鸣、高莉婷"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "徐佳佳、李欣怡、肖艳玲"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "徐雅、欧阳岩、詹温温"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "周政、李一、陈楠"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "倪超骏、彭佳俊、蔡建怿"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "唐文卓、潘祉岳、邓祖鹏"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "彭俊杰、徐晓律、荣应琪"
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "余子俊、杨雨萌"
+          },
+          {
+            "title": "CCPC全国赛 广州站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "何洋、王玛琪、石翰林"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "宋嘉荟、徐雅、高莉婷"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "members": "徐佳佳、李欣怡、肖艳玲"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "members": "张悦、王雨轩、高颖"
+          }
+        ]
+      },
+      {
+        "year": "2021",
+        "entries": [
+          {
+            "title": "CCPC总决赛",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "铜牌",
+            "level": "省级",
+            "members": "宋嘉荟、李婷、童若珈"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "members": "刘紫璇、蒋悦、蓝伊"
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "members": "张梦凡、胡博、谢子昭"
+          },
+          {
+            "title": "CCPC全国赛 威海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘江、朱政、钟志清"
+          }
+        ]
+      },
+      {
+        "year": "2020",
+        "entries": [
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "梁云钦、罗文浩、郭子健"
+          },
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "李小龙、邓荣斌、饶木平"
+          },
+          {
+            "title": "CCPC全国赛 威海站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "刘力溯、王安、黄友民"
+          },
+          {
+            "title": "CCPC全国赛 绵阳站",
+            "desc": "银牌",
+            "level": "国家级",
+            "members": "刘力溯、王安、黄友民"
+          }
+        ]
+      },
+      {
+        "year": "2019",
+        "entries": [
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "members": "游心、肖熠、郭鹏"
+          }
+        ]
       }
-    ]
+    ],
+    "mode": "history"
   },
   {
     "slug": "gplt",
@@ -225,12 +1836,19 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年3-4月", "分为校内选拔赛和全国总决赛"]
+        "lines": [
+          "每年3-4月",
+          "分为校内选拔赛和全国总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["10人一队", "3小时现场编程", "使用C/C++/Java/Python"]
+        "lines": [
+          "10人一队",
+          "3小时现场编程",
+          "使用C/C++/Java/Python"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -256,12 +1874,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年4-6月", "分为省赛、总决赛"]
+        "lines": [
+          "每年4-6月",
+          "分为省赛、总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位进行比赛", "在指定赛点全程4小时独立闭卷答题"]
+        "lines": [
+          "以个人为单位进行比赛",
+          "在指定赛点全程4小时独立闭卷答题"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -272,7 +1896,12 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [
+      {
+        "year": "2025",
+        "entries": []
+      }
+    ]
   },
   {
     "slug": "baidu",
@@ -287,12 +1916,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年不固定", "分为初赛、决赛"]
+        "lines": [
+          "每年不固定",
+          "分为初赛、决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位进行比赛", "初赛3小时，决赛5小时"]
+        "lines": [
+          "以个人为单位进行比赛",
+          "初赛3小时，决赛5小时"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -303,7 +1938,12 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [
+      {
+        "year": "2025",
+        "entries": []
+      }
+    ]
   },
   {
     "slug": "chuanzhi",
@@ -318,12 +1958,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年11月和3-4月", "分为校内选拔赛、省赛、全国总决赛"]
+        "lines": [
+          "每年11月和3-4月",
+          "分为校内选拔赛、省赛、全国总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位参赛", "3.5小时现场编程"]
+        "lines": [
+          "以个人为单位参赛",
+          "3.5小时现场编程"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -334,6 +1980,11 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [
+      {
+        "year": "2025",
+        "entries": []
+      }
+    ]
   }
 ]

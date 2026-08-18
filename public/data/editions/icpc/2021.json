@@ -1,0 +1,23 @@
+{
+  "slug": "icpc",
+  "year": "2021",
+  "edition": null,
+  "title": "2021年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 7 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "均衡存乎万物之间",
+        "award": "铜奖 · ICPC亚洲区域赛 南京站",
+        "members": "倪超骏、李梦豪、罗文浩"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}
