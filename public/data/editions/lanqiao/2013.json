@@ -1,0 +1,246 @@
+{
+  "slug": "lanqiao",
+  "year": "2013",
+  "edition": "第四届",
+  "title": "第四届蓝桥杯（2013年）获奖情况",
+  "date": null,
+  "dates": {
+    "provincial": null,
+    "national": "2013-07-13"
+  },
+  "scale": "省赛 32 人次获奖、国赛 5 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "陈天楚",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 4
+      },
+      {
+        "name": "石旺盛",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 75
+      },
+      {
+        "name": "陈忱",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 215
+      },
+      {
+        "name": "黄超强",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 191
+      },
+      {
+        "name": "吴荣福",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 244
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "吴荣福",
+        "award": "一等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 5
+      },
+      {
+        "name": "石旺盛",
+        "award": "一等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 1
+      },
+      {
+        "name": "陈天楚",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 3
+      },
+      {
+        "name": "陈忱",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 9
+      },
+      {
+        "name": "付冬英",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 24
+      },
+      {
+        "name": "刘子扬",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 27
+      },
+      {
+        "name": "刘玉",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 25
+      },
+      {
+        "name": "周志恒",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 32
+      },
+      {
+        "name": "王月月",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 7
+      },
+      {
+        "name": "谢贤超",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 9
+      },
+      {
+        "name": "黄超强",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 20
+      },
+      {
+        "name": "万腾",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 36
+      },
+      {
+        "name": "何远生",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 39
+      },
+      {
+        "name": "张兵玉",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 14
+      },
+      {
+        "name": "张毅",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 35
+      },
+      {
+        "name": "李志远",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 52
+      },
+      {
+        "name": "李立强",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 13
+      },
+      {
+        "name": "杨佳伟",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 50
+      },
+      {
+        "name": "杨学森",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 21
+      },
+      {
+        "name": "江峰",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 59
+      },
+      {
+        "name": "江燊",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 51
+      },
+      {
+        "name": "王国文",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 20
+      },
+      {
+        "name": "王瑶光",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 45
+      },
+      {
+        "name": "粟芳芳",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 19
+      },
+      {
+        "name": "胡龙",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 40
+      },
+      {
+        "name": "徐海官",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "熊昌磊",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "罗霄",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "聂亚丽",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "葛志蒸",
+        "award": "优秀奖",
+        "score": "Java程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "赖建国",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      },
+      {
+        "name": "郭茜",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,408 @@
+{
+  "slug": "lanqiao",
+  "year": "2016",
+  "edition": "第七届",
+  "title": "第七届蓝桥杯（2016年）获奖情况",
+  "date": null,
+  "dates": {
+    "provincial": null,
+    "national": "2016-05-29"
+  },
+  "scale": "省赛 57 人次获奖、国赛 7 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "何丰",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 45
+      },
+      {
+        "name": "周俊",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 226
+      },
+      {
+        "name": "熊诚",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 410
+      },
+      {
+        "name": "陈衍安",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 276
+      },
+      {
+        "name": "周鑫",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "王可可",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "罗成峰",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "何丰",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 3
+      },
+      {
+        "name": "周俊",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 6
+      },
+      {
+        "name": "周鑫",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1
+      },
+      {
+        "name": "熊诚",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 8
+      },
+      {
+        "name": "王可可",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 12
+      },
+      {
+        "name": "罗成峰",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 13
+      },
+      {
+        "name": "陈衍安",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 4
+      },
+      {
+        "name": "刘思湉",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 34
+      },
+      {
+        "name": "吴雅男",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 66
+      },
+      {
+        "name": "周启业",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 31
+      },
+      {
+        "name": "奉伟琦",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 50
+      },
+      {
+        "name": "姜勇",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 34
+      },
+      {
+        "name": "徐华",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 58
+      },
+      {
+        "name": "徐卓雅",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 18
+      },
+      {
+        "name": "方吉",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 63
+      },
+      {
+        "name": "杨蕊",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 29
+      },
+      {
+        "name": "梁超",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 31
+      },
+      {
+        "name": "焦鹏冲",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 36
+      },
+      {
+        "name": "章洁",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 35
+      },
+      {
+        "name": "许毅",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 46
+      },
+      {
+        "name": "郝爽",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 17
+      },
+      {
+        "name": "钱佳威",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 59
+      },
+      {
+        "name": "陈晓博",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 28
+      },
+      {
+        "name": "冯云芳",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 87
+      },
+      {
+        "name": "冯杨",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 129
+      },
+      {
+        "name": "刘国靖",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 73
+      },
+      {
+        "name": "刘畅",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 105
+      },
+      {
+        "name": "刘超",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 123
+      },
+      {
+        "name": "叶丽茶",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 93
+      },
+      {
+        "name": "叶云鹏",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 125
+      },
+      {
+        "name": "姜本领",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 42
+      },
+      {
+        "name": "宋雨薇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 122
+      },
+      {
+        "name": "官琳",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 101
+      },
+      {
+        "name": "张丽华",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 127
+      },
+      {
+        "name": "惠霓",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 94
+      },
+      {
+        "name": "曹茜",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 113
+      },
+      {
+        "name": "曾妍",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 50
+      },
+      {
+        "name": "朱中川",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 56
+      },
+      {
+        "name": "李晓云",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 60
+      },
+      {
+        "name": "杨乐川",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 90
+      },
+      {
+        "name": "殷勤",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 111
+      },
+      {
+        "name": "汪志鹏",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 88
+      },
+      {
+        "name": "熊波",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 75
+      },
+      {
+        "name": "王小玲",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 38
+      },
+      {
+        "name": "王耀",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 36
+      },
+      {
+        "name": "罗兴",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 84
+      },
+      {
+        "name": "胡康桥",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 43
+      },
+      {
+        "name": "袁宇超",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 115
+      },
+      {
+        "name": "许传炼",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学A组",
+        "rank": 13
+      },
+      {
+        "name": "谈锐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 112
+      },
+      {
+        "name": "贵玉婷",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 39
+      },
+      {
+        "name": "郭寒风",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 40
+      },
+      {
+        "name": "陈汉瑛",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 58
+      },
+      {
+        "name": "雷佳毅",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 78
+      },
+      {
+        "name": "韩高杰",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 52
+      },
+      {
+        "name": "马宁",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学A组",
+        "rank": 12
+      },
+      {
+        "name": "黑毅菲",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 51
+      }
+    ]
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "lanqiao",
+  "year": "2010",
+  "edition": "第一届",
+  "title": "第一届蓝桥杯（2010年）获奖情况",
+  "date": "2010-05",
+  "dates": {
+    "provincial": "2010-05",
+    "national": "2010-08-19"
+  },
+  "scale": "省赛 11 人次获奖、国赛 5 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "陈启明",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 131
+      },
+      {
+        "name": "陈启明",
+        "award": "三等奖",
+        "score": "个人赛",
+        "rank": null
+      },
+      {
+        "name": "饶娟",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 144
+      },
+      {
+        "name": "饶娟",
+        "award": "三等奖",
+        "score": "个人赛",
+        "rank": null
+      },
+      {
+        "name": "徐晓枫",
+        "award": "优秀奖",
+        "score": "个人赛",
+        "rank": null
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "徐晓枫",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 306
+      },
+      {
+        "name": "陈启明",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 307
+      },
+      {
+        "name": "饶娟",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 308
+      },
+      {
+        "name": "万小妹",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 311
+      },
+      {
+        "name": "万齐智",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 310
+      },
+      {
+        "name": "张帅",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 312
+      },
+      {
+        "name": "江恒",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 313
+      },
+      {
+        "name": "赵奕伟",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 309
+      },
+      {
+        "name": "付志辉",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科组",
+        "rank": null
+      },
+      {
+        "name": "张名云",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科组",
+        "rank": null
+      },
+      {
+        "name": "汪国彬",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科组",
+        "rank": null
+      }
+    ]
+  }
+}

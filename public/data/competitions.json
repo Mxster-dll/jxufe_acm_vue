@@ -3382,12 +3382,8 @@
         ]
       }
     ],
-    "history": [
-      {
-        "year": "2025",
-        "entries": []
-      }
-    ]
+    "history": [],
+    "mode": "lanqiao"
   },
   {
     "slug": "baidu",

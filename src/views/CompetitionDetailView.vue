@@ -1,7 +1,9 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useJson } from '../composables/useJson'
+import { lanqiaoGroup } from '../utils/lanqiaoGroup'
+import RosterGroup from '../components/lanqiao/RosterGroup.vue'
 
 const route = useRoute()
 const { data: competitions, loading, error } = useJson('/data/competitions.json', {
@@ -53,7 +55,8 @@ function rowDate(row) {
 }
 
 // 通用参赛史（mode=history）天梯赛式分组：
-// 按 (年份, 场次) 分组，同场多队 rowspan 合并"日期/赛事"列；组内保持奖牌优先顺序
+// 按 (年份, 场次) 分组，同场多队 rowspan 合并"日期/赛事"列；
+// 组内按排名升序（rank 缺失/无效排最后，同分稳定保持原顺序）
 const groupedHistoryRows = computed(() => {
   const groups = []
   const map = new Map()
@@ -70,6 +73,14 @@ const groupedHistoryRows = computed(() => {
       groups.push(map.get(key))
     }
     map.get(key).rows.push(row)
+  }
+  for (const g of groups) {
+    g.rows.sort((a, b) => {
+      const ra = a.rank != null ? Number(a.rank) : Infinity
+      const rb = b.rank != null ? Number(b.rank) : Infinity
+      if (ra === rb) return 0
+      return ra < rb ? -1 : 1
+    })
   }
   return groups
 })
@@ -91,6 +102,19 @@ watch(
     // 不使用天梯赛式单届表（editions 文件仅作年度汇总详情页，供大事记时间轴跳转）
     if (c.mode === 'history') {
       console.log('该赛事使用通用参赛历史表（mode=history）:', c.slug)
+      return
+    }
+    // mode=lanqiao：蓝桥杯为个人赛，总名单来自 /data/lanqiao.json（按年份分组）
+    if (c.mode === 'lanqiao') {
+      console.log('该赛事使用蓝桥杯总名单（mode=lanqiao）:', c.slug)
+      try {
+        const res = await fetch('/data/lanqiao.json')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        lanqiaoData.value = await res.json()
+      } catch (e) {
+        console.error('加载 /data/lanqiao.json 失败:', e)
+        lanqiaoData.value = null
+      }
       return
     }
     try {
@@ -280,6 +304,75 @@ function medalChipClass(medal) {
   if (/铜奖/.test(medal)) return 'chip-bronze'
   return 'chip-none'
 }
+
+// 卡片左边框色调（新闻页 award-card 样式）：按队伍最高奖项金/银/铜，无奖无 tone
+function cardTone(row) {
+  const medals = row.medals || []
+  if (!medals.length) return ''
+  if (medals.some((m) => /金奖/.test(m.medal))) return 'tone-gold'
+  if (medals.some((m) => /银奖/.test(m.medal))) return 'tone-silver'
+  if (medals.some((m) => /铜奖/.test(m.medal))) return 'tone-bronze'
+  return ''
+}
+
+// ── 参赛历史视图模式：表格 / 卡片 ──
+// 桌面端默认表格、移动端默认卡片；用户切换后记住选择（localStorage）
+const viewMode = ref('table')
+const VIEW_KEY = 'jufc-history-view'
+
+onMounted(() => {
+  let saved = null
+  try {
+    saved = localStorage.getItem(VIEW_KEY)
+  } catch (e) {}
+  viewMode.value =
+    saved === 'table' || saved === 'card'
+      ? saved
+      : window.matchMedia('(max-width: 768px)').matches
+        ? 'card'
+        : 'table'
+})
+
+watch(viewMode, (v) => {
+  try {
+    localStorage.setItem(VIEW_KEY, v)
+  } catch (e) {}
+})
+
+function setView(v) {
+  viewMode.value = v
+}
+
+// ── 蓝桥杯总名单（mode=lanqiao）：/data/lanqiao.json ──
+const lanqiaoData = ref(null)
+
+// 每年名单预分组（C/C++·Java·Python × A/B 级 × 奖等），省赛/国赛各一组
+const lanqiaoYears = computed(() => {
+  if (!lanqiaoData.value?.years) return []
+  return lanqiaoData.value.years.map((y) => ({
+    year: y.year,
+    edition: y.edition,
+    dates: y.dates || {},
+    provincial: y.provincial,
+    national: y.national,
+    provincialGroups: lanqiaoGroup(y.provincial),
+    nationalGroups: lanqiaoGroup(y.national),
+  }))
+})
+
+// 比赛日期格式化：'2025-06-15' → '2025年6月15日'；'2010-05' → '2010年5月'；空 → ''
+function fmtLqDate(d) {
+  if (!d) return ''
+  const m = String(d).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/)
+  if (!m) return d
+  return m[3] ? `${m[1]}年${+m[2]}月${+m[3]}日` : `${m[1]}年${+m[2]}月`
+}
+
+// 蓝桥杯每年分组（国赛在上、省赛在下）
+const lqStages = [
+  ['national', '国赛'],
+  ['provincial', '省赛'],
+]
 </script>
 
 <template>
@@ -332,10 +425,44 @@ function medalChipClass(medal) {
 
         <!-- 参赛历史 -->
         <section class="comp-history">
-          <h2 class="section-label"><i class="fas fa-timeline"></i> 我校参赛历史</h2>
-          <p v-if="!historyRows.length && !teamRows.length" class="empty">暂无参赛记录</p>
-          <div v-else class="history-table-wrap" v-reveal="'fade-up'">
-            <table class="history-table" :class="teamRows.length || groupedHistoryRows.length ? 'team-table-desktop' : ''">
+          <div class="history-toolbar">
+            <h2 class="section-label"><i class="fas fa-timeline"></i> {{ comp.mode === 'lanqiao' ? '我校蓝桥杯获奖总名单' : '我校参赛历史' }}</h2>
+            <div v-if="historyRows.length || teamRows.length" class="view-toggle" role="group" aria-label="切换视图">
+              <button type="button" class="view-btn" :class="{ active: viewMode === 'table' }" @click="setView('table')" title="表格视图"><i class="fa-solid fa-table-list"></i> 表格</button>
+              <button type="button" class="view-btn" :class="{ active: viewMode === 'card' }" @click="setView('card')" title="卡片视图"><i class="fa-solid fa-table-cells-large"></i> 卡片</button>
+            </div>
+          </div>
+
+          <!-- 蓝桥杯总名单（个人赛：按年 → 国/省 两卡 → C/C++·Java·Python × A/B → 奖等 → 姓名表格） -->
+          <template v-if="comp.mode === 'lanqiao'">
+            <p v-if="!lanqiaoData" class="empty">名单加载中…</p>
+            <template v-else>
+              <div class="lq-list">
+                <div v-for="y in lanqiaoYears" :key="y.year" class="lq-year">
+                  <div class="lq-year-head">
+                    <h3>第{{ y.edition }}届蓝桥杯（{{ y.year }}年）</h3>
+                    <span class="lq-count">{{ y.provincial.length + y.national.length }} 人次</span>
+                  </div>
+                  <div v-for="(st, si) in lqStages" :key="si" class="lq-stage-card" :class="'lq-' + st[0]">
+                    <div class="lq-stage-head">
+                      <h4 class="lq-stage-title">
+                        <i :class="st[0] === 'national' ? 'fa-solid fa-trophy' : 'fa-solid fa-medal'"></i>
+                        {{ st[1] }}
+                        <span v-if="y.dates && y.dates[st[0]]" class="lq-stage-date">{{ fmtLqDate(y.dates[st[0]]) }}</span>
+                      </h4>
+                      <span class="lq-count">{{ y[st[0]].length }} 人次</span>
+                    </div>
+                    <RosterGroup v-if="y[st[0]].length" :groups="st[0] === 'national' ? y.nationalGroups : y.provincialGroups" />
+                    <p v-else class="empty">本届无{{ st[1] }}获奖记录</p>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </template>
+
+          <p v-else-if="!historyRows.length && !teamRows.length" class="empty">暂无参赛记录</p>
+          <div v-else class="history-table-wrap" v-reveal="{ variant: 'fade-up', threshold: 0.01, rootMargin: '0px 0px 100px 0px' }">
+            <table class="history-table" :class="{ 'view-hidden': viewMode !== 'table' }">
               <thead>
                 <tr>
                   <template v-if="teamRows.length">
@@ -417,8 +544,8 @@ function medalChipClass(medal) {
               </tbody>
             </table>
 
-            <!-- 移动端：每队一张卡片（≤768px 时替代表格） -->
-            <div v-if="teamRows.length || groupedHistoryRows.length" class="team-cards-mobile">
+            <!-- 卡片视图（桌面/移动均可用；移动端默认，可切换） -->
+            <div v-if="teamRows.length || groupedHistoryRows.length" class="team-cards-mobile" :class="{ 'view-hidden': viewMode !== 'card' }">
               <!-- 天梯赛式 -->
               <div v-for="g in teamRows" :key="'m' + g.year" class="m-group">
                 <div class="m-group-head">
@@ -455,7 +582,7 @@ function medalChipClass(medal) {
                   <span class="m-edition">{{ g.title }}</span>
                   <span class="m-date">{{ g.dateText }}</span>
                 </div>
-                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card" :class="'row-' + catOf(g.title)">
+                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card m-team-card--event" :class="cardTone(row)">
                   <div class="m-team-name">{{ row.name || '—' }}</div>
                   <div class="m-awards">
                     <template v-if="row.medals && row.medals.length">
@@ -468,15 +595,18 @@ function medalChipClass(medal) {
                     </template>
                     <span v-else class="m-award chip-none"><i class="fa-solid fa-trophy"></i> {{ row.desc }}</span>
                   </div>
-                  <div class="m-members">
-                    <template v-if="row.members">
-                      <span
-                        v-for="(m, mi) in splitMembers(row.members)"
-                        :key="mi"
-                        class="member-name"
-                      ><template v-if="mi > 0">、</template>{{ alignName(m) }}</span>
-                    </template>
-                    <span v-else class="member-name member-plain">—</span>
+                  <div class="m-fields">
+                    <p v-if="row.rank" class="m-field"><strong>排名：</strong>{{ row.rank }}/{{ row.teamCount }}</p>
+                    <p class="m-field"><strong>参赛成员：</strong>
+                      <template v-if="row.members">
+                        <span
+                          v-for="(m, mi) in splitMembers(row.members)"
+                          :key="mi"
+                          class="member-name"
+                        ><template v-if="mi > 0">、</template>{{ alignName(m) }}</span>
+                      </template>
+                      <span v-else class="member-name member-plain">—</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -655,6 +785,141 @@ function medalChipClass(medal) {
   padding: var(--space-xl) 0;
   font-size: var(--font-size-sm);
 }
+/* 标题行 + 视图切换（表格/卡片） */
+.history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.history-toolbar .section-label {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(26, 115, 232, 0.06);
+  border: 1px solid rgba(26, 115, 232, 0.12);
+  border-radius: var(--radius-full);
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.view-btn:hover {
+  color: var(--primary);
+}
+.view-btn.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+}
+/* 视图显隐：表格/卡片二选一展示 */
+.view-hidden {
+  display: none !important;
+}
+
+/* ── 蓝桥杯总名单（个人赛：姓名/科目/奖项，按年分组；每年国赛/省赛两个卡片）── */
+.lq-list {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.lq-year {
+  margin-bottom: var(--space-2xl);
+}
+/* 年份标题（非卡片，置于两个阶段卡片之上） */
+.lq-year-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+}
+.lq-year-head h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.lq-count {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+/* 阶段卡片：国赛/省赛各一张卡 */
+.lq-stage-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+.lq-stage-card.lq-national {
+  border-left: 4px solid var(--accent);
+}
+.lq-stage-card.lq-provincial {
+  border-left: 4px solid var(--primary);
+}
+.lq-stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  border-bottom: 2px solid rgba(26,115,232,0.12);
+}
+.lq-stage-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--text);
+}
+.lq-stage-title i {
+  font-size: 0.85rem;
+  color: var(--primary);
+  opacity: 0.8;
+}
+.lq-stage-card.lq-national .lq-stage-title i {
+  color: var(--accent);
+}
+.lq-stage-date {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 1px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(0,0,0,0.04);
+  white-space: nowrap;
+}
+/* 卡片视图：外层无框线（卡片自带边框，避免双重框线）。
+   注意：不能用 JS 动态 class 控制（Vue 整体赋值 className 会抹掉 v-reveal 加的 is-visible），
+   用 :has() 按"卡片视图可见"的结构状态判定 */
+.history-table-wrap:has(.team-cards-mobile:not(.view-hidden)) {
+  border: none;
+}
 .history-table-wrap {
   overflow-x: auto;
   border-radius: var(--radius-lg);
@@ -732,9 +997,10 @@ function medalChipClass(medal) {
   font-weight: 400;
 }
 
-/* ── 移动端参赛历史卡片（≤768px 替代六列表格）── */
+/* ── 卡片视图（桌面/移动共用；显隐由 .view-hidden 控制）── */
 .team-cards-mobile {
-  display: none;
+  max-width: 880px;
+  margin: 0 auto;
 }
 .m-group {
   margin-bottom: var(--space-lg);
@@ -765,12 +1031,34 @@ function medalChipClass(medal) {
   padding: var(--space-md) var(--space-lg);
   margin-bottom: var(--space-sm);
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: box-shadow var(--transition);
 }
-/* 移动端卡片：赛事类别淡色背景（与桌面表格行背景一致） */
-.m-team-card.row-inv { background: rgba(30, 136, 229, 0.055); border-color: rgba(30, 136, 229, 0.18); }
-.m-team-card.row-reg { background: rgba(124, 77, 255, 0.055); border-color: rgba(124, 77, 255, 0.18); }
-.m-team-card.row-net { background: rgba(0, 172, 193, 0.055); border-color: rgba(0, 172, 193, 0.18); }
-.m-team-card.row-prov { background: rgba(67, 160, 71, 0.06); border-color: rgba(67, 160, 71, 0.18); }
+.m-team-card:hover {
+  box-shadow: 0 6px 24px rgba(26,115,232,0.06);
+}
+/* 通用式参赛记录卡片：新闻页 award-card 样式（奖牌色左框线 + 渐变背景） */
+.m-team-card--event {
+  margin-bottom: var(--space-md);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.m-team-card--event.tone-gold {
+  border-left: 6px solid #d4a72c;
+  background: linear-gradient(90deg, rgba(212,167,44,0.05), #fff 45%);
+}
+.m-team-card--event.tone-silver {
+  border-left: 6px solid #a8a9ad;
+  background: linear-gradient(90deg, rgba(168,169,173,0.07), #fff 45%);
+}
+.m-team-card--event.tone-bronze {
+  border-left: 6px solid #cd7f32;
+  background: linear-gradient(90deg, rgba(205,127,50,0.06), #fff 45%);
+}
+.m-team-card--event .m-team-name {
+  color: var(--primary);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
 .m-team-name {
   font-weight: 700;
   color: var(--text);
@@ -801,6 +1089,16 @@ function medalChipClass(medal) {
 .m-award i {
   font-size: 0.7rem;
   opacity: 0.8;
+}
+/* 卡片字段行（新闻页 award-card 同款：label：value） */
+.m-fields p {
+  margin: 6px 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-light);
+  line-height: 1.8;
+}
+.m-fields strong {
+  color: var(--text);
 }
 .m-members {
   font-size: var(--font-size-sm);
@@ -936,13 +1234,6 @@ function medalChipClass(medal) {
   }
   .comp-logo {
     width: 140px;
-  }
-  /* 参赛历史：表格切卡片 */
-  .team-table-desktop {
-    display: none;
-  }
-  .team-cards-mobile {
-    display: block;
   }
 }
 @media (max-width: 576px) {

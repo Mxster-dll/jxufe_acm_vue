@@ -97,16 +97,19 @@ function itemTo(item) {
   return `/action/${item.slug}`;
 }
 
-// xcpc 卡片右上角徽标：奖项汇总（🥇🥈🥉），仅获奖场次显示
+// 卡片右上角徽标：奖项汇总（🥇🥈🥉），仅获奖场次显示
+// xcpc 走新闻页（cid）；蓝桥等走单届详情页（无 cid，按 slug 识别）
 function itemBadge(item) {
-  if (item.kind !== "event" || !item.cid) return "";
+  if (item.kind !== "event") return "";
+  if (!item.cid && item.slug !== "lanqiao") return "";
   const s = item.summary || "";
   return /[🥇🥈🥉]/.test(s) ? s : "";
 }
 
 // 徽标按最高奖项着色：🥇金 > 🥈银 > 🥉铜
 function badgeTone(item) {
-  if (item.kind !== "event" || !item.cid) return "";
+  if (item.kind !== "event") return "";
+  if (!item.cid && item.slug !== "lanqiao") return "";
   const s = item.summary || "";
   if (s.includes("🥇")) return "gold";
   if (s.includes("🥈")) return "silver";
