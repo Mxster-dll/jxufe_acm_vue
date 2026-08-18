@@ -35,7 +35,9 @@ function alignName(name) {
             <tr v-for="(row, ri) in chunk(aw.persons, CELLS)" :key="ri">
               <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell">
                 <span class="lq-cell-inner">
-                  <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>
+                  <span v-if="p.rank != null" class="lq-rank-slot">
+                    <span class="lq-rank-pill">#{{ p.rank }}</span>
+                  </span>
                   <span class="lq-name">{{ alignName(p.name) }}</span>
                 </span>
               </td>
@@ -139,11 +141,16 @@ function alignName(name) {
   border-bottom: none;
 }
 /* 排名（蓝桥杯 Finder 数据：省赛=省内组排名、国赛=全国组排名）：
-   固定宽度内数字右对齐，不同位数排名右缘对齐 */
-.lq-rank-pill {
+   外层 slot 固定 40px 占位（位于格子最左侧），数字右缘对齐的盈余留在此处；
+   内层 pill 背景贴合文字宽度 */
+.lq-rank-slot {
   flex-shrink: 0;
   width: 40px;
   margin-right: 4px;
+  display: inline-flex;
+  justify-content: flex-end;
+}
+.lq-rank-pill {
   padding: 0 4px;
   border-radius: var(--radius-full);
   background: rgba(57, 73, 171, 0.1);
@@ -151,7 +158,7 @@ function alignName(name) {
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1.5;
+  white-space: nowrap;
   text-align: right;
-  box-sizing: border-box;
 }
 </style>
