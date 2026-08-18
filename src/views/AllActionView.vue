@@ -799,8 +799,8 @@ const filteredYears = computed(() => {
    inv=ICPC/CCPC全国邀请赛  reg=ICPC亚洲区域赛/CCPC全国赛  prov=xcpc省赛(含区赛)
    net=网络预选赛  tts=天梯赛  lanqiao=蓝桥杯  chuanzhi=传智杯
    baidu=百度之星  club=社团活动/讲座/集训  school=校赛  other=其他 */
-.tl-card--inv { --cat: #7c4dff; }
-.tl-card--reg { --cat: #1e88e5; }
+.tl-card--inv { --cat: #1e88e5; }
+.tl-card--reg { --cat: #7c4dff; }
 .tl-card--prov { --cat: #43a047; }
 .tl-card--net { --cat: #00acc1; }
 .tl-card--tts { --cat: #f9a825; }
