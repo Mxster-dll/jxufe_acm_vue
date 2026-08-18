@@ -10,10 +10,17 @@ const props = defineProps({
 const LANQ_NAME = Object.fromEntries(LANGS)
 
 // 姓名数组 → 表格行（每行 6 人）
+const CELLS = 6
 function chunk(arr, n) {
   const out = []
   for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n))
   return out
+}
+
+// 二字名中间插全角空格，与三字名等宽对齐（与 xcpc 参赛史表格的 alignName 一致）
+function alignName(name) {
+  if (name && name.length === 2) return name[0] + '\u3000' + name[1]
+  return name
 }
 </script>
 
@@ -25,10 +32,12 @@ function chunk(arr, n) {
       <div class="lq-table-wrap">
         <table class="lq-name-table">
           <tbody>
-            <tr v-for="(row, ri) in chunk(aw.persons, 6)" :key="ri">
+            <tr v-for="(row, ri) in chunk(aw.persons, CELLS)" :key="ri">
               <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell">
-                <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>{{ p.name }}
+                <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>{{ alignName(p.name) }}
               </td>
+              <!-- 末行补齐空单元格，保持 6 列完整网格 -->
+              <td v-for="n in CELLS - row.length" :key="'e' + n" class="lq-name-cell lq-empty"></td>
             </tr>
           </tbody>
         </table>
@@ -80,7 +89,7 @@ function chunk(arr, n) {
 .lq-award-tag.medal-silver { background: rgba(122,139,153,0.12); color: #7a8b99; }
 .lq-award-tag.medal-bronze { background: rgba(184,115,51,0.1); color: #b87333; }
 .lq-award-tag.lq-excellent { background: rgba(150,140,110,0.1); color: #8d8560; }
-/* 姓名表格：天梯赛式框线（外框 + 行分隔线，白底圆角） */
+/* 姓名表格：天梯赛式框线（外框 + 行/列分隔线，白底圆角） */
 .lq-table-wrap {
   flex: 1;
   min-width: 0;
@@ -89,12 +98,15 @@ function chunk(arr, n) {
   overflow-x: auto;
   background: var(--card-bg, #fff);
 }
+/* 格子定宽（而非总宽固定）：表格宽度 = 6 列 × 单元格宽度（max-content），
+   超出容器时由 .lq-table-wrap 横向滚动 */
 .lq-name-table {
-  width: 100%;
-  border-collapse: collapse;
+  width: max-content;
   table-layout: fixed;
+  border-collapse: collapse;
 }
 .lq-name-table td {
+  width: 96px;
   padding: 4px 6px;
   text-align: center;
   font-size: var(--font-size-xs);
@@ -102,7 +114,11 @@ function chunk(arr, n) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.lq-name-table td:last-child {
+  border-right: none;
 }
 .lq-name-table tr:last-child td {
   border-bottom: none;
