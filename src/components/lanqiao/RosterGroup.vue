@@ -90,9 +90,12 @@ function alignName(name) {
 .lq-award-tag.medal-silver { background: rgba(122,139,153,0.12); color: #7a8b99; }
 .lq-award-tag.medal-bronze { background: rgba(184,115,51,0.1); color: #b87333; }
 .lq-award-tag.lq-excellent { background: rgba(150,140,110,0.1); color: #8d8560; }
-/* 姓名表格：天梯赛式框线（外框 + 行/列分隔线，白底圆角） */
+/* 姓名表格：天梯赛式框线（外框 + 行/列分隔线，白底圆角）。
+   wrap 宽度贴合表格内容（fit-content）：窄表格 wrap 窄、不留白；
+   宽表格（超出行内可用空间）被收缩后由 wrap 横向滚动 */
 .lq-table-wrap {
-  flex: 1;
+  flex: 0 1 auto;
+  width: fit-content;
   min-width: 0;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-md);
