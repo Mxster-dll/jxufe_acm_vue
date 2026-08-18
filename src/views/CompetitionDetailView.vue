@@ -65,6 +65,12 @@ watch(
   async (c) => {
     useTeamTable.value = false
     if (!c) return
+    // mode=history：参赛历史由 competitions.json 全量维护（ICPC/CCPC 等），
+    // 不使用天梯赛式单届表（editions 文件仅作年度汇总详情页，供大事记时间轴跳转）
+    if (c.mode === 'history') {
+      console.log('该赛事使用通用参赛历史表（mode=history）:', c.slug)
+      return
+    }
     try {
       const evRes = await fetch(`/data/events/${c.slug}.json`)
       if (!evRes.ok) throw new Error(`HTTP ${evRes.status}`)

@@ -5,11 +5,22 @@ import { useJson } from '../composables/useJson'
 import BlockRenderer from '../components/action/BlockRenderer.vue'
 
 const route = useRoute()
-const { data: actions, loading, error } = useJson('/data/actions.json', { initial: [] })
+const { data: actions, loading: loadingActions, error } = useJson('/data/actions.json', { initial: [] })
+// 比赛新闻页（大事记里 ICPC/CCPC 场次卡片点击进入）：/contest-news/<cid>
+const { data: contestNews, loading: loadingNews, error: newsError } = useJson('/data/contest-news.json', { initial: {} })
 
-const article = computed(() =>
-  (actions.value || []).find((a) => a.slug === route.params.slug)
-)
+const id = computed(() => route.params.cid ?? route.params.slug)
+const loading = computed(() => loadingActions.value || loadingNews.value)
+
+const article = computed(() => {
+  const a = (actions.value || []).find((a) => a.slug === id.value)
+  if (a) return a
+  return (contestNews.value || {})[id.value] || null
+})
+
+const failed = computed(() => !article.value && (error.value || newsError.value))
+
+const isContestNews = computed(() => !!article.value && !(actions.value || []).some((a) => a.slug === id.value))
 </script>
 
 <template>
@@ -27,13 +38,13 @@ const article = computed(() =>
       </div>
 
       <!-- Error / Not found -->
-      <p v-else-if="error" class="hint">加载失败</p>
+      <p v-else-if="failed" class="hint">加载失败</p>
       <p v-else-if="!article" class="hint">未找到该文章</p>
 
       <!-- 文章 -->
       <article v-else>
         <header class="article-header">
-          <p class="article-label">ACTION DETAIL</p>
+          <p class="article-label">{{ isContestNews ? 'CONTEST NEWS' : 'ACTION DETAIL' }}</p>
           <h1>{{ article.title }}</h1>
           <div class="header-divider"></div>
           <p v-if="article.subtitle" class="subtitle">{{ article.subtitle }}</p>

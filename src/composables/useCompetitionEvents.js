@@ -46,6 +46,8 @@ export function useCompetitionEvents() {
             name: comp.name,
             title: ev.title || comp.name,
             summary: ev.summary || '',
+            subtitle: ev.subtitle || '',
+            cid: ev.cid, // 比赛场次标识（有 cid 的节点点击进入该场比赛的新闻页）
             date,
             dateStr
           })

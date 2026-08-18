@@ -87,11 +87,66 @@ function yearItems(year) {
   return items;
 }
 
-// 比赛节点/新闻 → 详情页地址（比赛节点进入该届比赛详情页）
+// 比赛节点/新闻 → 详情页地址（xcpc 比赛节点进入该场比赛的新闻页；无 cid 的赛事节点进入该届参赛详情页）
 function itemTo(item) {
-  return item.kind === "event"
-    ? `/competition/${item.slug}/${item.year}`
-    : `/action/${item.slug}`;
+  if (item.kind === "event") {
+    return item.cid
+      ? `/contest-news/${item.cid}`
+      : `/competition/${item.slug}/${item.year}`;
+  }
+  return `/action/${item.slug}`;
+}
+
+// xcpc 卡片右上角徽标：奖项汇总（🥇🥈🥉），仅获奖场次显示
+function itemBadge(item) {
+  if (item.kind !== "event" || !item.cid) return "";
+  const s = item.summary || "";
+  return /[🥇🥈🥉]/.test(s) ? s : "";
+}
+
+// 徽标按最高奖项着色：🥇金 > 🥈银 > 🥉铜
+function badgeTone(item) {
+  if (item.kind !== "event" || !item.cid) return "";
+  const s = item.summary || "";
+  if (s.includes("🥇")) return "gold";
+  if (s.includes("🥈")) return "silver";
+  if (s.includes("🥉")) return "bronze";
+  return "";
+}
+
+// 卡片正文：有梗文案优先，回退奖项汇总（其他赛事节点无 subtitle 时保持原样）
+function itemTagline(item) {
+  if (item.kind === "event" && item.subtitle) return item.subtitle;
+  return item.summary || "";
+}
+
+// ── 卡片类别（左边框配色）：xcpc邀请赛 / IC区域赛·CC全国赛 / xcpc省赛 / 网络赛 / 天梯赛 / 蓝桥杯 / 传智杯 / 社团活动·讲座·集训 / 校赛 ──
+// 类别 key → CSS 类后缀（tl-card--<key>），颜色在 <style> 中通过 --cat 变量定义
+function itemClass(item) {
+  const t = item.title || "";
+  if (item.kind === "event") {
+    // 按赛事系列判定（非 xcpc 系列直接归类）
+    if (item.slug === "gplt") return "tts";
+    if (item.slug === "lanqiao") return "lanqiao";
+    if (item.slug === "chuanzhi") return "chuanzhi";
+    if (item.slug === "baidu") return "baidu";
+    // xcpc 系列按标题关键词判定（顺序敏感：邀请赛兼办省赛的标题归邀请赛）
+    if (t.includes("网络预选赛")) return "net";
+    if (t.includes("全国邀请赛")) return "inv";
+    if (t.includes("亚洲区域赛") || t.includes("全国赛")) return "reg";
+    if (t.includes("女生专场")) return "inv"; // CCPC女生专场：国家级 xcpc 赛事
+    if (t.includes("总决赛")) return "reg";   // CCPC总决赛：全国性顶级赛事
+    if (t.includes("省赛") || t.includes("区赛")) return "prov";
+    return "other";
+  }
+  // 新闻节点（actions.json）
+  if (t.includes("天梯赛")) return "tts";
+  if (t.includes("蓝桥")) return "lanqiao";
+  if (t.includes("传智")) return "chuanzhi";
+  if (t.includes("百度之星")) return "baidu";
+  if (t.includes("校赛") || t.includes("校内")) return "school";
+  // 其余新闻（培训/讲座/集训/答疑等）归社团活动类
+  return "club";
 }
 
 // ── 综合筛选 + 搜索 ──
@@ -276,6 +331,7 @@ const filteredYears = computed(() => {
                 :style="{ '--reveal-index': i }"
                 :to="`/action/${top.slug}`"
                 class="pinned-card"
+                :class="'tl-card--' + itemClass(top)"
               >
                 <span class="pinned-mark"
                   ><i class="fa-solid fa-thumbtack"></i
@@ -315,17 +371,18 @@ const filteredYears = computed(() => {
             <div v-if="yearItems(year).length" class="timeline">
               <RouterLink
                 v-for="(item, idx) in yearItems(year)"
-                :key="item.kind + '-' + (item.slug || item.title)"
+                :key="item.kind + '-' + (item.slug || item.title) + '-' + idx"
                 :to="itemTo(item)"
                 v-reveal="'fade-up'"
                 :style="{ '--reveal-index': idx }"
                 class="tl-item"
                 :class="{ right: idx % 2 === 1 }"
               >
-                <div class="tl-card">
+                <div class="tl-card" :class="'tl-card--' + itemClass(item)">
+                  <span v-if="itemBadge(item)" class="tl-badge" :class="'tl-badge--' + badgeTone(item)">{{ itemBadge(item) }}</span>
                   <span class="tl-date">{{ item.dateStr }}</span>
                   <h3>{{ item.title }}</h3>
-                  <p>{{ item.summary }}</p>
+                  <p>{{ itemTagline(item) }}</p>
                 </div>
                 <div class="tl-dot"></div>
               </RouterLink>
@@ -610,6 +667,7 @@ const filteredYears = computed(() => {
   padding: var(--space-md) var(--space-lg);
   background: #fff;
   border: 1px solid rgba(0,0,0,0.06);
+  border-left: 4px solid var(--cat, #b0bec5);
   border-radius: var(--radius-lg);
   color: var(--text);
   text-decoration: none;
@@ -622,6 +680,7 @@ const filteredYears = computed(() => {
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(26,115,232,0.08);
   border-color: rgba(26,115,232,0.18);
+  border-left-color: var(--cat, #b0bec5); /* hover 时保留类别左边框色 */
   color: var(--text);
 }
 .pinned-mark {
@@ -717,10 +776,12 @@ const filteredYears = computed(() => {
 }
 
 .tl-card {
+  position: relative;
   width: calc(50% - 50px);
   padding: var(--space-lg);
   background: #fff;
   border: 1px solid rgba(0,0,0,0.05);
+  border-left: 4px solid var(--cat, #b0bec5);
   border-radius: var(--radius-lg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   transition:
@@ -732,6 +793,58 @@ const filteredYears = computed(() => {
   transform: translateY(-3px);
   box-shadow: 0 10px 32px rgba(26,115,232,0.07);
   border-color: rgba(26,115,232,0.15);
+  border-left-color: var(--cat, #b0bec5); /* hover 时保留类别左边框色 */
+}
+/* ── 卡片类别左边框配色（--cat 变量）──
+   inv=ICPC/CCPC全国邀请赛  reg=ICPC亚洲区域赛/CCPC全国赛  prov=xcpc省赛(含区赛)
+   net=网络预选赛  tts=天梯赛  lanqiao=蓝桥杯  chuanzhi=传智杯
+   baidu=百度之星  club=社团活动/讲座/集训  school=校赛  other=其他 */
+.tl-card--inv { --cat: #7c4dff; }
+.tl-card--reg { --cat: #1e88e5; }
+.tl-card--prov { --cat: #43a047; }
+.tl-card--net { --cat: #00acc1; }
+.tl-card--tts { --cat: #f9a825; }
+.tl-card--lanqiao { --cat: #3949ab; }
+.tl-card--chuanzhi { --cat: #ff7043; }
+.tl-card--baidu { --cat: #e53935; }
+.tl-card--club { --cat: #78909c; }
+.tl-card--school { --cat: #d81b60; }
+.tl-card--other { --cat: #b0bec5; }
+/* 奖项汇总徽标（右上角；背景色与最高奖项相同） */
+.tl-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tl-badge--gold {
+  background: linear-gradient(135deg, #fff3d6, #ffe3a1);
+  border-color: rgba(212, 167, 44, 0.45);
+  color: #8a6d1a;
+}
+.tl-badge--silver {
+  background: linear-gradient(135deg, #f3f3f4, #dcddde);
+  border-color: rgba(150, 152, 156, 0.5);
+  color: #6d6f73;
+}
+.tl-badge--bronze {
+  background: linear-gradient(135deg, #fbe9dc, #f0cdb0);
+  border-color: rgba(205, 127, 50, 0.45);
+  color: #9c5a1e;
+}
+.tl-card h3 {
+  padding-right: 96px; /* 给右上角徽标留位 */
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  transition: color var(--transition-fast);
 }
 .tl-date {
   display: block;
@@ -739,13 +852,6 @@ const filteredYears = computed(() => {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
   margin-bottom: 6px;
-}
-.tl-card h3 {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 6px;
-  transition: color var(--transition-fast);
 }
 .tl-item:hover .tl-card h3 {
   color: var(--primary);

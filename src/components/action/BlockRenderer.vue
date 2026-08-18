@@ -35,7 +35,12 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
   <!-- 获奖卡片 -->
   <section v-else-if="block.type === 'awards'" class="b-awards">
     <h2 v-if="block.heading" v-html="html(block.heading)"></h2>
-    <div class="award-card" v-for="(card, i) in block.cards" :key="i">
+    <div
+      class="award-card"
+      :class="card.tone ? 'tone-' + card.tone : ''"
+      v-for="(card, i) in block.cards"
+      :key="i"
+    >
       <h3 v-html="html(card.title)"></h3>
       <p v-for="(f, j) in card.fields" :key="j">
         <strong>{{ f.label }}：</strong>{{ f.value }}
@@ -208,6 +213,19 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
 }
 .b-awards .award-card:hover {
   box-shadow: 0 6px 24px rgba(26,115,232,0.06);
+}
+/* 奖牌颜色左框线（比赛新闻页按奖项着色） */
+.b-awards .award-card.tone-gold {
+  border-left: 6px solid #d4a72c;
+  background: linear-gradient(90deg, rgba(212,167,44,0.05), #fff 45%);
+}
+.b-awards .award-card.tone-silver {
+  border-left: 6px solid #a8a9ad;
+  background: linear-gradient(90deg, rgba(168,169,173,0.07), #fff 45%);
+}
+.b-awards .award-card.tone-bronze {
+  border-left: 6px solid #cd7f32;
+  background: linear-gradient(90deg, rgba(205,127,50,0.06), #fff 45%);
 }
 .b-awards h3 {
   color: var(--primary);
