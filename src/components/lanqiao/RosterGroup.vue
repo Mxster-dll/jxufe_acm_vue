@@ -34,8 +34,10 @@ function alignName(name) {
           <tbody>
             <tr v-for="(row, ri) in chunk(aw.persons, CELLS)" :key="ri">
               <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell">
-                <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>
-                <span class="lq-name">{{ alignName(p.name) }}</span>
+                <span class="lq-cell-inner">
+                  <span v-if="p.rank != null" class="lq-rank-pill">#{{ p.rank }}</span>
+                  <span class="lq-name">{{ alignName(p.name) }}</span>
+                </span>
               </td>
             </tr>
           </tbody>
@@ -97,15 +99,17 @@ function alignName(name) {
   overflow-x: auto;
   background: var(--card-bg, #fff);
 }
-/* 格子定宽（而非总宽固定）：表格宽度 = 列数 × 单元格宽度（max-content），
-   列数随人数自适应（仅 2 人时只有 2 列），超出容器时由 .lq-table-wrap 横向滚动 */
+/* 表格宽度贴合内容：fixed 布局下列宽 = max-content（该列最宽内容），
+   表格总宽 = 列宽之和；列数随人数自适应（仅 1 人时只有 1 列），
+   超出容器时由 .lq-table-wrap 横向滚动 */
 .lq-name-table {
-  width: max-content;
+  width: auto;
   table-layout: fixed;
   border-collapse: collapse;
 }
 .lq-name-table td {
-  width: 108px;
+  width: max-content;
+  min-width: 0;
   padding: 6px 8px;
   font-size: var(--font-size-xs);
   color: var(--text);
@@ -113,8 +117,8 @@ function alignName(name) {
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-/* 格内布局：排名右对齐、姓名左对齐 */
-.lq-name-cell {
+/* 格内布局：排名右对齐、姓名左对齐（flex 放内层，td 保持 table-cell 角色） */
+.lq-cell-inner {
   display: flex;
   align-items: baseline;
   text-align: left;
