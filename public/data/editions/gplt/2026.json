@@ -1,0 +1,70 @@
+{
+  "slug": "gplt",
+  "year": "2026",
+  "edition": "第十一届",
+  "title": "第十一届团体程序设计天梯赛",
+  "date": "2026-04-18",
+  "scale": "来自全国 31 个省级行政区、595 所高校、1822 支队伍、18062 位参赛学生",
+  "national": {
+    "university": ["全国高校二等奖"],
+    "teams": [
+      {
+        "name": "JXUFE_1",
+        "award": "全国团队一等奖",
+        "members": "肖丛宇、钟明皓、朱子豪、罗文轩、杨源鑫、王翔、孙天成、喻琰、周君、王文浩"
+      },
+      {
+        "name": "江财计信联合 1 队【JXUFE_CI_1】",
+        "award": "全国团队二等奖",
+        "members": "曹京顺、万俊哲、陈帆、李鑫、李承志、衷铭川、肖俊杰、陶金杰、刘旭凡、陈煜仕"
+      },
+      {
+        "name": "江财计信联合 2 队【JXUFE_CI_2】",
+        "award": "全国团队三等奖",
+        "members": "李跃和、胡强、钟俊、牛志义、徐谦、龚铭浩、胡峻珲、程思彤、张云菲、王征"
+      }
+    ],
+    "personal": [
+      { "name": "钟明皓", "award": "个人一等奖", "score": 256 },
+      { "name": "朱子豪", "award": "个人二等奖", "score": 246 },
+      { "name": "罗文轩", "award": "个人二等奖", "score": 244 },
+      { "name": "曹京顺", "award": "个人二等奖", "score": 244 },
+      { "name": "杨源鑫", "award": "个人二等奖", "score": 242 },
+      { "name": "万俊哲", "award": "个人二等奖", "score": 242 },
+      { "name": "王翔", "award": "个人二等奖", "score": 240 },
+      { "name": "陈帆", "award": "个人二等奖", "score": 236 },
+      { "name": "肖丛宇", "award": "个人二等奖", "score": 233 },
+      { "name": "李鑫", "award": "个人二等奖", "score": 232 },
+      { "name": "李承志", "award": "个人二等奖", "score": 231 },
+      { "name": "孙天成", "award": "个人二等奖", "score": 230 },
+      { "name": "喻琰", "award": "个人二等奖", "score": 230 },
+      { "name": "衷铭川", "award": "个人二等奖", "score": 230 },
+      { "name": "李跃和", "award": "个人三等奖", "score": 223 },
+      { "name": "肖俊杰", "award": "个人三等奖", "score": 216 },
+      { "name": "胡强", "award": "个人三等奖", "score": 215 },
+      { "name": "钟俊", "award": "个人三等奖", "score": 200 },
+      { "name": "牛志义", "award": "个人三等奖", "score": 200 },
+      { "name": "徐谦", "award": "个人三等奖", "score": 199 },
+      { "name": "陶金杰", "award": "个人三等奖", "score": 199 },
+      { "name": "杨镇宁", "award": "个人三等奖", "score": 198 },
+      { "name": "吴穹宇", "award": "个人三等奖", "score": 196 },
+      { "name": "张瑞杰", "award": "个人三等奖", "score": 193 },
+      { "name": "周君", "award": "个人三等奖", "score": 192 },
+      { "name": "龚铭浩", "award": "个人三等奖", "score": 192 },
+      { "name": "黄志豪", "award": "个人三等奖", "score": 191 },
+      { "name": "胡峻珲", "award": "个人三等奖", "score": 184 },
+      { "name": "刘旭凡", "award": "个人三等奖", "score": 176 },
+      { "name": "谢文硕", "award": "个人三等奖", "score": 175 },
+      { "name": "曹湛云", "award": "个人三等奖", "score": 175 },
+      { "name": "陈煜仕", "award": "个人三等奖", "score": 175 }
+    ]
+  },
+  "provincial": {
+    "university": ["江西省高校一等奖"],
+    "teams": [
+      { "name": "JXUFE_1", "award": "分省团队一等奖" },
+      { "name": "江财计信联合 1 队【JXUFE_CI_1】", "award": "分省团队一等奖" },
+      { "name": "江财计信联合 2 队【JXUFE_CI_2】", "award": "分省团队二等奖" }
+    ]
+  }
+}

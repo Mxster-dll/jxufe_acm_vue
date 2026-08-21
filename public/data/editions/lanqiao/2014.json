@@ -1,0 +1,108 @@
+{
+  "slug": "lanqiao",
+  "year": "2014",
+  "edition": "第五届",
+  "title": "第五届蓝桥杯（2014年）获奖情况",
+  "date": null,
+  "dates": {
+    "provincial": null,
+    "national": "2014-06-01"
+  },
+  "scale": "省赛 10 人次获奖、国赛 4 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "陈天楚",
+        "award": "特等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 1
+      },
+      {
+        "name": "许少岩",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 299
+      },
+      {
+        "name": "刘玉",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 228
+      },
+      {
+        "name": "徐海官",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 225
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "刘玉",
+        "award": "一等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 2
+      },
+      {
+        "name": "徐海官",
+        "award": "一等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 1
+      },
+      {
+        "name": "陈天楚",
+        "award": "一等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 3
+      },
+      {
+        "name": "刘子扬",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 5
+      },
+      {
+        "name": "周志恒",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 4
+      },
+      {
+        "name": "江峰",
+        "award": "二等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 6
+      },
+      {
+        "name": "许少岩",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": 8
+      },
+      {
+        "name": "何远生",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 8
+      },
+      {
+        "name": "赖建国",
+        "award": "三等奖",
+        "score": "Java程序设计本科B组",
+        "rank": 7
+      },
+      {
+        "name": "彭倩",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科B组",
+        "rank": null
+      }
+    ]
+  }
+}

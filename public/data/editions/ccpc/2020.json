@@ -1,0 +1,23 @@
+{
+  "slug": "ccpc",
+  "year": "2020",
+  "edition": null,
+  "title": "2020年CCPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 3 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "你一生的故事",
+        "award": "银奖 · CCPC全国赛 绵阳站",
+        "members": "刘力溯、王安、黄友民"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

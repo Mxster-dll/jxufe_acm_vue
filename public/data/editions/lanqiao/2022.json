@@ -1,0 +1,1824 @@
+{
+  "slug": "lanqiao",
+  "year": "2022",
+  "edition": "第十三届",
+  "title": "第十三届蓝桥杯（2022年）获奖情况",
+  "date": "2022-04-09",
+  "dates": {
+    "provincial": "2022-04-09",
+    "national": "2022-06-18"
+  },
+  "scale": "省赛 256 人次获奖、国赛 44 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "唐文卓",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 67
+      },
+      {
+        "name": "李梦豪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 111
+      },
+      {
+        "name": "王玛琪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 235
+      },
+      {
+        "name": "管一鸣",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 60
+      },
+      {
+        "name": "倪超骏",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 711
+      },
+      {
+        "name": "刘江",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 222
+      },
+      {
+        "name": "张睿诠",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 661
+      },
+      {
+        "name": "朱龙耀",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 231
+      },
+      {
+        "name": "洪杭海",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 99
+      },
+      {
+        "name": "熊卓来",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 157
+      },
+      {
+        "name": "石翰林",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 569
+      },
+      {
+        "name": "谢佳维",
+        "award": "二等奖",
+        "score": "Python程序设计研究生组",
+        "rank": 13
+      },
+      {
+        "name": "钟志清",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 871
+      },
+      {
+        "name": "何洋",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1457
+      },
+      {
+        "name": "张煜",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 466
+      },
+      {
+        "name": "朱元浩",
+        "award": "三等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 307
+      },
+      {
+        "name": "杨庆鹏",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 309
+      },
+      {
+        "name": "潘祉岳",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 449
+      },
+      {
+        "name": "熊书豪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 2057
+      },
+      {
+        "name": "王少彬",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 2079
+      },
+      {
+        "name": "王晓东",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1849
+      },
+      {
+        "name": "罗世权",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1985
+      },
+      {
+        "name": "罗文浩",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1304
+      },
+      {
+        "name": "范高军",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 529
+      },
+      {
+        "name": "谢志浩",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 451
+      },
+      {
+        "name": "郑训哲",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 488
+      },
+      {
+        "name": "黄号晨",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 2287
+      },
+      {
+        "name": "龚俊杰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1111
+      },
+      {
+        "name": "俞大千",
+        "award": "优秀奖",
+        "score": "Java程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "卢超超",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "彭佳俊",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "施小雨",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "李慧如",
+        "award": "优秀奖",
+        "score": "Java程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "段浩然",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "王力",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "秦晖洋",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "程世豪",
+        "award": "优秀奖",
+        "score": "Java程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "荣应琪",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "詹温温",
+        "award": "优秀奖",
+        "score": "Java程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "谢瑞",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "金超男",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "陈富乐",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "陈航",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      },
+      {
+        "name": "骆子晗",
+        "award": "优秀奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": null
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "何洋",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 152
+      },
+      {
+        "name": "俞大千",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 29
+      },
+      {
+        "name": "倪超骏",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 70
+      },
+      {
+        "name": "刘江",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 1
+      },
+      {
+        "name": "卢超超",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 172
+      },
+      {
+        "name": "唐文卓",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 9
+      },
+      {
+        "name": "张煜",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 23
+      },
+      {
+        "name": "张睿诠",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 213
+      },
+      {
+        "name": "彭佳俊",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 51
+      },
+      {
+        "name": "施小雨",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 207
+      },
+      {
+        "name": "朱元浩",
+        "award": "一等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 38
+      },
+      {
+        "name": "朱龙耀",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 43
+      },
+      {
+        "name": "李慧如",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 47
+      },
+      {
+        "name": "李梦豪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 16
+      },
+      {
+        "name": "杨庆鹏",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 21
+      },
+      {
+        "name": "杨戈",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 23
+      },
+      {
+        "name": "段浩然",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 245
+      },
+      {
+        "name": "洪杭海",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 24
+      },
+      {
+        "name": "潘祉岳",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 25
+      },
+      {
+        "name": "熊书豪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 255
+      },
+      {
+        "name": "熊卓来",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 20
+      },
+      {
+        "name": "王力",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 212
+      },
+      {
+        "name": "王少彬",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 184
+      },
+      {
+        "name": "王晓东",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 215
+      },
+      {
+        "name": "王玛琪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 22
+      },
+      {
+        "name": "石翰林",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 90
+      },
+      {
+        "name": "秦晖洋",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 206
+      },
+      {
+        "name": "程世豪",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 56
+      },
+      {
+        "name": "管一鸣",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 19
+      },
+      {
+        "name": "罗世权",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 198
+      },
+      {
+        "name": "罗文浩",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 21
+      },
+      {
+        "name": "范高军",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 36
+      },
+      {
+        "name": "荣应琪",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 259
+      },
+      {
+        "name": "詹温温",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 46
+      },
+      {
+        "name": "谢佳维",
+        "award": "一等奖",
+        "score": "Python程序设计研究生组",
+        "rank": 2
+      },
+      {
+        "name": "谢志浩",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 40
+      },
+      {
+        "name": "谢瑞",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 193
+      },
+      {
+        "name": "郑训哲",
+        "award": "一等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 13
+      },
+      {
+        "name": "金超男",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 164
+      },
+      {
+        "name": "钟志清",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 88
+      },
+      {
+        "name": "陈富乐",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 113
+      },
+      {
+        "name": "陈航",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 177
+      },
+      {
+        "name": "骆子晗",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 223
+      },
+      {
+        "name": "黄号晨",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 246
+      },
+      {
+        "name": "龚俊杰",
+        "award": "一等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 47
+      },
+      {
+        "name": "丁飞扬",
+        "award": "二等奖",
+        "score": "Web应用开发大学组",
+        "rank": null
+      },
+      {
+        "name": "余意",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 382
+      },
+      {
+        "name": "刘志奇",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 410
+      },
+      {
+        "name": "刘振宇",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 850
+      },
+      {
+        "name": "刘梦来",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 234
+      },
+      {
+        "name": "刘骏",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 576
+      },
+      {
+        "name": "古煌",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 863
+      },
+      {
+        "name": "吕子俊",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 751
+      },
+      {
+        "name": "吴丽秀",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 649
+      },
+      {
+        "name": "吴佳豪",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 173
+      },
+      {
+        "name": "吴芷文",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 227
+      },
+      {
+        "name": "周小豹",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 441
+      },
+      {
+        "name": "周灿",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 394
+      },
+      {
+        "name": "姜宇",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 679
+      },
+      {
+        "name": "尧强",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 857
+      },
+      {
+        "name": "尧海标",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 67
+      },
+      {
+        "name": "左志超",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 851
+      },
+      {
+        "name": "廖凌翔",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 310
+      },
+      {
+        "name": "廖超豪",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 159
+      },
+      {
+        "name": "张伊帆",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 599
+      },
+      {
+        "name": "张宇川",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 574
+      },
+      {
+        "name": "张悦",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 409
+      },
+      {
+        "name": "张晓颖",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 456
+      },
+      {
+        "name": "徐文杰",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 862
+      },
+      {
+        "name": "敖凸",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 439
+      },
+      {
+        "name": "文俊",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 865
+      },
+      {
+        "name": "朱诚",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 426
+      },
+      {
+        "name": "李一",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 337
+      },
+      {
+        "name": "李嘉欣",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 749
+      },
+      {
+        "name": "李婷",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 313
+      },
+      {
+        "name": "李孟臻",
+        "award": "二等奖",
+        "score": "C/C++程序设计研究生组",
+        "rank": 5
+      },
+      {
+        "name": "李欣怡",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 775
+      },
+      {
+        "name": "杨剑",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 537
+      },
+      {
+        "name": "杨嘉彬",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 143
+      },
+      {
+        "name": "杨海涛",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 704
+      },
+      {
+        "name": "林洋豪",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 624
+      },
+      {
+        "name": "欧阳岩",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 680
+      },
+      {
+        "name": "毛文浩",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 858
+      },
+      {
+        "name": "汪可",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 861
+      },
+      {
+        "name": "洪凯",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 561
+      },
+      {
+        "name": "王海峰",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 676
+      },
+      {
+        "name": "王茜璘",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 194
+      },
+      {
+        "name": "王雨轩",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 729
+      },
+      {
+        "name": "祝慧荣",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 859
+      },
+      {
+        "name": "章元耀",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 167
+      },
+      {
+        "name": "肖子翼",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 90
+      },
+      {
+        "name": "肖艳玲",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 750
+      },
+      {
+        "name": "肖荐升",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 199
+      },
+      {
+        "name": "胡佳俊",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 236
+      },
+      {
+        "name": "胡佳成",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 728
+      },
+      {
+        "name": "胡涛",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 849
+      },
+      {
+        "name": "胡烨保",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 427
+      },
+      {
+        "name": "胡衍滨",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 395
+      },
+      {
+        "name": "范乐炜",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 396
+      },
+      {
+        "name": "萧剑",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 133
+      },
+      {
+        "name": "葛智朋",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 505
+      },
+      {
+        "name": "蒋文梦",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 473
+      },
+      {
+        "name": "蔡东庭",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 536
+      },
+      {
+        "name": "蔡建怿",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 598
+      },
+      {
+        "name": "袁多华",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 487
+      },
+      {
+        "name": "谢涛",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 91
+      },
+      {
+        "name": "赖城铖",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 538
+      },
+      {
+        "name": "赖子卓",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 600
+      },
+      {
+        "name": "赵海彬",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 866
+      },
+      {
+        "name": "邓祖鹏",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 134
+      },
+      {
+        "name": "邓荣斌",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 381
+      },
+      {
+        "name": "邹佳成",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 312
+      },
+      {
+        "name": "邹涛",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 114
+      },
+      {
+        "name": "郑国相",
+        "award": "二等奖",
+        "score": "Web应用开发大学组",
+        "rank": null
+      },
+      {
+        "name": "郭圣",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 860
+      },
+      {
+        "name": "郭宇航",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 326
+      },
+      {
+        "name": "郭艺",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 647
+      },
+      {
+        "name": "钟亦凡",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 228
+      },
+      {
+        "name": "钟晓明",
+        "award": "二等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 50
+      },
+      {
+        "name": "陈名杰",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 314
+      },
+      {
+        "name": "陈昊",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 438
+      },
+      {
+        "name": "陈瑞",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 504
+      },
+      {
+        "name": "韩子煜",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 650
+      },
+      {
+        "name": "韩宇帆",
+        "award": "二等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 235
+      },
+      {
+        "name": "高桐",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 772
+      },
+      {
+        "name": "黄宇龙",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 648
+      },
+      {
+        "name": "黄思娜",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 730
+      },
+      {
+        "name": "黎雨馨",
+        "award": "二等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 864
+      },
+      {
+        "name": "万俊杰",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 454
+      },
+      {
+        "name": "万寄傲",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1570
+      },
+      {
+        "name": "何胜彰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1448
+      },
+      {
+        "name": "傅旭荣",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1563
+      },
+      {
+        "name": "冯绍武",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1348
+      },
+      {
+        "name": "冷末灵",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1567
+      },
+      {
+        "name": "凌毅",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 455
+      },
+      {
+        "name": "刘伟",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1347
+      },
+      {
+        "name": "刘天豪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1081
+      },
+      {
+        "name": "刘姝娴",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1342
+      },
+      {
+        "name": "刘子祺",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1228
+      },
+      {
+        "name": "刘家文",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1566
+      },
+      {
+        "name": "刘明智",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1078
+      },
+      {
+        "name": "刘柱铭",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1221
+      },
+      {
+        "name": "刘椿洋",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1564
+      },
+      {
+        "name": "刘紫程",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 406
+      },
+      {
+        "name": "刘雨璐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1343
+      },
+      {
+        "name": "卢志鹏",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1562
+      },
+      {
+        "name": "卢沿宇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1350
+      },
+      {
+        "name": "古象武",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 303
+      },
+      {
+        "name": "叶倖燚",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1226
+      },
+      {
+        "name": "叶嘉骏",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 960
+      },
+      {
+        "name": "叶宇鹏",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1705
+      },
+      {
+        "name": "吕欣",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1498
+      },
+      {
+        "name": "吴卓成",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1650
+      },
+      {
+        "name": "吴宇豪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1297
+      },
+      {
+        "name": "吴植文",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1207
+      },
+      {
+        "name": "周伟杰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1423
+      },
+      {
+        "name": "周智慧",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1568
+      },
+      {
+        "name": "周沛霖",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1222
+      },
+      {
+        "name": "周海玲",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 272
+      },
+      {
+        "name": "夏侯泽轩",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1706
+      },
+      {
+        "name": "孙健",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1653
+      },
+      {
+        "name": "孙春强",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 994
+      },
+      {
+        "name": "宋嘉荟",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1501
+      },
+      {
+        "name": "尹宽烨",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 993
+      },
+      {
+        "name": "帅德滨",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 957
+      },
+      {
+        "name": "康伟",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1219
+      },
+      {
+        "name": "廖晓龙",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 287
+      },
+      {
+        "name": "廖梓毅",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 271
+      },
+      {
+        "name": "张弛",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1383
+      },
+      {
+        "name": "张昊",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 407
+      },
+      {
+        "name": "张瑜辉",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 273
+      },
+      {
+        "name": "张蓝天",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1056
+      },
+      {
+        "name": "张钱成",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1234
+      },
+      {
+        "name": "张铭健",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1649
+      },
+      {
+        "name": "张雨婷",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1449
+      },
+      {
+        "name": "张驰欣",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 530
+      },
+      {
+        "name": "徐佳佳",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 510
+      },
+      {
+        "name": "徐雅",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1502
+      },
+      {
+        "name": "操祉豪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学A组",
+        "rank": 154
+      },
+      {
+        "name": "敖青翔",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1414
+      },
+      {
+        "name": "易天一",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1500
+      },
+      {
+        "name": "晏倩嫱",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 408
+      },
+      {
+        "name": "曹帅江",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 484
+      },
+      {
+        "name": "曾剑峰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1569
+      },
+      {
+        "name": "曾志恒",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1220
+      },
+      {
+        "name": "曾斌",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1384
+      },
+      {
+        "name": "曾苏欣",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1651
+      },
+      {
+        "name": "曾鑫浩",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1652
+      },
+      {
+        "name": "李仲伟",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1499
+      },
+      {
+        "name": "李佳",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1480
+      },
+      {
+        "name": "李想",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1654
+      },
+      {
+        "name": "李文哲",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 523
+      },
+      {
+        "name": "李智豪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 959
+      },
+      {
+        "name": "李正江",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1229
+      },
+      {
+        "name": "李泽熙",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 323
+      },
+      {
+        "name": "李璇昇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1345
+      },
+      {
+        "name": "李至立",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1095
+      },
+      {
+        "name": "李荣翔",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1341
+      },
+      {
+        "name": "杜诗雨",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1424
+      },
+      {
+        "name": "柯巧云",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1052
+      },
+      {
+        "name": "段锦熙",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 922
+      },
+      {
+        "name": "汪可欣",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1646
+      },
+      {
+        "name": "汪家豪",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 359
+      },
+      {
+        "name": "沈俊杰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1708
+      },
+      {
+        "name": "温辉",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1571
+      },
+      {
+        "name": "熊嘉宇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1647
+      },
+      {
+        "name": "熊峥",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1709
+      },
+      {
+        "name": "王世杰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1227
+      },
+      {
+        "name": "王嘉乐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1206
+      },
+      {
+        "name": "王子超",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1517
+      },
+      {
+        "name": "王德才",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1346
+      },
+      {
+        "name": "王晋齐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1618
+      },
+      {
+        "name": "王运康",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1232
+      },
+      {
+        "name": "王鑫涛",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1620
+      },
+      {
+        "name": "王龙",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1497
+      },
+      {
+        "name": "盛静宇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1446
+      },
+      {
+        "name": "章梁",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1230
+      },
+      {
+        "name": "童若珈",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 314
+      },
+      {
+        "name": "符信辉",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1648
+      },
+      {
+        "name": "符惠玲",
+        "award": "三等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 203
+      },
+      {
+        "name": "罗承宇",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 324
+      },
+      {
+        "name": "罗聪",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1115
+      },
+      {
+        "name": "肖君豪",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 456
+      },
+      {
+        "name": "胡友",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1349
+      },
+      {
+        "name": "胡泽凡",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 405
+      },
+      {
+        "name": "胡泽昊",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 529
+      },
+      {
+        "name": "艾璐玄",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1057
+      },
+      {
+        "name": "蓝伊",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 955
+      },
+      {
+        "name": "蔡伟婷",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 992
+      },
+      {
+        "name": "蔡恩晨",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 524
+      },
+      {
+        "name": "薛靖菲",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1415
+      },
+      {
+        "name": "袁兆奇",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1233
+      },
+      {
+        "name": "许志齐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1565
+      },
+      {
+        "name": "谢子涵",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1558
+      },
+      {
+        "name": "谢洋昊",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1344
+      },
+      {
+        "name": "邓军",
+        "award": "三等奖",
+        "score": "Java程序设计大学B组",
+        "rank": 457
+      },
+      {
+        "name": "邱子昕",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1231
+      },
+      {
+        "name": "邱宏扬",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1481
+      },
+      {
+        "name": "邱庆玉",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1645
+      },
+      {
+        "name": "郭前宵",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1225
+      },
+      {
+        "name": "鄢智杰",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1516
+      },
+      {
+        "name": "金亮",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1641
+      },
+      {
+        "name": "钟优祥",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 958
+      },
+      {
+        "name": "陈啸",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1124
+      },
+      {
+        "name": "陈楠",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1024
+      },
+      {
+        "name": "陈浩天",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1334
+      },
+      {
+        "name": "陈盛阳",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1114
+      },
+      {
+        "name": "陈道竣",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1051
+      },
+      {
+        "name": "马嘉琳",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1707
+      },
+      {
+        "name": "黄偲成",
+        "award": "三等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 223
+      },
+      {
+        "name": "黄宗柱",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1053
+      },
+      {
+        "name": "黄家齐",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1223
+      },
+      {
+        "name": "黄志鹏",
+        "award": "三等奖",
+        "score": "Python程序设计大学B组",
+        "rank": 224
+      },
+      {
+        "name": "黄杰儒",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 961
+      },
+      {
+        "name": "黄海森",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1224
+      },
+      {
+        "name": "黎海红",
+        "award": "三等奖",
+        "score": "C/C++程序设计大学B组",
+        "rank": 1218
+      }
+    ]
+  }
+}

@@ -1,0 +1,6165 @@
+{
+  "icpc__icpc2016__icpc2016beijing": {
+    "slug": "icpc__icpc2016__icpc2016beijing",
+    "title": "2016 ACM-ICPC 亚洲区北京赛站 （北京大学）",
+    "date": "2016-11-13",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "第一次，总是最难忘",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2016-11-13 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。",
+          "这是我校首次参加 ICPC 亚洲区域赛。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "typhoon",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "li wanrong、mao ying tang、xin liao"
+              },
+              {
+                "label": "排名",
+                "value": "180/198"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022xi_an": {
+    "slug": "icpc__icpc2022__icpc2022xi_an",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域西安站",
+    "date": "2022-11-13",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "十三朝古都，代码不老",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-11-13 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Gold Slayer",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "ouyang yan、叶倖燚、徐雅"
+              },
+              {
+                "label": "排名",
+                "value": "468/522"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024preliminary-1": {
+    "slug": "icpc__icpc2024__icpc2024preliminary-1",
+    "title": "The 49th ICPC Asia Regionals Online Contest (I)",
+    "date": "2024-09-15",
+    "summary": "参赛 10 支队伍",
+    "subtitle": "线上试剑",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2024-09-15 举行。江西财经大学共派出 10 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Fe^3=Au",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "622/2323"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "636/2323"
+              }
+            ]
+          },
+          {
+            "title": "但求问心无愧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "797/2323"
+              }
+            ]
+          },
+          {
+            "title": "我不想吃蛙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "849/2323"
+              }
+            ]
+          },
+          {
+            "title": "zyf在线征婚",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "罗昊、肖俊杰、谢乐乐"
+              },
+              {
+                "label": "排名",
+                "value": "1055/2323"
+              }
+            ]
+          },
+          {
+            "title": "原来你也玩ACM",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘星、曾毅、牛志义"
+              },
+              {
+                "label": "排名",
+                "value": "1379/2323"
+              }
+            ]
+          },
+          {
+            "title": "你不要给我WAWA叫",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶遇乐、徐晓律、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "1472/2323"
+              }
+            ]
+          },
+          {
+            "title": "再多A一道题她就不会走对不队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "1538/2323"
+              }
+            ]
+          },
+          {
+            "title": "做梦都要AC队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王俊杰、陈雨希、韩家欢"
+              },
+              {
+                "label": "排名",
+                "value": "1790/2323"
+              }
+            ]
+          },
+          {
+            "title": "宝宝车",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "2106/2323"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024preliminary-2": {
+    "slug": "icpc__icpc2024__icpc2024preliminary-2",
+    "title": "The 49th ICPC Asia Regionals Online Contest (II)",
+    "date": "2024-09-21",
+    "summary": "参赛 9 支队伍",
+    "subtitle": "二度出鞘",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2024-09-21 举行。江西财经大学共派出 9 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Fe^3=Au",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "255/2450"
+              }
+            ]
+          },
+          {
+            "title": "我不想吃蛙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "750/2450"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "855/2450"
+              }
+            ]
+          },
+          {
+            "title": "zyf在线征婚",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "罗昊、肖俊杰、谢乐乐"
+              },
+              {
+                "label": "排名",
+                "value": "1155/2450"
+              }
+            ]
+          },
+          {
+            "title": "但求问心无愧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "1307/2450"
+              }
+            ]
+          },
+          {
+            "title": "再多A一道题她就不会走对不队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "1669/2450"
+              }
+            ]
+          },
+          {
+            "title": "宝宝车",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "1873/2450"
+              }
+            ]
+          },
+          {
+            "title": "原来你也玩ACM",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘星、曾毅、牛志义"
+              },
+              {
+                "label": "排名",
+                "value": "2054/2450"
+              }
+            ]
+          },
+          {
+            "title": "你不要给我WAWA叫",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶遇乐、徐晓律、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "2135/2450"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025invitational-nanchang": {
+    "slug": "icpc__icpc2025__icpc2025invitational-nanchang",
+    "title": "2025年icpc全国邀请赛（南昌）暨2025年（icpc）江西省大学生程序设计竞赛",
+    "date": "2025-05-18",
+    "summary": "🥈1🥉3",
+    "subtitle": "英雄城，代码亦英雄",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-05-18 举行。江西财经大学共派出 8 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 3 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "廉颇老矣",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "117/457"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周政、喻琰、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "145/457"
+              }
+            ]
+          },
+          {
+            "title": "注意力涣散",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "176/457"
+              }
+            ]
+          },
+          {
+            "title": "ACM败犬太多了",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "214/457"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "256/457"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、孙天成、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "277/457"
+              }
+            ]
+          },
+          {
+            "title": "灵魂舞者",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "谢乐乐、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "289/457"
+              }
+            ]
+          },
+          {
+            "title": "AC 学长不会遇见 WA 学弟",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "311/457"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025invitational-northeast": {
+    "slug": "ccpc__ccpc2025__ccpc2025invitational-northeast",
+    "title": "2025 年 CCPC 全国邀请赛（东北）暨 CCPC 东北地区大学生程序设计竞赛 - 正式赛",
+    "date": "2025-05-25",
+    "summary": "🥈1🥉1",
+    "subtitle": "东北的雪，代码的火",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-05-25 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "别开香槟开早了",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周政、孙天成、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "116/397"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "156/397"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025invitational-zhengzhou": {
+    "slug": "ccpc__ccpc2025__ccpc2025invitational-zhengzhou",
+    "title": "2025CCPC全国邀请赛（郑州）暨河南省赛",
+    "date": "2025-06-02",
+    "summary": "🥈1",
+    "subtitle": "“河南人”体验卡",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-06-02 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/68d3c364c5157e1a882ccce1.jpg",
+            "alt": "获奖团队合影",
+            "caption": "现场滚榜照片"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "96/438"
+              }
+            ]
+          },
+          {
+            "title": "喜欢不是错觉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "269/438"
+              }
+            ]
+          },
+          {
+            "title": "ACM败犬太多了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、罗潇彬、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "284/438"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025preliminary-1": {
+    "slug": "icpc__icpc2025__icpc2025preliminary-1",
+    "title": "2025 ICPC Asia EC网络预选赛 - 第一场",
+    "date": "2025-09-07",
+    "summary": "参赛 12 支队伍",
+    "subtitle": "第一场线上，先热个身",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2025-09-07 举行。江西财经大学共派出 12 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "676/2279"
+              }
+            ]
+          },
+          {
+            "title": "关注红烧猪猪头喵",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "757/2279"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、杨源鑫、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "882/2279"
+              }
+            ]
+          },
+          {
+            "title": "没有下次再见吧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、衷铭川、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "929/2279"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "1069/2279"
+              }
+            ]
+          },
+          {
+            "title": "证明!!!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "1078/2279"
+              }
+            ]
+          },
+          {
+            "title": "鱼跃千帆过,羊踏万里程",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "1409/2279"
+              }
+            ]
+          },
+          {
+            "title": "我很贪心很想赢",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘文浩、王征、胡剑东"
+              },
+              {
+                "label": "排名",
+                "value": "1619/2279"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "孙天成、罗文轩、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "1762/2279"
+              }
+            ]
+          },
+          {
+            "title": "ac梦不是梦",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘庆栋、胡峻珲、蒋必成"
+              },
+              {
+                "label": "排名",
+                "value": "1813/2279"
+              }
+            ]
+          },
+          {
+            "title": "让我拿个奖吧求求了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王天浩、胡强、黄辉"
+              },
+              {
+                "label": "排名",
+                "value": "1931/2279"
+              }
+            ]
+          },
+          {
+            "title": "蛋仔派队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张思宏、曾林、李志文"
+              },
+              {
+                "label": "排名",
+                "value": "2019/2279"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025invitational-nanchang": {
+    "slug": "ccpc__ccpc2025__ccpc2025invitational-nanchang",
+    "title": "2025 CCPC 全国邀请赛（南昌）暨江西省赛 - 正式赛",
+    "date": "2025-09-13",
+    "summary": "🥈2🥉3",
+    "subtitle": "编程竞技展风采，江财学子创佳绩",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-09-13 举行。江西财经大学共派出 9 支队伍参赛。",
+          "最终斩获银奖 2 项、铜奖 3 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/68d3d9c7c5157e1a882cf89a.jpg",
+            "alt": "现场照片1"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/68d3d9c8c5157e1a882cf89e.jpg",
+            "alt": "现场照片2"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "44/270"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "孙天成、罗文轩、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "52/270"
+              }
+            ]
+          },
+          {
+            "title": "~到了赛场上就要拿出真本事~",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "90/270"
+              }
+            ]
+          },
+          {
+            "title": "ACM败犬太多了",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻芷珊、张瑞杰、杨源鑫"
+              },
+              {
+                "label": "排名",
+                "value": "123/270"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "160/270"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "183/270"
+              }
+            ]
+          },
+          {
+            "title": "打铁后在做什么?有没有空?可以来加训吗?",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "191/270"
+              }
+            ]
+          },
+          {
+            "title": "鱼跃千帆竞,羊踏万里程",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "220/270"
+              }
+            ]
+          },
+          {
+            "title": "蛋仔派队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张思宏、曾林、李志文"
+              },
+              {
+                "label": "排名",
+                "value": "234/270"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025preliminary-2": {
+    "slug": "icpc__icpc2025__icpc2025preliminary-2",
+    "title": "2025 ICPC Asia EC网络预选赛 - 第二场",
+    "date": "2025-09-14",
+    "summary": "参赛 12 支队伍",
+    "subtitle": "第二场线上，渐入状态",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2025-09-14 举行。江西财经大学共派出 12 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "关注红烧猪猪头喵",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "378/2575"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "孙天成、罗文轩、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "798/2575"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "820/2575"
+              }
+            ]
+          },
+          {
+            "title": "没有下次再见吧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、衷铭川、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "1057/2575"
+              }
+            ]
+          },
+          {
+            "title": "ac梦不是梦",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘庆栋、胡峻珲、蒋必成"
+              },
+              {
+                "label": "排名",
+                "value": "1089/2575"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "1471/2575"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、杨源鑫、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "1512/2575"
+              }
+            ]
+          },
+          {
+            "title": "证明!!!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "1739/2575"
+              }
+            ]
+          },
+          {
+            "title": "让我拿个奖吧求求了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王天浩、胡强、黄辉"
+              },
+              {
+                "label": "排名",
+                "value": "1751/2575"
+              }
+            ]
+          },
+          {
+            "title": "我很贪心很想赢",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘文浩、王征、胡剑东"
+              },
+              {
+                "label": "排名",
+                "value": "1757/2575"
+              }
+            ]
+          },
+          {
+            "title": "蛋仔派队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张思宏、曾林、李志文"
+              },
+              {
+                "label": "排名",
+                "value": "1757/2575"
+              }
+            ]
+          },
+          {
+            "title": "鱼跃千帆过,羊踏万里程",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "1757/2575"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025preliminary": {
+    "slug": "ccpc__ccpc2025__ccpc2025preliminary",
+    "title": "2025年CCPC网络预选赛",
+    "date": "2025-09-20",
+    "summary": "参赛 9 支队伍",
+    "subtitle": "线上练兵，静待花开",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2025-09-20 举行。江西财经大学共派出 9 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "证明!!!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "550/2085"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "孙天成、罗文轩、肖源"
+              },
+              {
+                "label": "排名",
+                "value": "1023/2085"
+              }
+            ]
+          },
+          {
+            "title": "彩虹河",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻芷珊、杨源鑫、武瑞雪"
+              },
+              {
+                "label": "排名",
+                "value": "1148/2085"
+              }
+            ]
+          },
+          {
+            "title": "瑞杰与少羽",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "1370/2085"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "1400/2085"
+              }
+            ]
+          },
+          {
+            "title": "蛋仔派队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张思宏、曾林、李志文"
+              },
+              {
+                "label": "排名",
+                "value": "1424/2085"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "1433/2085"
+              }
+            ]
+          },
+          {
+            "title": "鱼跃千帆竞,羊踏万里程",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "1835/2085"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "1855/2085"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025nanjing": {
+    "slug": "icpc__icpc2025__icpc2025nanjing",
+    "title": "「华为杯」第 50 届 ICPC 国际大学生程序设计竞赛区域赛南京站",
+    "date": "2025-11-09",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "金陵六赴，越战越勇",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-09 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "295/359"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025hongkong": {
+    "slug": "icpc__icpc2025__icpc2025hongkong",
+    "title": "The 50th ICPC Asia Hong Kong Regional Contest",
+    "date": "2025-11-30",
+    "summary": "🥉1",
+    "subtitle": "维港夜色，代码浪漫",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-30 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Fondness? Delusion!",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "81/136"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2026__icpc2026invitational-xi_an": {
+    "slug": "icpc__icpc2026__icpc2026invitational-xi_an",
+    "title": "第 51 届 ICPC 国际大学生程序设计竞赛邀请赛西安站 - 正式赛",
+    "date": "2026-05-02",
+    "summary": "🥈1🥉1",
+    "subtitle": "长安虽远，行则将至",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-02 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3fa4fb2546dff76d1d7280.png",
+            "alt": "获奖团队合影",
+            "caption": "获奖团队合影"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3fa4fb2546dff76d1d727f.png",
+            "alt": "奖牌照片",
+            "caption": "奖牌照片"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3fa55e2546dff76d1d729d.jpg",
+            "alt": "奖牌照片",
+            "caption": "奖牌照片"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "87/400"
+              }
+            ]
+          },
+          {
+            "title": "服务器未响应",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、陈帆、陈煜仕"
+              },
+              {
+                "label": "排名",
+                "value": "211/400"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2026__ccpc2026invitational-qinhuangdao": {
+    "slug": "ccpc__ccpc2026__ccpc2026invitational-qinhuangdao",
+    "title": "2026年中国大学生程序设计竞赛全国邀请赛（秦皇岛）暨第十届河北省大学生程序设计竞赛-正式赛",
+    "date": "2026-05-24",
+    "summary": "🥈4",
+    "subtitle": "别告诉她，我还想她",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-24 举行。江西财经大学共派出 5 支队伍参赛。",
+          "最终斩获银奖 4 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3fa2dc2546dff76d1d7160.jpg",
+            "alt": "获奖团队合影",
+            "caption": "获奖团队合影"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "200g金牌和200g铁牌哪个更重.",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、陈帆、陈煜仕"
+              },
+              {
+                "label": "排名",
+                "value": "67/375"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "74/375"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码.",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "97/375"
+              }
+            ]
+          },
+          {
+            "title": "哔站复活小聪明粉丝团.",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、王翔、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "99/375"
+              }
+            ]
+          },
+          {
+            "title": "这个队什么也没留下",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴穹宇、喻芷珊、黄志豪"
+              },
+              {
+                "label": "排名",
+                "value": "240/375"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2026__ccpc2026invitational-fuzhou": {
+    "slug": "ccpc__ccpc2026__ccpc2026invitational-fuzhou",
+    "title": "第十三届福建省大学生程序设计竞赛 暨2026年CCPC全国邀请赛（福州）",
+    "date": "2026-05-30",
+    "summary": "🥈1",
+    "subtitle": "有福之州，有喜之队",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-30 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉.",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "99/345"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "230/345"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__gx__gxcpc9th": {
+    "slug": "provincial__gx__gxcpc9th",
+    "title": "广西大学生程序设计大赛暨2026中国-东盟国际大学生程序设计大赛",
+    "date": "2026-05-31",
+    "summary": "🥇2🥈5🥉2",
+    "subtitle": "你喜欢吃螺蛳粉吗？",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2026-05-31 举行。江西财经大学共派出 9 支队伍参赛。",
+          "最终斩获金奖 2 项、银奖 5 项、铜奖 2 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3f9feb2546dff76d1d6ffe.png",
+            "alt": "获奖团队合影",
+            "caption": "获奖团队合影"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉..",
+            "tone": "gold",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "金奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "26/312"
+              }
+            ]
+          },
+          {
+            "title": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "tone": "gold",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "金奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王翔"
+              },
+              {
+                "label": "排名",
+                "value": "27/312"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "孙天成、杨源鑫、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "42/312"
+              }
+            ]
+          },
+          {
+            "title": "酱菜一队",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "吴穹宇、喻芷珊、黄志豪"
+              },
+              {
+                "label": "排名",
+                "value": "50/312"
+              }
+            ]
+          },
+          {
+            "title": "200g金牌和200g铁牌哪个更重..",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、陈帆、陈煜仕"
+              },
+              {
+                "label": "排名",
+                "value": "60/312"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码..",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "72/312"
+              }
+            ]
+          },
+          {
+            "title": "四氧化三铁",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "77/312"
+              }
+            ]
+          },
+          {
+            "title": "清纯粉毛小萝莉.",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万涛涛、严雨睿、周子诺"
+              },
+              {
+                "label": "排名",
+                "value": "120/312"
+              }
+            ]
+          },
+          {
+            "title": "我发现用大脑思考不用token",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "蒋滔、钟俊、龚铭浩"
+              },
+              {
+                "label": "排名",
+                "value": "143/312"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2026__ccpc2026invitational-guizhou": {
+    "slug": "ccpc__ccpc2026__ccpc2026invitational-guizhou",
+    "title": "2026 CCPC 中国大学生程序设计竞赛全国邀请赛（贵州）暨贵州省赛",
+    "date": "2026-06-07",
+    "summary": "🥈1🥉1",
+    "subtitle": "“贵州人”体验卡",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-06-07 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3f8bfd2546dff76d1ca7f3.png",
+            "alt": "获奖团队合影",
+            "caption": "获奖团队合影"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3f8bfe2546dff76d1ca7f4.png",
+            "alt": "奖牌照片",
+            "caption": "奖牌照片"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3f8bfc2546dff76d1ca7f2.png",
+            "alt": "沿途风景",
+            "caption": "沿途风景"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "44/222"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "77/222"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2026__icpc2026invitational-shenyang": {
+    "slug": "icpc__icpc2026__icpc2026invitational-shenyang",
+    "title": "2026 年 ICPC 国际大学生程序设计竞赛全国邀请赛（沈阳）",
+    "date": "2026-07-29",
+    "summary": "🥈2🥉1",
+    "subtitle": "盛京夏日，奖牌如雨",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-07-29 举行。江西财经大学共派出 4 支队伍参赛。",
+          "最终斩获银奖 2 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "三人驭六丸",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周君、彭俊杰、詹宇飞"
+              },
+              {
+                "label": "排名",
+                "value": "66/286"
+              }
+            ]
+          },
+          {
+            "title": "服务器未响应",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、陈帆、陈煜仕"
+              },
+              {
+                "label": "排名",
+                "value": "70/286"
+              }
+            ]
+          },
+          {
+            "title": "喜欢只是错觉",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "万俊哲、张云菲、衷铭川"
+              },
+              {
+                "label": "排名",
+                "value": "157/286"
+              }
+            ]
+          },
+          {
+            "title": "香槟不要开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "孙天成、杨源鑫、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "222/286"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2021__icpc2021jinan": {
+    "slug": "icpc__icpc2021__icpc2021jinan",
+    "title": "第 46 届 ICPC 国际大学生程序设计竞赛亚洲区域赛 济南站",
+    "date": "2021-11-14",
+    "summary": "参赛 4 支队伍，未获奖",
+    "subtitle": "趵突泉边，二度会师",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-11-14 举行。江西财经大学共派出 4 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "真的来摸摸鱼",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "364/800"
+              }
+            ]
+          },
+          {
+            "title": "未定义",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭佳俊、陈航、龚俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "677/800"
+              }
+            ]
+          },
+          {
+            "title": "对手不",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、何胜彰、王玛琪"
+              },
+              {
+                "label": "排名",
+                "value": "723/800"
+              }
+            ]
+          },
+          {
+            "title": "划水运动装",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴卓成、操祉豪、王子超"
+              },
+              {
+                "label": "排名",
+                "value": "730/800"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2021__icpc2021nanjing": {
+    "slug": "icpc__icpc2021__icpc2021nanjing",
+    "title": "第 46 届 ICPC 国际大学生程序设计竞赛亚洲区域赛 南京站",
+    "date": "2021-12-04",
+    "summary": "🥉1",
+    "subtitle": "金陵再赴，均衡之道",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-12-04 举行。江西财经大学共派出 4 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "均衡存乎万物之间",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、李梦豪、罗文浩"
+              },
+              {
+                "label": "排名",
+                "value": "165/684"
+              }
+            ]
+          },
+          {
+            "title": "心机之蛙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "343/684"
+              }
+            ]
+          },
+          {
+            "title": "对手不",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、何胜彰、王玛琪"
+              },
+              {
+                "label": "排名",
+                "value": "573/684"
+              }
+            ]
+          },
+          {
+            "title": "面向样例程序设计",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘江、朱政、钟志清"
+              },
+              {
+                "label": "排名",
+                "value": "609/684"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2022__ccpc2022preliminary": {
+    "slug": "ccpc__ccpc2022__ccpc2022preliminary",
+    "title": "2022 年中国大学生程序设计竞赛网络预选赛",
+    "date": "2022-09-11",
+    "summary": "参赛 10 支队伍",
+    "subtitle": "线上初试锋芒",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2022-09-11 举行。江西财经大学共派出 10 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "G你太美",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "788/1790"
+              }
+            ]
+          },
+          {
+            "title": "这把全靠队友带我飞",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "1225/1790"
+              }
+            ]
+          },
+          {
+            "title": "自愿打铁队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、彭佳俊、蔡建怿"
+              },
+              {
+                "label": "排名",
+                "value": "1242/1790"
+              }
+            ]
+          },
+          {
+            "title": "摸Au校尉",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、李一、陈楠"
+              },
+              {
+                "label": "排名",
+                "value": "1261/1790"
+              }
+            ]
+          },
+          {
+            "title": "芝士雪豹队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "唐文卓、潘祉岳、邓祖鹏"
+              },
+              {
+                "label": "排名",
+                "value": "1279/1790"
+              }
+            ]
+          },
+          {
+            "title": "Riddle Original",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "曾斌、舒钧、陈名杰"
+              },
+              {
+                "label": "排名",
+                "value": "1281/1790"
+              }
+            ]
+          },
+          {
+            "title": "vr改变未来",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "尧海标、管一鸣、高莉婷"
+              },
+              {
+                "label": "排名",
+                "value": "1377/1790"
+              }
+            ]
+          },
+          {
+            "title": "对不对",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐雅、欧阳岩、詹温温"
+              },
+              {
+                "label": "排名",
+                "value": "1501/1790"
+              }
+            ]
+          },
+          {
+            "title": "假面骑士贞贞贞贞德",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐佳佳、李欣怡、肖艳玲"
+              },
+              {
+                "label": "排名",
+                "value": "1532/1790"
+              }
+            ]
+          },
+          {
+            "title": "马猴大队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "余子俊、杨雨萌"
+              },
+              {
+                "label": "排名",
+                "value": "1701/1790"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022preliminary-1": {
+    "slug": "icpc__icpc2022__icpc2022preliminary-1",
+    "title": "The 2022 ICPC Asia Regionals Online Contest (I)",
+    "date": "2022-09-17",
+    "summary": "参赛 7 支队伍",
+    "subtitle": "网线一拉，隔空过招",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2022-09-17 举行。江西财经大学共派出 7 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "能不能不打铁",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "1072/2173"
+              }
+            ]
+          },
+          {
+            "title": "我就来签个到打个卡",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "1240/2173"
+              }
+            ]
+          },
+          {
+            "title": "玛卡巴卡",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、林俊坤、陈楠"
+              },
+              {
+                "label": "排名",
+                "value": "1522/2173"
+              }
+            ]
+          },
+          {
+            "title": "loop",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "曾斌、欧阳岩、詹温温"
+              },
+              {
+                "label": "排名",
+                "value": "1721/2173"
+              }
+            ]
+          },
+          {
+            "title": "直挂云帆济沧海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "宋嘉荟、徐雅、高莉婷"
+              },
+              {
+                "label": "排名",
+                "value": "1721/2173"
+              }
+            ]
+          },
+          {
+            "title": "突击小分队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张悦、王雨轩、高颖"
+              },
+              {
+                "label": "排名",
+                "value": "1721/2173"
+              }
+            ]
+          },
+          {
+            "title": "芝士小飞棍",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶倖燚、尧海标、管一鸣"
+              },
+              {
+                "label": "排名",
+                "value": "1721/2173"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022preliminary-2": {
+    "slug": "icpc__icpc2022__icpc2022preliminary-2",
+    "title": "The 2022 ICPC Asia Regionals Online Contest (II)",
+    "date": "2022-09-25",
+    "summary": "参赛 14 支队伍",
+    "subtitle": "线上二番战",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2022-09-25 举行。江西财经大学共派出 14 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "我就来签个到打个卡",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "775/2755"
+              }
+            ]
+          },
+          {
+            "title": "能不能不打铁",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "843/2755"
+              }
+            ]
+          },
+          {
+            "title": "郭楠 show show way",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、胡衍滨"
+              },
+              {
+                "label": "排名",
+                "value": "1473/2755"
+              }
+            ]
+          },
+          {
+            "title": "随便叫啥",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李至立、舒钧、陈名杰"
+              },
+              {
+                "label": "排名",
+                "value": "1635/2755"
+              }
+            ]
+          },
+          {
+            "title": "roop",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶倖燚、尧海标、管一鸣"
+              },
+              {
+                "label": "排名",
+                "value": "1764/2755"
+              }
+            ]
+          },
+          {
+            "title": "玛卡巴卡",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、林俊坤、陈楠"
+              },
+              {
+                "label": "排名",
+                "value": "1776/2755"
+              }
+            ]
+          },
+          {
+            "title": "均衡存户万物之间",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、彭佳俊、蔡建怿"
+              },
+              {
+                "label": "排名",
+                "value": "1790/2755"
+              }
+            ]
+          },
+          {
+            "title": "咸鱼翻身队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周伟杰、崔煜杭、赖子卓"
+              },
+              {
+                "label": "排名",
+                "value": "1995/2755"
+              }
+            ]
+          },
+          {
+            "title": "loop",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "曾斌、欧阳岩、詹温温"
+              },
+              {
+                "label": "排名",
+                "value": "2001/2755"
+              }
+            ]
+          },
+          {
+            "title": "假面骑士贞贞贞贞德",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐佳佳、李欣怡、肖艳玲"
+              },
+              {
+                "label": "排名",
+                "value": "2053/2755"
+              }
+            ]
+          },
+          {
+            "title": "东方小队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "施小雨、熊卓来、陈富乐"
+              },
+              {
+                "label": "排名",
+                "value": "2229/2755"
+              }
+            ]
+          },
+          {
+            "title": "对一题就算win",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、王俊杰、韩家欢"
+              },
+              {
+                "label": "排名",
+                "value": "2249/2755"
+              }
+            ]
+          },
+          {
+            "title": "小试菜刀队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何胜彰、孙加海、赖城铖"
+              },
+              {
+                "label": "排名",
+                "value": "2361/2755"
+              }
+            ]
+          },
+          {
+            "title": "毛文浩",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "余子俊、杨雨萌、毛文浩"
+              },
+              {
+                "label": "排名",
+                "value": "2361/2755"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2022__ccpc2022guangzhou": {
+    "slug": "ccpc__ccpc2022__ccpc2022guangzhou",
+    "title": "2022 中国大学生程序设计竞赛 广州站",
+    "date": "2022-11-13",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "食在广州，题也在广州",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-11-13 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "逐梦",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "177/285"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022hefei": {
+    "slug": "icpc__icpc2022__icpc2022hefei",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域合肥站",
+    "date": "2022-11-20",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "创新之都，代码新高",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-11-20 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "逐梦",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "232/502"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022nanjing": {
+    "slug": "icpc__icpc2022__icpc2022nanjing",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域赛南京站",
+    "date": "2022-12-18",
+    "summary": "🥉1",
+    "subtitle": "金陵月下，逐梦前行",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-12-18 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "逐梦",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "158/501"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2023__ccpc2023invitational-xiangtan": {
+    "slug": "ccpc__ccpc2023__ccpc2023invitational-xiangtan",
+    "title": "2023 年中国大学生程序设计竞赛全国邀请赛（湖南）（湘潭大学）",
+    "date": "2023-05-28",
+    "summary": "🥉2",
+    "subtitle": "伟人故里，神之一手",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2023-05-28 举行。江西财经大学共派出 4 支队伍参赛。",
+          "最终斩获铜奖 2 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "神之一手",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、胡衍滨"
+              },
+              {
+                "label": "排名",
+                "value": "144/268"
+              }
+            ]
+          },
+          {
+            "title": "逐梦",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "161/268"
+              }
+            ]
+          },
+          {
+            "title": "大家觉得我说的对不队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶倖燚、喻琰、管一鸣"
+              },
+              {
+                "label": "排名",
+                "value": "190/268"
+              }
+            ]
+          },
+          {
+            "title": "求求队长别打王者",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、尧海标、欧阳岩"
+              },
+              {
+                "label": "排名",
+                "value": "239/268"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2023__ccpc2023preliminary": {
+    "slug": "ccpc__ccpc2023__ccpc2023preliminary",
+    "title": "第九届中国大学生程序设计竞赛网络预选赛",
+    "date": "2023-08-20",
+    "summary": "参赛 5 支队伍",
+    "subtitle": "线上练兵，静待花开",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2023-08-20 举行。江西财经大学共派出 5 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "从大学第一个WA开始",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "524/1493"
+              }
+            ]
+          },
+          {
+            "title": "三只小猪",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "536/1493"
+              }
+            ]
+          },
+          {
+            "title": "随便打打",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘文强、方郑轶、董泓毅"
+              },
+              {
+                "label": "排名",
+                "value": "918/1493"
+              }
+            ]
+          },
+          {
+            "title": "酱菜二队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘梓贤、潘登、陈知会"
+              },
+              {
+                "label": "排名",
+                "value": "1173/1493"
+              }
+            ]
+          },
+          {
+            "title": "Rainbow",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、欧阳岩、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "1248/1493"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023preliminary-1": {
+    "slug": "icpc__icpc2023__icpc2023preliminary-1",
+    "title": "The 2023 ICPC Asia Regionals Online Contest (I)",
+    "date": "2023-09-17",
+    "summary": "参赛 10 支队伍",
+    "subtitle": "线上练兵，蓄势待发",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2023-09-17 举行。江西财经大学共派出 10 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "从大学第一个AC开始!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "451/2554"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "653/2554"
+              }
+            ]
+          },
+          {
+            "title": "三只小猪",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "726/2554"
+              }
+            ]
+          },
+          {
+            "title": "做梦都要AC队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王俊杰、陈雨希、韩家欢"
+              },
+              {
+                "label": "排名",
+                "value": "1015/2554"
+              }
+            ]
+          },
+          {
+            "title": "MakkaPakkas",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "林俊坤、邓一帆、陈世坤"
+              },
+              {
+                "label": "排名",
+                "value": "1103/2554"
+              }
+            ]
+          },
+          {
+            "title": "被wa出bug的阿尔法狗",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "1128/2554"
+              }
+            ]
+          },
+          {
+            "title": "Nameless",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、崔煜杭、欧阳岩"
+              },
+              {
+                "label": "排名",
+                "value": "1551/2554"
+              }
+            ]
+          },
+          {
+            "title": "萍水三侠客",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘焕、王敏磊、辛思伟"
+              },
+              {
+                "label": "排名",
+                "value": "1551/2554"
+              }
+            ]
+          },
+          {
+            "title": "LFP",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘文强、方郑轶、潘登"
+              },
+              {
+                "label": "排名",
+                "value": "1806/2554"
+              }
+            ]
+          },
+          {
+            "title": "Professional imprisonment",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴子祥、周忠政、陈则鹏"
+              },
+              {
+                "label": "排名",
+                "value": "2001/2554"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023preliminary-2": {
+    "slug": "icpc__icpc2023__icpc2023preliminary-2",
+    "title": "The 2023 ICPC Asia Regionals Online Contest (II)",
+    "date": "2023-09-23",
+    "summary": "参赛 10 支队伍",
+    "subtitle": "再战线上，渐入佳境",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2023-09-23 举行。江西财经大学共派出 10 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "从大学第一个AC开始!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "541/2726"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "635/2726"
+              }
+            ]
+          },
+          {
+            "title": "三只小猪",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "1342/2726"
+              }
+            ]
+          },
+          {
+            "title": "MakkaPakkas",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "林俊坤、邓一帆、陈世坤"
+              },
+              {
+                "label": "排名",
+                "value": "1382/2726"
+              }
+            ]
+          },
+          {
+            "title": "LFP",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘文强、方郑轶、潘登"
+              },
+              {
+                "label": "排名",
+                "value": "1434/2726"
+              }
+            ]
+          },
+          {
+            "title": "做梦都要AC队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王俊杰、陈雨希、韩家欢"
+              },
+              {
+                "label": "排名",
+                "value": "1470/2726"
+              }
+            ]
+          },
+          {
+            "title": "被wa出bug的阿尔法狗",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "1753/2726"
+              }
+            ]
+          },
+          {
+            "title": "can't but right",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐雅、罗晓香鑫、陈知会"
+              },
+              {
+                "label": "排名",
+                "value": "1937/2726"
+              }
+            ]
+          },
+          {
+            "title": "Professional imprisonment",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴子祥、周忠政、陈则鹏"
+              },
+              {
+                "label": "排名",
+                "value": "2107/2726"
+              }
+            ]
+          },
+          {
+            "title": "萍水三侠客",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘焕、王敏磊、辛思伟"
+              },
+              {
+                "label": "排名",
+                "value": "2178/2726"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2023__ccpc2023shenzhen": {
+    "slug": "ccpc__ccpc2023__ccpc2023shenzhen",
+    "title": "第 9 届 CCPC 中国大学生程序设计竞赛 深圳站",
+    "date": "2023-11-12",
+    "summary": "🥉1",
+    "subtitle": "鹏城速度，小猪冲鸭",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-11-12 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "三只小猪",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "121/287"
+              }
+            ]
+          },
+          {
+            "title": "从大学第一个WA开始",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "210/287"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2023xi_an": {
+    "slug": "icpc2023xi_an",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域西安站",
+    "date": "2023-10-22",
+    "summary": "🥉1",
+    "subtitle": "城墙根下，三只小猪",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-10-22 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "三只小猪",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "何洋、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "244/418"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2020__icpc2020jinan": {
+    "slug": "icpc__icpc2020__icpc2020jinan",
+    "title": "第 45 届国际大学生程序设计竞赛（ICPC）亚洲区域赛（济南） （线上赛）",
+    "date": "2020-12-27",
+    "summary": "参赛 3 支队伍，未获奖",
+    "subtitle": "泉城之约，初试锋芒",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2020-12-27 举行。江西财经大学共派出 3 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "黑暗森林",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张涛、罗文浩、黄友民"
+              },
+              {
+                "label": "排名",
+                "value": "263/545"
+              }
+            ]
+          },
+          {
+            "title": "Want Coffee",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴浩邦、周子沛、梁云钦"
+              },
+              {
+                "label": "排名",
+                "value": "372/545"
+              }
+            ]
+          },
+          {
+            "title": "今日比赛暂停",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、李一、蔡建怿"
+              },
+              {
+                "label": "排名",
+                "value": "451/545"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2020__icpc2020kunming": {
+    "slug": "icpc__icpc2020__icpc2020kunming",
+    "title": "第 45 届国际大学生程序设计竞赛（ICPC）亚洲区域赛（昆明） （线上赛）",
+    "date": "2021-04-03",
+    "summary": "参赛 3 支队伍，未获奖",
+    "subtitle": "春城昆明，四季如春，代码如诗",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-04-03 举行。江西财经大学共派出 3 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "香蕉牛奶",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴浩邦、周子沛、罗文浩"
+              },
+              {
+                "label": "排名",
+                "value": "232/813"
+              }
+            ]
+          },
+          {
+            "title": "真的来摸摸鱼",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "583/813"
+              }
+            ]
+          },
+          {
+            "title": "对对对队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、李一、蔡建怿"
+              },
+              {
+                "label": "排名",
+                "value": "719/813"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022shenyang": {
+    "slug": "icpc__icpc2022__icpc2022shenyang",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域赛沈阳站",
+    "date": "2022-11-06",
+    "summary": "参赛 3 支队伍，未获奖",
+    "subtitle": "北国风光，千里冰封",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-11-06 举行。江西财经大学共派出 3 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "先质疑再质疑",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "倪超骏、彭佳俊、蔡建怿"
+              },
+              {
+                "label": "排名",
+                "value": "493/738"
+              }
+            ]
+          },
+          {
+            "title": "芝士改变命运",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "尧海标、管一鸣、艾荣贵"
+              },
+              {
+                "label": "排名",
+                "value": "536/738"
+              }
+            ]
+          },
+          {
+            "title": "打工小队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐雅、王雨轩、高莉婷"
+              },
+              {
+                "label": "排名",
+                "value": "714/738"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2020__ccpc2020weihai": {
+    "slug": "ccpc__ccpc2020__ccpc2020weihai",
+    "title": "2020年中国大学生程序设计竞赛 威海站",
+    "date": "2020-10-25",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "威海卫的风，吹不动 WA",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2020-10-25 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "不能承受生命之重",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘力溯、王安、黄友民"
+              },
+              {
+                "label": "排名",
+                "value": "74/386"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2020__ccpc2020mianyang": {
+    "slug": "ccpc__ccpc2020__ccpc2020mianyang",
+    "title": "2020年中国大学生程序设计竞赛 绵阳站",
+    "date": "2020-11-01",
+    "summary": "🥈1",
+    "subtitle": "科技之城，代码故事",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2020-11-01 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "你一生的故事",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "刘力溯、王安、黄友民"
+              },
+              {
+                "label": "排名",
+                "value": "73/340"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2020__icpc2020nanjing": {
+    "slug": "icpc__icpc2020__icpc2020nanjing",
+    "title": "第 45 届国际大学生程序设计竞赛（ICPC）亚洲区域赛（南京） （线上赛）",
+    "date": "2020-12-20",
+    "summary": "🥉1",
+    "subtitle": "金陵烟雨，代码温柔",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2020-12-20 举行。江西财经大学共派出 4 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "地球往事",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "刘力溯、王安、黄友民"
+              },
+              {
+                "label": "排名",
+                "value": "153/556"
+              }
+            ]
+          },
+          {
+            "title": "路人ACMers的养成方法",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "唐文卓、艾荣贵、邓祖鹏"
+              },
+              {
+                "label": "排名",
+                "value": "460/556"
+              }
+            ]
+          },
+          {
+            "title": "不如跳舞",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张睿诠、敖凸、盛静宇"
+              },
+              {
+                "label": "排名",
+                "value": "481/556"
+              }
+            ]
+          },
+          {
+            "title": "炼铁术士",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李梦豪、樊雨萌、胡烨保"
+              },
+              {
+                "label": "排名",
+                "value": "526/556"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2024__ccpc2024preliminary": {
+    "slug": "ccpc__ccpc2024__ccpc2024preliminary",
+    "title": "第十届中国大学生程序设计竞赛网络预选赛",
+    "date": "2024-09-08",
+    "summary": "参赛 7 支队伍",
+    "subtitle": "线上再会",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为网络预选赛，于 2024-09-08 举行。江西财经大学共派出 7 支队伍参赛。",
+          "网络预选赛不设奖项，成绩以排名计。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Fe^3=Au",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "460/2156"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "600/2156"
+              }
+            ]
+          },
+          {
+            "title": "我不想吃蛙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "1044/2156"
+              }
+            ]
+          },
+          {
+            "title": "但求问心无愧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "1246/2156"
+              }
+            ]
+          },
+          {
+            "title": "原来你也玩ACM",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘星、曾毅、牛志义"
+              },
+              {
+                "label": "排名",
+                "value": "1563/2156"
+              }
+            ]
+          },
+          {
+            "title": "XLX队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "罗昊、肖俊杰、谢乐乐"
+              },
+              {
+                "label": "排名",
+                "value": "1704/2156"
+              }
+            ]
+          },
+          {
+            "title": "你不要给我WAWA叫",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "叶遇乐、徐晓律、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "2085/2156"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2021__ccpc2021weihai": {
+    "slug": "ccpc__ccpc2021__ccpc2021weihai",
+    "title": "第 7 届中国大学生程序设计竞赛（CCPC）威海站",
+    "date": "2021-11-21",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "威海再会",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-11-21 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "面向样例程序设计",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘江、朱政、钟志清"
+              },
+              {
+                "label": "排名",
+                "value": "252/329"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2021shanghai": {
+    "slug": "icpc2021shanghai",
+    "title": "第 46 届 ICPC 国际大学生程序设计竞赛亚洲区域赛 上海站",
+    "date": "2021-11-28",
+    "summary": "参赛 3 支队伍，未获奖",
+    "subtitle": "魔都霓虹，代码闪耀",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-11-28 举行。江西财经大学共派出 3 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "真的来摸摸鱼",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "364/682"
+              }
+            ]
+          },
+          {
+            "title": "面向样例程序设计",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘江、朱政、钟志清"
+              },
+              {
+                "label": "排名",
+                "value": "452/682"
+              }
+            ]
+          },
+          {
+            "title": "404",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘紫璇、蒋悦、蓝伊"
+              },
+              {
+                "label": "排名",
+                "value": "628/682"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2021__ccpc2021ladies": {
+    "slug": "ccpc__ccpc2021__ccpc2021ladies",
+    "title": "2021年中国大学生程序设计竞赛 女生专场赛",
+    "date": "2021-10-31",
+    "summary": "🥉1",
+    "subtitle": "女生专场，谁说女子不如男",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2021-10-31 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "酱菜幼儿园",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "宋嘉荟、李婷、童若珈"
+              },
+              {
+                "label": "排名",
+                "value": "141/258"
+              }
+            ]
+          },
+          {
+            "title": "404",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘紫璇、蒋悦、蓝伊"
+              },
+              {
+                "label": "排名",
+                "value": "232/258"
+              }
+            ]
+          },
+          {
+            "title": "稳",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张梦凡、胡博、谢子昭"
+              },
+              {
+                "label": "排名",
+                "value": "245/258"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2021shenyang": {
+    "slug": "icpc2021shenyang",
+    "title": "第 46 届 ICPC 国际大学生程序设计竞赛亚洲区域赛 沈阳站",
+    "date": "2021-11-21",
+    "summary": "参赛 2 支队伍，未获奖",
+    "subtitle": "沈阳的雪，代码的热",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-11-21 举行。江西财经大学共派出 2 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "心机之蛙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "273/576"
+              }
+            ]
+          },
+          {
+            "title": "404",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "刘紫璇、蒋悦、蓝伊"
+              },
+              {
+                "label": "排名",
+                "value": "561/576"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__gx__gxcpc8th": {
+    "slug": "provincial__gx__gxcpc8th",
+    "title": "广西大学生程序设计大赛暨2025中国-东盟国际大学生程序设计大赛",
+    "date": "2025-05-25",
+    "summary": "🥈1🥉1",
+    "subtitle": "螺蛳粉加辣，奖牌加倍",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2025-05-25 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "~到了赛场上就要拿出真本事~",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "吴星乐、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "38/220"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻琰、杨源鑫、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "78/220"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2026__icpc2026invitational-nanchang": {
+    "slug": "icpc__icpc2026__icpc2026invitational-nanchang",
+    "title": "2026 年 ICPC 国际大学生程序设计竞赛全国邀请赛（南昌）暨江西省赛",
+    "date": "2026-05-17",
+    "summary": "🥈2",
+    "subtitle": "落霞与孤鹜齐飞，秋水共长天一色",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-17 举行。江西财经大学共派出 5 支队伍参赛。",
+          "最终斩获银奖 2 项。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/6a3fbbe72546dff76d1e2964.jpg",
+            "alt": "获奖团队合影",
+            "caption": "获奖团队合影"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "天空之矛",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "97/383"
+              }
+            ]
+          },
+          {
+            "title": "~到了赛场上就要拿出真本事~",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻芷珊、曹京顺、王翔"
+              },
+              {
+                "label": "排名",
+                "value": "103/383"
+              }
+            ]
+          },
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "262/383"
+              }
+            ]
+          },
+          {
+            "title": "四氧化三铁",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "285/383"
+              }
+            ]
+          },
+          {
+            "title": "这个队什么也没留下",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "吴穹宇、肖依婷、黄志豪"
+              },
+              {
+                "label": "排名",
+                "value": "318/383"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022jinan": {
+    "slug": "icpc__icpc2022__icpc2022jinan",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域赛济南站",
+    "date": "2022-11-27",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "泉城三顾，逐梦依旧",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-11-27 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "hyyzzz",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周伟杰、喻琰、胡衍滨"
+              },
+              {
+                "label": "排名",
+                "value": "451/580"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025wuhan": {
+    "slug": "icpc__icpc2025__icpc2025wuhan",
+    "title": "「华为杯」第 50 届 ICPC 国际大学生程序设计竞赛区域赛武汉站",
+    "date": "2025-11-02",
+    "summary": "🥉1",
+    "subtitle": "热干面趁热，香槟先别开",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-02 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "别开香槟开早了",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周政、孙天成、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "291/520"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "510/520"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2026__ccpc2026invitational-nanchang": {
+    "slug": "ccpc__ccpc2026__ccpc2026invitational-nanchang",
+    "title": "2026年中国大学生程序设计竞赛-全国邀请赛（南昌）（南昌大学）",
+    "date": "2026-05-24",
+    "summary": "🥈1🥉1",
+    "subtitle": "南昌再聚，香槟晚点开",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-24 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获银奖 1 项、铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "别开香槟开早了",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "孙天成、杨源鑫、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "89/340"
+              }
+            ]
+          },
+          {
+            "title": "天空之矛",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、曹京顺、李鑫"
+              },
+              {
+                "label": "排名",
+                "value": "146/340"
+              }
+            ]
+          },
+          {
+            "title": "三人驭六丸",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周君、詹宇飞、钟明皓"
+              },
+              {
+                "label": "排名",
+                "value": "245/340"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2022__icpc2022hangzhou": {
+    "slug": "icpc__icpc2022__icpc2022hangzhou",
+    "title": "第 47 届国际大学生程序设计竞赛亚洲区域赛杭州站",
+    "date": "2022-12-04",
+    "summary": "参赛 2 支队伍，未获奖",
+    "subtitle": "西湖作伴，代码江南",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2022-12-04 举行。江西财经大学共派出 2 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "蜜汁手残鸡",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、胡衍滨"
+              },
+              {
+                "label": "排名",
+                "value": "475/659"
+              }
+            ]
+          },
+          {
+            "title": "想成为纳西妲的编译器",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、喻琰、欧阳岩"
+              },
+              {
+                "label": "排名",
+                "value": "514/659"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023jinan": {
+    "slug": "icpc__icpc2023__icpc2023jinan",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域赛济南站",
+    "date": "2023-12-03",
+    "summary": "🥈1",
+    "subtitle": "泉城见证，银光闪闪",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-12-03 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "从第一个WA开始",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "100/347"
+              }
+            ]
+          },
+          {
+            "title": "Jtrip",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、欧阳岩、潘登"
+              },
+              {
+                "label": "排名",
+                "value": "339/347"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023hangzhou": {
+    "slug": "icpc__icpc2023__icpc2023hangzhou",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域赛杭州站",
+    "date": "2023-12-10",
+    "summary": "参赛 2 支队伍，未获奖",
+    "subtitle": "人间天堂，代码天堂",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-12-10 举行。江西财经大学共派出 2 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "从第一个WA开始",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "426/483"
+              }
+            ]
+          },
+          {
+            "title": "Jtrip",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、欧阳岩、陈则鹏"
+              },
+              {
+                "label": "排名",
+                "value": "452/483"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024nanjing": {
+    "slug": "icpc__icpc2024__icpc2024nanjing",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛南京站",
+    "date": "2024-11-03",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "金陵五赴",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-11-03 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、喻琰、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "252/360"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2024__ccpc2024zhengzhou": {
+    "slug": "ccpc__ccpc2024__ccpc2024zhengzhou",
+    "title": "第 10 届 CCPC 中国大学生程序设计竞赛 郑州站",
+    "date": "2024-11-17",
+    "summary": "🥉1",
+    "subtitle": "中原大地，郑州之约",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-11-17 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "她还爱着我对不队",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "108/320"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "周政、喻琰、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "283/320"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025invitational-fujian": {
+    "slug": "ccpc__ccpc2025__ccpc2025invitational-fujian",
+    "title": "第十二届福建省大学生程序设计竞赛暨2025年CCPC福建邀请赛",
+    "date": "2025-06-21",
+    "summary": "🥈1",
+    "subtitle": "福建的茶，奖牌的香",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-06-21 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "周政、喻琰、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "83/285"
+              }
+            ]
+          },
+          {
+            "title": "鱼跃千帆竞,羊踏万里程",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "杨镇宁、钟俊、陈帆"
+              },
+              {
+                "label": "排名",
+                "value": "222/285"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2023__ccpc2023guilin": {
+    "slug": "ccpc__ccpc2023__ccpc2023guilin",
+    "title": "第 9 届 CCPC 中国大学生程序设计竞赛 桂林站",
+    "date": "2023-10-29",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "桂林山水甲天下，代码也能甲天下",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-10-29 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "215/269"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023nanjing": {
+    "slug": "icpc__icpc2023__icpc2023nanjing",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域赛南京站",
+    "date": "2023-11-05",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "金陵四顾，初心未改",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-11-05 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "228/342"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023shenyang": {
+    "slug": "icpc__icpc2023__icpc2023shenyang",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域赛沈阳站",
+    "date": "2023-11-12",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "铁西的风，代码的梦",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-11-12 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "258/300"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__ha__haccpc6th": {
+    "slug": "provincial__ha__haccpc6th",
+    "title": "CCPC河南省大学生程序设计竞赛",
+    "date": "2024-05-12",
+    "summary": "🥉2",
+    "subtitle": "老家河南，奖牌回家",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2024-05-12 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 2 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "153/442"
+              }
+            ]
+          },
+          {
+            "title": "能不能不爆零",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "181/442"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024invitational-kunming": {
+    "slug": "icpc__icpc2024__icpc2024invitational-kunming",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛邀请赛昆明站",
+    "date": "2024-05-26",
+    "summary": "🥉2",
+    "subtitle": "春城的花，奖牌的香",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2024-05-26 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获铜奖 2 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "彩虹海",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻琰、肖丛宇、郭宇航"
+              },
+              {
+                "label": "排名",
+                "value": "95/280"
+              }
+            ]
+          },
+          {
+            "title": "志在必得!",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、林俊坤、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "118/280"
+              }
+            ]
+          },
+          {
+            "title": "做梦都要AC队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "王俊杰、陈雨希、韩家欢"
+              },
+              {
+                "label": "排名",
+                "value": "209/280"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024kunming": {
+    "slug": "icpc__icpc2024__icpc2024kunming",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛昆明站",
+    "date": "2024-12-01",
+    "summary": "🥉2",
+    "subtitle": "昆明蓝，奖牌亮",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-12-01 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 2 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "她还爱我对不队",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "149/485"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "喻琰、张瑞杰、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "234/485"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025xi_an": {
+    "slug": "icpc__icpc2025__icpc2025xi_an",
+    "title": "第 50 届 ICPC 国际大学生程序设计竞赛亚洲区域赛（西安）",
+    "date": "2025-10-19",
+    "summary": "🥉1",
+    "subtitle": "城墙根下，聪明复活",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-10-19 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "关注哔站复活小聪明谢谢喵",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "227/418"
+              }
+            ]
+          },
+          {
+            "title": "彩虹海",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "喻琰、杨源鑫、肖丛宇"
+              },
+              {
+                "label": "排名",
+                "value": "266/418"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2026__icpc2026invitational-shenzhen": {
+    "slug": "icpc__icpc2026__icpc2026invitational-shenzhen",
+    "title": "2026 年 ICPC 国际大学生程序设计竞赛全国邀请赛（深圳）",
+    "date": "2026-04-11",
+    "summary": "🥉1",
+    "subtitle": "来了就是深圳人，来了就要做题",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-04-11 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "天空之矛",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "210/326"
+              }
+            ]
+          },
+          {
+            "title": "别开香槟开早了",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "孙天成、杨源鑫、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "236/326"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2026__icpc2026invitational-wuhan": {
+    "slug": "icpc__icpc2026__icpc2026invitational-wuhan",
+    "title": "2026 年 ICPC 国际大学生程序设计竞赛全国邀请赛（武汉）暨湖北省赛",
+    "date": "2026-05-17",
+    "summary": "🥉1",
+    "subtitle": "黄鹤楼前，代码登高",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2026-05-17 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "别开香槟开早了",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "孙天成、杨源鑫、罗文轩"
+              },
+              {
+                "label": "排名",
+                "value": "114/236"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2022__ccpc2022ladies": {
+    "slug": "ccpc__ccpc2022__ccpc2022ladies",
+    "title": "2022 中国大学生程序设计竞赛（女生专场）",
+    "date": "2022-11-27",
+    "summary": "🥉1",
+    "subtitle": "会写的一把过，专场一把过",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2022-11-27 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "会写的一把过",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "宋嘉荟、徐雅、高莉婷"
+              },
+              {
+                "label": "排名",
+                "value": "135/277"
+              }
+            ]
+          },
+          {
+            "title": "假面骑士",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐佳佳、李欣怡、肖艳玲"
+              },
+              {
+                "label": "排名",
+                "value": "161/277"
+              }
+            ]
+          },
+          {
+            "title": "矿山挖铜",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张悦、王雨轩、高颖"
+              },
+              {
+                "label": "排名",
+                "value": "204/277"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__gd__gdcpc20th": {
+    "slug": "provincial__gd__gdcpc20th",
+    "title": "广东省大学生程序设计竞赛",
+    "date": "2023-05-14",
+    "summary": "🥉1",
+    "subtitle": "食在广州，神之一手",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2023-05-14 举行。江西财经大学共派出 3 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "神之一手",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "廖凌翔、王海峰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "180/305"
+              }
+            ]
+          },
+          {
+            "title": "不会的也能蒙",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐雅、王雨轩、高莉婷"
+              },
+              {
+                "label": "排名",
+                "value": "227/305"
+              }
+            ]
+          },
+          {
+            "title": "三重金字塔",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "曾斌、舒钧、陈名杰"
+              },
+              {
+                "label": "排名",
+                "value": "258/305"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2024__ccpc2024invitational-jinan": {
+    "slug": "ccpc__ccpc2024__ccpc2024invitational-jinan",
+    "title": "“齐鲁软件园杯”2024年中国大学生程序设计竞赛全国邀请赛（山东）暨CCPC山东省大学生程序设计竞赛",
+    "date": "2024-05-26",
+    "summary": "🥈1",
+    "subtitle": "齐鲁大地，铁变黄金 Fe³=Au",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2024-05-26 举行。江西财经大学共派出 2 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "Fe^3=Au",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "75/504"
+              }
+            ]
+          },
+          {
+            "title": "但求问心无愧",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "353/504"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024shenyang": {
+    "slug": "icpc__icpc2024__icpc2024shenyang",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛沈阳站",
+    "date": "2024-11-24",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "盛京之约，再续前缘",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-11-24 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "ACM败犬太多了!",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、杨源鑫、罗潇彬"
+              },
+              {
+                "label": "排名",
+                "value": "295/320"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025chengdu": {
+    "slug": "icpc__icpc2025__icpc2025chengdu",
+    "title": "第 50 届 ICPC 国际大学生程序设计竞赛区域赛成都站",
+    "date": "2025-10-26",
+    "summary": "🥉1",
+    "subtitle": "天府之国，代码为尊",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-10-26 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "魂殿十天尊——瑞杰",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "张瑞杰、李鑫、肖俊杰"
+              },
+              {
+                "label": "排名",
+                "value": "192/328"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2020yinchuan": {
+    "slug": "icpc2020yinchuan",
+    "title": "The 45th ICPC Asia Yinchuan Regional Programming Contest (Hosted by Ningxia Institute of Science and Technology, also known as IUPC 2021)",
+    "date": "2021-05-16",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "塞上江南，代码远航",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-05-16 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "不如跳舞",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "张睿诠、敖凸、盛静宇"
+              },
+              {
+                "label": "排名",
+                "value": "373/511"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2023__icpc2023hefei": {
+    "slug": "icpc__icpc2023__icpc2023hefei",
+    "title": "第 48 届国际大学生程序设计竞赛亚洲区域合肥站",
+    "date": "2023-11-26",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "科学岛旁，代码起飞",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2023-11-26 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "谱出一首诗",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "259/347"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2024__ccpc2024invitational-changchun": {
+    "slug": "ccpc__ccpc2024__ccpc2024invitational-changchun",
+    "title": "2024年中国大学生程序设计竞赛全国邀请赛（长春）暨第十七届CCPC吉林省大学生程序设计竞赛",
+    "date": "2024-05-18",
+    "summary": "🥈1",
+    "subtitle": "长是绵长的长，春是春天的春",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2024-05-18 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获银奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "能不能不爆零",
+            "tone": "silver",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "银奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、徐晓律、荣应琪"
+              },
+              {
+                "label": "排名",
+                "value": "46/181"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024chengdu": {
+    "slug": "icpc__icpc2024__icpc2024chengdu",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛成都站",
+    "date": "2024-10-27",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "火锅与代码，都很辣",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-10-27 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "她与银牌见合",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "222/309"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024shanghai": {
+    "slug": "icpc__icpc2024__icpc2024shanghai",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛上海站",
+    "date": "2024-11-17",
+    "summary": "🥉1",
+    "subtitle": "自带三金，魔都闪耀",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-11-17 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "我队友自带三金",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、李鑫、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "190/352"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025shenyang": {
+    "slug": "icpc__icpc2025__icpc2025shenyang",
+    "title": "「华为杯」第 50 届 ICPC 国际大学生程序设计竞赛区域赛沈阳站",
+    "date": "2025-11-16",
+    "summary": "🥉1",
+    "subtitle": "从丹东来，抽中真嗨",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-16 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "我从丹东来,抽中真嗨77",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、肖俊杰、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "202/411"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2024invitational-xi_an": {
+    "slug": "icpc2024invitational-xi_an",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛邀请赛西安站",
+    "date": "2024-05-19",
+    "summary": "🥉1",
+    "subtitle": "古都西安，志在必得",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2024-05-19 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "志在必得！",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "彭俊杰、林俊坤、王海峰"
+              },
+              {
+                "label": "排名",
+                "value": "243/397"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__gd__gdcpc21st": {
+    "slug": "provincial__gd__gdcpc21st",
+    "title": "广东省大学生程序设计竞赛",
+    "date": "2024-05-26",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "广式早茶，代码也香",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2024-05-26 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "csk拿牌队",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐晓律、荣应琪、陈世坤"
+              },
+              {
+                "label": "排名",
+                "value": "265/373"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2023__ccpc2023ladies": {
+    "slug": "ccpc__ccpc2023__ccpc2023ladies",
+    "title": "第 9 届 CCPC 中国大学生程序设计竞赛女生专场",
+    "date": "2023-10-21",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "巾帼不让须眉",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2023-10-21 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "会的一把过",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "徐雅、王雨轩、陈知会"
+              },
+              {
+                "label": "排名",
+                "value": "135/187"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2020__ccpc2020qinhuangdao": {
+    "slug": "ccpc__ccpc2020__ccpc2020qinhuangdao",
+    "title": "第六届中国大学生程序设计竞赛（秦皇岛站） （线上赛）",
+    "date": "2020-10-18",
+    "summary": "参赛 2 支队伍，未获奖",
+    "subtitle": "山海关前，在线过招",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2020-10-18 举行。江西财经大学共派出 2 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "下一回合就刷cf",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "梁云钦、罗文浩、郭子健"
+              },
+              {
+                "label": "排名",
+                "value": "320/343"
+              }
+            ]
+          },
+          {
+            "title": "唧唧思密达",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "326/343"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2020__ccpc2020final": {
+    "slug": "ccpc__ccpc2020__ccpc2020final",
+    "title": "2020年中国大学生程序设计竞赛 总决赛",
+    "date": "2021-05-30",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "决赛舞台，虽败犹荣",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为决赛，于 2021-05-30 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "真的来摸摸鱼",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "115/118"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2020__icpc2020shenyang": {
+    "slug": "icpc__icpc2020__icpc2020shenyang",
+    "title": "The 45th ICPC Asia Shenyang Regional Programming Contest （东北大学）",
+    "date": "2021-07-18",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "盛京夏日，热血开场",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2021-07-18 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "真的来摸摸鱼",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李小龙、邓荣斌、饶木平"
+              },
+              {
+                "label": "排名",
+                "value": "227/285"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2025__icpc2025shanghai": {
+    "slug": "icpc__icpc2025__icpc2025shanghai",
+    "title": "「华为杯」第 50 届 ICPC 国际大学生程序设计竞赛区域赛上海站",
+    "date": "2025-11-23",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "外滩灯火，代码长明",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-23 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "阳光彩虹不白码",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李承志、李润卓、陶金杰"
+              },
+              {
+                "label": "排名",
+                "value": "267/356"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2025__ccpc2025harbin": {
+    "slug": "ccpc__ccpc2025__ccpc2025harbin",
+    "title": "第 11 届 CCPC 中国大学生程序设计竞赛哈尔滨站",
+    "date": "2025-11-09",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "冰城哈尔滨，代码不结冰",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2025-11-09 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "~到了赛场上就要拿出真本事~",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "李鑫、王翔、肖辅霖"
+              },
+              {
+                "label": "排名",
+                "value": "204/278"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc__ccpc2019__ccpc2019qinhuangdao": {
+    "slug": "ccpc__ccpc2019__ccpc2019qinhuangdao",
+    "title": "2019年中国大学生程序设计竞赛 秦皇岛站 （东北大学秦皇岛分校）",
+    "date": "2019-09-22",
+    "summary": "参赛 1 支队伍，未获奖",
+    "subtitle": "秦皇岛的海，差不多就好",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2019-09-22 举行。江西财经大学共派出 1 支队伍参赛。",
+          "本次比赛中，我校参赛队伍未能获奖。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "差不多就好",
+            "tone": "",
+            "fields": [
+              {
+                "label": "参赛成员",
+                "value": "游心、肖熠、郭鹏"
+              },
+              {
+                "label": "排名",
+                "value": "218/264"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "provincial__gx__gxcpc7th": {
+    "slug": "provincial__gx__gxcpc7th",
+    "title": "广西大学生程序设计大赛",
+    "date": "2024-05-19",
+    "summary": "🥉1",
+    "subtitle": "你喜欢吃螺蛳粉吗？",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为省赛，于 2024-05-19 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "AC钙奶",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "潘登、董泓毅、邓燕翔"
+              },
+              {
+                "label": "排名",
+                "value": "63/169"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024invitational-wuhan": {
+    "slug": "icpc__icpc2024__icpc2024invitational-wuhan",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛邀请赛武汉站",
+    "date": "2024-05-02",
+    "summary": "🥉1",
+    "subtitle": "过早了吗？先过题",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2024-05-02 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "三只小猪",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王海峰、王玛琪、石翰林"
+              },
+              {
+                "label": "排名",
+                "value": "73/228"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc__icpc2024__icpc2024hangzhou": {
+    "slug": "icpc__icpc2024__icpc2024hangzhou",
+    "title": "第 49 届 ICPC 国际大学生程序设计竞赛区域赛杭州站",
+    "date": "2024-11-10",
+    "summary": "🥉1",
+    "subtitle": "断桥未断，代码不断",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为区域赛，于 2024-11-10 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获铜奖 1 项。"
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "她还爱我对不队",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "244/391"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "icpc2025invitational-xi_an": {
+    "slug": "icpc2025invitational-xi_an",
+    "title": "2025 年 ICPC 国际大学生程序设计竞赛 全国邀请赛（陕西）（西北工业大学）",
+    "date": "2025-05-04",
+    "summary": "🥇1",
+    "subtitle": "历史首金！",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "本次比赛为邀请赛，于 2025-05-04 举行。江西财经大学共派出 1 支队伍参赛。",
+          "最终斩获金奖 1 项。",
+          "这是江西财经大学在 ICPC 系列赛事中取得的历史首金！"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "/competition/icpc/hyc.png",
+            "alt": "队长-黄亦诚",
+            "caption": "队长-黄亦诚"
+          },
+          {
+            "src": "https://pic1.imgdb.cn/item/68d3c2ccc5157e1a882ccc5d.png",
+            "alt": "奖牌照片",
+            "caption": "奖牌照片"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "拿牌掰弯xzy",
+            "tone": "gold",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "金奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "王玛琪、石翰林、黄亦诚"
+              },
+              {
+                "label": "排名",
+                "value": "24/398"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ccpc-2025-changchun": {
+    "slug": "ccpc-2025-changchun",
+    "title": "2025年CCPC全国邀请赛（长春）",
+    "date": "2025-05-25",
+    "summary": "🥉1",
+    "subtitle": "长是绵长的长，春是春天的春",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "2025年5月25日，CCPC全国邀请赛（长春）举行，江西财经大学代表队“喜欢只是错觉”参赛。",
+          "最终，“喜欢只是错觉”队（衷铭川、万俊哲、张云菲）荣获铜牌。"
+        ]
+      },
+      {
+        "type": "images",
+        "items": [
+          {
+            "src": "https://pic1.imgdb.cn/item/68d3c333c5157e1a882cccae.jpg",
+            "alt": "获奖团队合影",
+            "caption": "获奖队伍合照"
+          }
+        ]
+      },
+      {
+        "type": "awards",
+        "cards": [
+          {
+            "title": "喜欢只是错觉",
+            "tone": "bronze",
+            "fields": [
+              {
+                "label": "奖项",
+                "value": "铜奖"
+              },
+              {
+                "label": "参赛成员",
+                "value": "衷铭川、万俊哲、张云菲"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

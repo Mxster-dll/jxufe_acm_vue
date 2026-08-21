@@ -1,0 +1,72 @@
+{
+  "slug": "lanqiao",
+  "year": "2011",
+  "edition": "第二届",
+  "title": "第二届蓝桥杯（2011年）获奖情况",
+  "date": null,
+  "dates": {
+    "provincial": null,
+    "national": "2011-07-14"
+  },
+  "scale": "省赛 7 人次获奖、国赛 1 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "韩涧武",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 218
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "石业晨",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 3
+      },
+      {
+        "name": "陈启明",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 1
+      },
+      {
+        "name": "韩涧武",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 2
+      },
+      {
+        "name": "付志辉",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 6
+      },
+      {
+        "name": "张帅",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 7
+      },
+      {
+        "name": "徐晓枫",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 4
+      },
+      {
+        "name": "谭寅",
+        "award": "优秀奖",
+        "score": "C/C++程序设计本科组",
+        "rank": null
+      }
+    ]
+  }
+}

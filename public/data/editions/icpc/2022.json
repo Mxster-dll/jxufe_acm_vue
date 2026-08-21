@@ -1,0 +1,23 @@
+{
+  "slug": "icpc",
+  "year": "2022",
+  "edition": null,
+  "title": "2022年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 8 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "逐梦",
+        "award": "铜奖 · ICPC亚洲区域赛 南京站",
+        "members": "何洋、王玛琪、石翰林"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

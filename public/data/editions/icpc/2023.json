@@ -1,0 +1,28 @@
+{
+  "slug": "icpc",
+  "year": "2023",
+  "edition": null,
+  "title": "2023年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 8 场、获奖 2 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "三只小猪",
+        "award": "铜奖 · ICPC亚洲区域赛 西安站",
+        "members": "何洋、王玛琪、石翰林"
+      },
+      {
+        "name": "从第一个WA开始",
+        "award": "银奖 · ICPC亚洲区域赛 济南站",
+        "members": "廖凌翔、王海峰、黄亦诚"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

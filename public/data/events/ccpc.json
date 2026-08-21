@@ -1,0 +1,294 @@
+{
+  "slug": "ccpc",
+  "name": "CCPC程序设计竞赛",
+  "events": [
+    {
+      "year": 2019,
+      "date": "2019-09-22",
+      "title": "CCPC全国赛 秦皇岛站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2019__ccpc2019qinhuangdao",
+      "subtitle": "秦皇岛的海，差不多就好"
+    },
+    {
+      "year": 2020,
+      "date": "2020-10-18",
+      "title": "CCPC全国赛 秦皇岛站",
+      "summary": "参赛 2 支队伍，未获奖",
+      "cid": "ccpc__ccpc2020__ccpc2020qinhuangdao",
+      "subtitle": "山海关前，在线过招"
+    },
+    {
+      "year": 2020,
+      "date": "2020-10-25",
+      "title": "CCPC全国赛 威海站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2020__ccpc2020weihai",
+      "subtitle": "威海卫的风，吹不动 WA"
+    },
+    {
+      "year": 2020,
+      "date": "2020-11-01",
+      "title": "CCPC全国赛 绵阳站",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2020__ccpc2020mianyang",
+      "subtitle": "科技之城，代码故事"
+    },
+    {
+      "year": 2021,
+      "date": "2021-05-30",
+      "title": "CCPC总决赛",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2020__ccpc2020final",
+      "subtitle": "决赛舞台，虽败犹荣"
+    },
+    {
+      "year": 2021,
+      "date": "2021-10-31",
+      "title": "CCPC女生专场",
+      "summary": "🥉1",
+      "cid": "ccpc__ccpc2021__ccpc2021ladies",
+      "subtitle": "女生专场，谁说女子不如男"
+    },
+    {
+      "year": 2021,
+      "date": "2021-11-21",
+      "title": "CCPC全国赛 威海站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2021__ccpc2021weihai",
+      "subtitle": "威海再会"
+    },
+    {
+      "year": 2022,
+      "date": "2022-09-11",
+      "title": "CCPC网络预选赛",
+      "summary": "参赛 10 支队伍",
+      "cid": "ccpc__ccpc2022__ccpc2022preliminary",
+      "subtitle": "线上初试锋芒"
+    },
+    {
+      "year": 2022,
+      "date": "2022-11-13",
+      "title": "CCPC全国赛 广州站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2022__ccpc2022guangzhou",
+      "subtitle": "食在广州，题也在广州"
+    },
+    {
+      "year": 2022,
+      "date": "2022-11-27",
+      "title": "CCPC女生专场",
+      "summary": "🥉1",
+      "cid": "ccpc__ccpc2022__ccpc2022ladies",
+      "subtitle": "会写的一把过，专场一把过"
+    },
+    {
+      "year": 2023,
+      "date": "2023-05-14",
+      "title": "广东省赛",
+      "summary": "🥉1",
+      "cid": "provincial__gd__gdcpc20th",
+      "subtitle": "食在广州，神之一手"
+    },
+    {
+      "year": 2023,
+      "date": "2023-05-28",
+      "title": "CCPC全国邀请赛（湖南）",
+      "summary": "🥉2",
+      "cid": "ccpc__ccpc2023__ccpc2023invitational-xiangtan",
+      "subtitle": "伟人故里，神之一手"
+    },
+    {
+      "year": 2023,
+      "date": "2023-08-20",
+      "title": "CCPC网络预选赛",
+      "summary": "参赛 5 支队伍",
+      "cid": "ccpc__ccpc2023__ccpc2023preliminary",
+      "subtitle": "线上练兵，静待花开"
+    },
+    {
+      "year": 2023,
+      "date": "2023-10-21",
+      "title": "CCPC女生专场",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2023__ccpc2023ladies",
+      "subtitle": "巾帼不让须眉"
+    },
+    {
+      "year": 2023,
+      "date": "2023-10-29",
+      "title": "CCPC全国赛 桂林站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2023__ccpc2023guilin",
+      "subtitle": "桂林山水甲天下，代码也能甲天下"
+    },
+    {
+      "year": 2023,
+      "date": "2023-11-12",
+      "title": "CCPC全国赛 深圳站",
+      "summary": "🥉1",
+      "cid": "ccpc__ccpc2023__ccpc2023shenzhen",
+      "subtitle": "鹏城速度，小猪冲鸭"
+    },
+    {
+      "year": 2024,
+      "date": "2024-05-12",
+      "title": "河南省赛",
+      "summary": "🥉2",
+      "cid": "provincial__ha__haccpc6th",
+      "subtitle": "老家河南，奖牌回家"
+    },
+    {
+      "year": 2024,
+      "date": "2024-05-18",
+      "title": "CCPC全国邀请赛（长春）暨吉林省赛",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2024__ccpc2024invitational-changchun",
+      "subtitle": "长是绵长的长，春是春天的春"
+    },
+    {
+      "year": 2024,
+      "date": "2024-05-19",
+      "title": "广西区赛",
+      "summary": "🥉1",
+      "cid": "provincial__gx__gxcpc7th",
+      "subtitle": "你喜欢吃螺蛳粉吗？"
+    },
+    {
+      "year": 2024,
+      "date": "2024-05-26",
+      "title": "CCPC全国邀请赛（山东）暨山东省赛",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2024__ccpc2024invitational-jinan",
+      "subtitle": "齐鲁大地，铁变黄金 Fe³=Au"
+    },
+    {
+      "year": 2024,
+      "date": "2024-05-26",
+      "title": "广东省赛",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "provincial__gd__gdcpc21st",
+      "subtitle": "广式早茶，代码也香"
+    },
+    {
+      "year": 2024,
+      "date": "2024-09-08",
+      "title": "CCPC网络预选赛",
+      "summary": "参赛 7 支队伍",
+      "cid": "ccpc__ccpc2024__ccpc2024preliminary",
+      "subtitle": "线上再会"
+    },
+    {
+      "year": 2024,
+      "date": "2024-11-17",
+      "title": "CCPC全国赛 郑州站",
+      "summary": "🥉1",
+      "cid": "ccpc__ccpc2024__ccpc2024zhengzhou",
+      "subtitle": "中原大地，郑州之约"
+    },
+    {
+      "year": 2025,
+      "date": "2025-05-25",
+      "title": "CCPC全国邀请赛（东北）暨东北地区赛",
+      "summary": "🥈1🥉1",
+      "cid": "ccpc__ccpc2025__ccpc2025invitational-northeast",
+      "subtitle": "东北的雪，代码的火"
+    },
+    {
+      "year": 2025,
+      "date": "2025-05-25",
+      "title": "广西区赛",
+      "summary": "🥈1🥉1",
+      "cid": "provincial__gx__gxcpc8th",
+      "subtitle": "螺蛳粉加辣，奖牌加倍"
+    },
+    {
+      "year": 2025,
+      "date": "2025-05-25",
+      "title": "CCPC全国邀请赛（长春）",
+      "summary": "🥉1",
+      "cid": "ccpc-2025-changchun",
+      "subtitle": "长是绵长的长，春是春天的春"
+    },
+    {
+      "year": 2025,
+      "date": "2025-06-02",
+      "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2025__ccpc2025invitational-zhengzhou",
+      "subtitle": "中原逐鹿，聪明复活"
+    },
+    {
+      "year": 2025,
+      "date": "2025-06-21",
+      "title": "CCPC全国邀请赛（福建）暨福建省赛",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2025__ccpc2025invitational-fujian",
+      "subtitle": "福建的茶，奖牌的香"
+    },
+    {
+      "year": 2025,
+      "date": "2025-09-13",
+      "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+      "summary": "🥈2🥉3",
+      "cid": "ccpc__ccpc2025__ccpc2025invitational-nanchang",
+      "subtitle": "英雄城下，再创佳绩"
+    },
+    {
+      "year": 2025,
+      "date": "2025-09-20",
+      "title": "CCPC网络预选赛",
+      "summary": "参赛 9 支队伍",
+      "cid": "ccpc__ccpc2025__ccpc2025preliminary",
+      "subtitle": "线上练兵，静待花开"
+    },
+    {
+      "year": 2025,
+      "date": "2025-11-09",
+      "title": "CCPC全国赛 哈尔滨站",
+      "summary": "参赛 1 支队伍，未获奖",
+      "cid": "ccpc__ccpc2025__ccpc2025harbin",
+      "subtitle": "冰城哈尔滨，代码不结冰"
+    },
+    {
+      "year": 2026,
+      "date": "2026-05-24",
+      "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+      "summary": "🥈4",
+      "cid": "ccpc__ccpc2026__ccpc2026invitational-qinhuangdao",
+      "subtitle": "山海关前，银光四射"
+    },
+    {
+      "year": 2026,
+      "date": "2026-05-24",
+      "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+      "summary": "🥈1🥉1",
+      "cid": "ccpc__ccpc2026__ccpc2026invitational-nanchang",
+      "subtitle": "南昌再聚，香槟晚点开"
+    },
+    {
+      "year": 2026,
+      "date": "2026-05-30",
+      "title": "CCPC全国邀请赛（福州）暨福建省赛",
+      "summary": "🥈1",
+      "cid": "ccpc__ccpc2026__ccpc2026invitational-fuzhou",
+      "subtitle": "有福之州，有喜之队"
+    },
+    {
+      "year": 2026,
+      "date": "2026-05-31",
+      "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+      "summary": "🥇2🥈5🥉2",
+      "cid": "provincial__gx__gxcpc9th",
+      "subtitle": "广西三连，螺蛳粉管够"
+    },
+    {
+      "year": 2026,
+      "date": "2026-06-07",
+      "title": "CCPC全国邀请赛（贵州）暨贵州省赛",
+      "summary": "🥈1🥉1",
+      "cid": "ccpc__ccpc2026__ccpc2026invitational-guizhou",
+      "subtitle": "“贵州人”体验卡"
+    }
+  ]
+}

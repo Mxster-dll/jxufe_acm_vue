@@ -1,0 +1,39 @@
+{
+  "slug": "ccpc",
+  "year": "2023",
+  "edition": null,
+  "title": "2023年CCPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 6 场、获奖 4 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "逐梦",
+        "award": "铜奖 · CCPC全国邀请赛（湖南）",
+        "members": "何洋、王玛琪、石翰林"
+      },
+      {
+        "name": "神之一手",
+        "award": "铜奖 · CCPC全国邀请赛（湖南）",
+        "members": "廖凌翔、王海峰、胡衍滨"
+      },
+      {
+        "name": "三只小猪",
+        "award": "铜奖 · CCPC全国赛 深圳站",
+        "members": "何洋、王玛琪、石翰林"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": [
+      {
+        "name": "神之一手",
+        "award": "铜奖 · 广东省赛",
+        "members": "廖凌翔、王海峰、黄亦诚"
+      }
+    ]
+  }
+}

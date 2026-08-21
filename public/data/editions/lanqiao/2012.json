@@ -1,0 +1,144 @@
+{
+  "slug": "lanqiao",
+  "year": "2012",
+  "edition": "第三届",
+  "title": "第三届蓝桥杯（2012年）获奖情况",
+  "date": null,
+  "dates": {
+    "provincial": null,
+    "national": "2012-05-27"
+  },
+  "scale": "省赛 13 人次获奖、国赛 7 人次获奖",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "付昊",
+        "award": "二等奖",
+        "score": "Java程序设计本科组",
+        "rank": 36
+      },
+      {
+        "name": "章逸群",
+        "award": "二等奖",
+        "score": "Java程序设计本科组",
+        "rank": 72
+      },
+      {
+        "name": "吴军军",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 481
+      },
+      {
+        "name": "徐鹏",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 400
+      },
+      {
+        "name": "毕锦程",
+        "award": "三等奖",
+        "score": "Java程序设计本科组",
+        "rank": 242
+      },
+      {
+        "name": "黄超强",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 399
+      },
+      {
+        "name": "汪志强",
+        "award": "优秀奖",
+        "score": "Java程序设计本科组",
+        "rank": null
+      }
+    ]
+  },
+  "provincial": {
+    "university": [],
+    "teams": [],
+    "personal": [
+      {
+        "name": "付昊",
+        "award": "一等奖",
+        "score": "Java程序设计本科组",
+        "rank": 1
+      },
+      {
+        "name": "吴军军",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 16
+      },
+      {
+        "name": "徐鹏",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 6
+      },
+      {
+        "name": "毕锦程",
+        "award": "一等奖",
+        "score": "Java程序设计本科组",
+        "rank": 3
+      },
+      {
+        "name": "章逸群",
+        "award": "一等奖",
+        "score": "Java程序设计本科组",
+        "rank": 2
+      },
+      {
+        "name": "黄超强",
+        "award": "一等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 5
+      },
+      {
+        "name": "张毅",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 27
+      },
+      {
+        "name": "汪志强",
+        "award": "二等奖",
+        "score": "Java程序设计本科组",
+        "rank": 9
+      },
+      {
+        "name": "王月月",
+        "award": "二等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 19
+      },
+      {
+        "name": "赖明剑",
+        "award": "二等奖",
+        "score": "Java程序设计本科组",
+        "rank": 10
+      },
+      {
+        "name": "戴爱美",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 48
+      },
+      {
+        "name": "谭寅",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 45
+      },
+      {
+        "name": "邓淑瑛",
+        "award": "三等奖",
+        "score": "C/C++程序设计本科组",
+        "rank": 60
+      }
+    ]
+  }
+}

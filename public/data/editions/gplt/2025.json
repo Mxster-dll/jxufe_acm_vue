@@ -1,0 +1,57 @@
+{
+  "slug": "gplt",
+  "year": "2025",
+  "edition": "第十届",
+  "title": "第十届团体程序设计天梯赛",
+  "date": "2025-04-19",
+  "scale": "来自全国 31 个省级行政区、613 所高校、1972 支队伍、19628 位参赛学生",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "JXUFE_C1",
+        "award": "全国团队一等奖",
+        "members": "黄亦诚、石翰林、万俊哲、王玛琪、肖俊杰、衷铭川、徐晓律、陈帆、李鑫、牛志义"
+      },
+      {
+        "name": "JXUFE_S1",
+        "award": "全国团队二等奖",
+        "members": "张轶群、吴星乐、喻琰、钟明皓、罗文轩、肖丛宇、张瑞杰、孙天成、罗潇彬、杨源鑫"
+      },
+      {
+        "name": "JXUFE_C2",
+        "award": "全国团队三等奖",
+        "members": "张志泽、刘文浩、李承志、詹宇飞、方俊、娄子豪、王征、胡强、蒋必成、吴振邦"
+      }
+    ],
+    "personal": [
+      { "name": "黄亦诚", "award": "个人一等奖", "score": 276 },
+      { "name": "石翰林", "award": "个人一等奖", "score": 261 },
+      { "name": "万俊哲", "award": "个人二等奖", "score": 230 },
+      { "name": "王玛琪", "award": "个人三等奖", "score": 215 },
+      { "name": "肖俊杰", "award": "个人三等奖", "score": 213 },
+      { "name": "张志泽", "award": "个人三等奖", "score": 205 },
+      { "name": "王翔", "award": "个人三等奖", "score": 204 },
+      { "name": "喻琰", "award": "个人三等奖", "score": 199 },
+      { "name": "钟明皓", "award": "个人三等奖", "score": 197 },
+      { "name": "罗文轩", "award": "个人三等奖", "score": 195 },
+      { "name": "衷铭川", "award": "个人三等奖", "score": 190 },
+      { "name": "杨源鑫", "award": "个人三等奖", "score": 188 },
+      { "name": "王俊杰", "award": "个人三等奖", "score": 184 },
+      { "name": "肖辅霖", "award": "个人三等奖", "score": 182 },
+      { "name": "肖丛宇", "award": "个人三等奖", "score": 181 },
+      { "name": "张瑞杰", "award": "个人三等奖", "score": 178 },
+      { "name": "徐晓律", "award": "个人三等奖", "score": 178 },
+      { "name": "胡峻珲", "award": "个人三等奖", "score": 178 },
+      { "name": "刘文浩", "award": "个人三等奖", "score": 177 }
+    ]
+  },
+  "provincial": {
+    "university": ["江西省高校二等奖"],
+    "teams": [
+      { "name": "JXUFE_C1", "award": "分省团队一等奖" },
+      { "name": "JXUFE_S1", "award": "分省团队一等奖" },
+      { "name": "JXUFE_C2", "award": "分省团队二等奖" }
+    ]
+  }
+}

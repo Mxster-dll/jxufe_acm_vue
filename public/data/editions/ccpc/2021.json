@@ -1,0 +1,23 @@
+{
+  "slug": "ccpc",
+  "year": "2021",
+  "edition": null,
+  "title": "2021年CCPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 3 场、获奖 1 项",
+  "national": {
+    "university": [],
+    "teams": [],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": [
+      {
+        "name": "酱菜幼儿园",
+        "award": "铜奖 · CCPC女生专场",
+        "members": "宋嘉荟、李婷、童若珈"
+      }
+    ]
+  }
+}

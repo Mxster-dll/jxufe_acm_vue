@@ -13,12 +13,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["全年不定期", "分为网络预选赛、邀请赛、区域赛"]
+        "lines": [
+          "全年不定期",
+          "分为网络预选赛、邀请赛、区域赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["3人一队", "5小时现场编程"]
+        "lines": [
+          "3人一队",
+          "5小时现场编程"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -37,31 +43,186 @@
             "title": "ICPC全国邀请赛（深圳）",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、李鑫"
+            "name": "天空之矛",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 210,
+            "teamCount": 326,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "ICPC全国邀请赛（南昌）",
-            "desc": "银牌",
+            "title": "ICPC全国邀请赛（深圳）",
+            "desc": "—",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、李鑫"
+            "name": "别开香槟开早了",
+            "members": "孙天成、杨源鑫、罗文轩",
+            "rank": 236,
+            "teamCount": 326,
+            "medals": []
           },
           {
             "title": "ICPC全国邀请赛（西安）",
             "desc": "银牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 87,
+            "teamCount": 400,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
             "title": "ICPC全国邀请赛（西安）",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
+            "name": "服务器未响应",
+            "members": "杨镇宁、陈帆、陈煜仕",
+            "rank": 211,
+            "teamCount": 400,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "ICPC全国邀请赛（南昌）",
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "李鑫、彭俊杰、肖俊杰"
+            "name": "~到了赛场上就要拿出真本事~",
+            "members": "喻芷珊、曹京顺、王翔",
+            "rank": 103,
+            "teamCount": 383,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "天空之矛",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 97,
+            "teamCount": 383,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "四氧化三铁",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 285,
+            "teamCount": 383,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "这个队什么也没留下",
+            "members": "吴穹宇、肖依婷、黄志豪",
+            "rank": 318,
+            "teamCount": 383,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 262,
+            "teamCount": 383,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（武汉）暨湖北省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、杨源鑫、罗文轩",
+            "rank": 114,
+            "teamCount": 236,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、彭俊杰、詹宇飞",
+            "rank": 66,
+            "teamCount": 286,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "服务器未响应",
+            "members": "杨镇宁、陈帆、陈煜仕",
+            "rank": 70,
+            "teamCount": 286,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 157,
+            "teamCount": 286,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（沈阳）",
+            "desc": "—",
+            "level": "国家级",
+            "name": "香槟不要开早了",
+            "members": "孙天成、杨源鑫、罗文轩",
+            "rank": 222,
+            "teamCount": 286,
+            "medals": []
           }
         ]
       },
@@ -72,11 +233,1721 @@
             "title": "ICPC全国邀请赛（西安）",
             "desc": "金牌",
             "level": "国家级",
-            "members": "黄亦诚、石翰林、王玛琪"
+            "name": "拿牌掰弯xzy",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 24,
+            "teamCount": 398,
+            "medals": [
+              {
+                "medal": "金奖",
+                "tier": null
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "廉颇老矣",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 117,
+            "teamCount": 457,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "ACM败犬太多了",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 214,
+            "teamCount": 457,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "周政、喻琰、肖丛宇",
+            "rank": 145,
+            "teamCount": 457,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "注意力涣散",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 176,
+            "teamCount": 457,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "AC 学长不会遇见 WA 学弟",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 311,
+            "teamCount": 457,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "周君、孙天成、罗文轩",
+            "rank": 277,
+            "teamCount": 457,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 256,
+            "teamCount": 457,
+            "medals": []
+          },
+          {
+            "title": "ICPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "灵魂舞者",
+            "members": "谢乐乐、钟俊、陈帆",
+            "rank": 289,
+            "teamCount": 457,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1813/2279",
+            "level": "国家级",
+            "name": "ac梦不是梦",
+            "members": "刘庆栋、胡峻珲、蒋必成",
+            "rank": 1813,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1069/2279",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 1069,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "757/2279",
+            "level": "国家级",
+            "name": "关注红烧猪猪头喵",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 757,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1762/2279",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、罗文轩、肖源",
+            "rank": 1762,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "882/2279",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、杨源鑫、肖丛宇",
+            "rank": 882,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1619/2279",
+            "level": "国家级",
+            "name": "我很贪心很想赢",
+            "members": "刘文浩、王征、胡剑东",
+            "rank": 1619,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "929/2279",
+            "level": "国家级",
+            "name": "没有下次再见吧",
+            "members": "万俊哲、衷铭川、黄亦诚",
+            "rank": 929,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "2019/2279",
+            "level": "国家级",
+            "name": "蛋仔派队",
+            "members": "张思宏、曾林、李志文",
+            "rank": 2019,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1931/2279",
+            "level": "国家级",
+            "name": "让我拿个奖吧求求了",
+            "members": "王天浩、胡强、黄辉",
+            "rank": 1931,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1078/2279",
+            "level": "国家级",
+            "name": "证明!!!",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 1078,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "676/2279",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 676,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1409/2279",
+            "level": "国家级",
+            "name": "鱼跃千帆过,羊踏万里程",
+            "members": "杨镇宁、钟俊、陈帆",
+            "rank": 1409,
+            "teamCount": 2279,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1089/2575",
+            "level": "国家级",
+            "name": "ac梦不是梦",
+            "members": "刘庆栋、胡峻珲、蒋必成",
+            "rank": 1089,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1471/2575",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 1471,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "378/2575",
+            "level": "国家级",
+            "name": "关注红烧猪猪头喵",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 378,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "798/2575",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、罗文轩、肖源",
+            "rank": 798,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1512/2575",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、杨源鑫、肖丛宇",
+            "rank": 1512,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1757/2575",
+            "level": "国家级",
+            "name": "我很贪心很想赢",
+            "members": "刘文浩、王征、胡剑东",
+            "rank": 1757,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1057/2575",
+            "level": "国家级",
+            "name": "没有下次再见吧",
+            "members": "万俊哲、衷铭川、黄亦诚",
+            "rank": 1057,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1757/2575",
+            "level": "国家级",
+            "name": "蛋仔派队",
+            "members": "张思宏、曾林、李志文",
+            "rank": 1757,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1751/2575",
+            "level": "国家级",
+            "name": "让我拿个奖吧求求了",
+            "members": "王天浩、胡强、黄辉",
+            "rank": 1751,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1739/2575",
+            "level": "国家级",
+            "name": "证明!!!",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 1739,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "820/2575",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 820,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1757/2575",
+            "level": "国家级",
+            "name": "鱼跃千帆过,羊踏万里程",
+            "members": "杨镇宁、钟俊、陈帆",
+            "rank": 1757,
+            "teamCount": 2575,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "关注哔站复活小聪明谢谢喵",
+            "members": "彭俊杰、李鑫、黄亦诚",
+            "rank": 227,
+            "teamCount": 418,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、杨源鑫、肖丛宇",
+            "rank": 266,
+            "teamCount": 418,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 成都站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "魂殿十天尊——瑞杰",
+            "members": "张瑞杰、李鑫、肖俊杰",
+            "rank": 192,
+            "teamCount": 328,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 武汉站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "周政、孙天成、罗文轩",
+            "rank": 291,
+            "teamCount": 520,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 武汉站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 510,
+            "teamCount": 520,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 295,
+            "teamCount": 359,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "我从丹东来,抽中真嗨77",
+            "members": "彭俊杰、肖俊杰、黄亦诚",
+            "rank": 202,
+            "teamCount": 411,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 267,
+            "teamCount": 356,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 香港站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "Fondness? Delusion!",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 81,
+            "teamCount": 136,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year": "2024",
+        "entries": [
+          {
+            "title": "ICPC全国邀请赛（武汉）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "王海峰、王玛琪、石翰林",
+            "rank": 73,
+            "teamCount": 228,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（西安）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "志在必得！",
+            "members": "彭俊杰、林俊坤、王海峰",
+            "rank": 243,
+            "teamCount": 397,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": null
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 95,
+            "teamCount": 280,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "志在必得!",
+            "members": "彭俊杰、林俊坤、王海峰",
+            "rank": 118,
+            "teamCount": 280,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "ICPC全国邀请赛（昆明）",
+            "desc": "—",
+            "level": "国家级",
+            "name": "做梦都要AC队",
+            "members": "王俊杰、陈雨希、韩家欢",
+            "rank": 209,
+            "teamCount": 280,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "622/2323",
+            "level": "国家级",
+            "name": "Fe^3=Au",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 622,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1055/2323",
+            "level": "国家级",
+            "name": "zyf在线征婚",
+            "members": "罗昊、肖俊杰、谢乐乐",
+            "rank": 1055,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "797/2323",
+            "level": "国家级",
+            "name": "但求问心无愧",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 797,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1472/2323",
+            "level": "国家级",
+            "name": "你不要给我WAWA叫",
+            "members": "叶遇乐、徐晓律、陈帆",
+            "rank": 1472,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1790/2323",
+            "level": "国家级",
+            "name": "做梦都要AC队",
+            "members": "王俊杰、陈雨希、韩家欢",
+            "rank": 1790,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1538/2323",
+            "level": "国家级",
+            "name": "再多A一道题她就不会走对不队",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 1538,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1379/2323",
+            "level": "国家级",
+            "name": "原来你也玩ACM",
+            "members": "刘星、曾毅、牛志义",
+            "rank": 1379,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "2106/2323",
+            "level": "国家级",
+            "name": "宝宝车",
+            "members": "吴星乐、王翔、肖源",
+            "rank": 2106,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "636/2323",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 636,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "849/2323",
+            "level": "国家级",
+            "name": "我不想吃蛙",
+            "members": "彭俊杰、李鑫、王海峰",
+            "rank": 849,
+            "teamCount": 2323,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "255/2450",
+            "level": "国家级",
+            "name": "Fe^3=Au",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 255,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1155/2450",
+            "level": "国家级",
+            "name": "zyf在线征婚",
+            "members": "罗昊、肖俊杰、谢乐乐",
+            "rank": 1155,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1307/2450",
+            "level": "国家级",
+            "name": "但求问心无愧",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 1307,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2135/2450",
+            "level": "国家级",
+            "name": "你不要给我WAWA叫",
+            "members": "叶遇乐、徐晓律、陈帆",
+            "rank": 2135,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1669/2450",
+            "level": "国家级",
+            "name": "再多A一道题她就不会走对不队",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 1669,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2054/2450",
+            "level": "国家级",
+            "name": "原来你也玩ACM",
+            "members": "刘星、曾毅、牛志义",
+            "rank": 2054,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1873/2450",
+            "level": "国家级",
+            "name": "宝宝车",
+            "members": "吴星乐、王翔、肖源",
+            "rank": 1873,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "855/2450",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 855,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "750/2450",
+            "level": "国家级",
+            "name": "我不想吃蛙",
+            "members": "彭俊杰、李鑫、王海峰",
+            "rank": 750,
+            "teamCount": 2450,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 成都站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "她与银牌见合",
+            "members": "彭俊杰、李鑫、王海峰",
+            "rank": 222,
+            "teamCount": 309,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "周政、喻琰、肖丛宇",
+            "rank": 252,
+            "teamCount": 360,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "她还爱我对不队",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 244,
+            "teamCount": 391,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "我队友自带三金",
+            "members": "彭俊杰、李鑫、王海峰",
+            "rank": 190,
+            "teamCount": 352,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "ACM败犬太多了!",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 295,
+            "teamCount": 320,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "她还爱我对不队",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 149,
+            "teamCount": 485,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、张瑞杰、肖丛宇",
+            "rank": 234,
+            "teamCount": 485,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year": "2023",
+        "entries": [
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1806/2554",
+            "level": "国家级",
+            "name": "LFP",
+            "members": "刘文强、方郑轶、潘登",
+            "rank": 1806,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1103/2554",
+            "level": "国家级",
+            "name": "MakkaPakkas",
+            "members": "林俊坤、邓一帆、陈世坤",
+            "rank": 1103,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1551/2554",
+            "level": "国家级",
+            "name": "Nameless",
+            "members": "周政、崔煜杭、欧阳岩",
+            "rank": 1551,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "2001/2554",
+            "level": "国家级",
+            "name": "Professional imprisonment",
+            "members": "吴子祥、周忠政、陈则鹏",
+            "rank": 2001,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "726/2554",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 726,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "451/2554",
+            "level": "国家级",
+            "name": "从大学第一个AC开始!",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 451,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1015/2554",
+            "level": "国家级",
+            "name": "做梦都要AC队",
+            "members": "王俊杰、陈雨希、韩家欢",
+            "rank": 1015,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "653/2554",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 653,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1551/2554",
+            "level": "国家级",
+            "name": "萍水三侠客",
+            "members": "刘焕、王敏磊、辛思伟",
+            "rank": 1551,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1128/2554",
+            "level": "国家级",
+            "name": "被wa出bug的阿尔法狗",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 1128,
+            "teamCount": 2554,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1434/2726",
+            "level": "国家级",
+            "name": "LFP",
+            "members": "刘文强、方郑轶、潘登",
+            "rank": 1434,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1382/2726",
+            "level": "国家级",
+            "name": "MakkaPakkas",
+            "members": "林俊坤、邓一帆、陈世坤",
+            "rank": 1382,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2107/2726",
+            "level": "国家级",
+            "name": "Professional imprisonment",
+            "members": "吴子祥、周忠政、陈则鹏",
+            "rank": 2107,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1937/2726",
+            "level": "国家级",
+            "name": "can't but right",
+            "members": "徐雅、罗晓香鑫、陈知会",
+            "rank": 1937,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1342/2726",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 1342,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "541/2726",
+            "level": "国家级",
+            "name": "从大学第一个AC开始!",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 541,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1470/2726",
+            "level": "国家级",
+            "name": "做梦都要AC队",
+            "members": "王俊杰、陈雨希、韩家欢",
+            "rank": 1470,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "635/2726",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 635,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2178/2726",
+            "level": "国家级",
+            "name": "萍水三侠客",
+            "members": "刘焕、王敏磊、辛思伟",
+            "rank": 2178,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1753/2726",
+            "level": "国家级",
+            "name": "被wa出bug的阿尔法狗",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 1753,
+            "teamCount": 2726,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 244,
+            "teamCount": 418,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": null
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 228,
+            "teamCount": 342,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 258,
+            "teamCount": 300,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 合肥站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "谱出一首诗",
+            "members": "彭俊杰、王玛琪、石翰林",
+            "rank": 259,
+            "teamCount": 347,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "从第一个WA开始",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 100,
+            "teamCount": 347,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "Jtrip",
+            "members": "周政、欧阳岩、潘登",
+            "rank": 339,
+            "teamCount": 347,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "Jtrip",
+            "members": "周政、欧阳岩、陈则鹏",
+            "rank": 452,
+            "teamCount": 483,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "从第一个WA开始",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 426,
+            "teamCount": 483,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2022",
+        "entries": [
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1721/2173",
+            "level": "国家级",
+            "name": "loop",
+            "members": "曾斌、欧阳岩、詹温温",
+            "rank": 1721,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1240/2173",
+            "level": "国家级",
+            "name": "我就来签个到打个卡",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 1240,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1522/2173",
+            "level": "国家级",
+            "name": "玛卡巴卡",
+            "members": "周政、林俊坤、陈楠",
+            "rank": 1522,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1721/2173",
+            "level": "国家级",
+            "name": "直挂云帆济沧海",
+            "members": "宋嘉荟、徐雅、高莉婷",
+            "rank": 1721,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1721/2173",
+            "level": "国家级",
+            "name": "突击小分队",
+            "members": "张悦、王雨轩、高颖",
+            "rank": 1721,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1072/2173",
+            "level": "国家级",
+            "name": "能不能不打铁",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 1072,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛I",
+            "desc": "1721/2173",
+            "level": "国家级",
+            "name": "芝士小飞棍",
+            "members": "叶倖燚、尧海标、管一鸣",
+            "rank": 1721,
+            "teamCount": 2173,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2001/2755",
+            "level": "国家级",
+            "name": "loop",
+            "members": "曾斌、欧阳岩、詹温温",
+            "rank": 2001,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1764/2755",
+            "level": "国家级",
+            "name": "roop",
+            "members": "叶倖燚、尧海标、管一鸣",
+            "rank": 1764,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2229/2755",
+            "level": "国家级",
+            "name": "东方小队",
+            "members": "施小雨、熊卓来、陈富乐",
+            "rank": 2229,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2053/2755",
+            "level": "国家级",
+            "name": "假面骑士贞贞贞贞德",
+            "members": "徐佳佳、李欣怡、肖艳玲",
+            "rank": 2053,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1995/2755",
+            "level": "国家级",
+            "name": "咸鱼翻身队",
+            "members": "周伟杰、崔煜杭、赖子卓",
+            "rank": 1995,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1790/2755",
+            "level": "国家级",
+            "name": "均衡存户万物之间",
+            "members": "倪超骏、彭佳俊、蔡建怿",
+            "rank": 1790,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2249/2755",
+            "level": "国家级",
+            "name": "对一题就算win",
+            "members": "喻琰、王俊杰、韩家欢",
+            "rank": 2249,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2361/2755",
+            "level": "国家级",
+            "name": "小试菜刀队",
+            "members": "何胜彰、孙加海、赖城铖",
+            "rank": 2361,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "775/2755",
+            "level": "国家级",
+            "name": "我就来签个到打个卡",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 775,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "2361/2755",
+            "level": "国家级",
+            "name": "毛文浩",
+            "members": "余子俊、杨雨萌、毛文浩",
+            "rank": 2361,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1776/2755",
+            "level": "国家级",
+            "name": "玛卡巴卡",
+            "members": "周政、林俊坤、陈楠",
+            "rank": 1776,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "843/2755",
+            "level": "国家级",
+            "name": "能不能不打铁",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 843,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1473/2755",
+            "level": "国家级",
+            "name": "郭楠 show show way",
+            "members": "廖凌翔、王海峰、胡衍滨",
+            "rank": 1473,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC网络预选赛II",
+            "desc": "1635/2755",
+            "level": "国家级",
+            "name": "随便叫啥",
+            "members": "李至立、舒钧、陈名杰",
+            "rank": 1635,
+            "teamCount": 2755,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "先质疑再质疑",
+            "members": "倪超骏、彭佳俊、蔡建怿",
+            "rank": 493,
+            "teamCount": 738,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "打工小队",
+            "members": "徐雅、王雨轩、高莉婷",
+            "rank": 714,
+            "teamCount": 738,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "芝士改变命运",
+            "members": "尧海标、管一鸣、艾荣贵",
+            "rank": 536,
+            "teamCount": 738,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 西安站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "Gold Slayer",
+            "members": "ouyang yan、叶倖燚、徐雅",
+            "rank": 468,
+            "teamCount": 522,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 合肥站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "逐梦",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 232,
+            "teamCount": 502,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "hyyzzz",
+            "members": "周伟杰、喻琰、胡衍滨",
+            "rank": 451,
+            "teamCount": 580,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "想成为纳西妲的编译器",
+            "members": "周政、喻琰、欧阳岩",
+            "rank": 514,
+            "teamCount": 659,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 杭州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "蜜汁手残鸡",
+            "members": "廖凌翔、王海峰、胡衍滨",
+            "rank": 475,
+            "teamCount": 659,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "逐梦",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 158,
+            "teamCount": 501,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year": "2021",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "对对对队",
+            "members": "倪超骏、李一、蔡建怿",
+            "rank": 719,
+            "teamCount": 813,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "真的来摸摸鱼",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 583,
+            "teamCount": 813,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 昆明站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "香蕉牛奶",
+            "members": "吴浩邦、周子沛、罗文浩",
+            "rank": 232,
+            "teamCount": 813,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 银川站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "不如跳舞",
+            "members": "张睿诠、敖凸、盛静宇",
+            "rank": 373,
+            "teamCount": 511,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "真的来摸摸鱼",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 227,
+            "teamCount": 285,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "划水运动装",
+            "members": "吴卓成、操祉豪、王子超",
+            "rank": 730,
+            "teamCount": 800,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "对手不",
+            "members": "何洋、何胜彰、王玛琪",
+            "rank": 723,
+            "teamCount": 800,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "未定义",
+            "members": "彭佳俊、陈航、龚俊杰",
+            "rank": 677,
+            "teamCount": 800,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "真的来摸摸鱼",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 364,
+            "teamCount": 800,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "404",
+            "members": "刘紫璇、蒋悦、蓝伊",
+            "rank": 561,
+            "teamCount": 576,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 沈阳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "心机之蛙",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 273,
+            "teamCount": 576,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "404",
+            "members": "刘紫璇、蒋悦、蓝伊",
+            "rank": 628,
+            "teamCount": 682,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "真的来摸摸鱼",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 364,
+            "teamCount": 682,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 上海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "面向样例程序设计",
+            "members": "刘江、朱政、钟志清",
+            "rank": 452,
+            "teamCount": 682,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "均衡存乎万物之间",
+            "members": "倪超骏、李梦豪、罗文浩",
+            "rank": 165,
+            "teamCount": 684,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "对手不",
+            "members": "何洋、何胜彰、王玛琪",
+            "rank": 573,
+            "teamCount": 684,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "心机之蛙",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 343,
+            "teamCount": 684,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "面向样例程序设计",
+            "members": "刘江、朱政、钟志清",
+            "rank": 609,
+            "teamCount": 684,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2020",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "地球往事",
+            "members": "刘力溯、王安、黄友民",
+            "rank": 153,
+            "teamCount": 556,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "不如跳舞",
+            "members": "张睿诠、敖凸、盛静宇",
+            "rank": 481,
+            "teamCount": 556,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "炼铁术士",
+            "members": "李梦豪、樊雨萌、胡烨保",
+            "rank": 526,
+            "teamCount": 556,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 南京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "路人ACMers的养成方法",
+            "members": "唐文卓、艾荣贵、邓祖鹏",
+            "rank": 460,
+            "teamCount": 556,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "Want Coffee",
+            "members": "吴浩邦、周子沛、梁云钦",
+            "rank": 372,
+            "teamCount": 545,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "今日比赛暂停",
+            "members": "倪超骏、李一、蔡建怿",
+            "rank": 451,
+            "teamCount": 545,
+            "medals": []
+          },
+          {
+            "title": "ICPC亚洲区域赛 济南站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "黑暗森林",
+            "members": "张涛、罗文浩、黄友民",
+            "rank": 263,
+            "teamCount": 545,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2016",
+        "entries": [
+          {
+            "title": "ICPC亚洲区域赛 北京站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "typhoon",
+            "members": "li wanrong、mao ying tang、xin liao",
+            "rank": 180,
+            "teamCount": 198,
+            "medals": []
           }
         ]
       }
-    ]
+    ],
+    "mode": "history"
   },
   {
     "slug": "ccpc",
@@ -92,12 +1963,19 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年3月-12月", "分为网络赛、省赛、分站赛和总决赛"]
+        "lines": [
+          "每年3月-12月",
+          "分为网络赛、省赛、分站赛和总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["3人一队", "5小时现场编程", "使用C/C++/Java/Python"]
+        "lines": [
+          "3人一队",
+          "5小时现场编程",
+          "使用C/C++/Java/Python"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -113,82 +1991,312 @@
         "year": "2026",
         "entries": [
           {
-            "title": "CCPC全国邀请赛（南昌）",
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "200g金牌和200g铁牌哪个更重.",
+            "members": "杨镇宁、陈帆、陈煜仕",
+            "rank": 67,
+            "teamCount": 375,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "哔站复活小聪明粉丝团.",
+            "members": "彭俊杰、王翔、肖俊杰",
+            "rank": 99,
+            "teamCount": 375,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 74,
+            "teamCount": 375,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "阳光彩虹不白码.",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 97,
+            "teamCount": 375,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "这个队什么也没留下",
+            "members": "吴穹宇、喻芷珊、黄志豪",
+            "rank": 240,
+            "teamCount": 375,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、杨源鑫、罗文轩",
+            "rank": 89,
+            "teamCount": 340,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              },
+              {
+                "medal": "银奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "李鑫、曹京顺、张瑞杰"
+            "name": "天空之矛",
+            "members": "张瑞杰、曹京顺、李鑫",
+            "rank": 146,
+            "teamCount": 340,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              },
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 245,
+            "teamCount": 340,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（福州）暨福建省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "彭俊杰、肖俊杰、王翔"
+            "name": "喜欢只是错觉.",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 99,
+            "teamCount": 345,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
+            "title": "CCPC全国邀请赛（福州）暨福建省赛",
+            "desc": "—",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 230,
+            "teamCount": 345,
+            "medals": []
           },
           {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
-          },
-          {
-            "title": "CCPC全国邀请赛（秦皇岛）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "陶金杰、李承志、李润卓"
-          },
-          {
-            "title": "CCPC全国邀请赛（福建）",
-            "desc": "银牌",
-            "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
-          },
-          {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "金牌",
             "level": "国家级",
-            "members": "彭俊杰、王翔、李鑫"
+            "name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "members": "彭俊杰、李鑫、王翔",
+            "rank": 27,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "金奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "金牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "name": "喜欢只是错觉..",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 26,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "金奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "陈帆、杨镇宁、陈煜仕"
+            "name": "200g金牌和200g铁牌哪个更重..",
+            "members": "杨镇宁、陈帆、陈煜仕",
+            "rank": 60,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "陶金杰、李承志、李润卓"
+            "name": "别开香槟开早了",
+            "members": "孙天成、杨源鑫、罗文轩",
+            "rank": 42,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "四氧化三铁",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 77,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "酱菜一队",
+            "members": "吴穹宇、喻芷珊、黄志豪",
+            "rank": 50,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "阳光彩虹不白码..",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 72,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "钟俊、蒋滔、龚铭浩"
+            "name": "我发现用大脑思考不用token",
+            "members": "蒋滔、钟俊、龚铭浩",
+            "rank": 143,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（广西）",
+            "title": "CCPC全国邀请赛（桂林）暨广西区赛",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "万涛涛、周子诺、严雨睿"
+            "name": "清纯粉毛小萝莉.",
+            "members": "万涛涛、严雨睿、周子诺",
+            "rank": 120,
+            "teamCount": 312,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
           },
           {
-            "title": "CCPC全国邀请赛（贵州）",
+            "title": "CCPC全国邀请赛（贵州）暨贵州省赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 44,
+            "teamCount": 222,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（贵州）暨贵州省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 77,
+            "teamCount": 222,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
           }
         ]
       },
@@ -196,20 +2304,1009 @@
         "year": "2025",
         "entries": [
           {
-            "title": "CCPC全国邀请赛（郑州）",
+            "title": "CCPC全国邀请赛（东北）暨东北地区赛",
             "desc": "银牌",
             "level": "国家级",
-            "members": "彭俊杰、李鑫、肖俊杰"
+            "name": "别开香槟开早了",
+            "members": "周政、孙天成、罗文轩",
+            "rank": 116,
+            "teamCount": 397,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（东北）暨东北地区赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 156,
+            "teamCount": 397,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "广西区赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "~到了赛场上就要拿出真本事~",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 38,
+            "teamCount": 220,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "广西区赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、杨源鑫、肖丛宇",
+            "rank": 78,
+            "teamCount": 220,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 96,
+            "teamCount": 438,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "ACM败犬太多了",
+            "members": "张瑞杰、罗潇彬、钟明皓",
+            "rank": 284,
+            "teamCount": 438,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（郑州）暨河南省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "喜欢不是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 269,
+            "teamCount": 438,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（福建）暨福建省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "周政、喻琰、肖丛宇",
+            "rank": 83,
+            "teamCount": 285,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（福建）暨福建省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "鱼跃千帆竞,羊踏万里程",
+            "members": "杨镇宁、钟俊、陈帆",
+            "rank": 222,
+            "teamCount": 285,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+            "members": "彭俊杰、李鑫、肖俊杰",
+            "rank": 44,
+            "teamCount": 270,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、罗文轩、肖源",
+            "rank": 52,
+            "teamCount": 270,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "ACM败犬太多了",
+            "members": "喻芷珊、张瑞杰、杨源鑫",
+            "rank": 123,
+            "teamCount": 270,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "~到了赛场上就要拿出真本事~",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 90,
+            "teamCount": 270,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 160,
+            "teamCount": 270,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 183,
+            "teamCount": 270,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "打铁后在做什么?有没有空?可以来加训吗?",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 191,
+            "teamCount": 270,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "蛋仔派队",
+            "members": "张思宏、曾林、李志文",
+            "rank": 234,
+            "teamCount": 270,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（南昌）暨江西省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "鱼跃千帆竞,羊踏万里程",
+            "members": "杨镇宁、钟俊、陈帆",
+            "rank": 220,
+            "teamCount": 270,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1433/2085",
+            "level": "国家级",
+            "name": "三人驭六丸",
+            "members": "周君、詹宇飞、钟明皓",
+            "rank": 1433,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1023/2085",
+            "level": "国家级",
+            "name": "别开香槟开早了",
+            "members": "孙天成、罗文轩、肖源",
+            "rank": 1023,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1400/2085",
+            "level": "国家级",
+            "name": "喜欢只是错觉",
+            "members": "万俊哲、张云菲、衷铭川",
+            "rank": 1400,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1148/2085",
+            "level": "国家级",
+            "name": "彩虹河",
+            "members": "喻芷珊、杨源鑫、武瑞雪",
+            "rank": 1148,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1370/2085",
+            "level": "国家级",
+            "name": "瑞杰与少羽",
+            "members": "张瑞杰、李鑫、肖俊杰",
+            "rank": 1370,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1424/2085",
+            "level": "国家级",
+            "name": "蛋仔派队",
+            "members": "张思宏、曾林、李志文",
+            "rank": 1424,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "550/2085",
+            "level": "国家级",
+            "name": "证明!!!",
+            "members": "吴星乐、王翔、肖辅霖",
+            "rank": 550,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1855/2085",
+            "level": "国家级",
+            "name": "阳光彩虹不白码",
+            "members": "李承志、李润卓、陶金杰",
+            "rank": 1855,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1835/2085",
+            "level": "国家级",
+            "name": "鱼跃千帆竞,羊踏万里程",
+            "members": "杨镇宁、钟俊、陈帆",
+            "rank": 1835,
+            "teamCount": 2085,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 哈尔滨站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "~到了赛场上就要拿出真本事~",
+            "members": "李鑫、王翔、肖辅霖",
+            "rank": 204,
+            "teamCount": 278,
+            "medals": []
           },
           {
             "title": "CCPC全国邀请赛（长春）",
             "desc": "铜牌",
             "level": "国家级",
-            "members": "衷铭川、万俊哲、张云菲"
+            "name": "喜欢只是错觉",
+            "members": "衷铭川、万俊哲、张云菲",
+            "rank": null,
+            "teamCount": null,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2024",
+        "entries": [
+          {
+            "title": "河南省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 153,
+            "teamCount": 442,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "河南省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "能不能不爆零",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 181,
+            "teamCount": 442,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（长春）暨吉林省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "能不能不爆零",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 46,
+            "teamCount": 181,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "广西区赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "AC钙奶",
+            "members": "潘登、董泓毅、邓燕翔",
+            "rank": 63,
+            "teamCount": 169,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（山东）暨山东省赛",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "Fe^3=Au",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 75,
+            "teamCount": 504,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（山东）暨山东省赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "但求问心无愧",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 353,
+            "teamCount": 504,
+            "medals": []
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "name": "csk拿牌队",
+            "members": "徐晓律、荣应琪、陈世坤",
+            "rank": 265,
+            "teamCount": 373,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "460/2156",
+            "level": "国家级",
+            "name": "Fe^3=Au",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 460,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1704/2156",
+            "level": "国家级",
+            "name": "XLX队",
+            "members": "罗昊、肖俊杰、谢乐乐",
+            "rank": 1704,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1246/2156",
+            "level": "国家级",
+            "name": "但求问心无愧",
+            "members": "张瑞杰、杨源鑫、罗潇彬",
+            "rank": 1246,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "2085/2156",
+            "level": "国家级",
+            "name": "你不要给我WAWA叫",
+            "members": "叶遇乐、徐晓律、陈帆",
+            "rank": 2085,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1563/2156",
+            "level": "国家级",
+            "name": "原来你也玩ACM",
+            "members": "刘星、曾毅、牛志义",
+            "rank": 1563,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "600/2156",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 600,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1044/2156",
+            "level": "国家级",
+            "name": "我不想吃蛙",
+            "members": "彭俊杰、李鑫、王海峰",
+            "rank": 1044,
+            "teamCount": 2156,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 郑州站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "她还爱着我对不队",
+            "members": "王玛琪、石翰林、黄亦诚",
+            "rank": 108,
+            "teamCount": 320,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国赛 郑州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "周政、喻琰、肖丛宇",
+            "rank": 283,
+            "teamCount": 320,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2023",
+        "entries": [
+          {
+            "title": "广东省赛",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "神之一手",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 180,
+            "teamCount": 305,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "name": "三重金字塔",
+            "members": "曾斌、舒钧、陈名杰",
+            "rank": 258,
+            "teamCount": 305,
+            "medals": []
+          },
+          {
+            "title": "广东省赛",
+            "desc": "—",
+            "level": "省级",
+            "name": "不会的也能蒙",
+            "members": "徐雅、王雨轩、高莉婷",
+            "rank": 227,
+            "teamCount": 305,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "神之一手",
+            "members": "廖凌翔、王海峰、胡衍滨",
+            "rank": 144,
+            "teamCount": 268,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "逐梦",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 161,
+            "teamCount": 268,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "invitational"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "—",
+            "level": "国家级",
+            "name": "大家觉得我说的对不队",
+            "members": "叶倖燚、喻琰、管一鸣",
+            "rank": 190,
+            "teamCount": 268,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国邀请赛（湖南）",
+            "desc": "—",
+            "level": "国家级",
+            "name": "求求队长别打王者",
+            "members": "周政、尧海标、欧阳岩",
+            "rank": 239,
+            "teamCount": 268,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1248/1493",
+            "level": "国家级",
+            "name": "Rainbow",
+            "members": "喻琰、欧阳岩、肖丛宇",
+            "rank": 1248,
+            "teamCount": 1493,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "536/1493",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 536,
+            "teamCount": 1493,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "524/1493",
+            "level": "国家级",
+            "name": "从大学第一个WA开始",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 524,
+            "teamCount": 1493,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1173/1493",
+            "level": "国家级",
+            "name": "酱菜二队",
+            "members": "刘梓贤、潘登、陈知会",
+            "rank": 1173,
+            "teamCount": 1493,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "918/1493",
+            "level": "国家级",
+            "name": "随便打打",
+            "members": "刘文强、方郑轶、董泓毅",
+            "rank": 918,
+            "teamCount": 1493,
+            "medals": []
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "name": "会的一把过",
+            "members": "徐雅、王雨轩、陈知会",
+            "rank": 135,
+            "teamCount": 187,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 桂林站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "彩虹海",
+            "members": "喻琰、肖丛宇、郭宇航",
+            "rank": 215,
+            "teamCount": 269,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 深圳站",
+            "desc": "铜牌",
+            "level": "国家级",
+            "name": "三只小猪",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 121,
+            "teamCount": 287,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "regional"
+              }
+            ]
+          },
+          {
+            "title": "CCPC全国赛 深圳站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "从大学第一个WA开始",
+            "members": "廖凌翔、王海峰、黄亦诚",
+            "rank": 210,
+            "teamCount": 287,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2022",
+        "entries": [
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "788/1790",
+            "level": "国家级",
+            "name": "G你太美",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 788,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1281/1790",
+            "level": "国家级",
+            "name": "Riddle Original",
+            "members": "曾斌、舒钧、陈名杰",
+            "rank": 1281,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1377/1790",
+            "level": "国家级",
+            "name": "vr改变未来",
+            "members": "尧海标、管一鸣、高莉婷",
+            "rank": 1377,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1532/1790",
+            "level": "国家级",
+            "name": "假面骑士贞贞贞贞德",
+            "members": "徐佳佳、李欣怡、肖艳玲",
+            "rank": 1532,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1501/1790",
+            "level": "国家级",
+            "name": "对不对",
+            "members": "徐雅、欧阳岩、詹温温",
+            "rank": 1501,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1261/1790",
+            "level": "国家级",
+            "name": "摸Au校尉",
+            "members": "周政、李一、陈楠",
+            "rank": 1261,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1242/1790",
+            "level": "国家级",
+            "name": "自愿打铁队",
+            "members": "倪超骏、彭佳俊、蔡建怿",
+            "rank": 1242,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1279/1790",
+            "level": "国家级",
+            "name": "芝士雪豹队",
+            "members": "唐文卓、潘祉岳、邓祖鹏",
+            "rank": 1279,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1225/1790",
+            "level": "国家级",
+            "name": "这把全靠队友带我飞",
+            "members": "彭俊杰、徐晓律、荣应琪",
+            "rank": 1225,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC网络预选赛",
+            "desc": "1701/1790",
+            "level": "国家级",
+            "name": "马猴大队",
+            "members": "余子俊、杨雨萌",
+            "rank": 1701,
+            "teamCount": 1790,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 广州站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "逐梦",
+            "members": "何洋、王玛琪、石翰林",
+            "rank": 177,
+            "teamCount": 285,
+            "medals": []
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "会写的一把过",
+            "members": "宋嘉荟、徐雅、高莉婷",
+            "rank": 135,
+            "teamCount": 277,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "name": "假面骑士",
+            "members": "徐佳佳、李欣怡、肖艳玲",
+            "rank": 161,
+            "teamCount": 277,
+            "medals": []
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "name": "矿山挖铜",
+            "members": "张悦、王雨轩、高颖",
+            "rank": 204,
+            "teamCount": 277,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2021",
+        "entries": [
+          {
+            "title": "CCPC总决赛",
+            "desc": "—",
+            "level": "国家级",
+            "name": "真的来摸摸鱼",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 115,
+            "teamCount": 118,
+            "medals": []
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "铜牌",
+            "level": "省级",
+            "name": "酱菜幼儿园",
+            "members": "宋嘉荟、李婷、童若珈",
+            "rank": 141,
+            "teamCount": 258,
+            "medals": [
+              {
+                "medal": "铜奖",
+                "tier": "provincial"
+              }
+            ]
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "name": "404",
+            "members": "刘紫璇、蒋悦、蓝伊",
+            "rank": 232,
+            "teamCount": 258,
+            "medals": []
+          },
+          {
+            "title": "CCPC女生专场",
+            "desc": "—",
+            "level": "省级",
+            "name": "稳",
+            "members": "张梦凡、胡博、谢子昭",
+            "rank": 245,
+            "teamCount": 258,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 威海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "面向样例程序设计",
+            "members": "刘江、朱政、钟志清",
+            "rank": 252,
+            "teamCount": 329,
+            "medals": []
+          }
+        ]
+      },
+      {
+        "year": "2020",
+        "entries": [
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "下一回合就刷cf",
+            "members": "梁云钦、罗文浩、郭子健",
+            "rank": 320,
+            "teamCount": 343,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "唧唧思密达",
+            "members": "李小龙、邓荣斌、饶木平",
+            "rank": 326,
+            "teamCount": 343,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 威海站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "不能承受生命之重",
+            "members": "刘力溯、王安、黄友民",
+            "rank": 74,
+            "teamCount": 386,
+            "medals": []
+          },
+          {
+            "title": "CCPC全国赛 绵阳站",
+            "desc": "银牌",
+            "level": "国家级",
+            "name": "你一生的故事",
+            "members": "刘力溯、王安、黄友民",
+            "rank": 73,
+            "teamCount": 340,
+            "medals": [
+              {
+                "medal": "银奖",
+                "tier": "regional"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "year": "2019",
+        "entries": [
+          {
+            "title": "CCPC全国赛 秦皇岛站",
+            "desc": "—",
+            "level": "国家级",
+            "name": "差不多就好",
+            "members": "游心、肖熠、郭鹏",
+            "rank": 218,
+            "teamCount": 264,
+            "medals": []
           }
         ]
       }
-    ]
+    ],
+    "mode": "history"
   },
   {
     "slug": "gplt",
@@ -225,12 +3322,19 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年3-4月", "分为校内选拔赛和全国总决赛"]
+        "lines": [
+          "每年3-4月",
+          "分为校内选拔赛和全国总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["10人一队", "3小时现场编程", "使用C/C++/Java/Python"]
+        "lines": [
+          "10人一队",
+          "3小时现场编程",
+          "使用C/C++/Java/Python"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -241,29 +3345,7 @@
         ]
       }
     ],
-    "history": [
-      {
-        "year": "2026",
-        "entries": [
-          {
-            "title": "第十一届团体程序设计天梯赛",
-            "desc": "团队二等奖",
-            "level": "国家级",
-            "members": "肖俊杰、李鑫、万俊哲、衷铭川、陶金杰、陈帆、刘旭凡、曹京顺、陈煜仕、李承志"
-          }
-        ]
-      },
-      {
-        "year": "2025",
-        "entries": [
-          {
-            "title": "第十届团体程序设计天梯赛",
-            "desc": "团队一等奖",
-            "level": "国家级"
-          }
-        ]
-      }
-    ]
+    "history": []
   },
   {
     "slug": "lanqiao",
@@ -278,12 +3360,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年4-6月", "分为省赛、总决赛"]
+        "lines": [
+          "每年4-6月",
+          "分为省赛、总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位进行比赛", "在指定赛点全程4小时独立闭卷答题"]
+        "lines": [
+          "以个人为单位进行比赛",
+          "在指定赛点全程4小时独立闭卷答题"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -294,7 +3382,8 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [],
+    "mode": "lanqiao"
   },
   {
     "slug": "baidu",
@@ -309,12 +3398,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年不固定", "分为初赛、决赛"]
+        "lines": [
+          "每年不固定",
+          "分为初赛、决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位进行比赛", "初赛3小时，决赛5小时"]
+        "lines": [
+          "以个人为单位进行比赛",
+          "初赛3小时，决赛5小时"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -325,7 +3420,12 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [
+      {
+        "year": "2025",
+        "entries": []
+      }
+    ]
   },
   {
     "slug": "chuanzhi",
@@ -340,12 +3440,18 @@
       {
         "icon": "fa-calendar-alt",
         "title": "比赛时间",
-        "lines": ["每年11月和3-4月", "分为校内选拔赛、省赛、全国总决赛"]
+        "lines": [
+          "每年11月和3-4月",
+          "分为校内选拔赛、省赛、全国总决赛"
+        ]
       },
       {
         "icon": "fa-users",
         "title": "参赛形式",
-        "lines": ["以个人为单位参赛", "3.5小时现场编程"]
+        "lines": [
+          "以个人为单位参赛",
+          "3.5小时现场编程"
+        ]
       },
       {
         "icon": "fa-trophy",
@@ -356,6 +3462,11 @@
         ]
       }
     ],
-    "history": [{ "year": "2025", "entries": [] }]
+    "history": [
+      {
+        "year": "2025",
+        "entries": []
+      }
+    ]
   }
 ]

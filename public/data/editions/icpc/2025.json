@@ -1,0 +1,68 @@
+{
+  "slug": "icpc",
+  "year": "2025",
+  "edition": null,
+  "title": "2025年ICPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 11 场、获奖 10 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "彩虹海",
+        "award": "铜奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "周政、喻琰、肖丛宇"
+      },
+      {
+        "name": "ACM败犬太多了",
+        "award": "铜奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "张瑞杰、杨源鑫、罗潇彬"
+      },
+      {
+        "name": "注意力涣散",
+        "award": "铜奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "彭俊杰、李鑫、肖俊杰"
+      },
+      {
+        "name": "廉颇老矣",
+        "award": "银奖 · ICPC全国邀请赛（南昌）暨江西省赛",
+        "members": "王玛琪、石翰林、黄亦诚"
+      },
+      {
+        "name": "Fondness? Delusion!",
+        "award": "铜奖 · ICPC亚洲区域赛 香港站",
+        "members": "万俊哲、张云菲、衷铭川"
+      },
+      {
+        "name": "别开香槟开早了",
+        "award": "铜奖 · ICPC亚洲区域赛 武汉站",
+        "members": "周政、孙天成、罗文轩"
+      },
+      {
+        "name": "关注哔站复活小聪明谢谢喵",
+        "award": "铜奖 · ICPC亚洲区域赛 西安站",
+        "members": "彭俊杰、李鑫、黄亦诚"
+      },
+      {
+        "name": "魂殿十天尊——瑞杰",
+        "award": "铜奖 · ICPC亚洲区域赛 成都站",
+        "members": "张瑞杰、李鑫、肖俊杰"
+      },
+      {
+        "name": "我从丹东来,抽中真嗨77",
+        "award": "铜奖 · ICPC亚洲区域赛 沈阳站",
+        "members": "彭俊杰、肖俊杰、黄亦诚"
+      },
+      {
+        "name": "拿牌掰弯xzy",
+        "award": "金奖 · ICPC全国邀请赛（西安）",
+        "members": "王玛琪、石翰林、黄亦诚"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": []
+  }
+}

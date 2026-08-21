@@ -1,0 +1,27 @@
+{
+  "slug": "gplt",
+  "year": "2019",
+  "edition": "第四届",
+  "title": "第四届团体程序设计天梯赛",
+  "date": "2019-03-30",
+  "scale": "来自全国 28 个省级行政区、274 所高校、761 支队伍、7603 位参赛学生",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "酱菜软件 A 套餐",
+        "award": "全国团队三等奖",
+        "members": "何煦、吴臻、张涛、徐博宇、徐彤、曾国强、胡慧姣、许子鑫、黄友民、黄舸帆"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": ["江西省高校二等奖"],
+    "teams": [
+      { "name": "酱菜软件 A 套餐", "award": "分省团队二等奖" },
+      { "name": "酱菜信管 Go_For_Accepted!", "award": "分省团队二等奖" },
+      { "name": "酱菜软件 B 套餐", "award": "分省团队二等奖" }
+    ]
+  }
+}

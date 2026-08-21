@@ -1,0 +1,49 @@
+{
+  "slug": "ccpc",
+  "year": "2024",
+  "edition": null,
+  "title": "2024年CCPC参赛史",
+  "date": null,
+  "scale": "全年共参赛 7 场、获奖 6 项",
+  "national": {
+    "university": [],
+    "teams": [
+      {
+        "name": "她还爱着我对不队",
+        "award": "铜奖 · CCPC全国赛 郑州站",
+        "members": "王玛琪、石翰林、黄亦诚"
+      },
+      {
+        "name": "Fe^3=Au",
+        "award": "银奖 · CCPC全国邀请赛（山东）暨山东省赛",
+        "members": "王玛琪、石翰林、黄亦诚"
+      },
+      {
+        "name": "能不能不爆零",
+        "award": "银奖 · CCPC全国邀请赛（长春）暨吉林省赛",
+        "members": "彭俊杰、徐晓律、荣应琪"
+      }
+    ],
+    "personal": []
+  },
+  "provincial": {
+    "university": [],
+    "teams": [
+      {
+        "name": "彩虹海",
+        "award": "铜奖 · 河南省赛",
+        "members": "喻琰、肖丛宇、郭宇航"
+      },
+      {
+        "name": "能不能不爆零",
+        "award": "铜奖 · 河南省赛",
+        "members": "彭俊杰、徐晓律、荣应琪"
+      },
+      {
+        "name": "AC钙奶",
+        "award": "铜奖 · 广西区赛",
+        "members": "潘登、董泓毅、邓燕翔"
+      }
+    ]
+  }
+}
