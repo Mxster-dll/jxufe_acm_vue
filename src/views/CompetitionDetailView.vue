@@ -10,20 +10,46 @@ const { data: competitions, loading, error } = useJson('/data/competitions.json'
   initial: []
 })
 
-const comp = computed(
-  () => (competitions.value || []).find((c) => c.slug === route.params.slug)
-)
+// xCPC 合并页（slug=xcpc）：由 ICPC + CCPC 合成——参赛历史合并显示，
+// 简介与详情卡通过 comp.children 分开介绍；其余竞赛按原 slug 查找
+const comp = computed(() => {
+  const slug = route.params.slug
+  const list = competitions.value || []
+  if (slug === 'xcpc') {
+    const icpc = list.find((c) => c.slug === 'icpc')
+    const ccpc = list.find((c) => c.slug === 'ccpc')
+    if (!icpc || !ccpc) return null
+    return {
+      slug: 'xcpc',
+      name: 'xCPC 程序设计竞赛',
+      subtitle: 'ICPC × CCPC —— 国际与中国大学生程序设计竞赛',
+      image: icpc.image,
+      mode: 'history',
+      intro: [],
+      details: [],
+      children: [icpc, ccpc],
+      history: [...(icpc.history || []), ...(ccpc.history || [])],
+    }
+  }
+  return list.find((c) => c.slug === slug)
+})
 
-// 举办时间数据：/data/events/<slug>.json（与大事记共用同一数据源）
+// 举办时间数据：/data/events/<slug>.json（与大事记共用同一数据源）；
+// xCPC 合并页同时加载 icpc + ccpc 两份事件数据用于日期匹配
 const events = ref([])
 watch(
   () => route.params.slug,
   async (slug) => {
     if (!slug) return
     try {
-      const res = await fetch(`/data/events/${slug}.json`)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      events.value = (await res.json()).events || []
+      const slugs = slug === 'xcpc' ? ['icpc', 'ccpc'] : [slug]
+      const all = []
+      for (const s of slugs) {
+        const res = await fetch(`/data/events/${s}.json`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        all.push(...((await res.json()).events || []))
+      }
+      events.value = all
     } catch (e) {
       console.error(`加载 /data/events/${slug}.json 失败:`, e)
       events.value = []
@@ -32,14 +58,37 @@ watch(
   { immediate: true }
 )
 
-// 将按年分组的 history 展平为表格行（按年份降序）
+// 将按年分组的 history 展平为表格行：
+//  - xcpc（ICPC/CCPC）只保留获奖项：去掉网络预选赛与未获奖（medals 为空）
+//  - 严格按赛事举办日期降序（无日期条目按当年年末兜底，保证同年后置）
 const historyRows = computed(() => {
   if (!comp.value?.history) return []
-  const sorted = [...comp.value.history].sort((a, b) => Number(b.year) - Number(a.year))
-  return sorted.flatMap((g) =>
+  const isXcpc = ['icpc', 'ccpc', 'xcpc'].includes(comp.value.slug)
+  const rows = comp.value.history.flatMap((g) =>
     (g.entries || []).map((e) => ({ year: g.year, ...e }))
   )
+  const filtered = isXcpc
+    ? rows.filter(
+        (r) =>
+          !(r.title || '').includes('网络预选赛') &&
+          Array.isArray(r.medals) &&
+          r.medals.length > 0
+      )
+    : rows
+  return [...filtered].sort((a, b) => rowSortKey(b).localeCompare(rowSortKey(a)))
 })
+
+// 排序键：优先取 events/<slug>.json 中匹配赛事的举办日期（YYYY-MM-DD 可直接字符串比较），
+// 无匹配赛事或无日期时回退为“年份-12-31”，保证同年内有日期的条目排前
+function rowSortKey(row) {
+  const evs = (events.value || []).filter((e) => String(e.year) === String(row.year))
+  const hit = evs.find(
+    (e) => e.title && (row.title.includes(e.title) || e.title.includes(row.title))
+  )
+  const d = (hit && hit.date) || row.year
+  const s = String(d)
+  return s.includes('-') ? s : `${s}-12-31`
+}
 
 // 日期列：优先取该年份的赛事举办时间（date），缺省回退为年份
 function rowDate(row) {
@@ -346,18 +395,27 @@ function setView(v) {
 // ── 蓝桥杯总名单（mode=lanqiao）：/data/lanqiao.json ──
 const lanqiaoData = ref(null)
 
+// 隐藏优秀奖：总名单不展示优秀奖（数据源保留，仅展示层过滤）
+function hideExcellent(rows) {
+  return (rows || []).filter((r) => !/优秀奖/.test(r.award || ''))
+}
+
 // 每年名单预分组（C/C++·Java·Python × A/B 级 × 奖等），省赛/国赛各一组
 const lanqiaoYears = computed(() => {
   if (!lanqiaoData.value?.years) return []
-  return lanqiaoData.value.years.map((y) => ({
-    year: y.year,
-    edition: y.edition,
-    dates: y.dates || {},
-    provincial: y.provincial,
-    national: y.national,
-    provincialGroups: lanqiaoGroup(y.provincial),
-    nationalGroups: lanqiaoGroup(y.national),
-  }))
+  return lanqiaoData.value.years.map((y) => {
+    const provincial = hideExcellent(y.provincial)
+    const national = hideExcellent(y.national)
+    return {
+      year: y.year,
+      edition: y.edition,
+      dates: y.dates || {},
+      provincial,
+      national,
+      provincialGroups: lanqiaoGroup(provincial),
+      nationalGroups: lanqiaoGroup(national),
+    }
+  })
 })
 
 // 比赛日期格式化：'2025-06-15' → '2025年6月15日'；'2010-05' → '2010年5月'；空 → ''
@@ -397,8 +455,18 @@ const lqStages = [
           <p v-if="comp.subtitle" class="page-subtitle">{{ comp.subtitle }}</p>
         </header>
 
+        <!-- 简介：xCPC 合并页 → ICPC / CCPC 分开介绍 -->
+        <section v-if="comp.children && comp.children.length" class="comp-intro-block">
+          <div v-for="child in comp.children" :key="child.slug" class="comp-intro">
+            <img :src="child.image" :alt="child.name" class="comp-logo" />
+            <div class="intro-text">
+              <h2>{{ child.name }}</h2>
+              <p v-for="(p, i) in child.intro" :key="i">{{ p }}</p>
+            </div>
+          </div>
+        </section>
         <!-- 简介 -->
-        <section class="comp-intro">
+        <section v-else class="comp-intro">
           <img :src="comp.image" :alt="comp.name" class="comp-logo" />
           <div class="intro-text">
             <h2>竞赛简介</h2>
@@ -406,8 +474,29 @@ const lqStages = [
           </div>
         </section>
 
+        <!-- 详情卡片：xCPC 合并页 → ICPC / CCPC 分开介绍 -->
+        <section v-if="comp.children && comp.children.length" class="comp-details-block">
+          <div v-for="child in comp.children" :key="child.slug" class="detail-group">
+            <h3 class="detail-group-title">{{ child.name }}</h3>
+            <div class="comp-details">
+              <div
+                v-for="(d, i) in child.details"
+                :key="d.title"
+                v-reveal="'scale-in'"
+                :style="{ '--reveal-index': i }"
+                class="detail-card"
+              >
+                <div class="detail-icon">
+                  <i :class="`fas ${d.icon}`"></i>
+                </div>
+                <h3>{{ d.title }}</h3>
+                <p v-for="(line, idx) in d.lines" :key="idx">{{ line }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
         <!-- 详情卡片 -->
-        <section class="comp-details">
+        <section v-else class="comp-details">
           <div
             v-for="(d, i) in comp.details"
             :key="d.title"
@@ -703,6 +792,42 @@ const lqStages = [
   gap: var(--space-xl);
   margin-bottom: var(--space-2xl);
 }
+
+/* xCPC 合并页：ICPC / CCPC 简介与详情分开介绍 */
+.comp-intro-block {
+  margin-bottom: var(--space-2xl);
+}
+.comp-intro-block .comp-intro {
+  margin-bottom: var(--space-xl);
+}
+.comp-intro-block .comp-intro:last-child {
+  margin-bottom: 0;
+}
+.comp-intro-block .comp-intro + .comp-intro {
+  padding-top: var(--space-xl);
+  border-top: 1px dashed rgba(0,0,0,0.1);
+}
+.comp-details-block {
+  margin-bottom: var(--space-2xl);
+}
+.detail-group {
+  margin-bottom: var(--space-xl);
+}
+.detail-group:last-child {
+  margin-bottom: 0;
+}
+.detail-group .comp-details {
+  margin-bottom: 0;
+}
+.detail-group-title {
+  display: inline-block;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid rgba(26,115,232,0.12);
+}
 .comp-logo {
   width: 180px;
   height: auto;
@@ -838,8 +963,7 @@ const lqStages = [
 
 /* ── 蓝桥杯总名单（个人赛：姓名/科目/奖项，按年分组；每年国赛/省赛两个卡片）── */
 .lq-list {
-  max-width: 880px;
-  margin: 0 auto;
+  width: 100%;
 }
 .lq-year {
   margin-bottom: var(--space-2xl);
@@ -999,8 +1123,7 @@ const lqStages = [
 
 /* ── 卡片视图（桌面/移动共用；显隐由 .view-hidden 控制）── */
 .team-cards-mobile {
-  max-width: 880px;
-  margin: 0 auto;
+  width: 100%;
 }
 .m-group {
   margin-bottom: var(--space-lg);

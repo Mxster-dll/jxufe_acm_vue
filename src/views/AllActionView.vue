@@ -14,6 +14,7 @@ const searchQuery = ref("");
 // ── 筛选：年份 + 月份 ──
 const selectedYear = ref(null);   // null = 全部
 const selectedMonth = ref(null);  // null = 该年全部月份
+const selectedCat = ref(null);    // null = 全部类型
 
 // 提取所有 (year, month) 组合（含比赛节点），按年分组
 const yearMonthTree = computed(() => {
@@ -57,10 +58,15 @@ function selectMonth(m) {
   selectedMonth.value = selectedMonth.value === m ? null : m;
 }
 
+function selectCat(k) {
+  selectedCat.value = selectedCat.value === k ? null : k;
+}
+
 function resetAll() {
   searchQuery.value = "";
   selectedYear.value = null;
   selectedMonth.value = null;
+  selectedCat.value = null;
 }
 
 // 某年的新闻条目 / 比赛节点（用于按年渲染）
@@ -152,8 +158,48 @@ function itemClass(item) {
   return "club";
 }
 
+// ── 事件类型筛选（本质是颜色：--cat 变量与卡片左边框一致）──
+// 顺序即侧栏 chips 展示顺序
+const CAT_META = [
+  { key: "inv", label: "邀请赛" },
+  { key: "reg", label: "区域赛·全国赛" },
+  { key: "prov", label: "省赛·区赛" },
+  { key: "net", label: "网络赛" },
+  { key: "tts", label: "天梯赛" },
+  { key: "lanqiao", label: "蓝桥杯" },
+  { key: "chuanzhi", label: "传智杯" },
+  { key: "baidu", label: "百度之星" },
+  { key: "club", label: "社团活动" },
+  { key: "school", label: "校赛" },
+  { key: "other", label: "其他" },
+];
+
+// 当前数据中实际存在的类型（含数量），空类型不展示
+const availableCats = computed(() => {
+  const counts = {};
+  const scan = (items) => {
+    for (const it of items) {
+      const k = itemClass(it);
+      counts[k] = (counts[k] || 0) + 1;
+    }
+  };
+  scan(topEvents.value);
+  for (const g of yearGroups.value) scan(g.items);
+  // 比赛节点原始数据无 kind 字段，按赛事分支归类需补上
+  for (const g of eventsByYear.value) scan(g.items.map((it) => ({ kind: "event", ...it })));
+  return CAT_META.filter((m) => counts[m.key] > 0).map((m) => ({
+    ...m,
+    count: counts[m.key],
+  }));
+});
+
+// 类别筛选匹配（null = 全部）
+function matchCat(item) {
+  return selectedCat.value === null || itemClass(item) === selectedCat.value;
+}
+
 // ── 综合筛选 + 搜索 ──
-const isFiltering = computed(() => selectedYear.value !== null || searchQuery.value.trim() !== "");
+const isFiltering = computed(() => selectedYear.value !== null || selectedCat.value !== null || searchQuery.value.trim() !== "");
 
 const filteredYearGroups = computed(() => {
   let groups = yearGroups.value;
@@ -169,6 +215,13 @@ const filteredYearGroups = computed(() => {
         ),
       }));
     }
+  }
+
+  // 事件类型筛选（颜色）
+  if (selectedCat.value !== null) {
+    groups = groups
+      .map((g) => ({ ...g, items: g.items.filter(matchCat) }))
+      .filter((g) => g.items.length > 0);
   }
 
   // 搜索
@@ -192,15 +245,16 @@ const filteredYearGroups = computed(() => {
 // 搜索结果也应用于置顶
 const filteredTopEvents = computed(() => {
   const q = searchQuery.value.trim().toLowerCase();
-  if (!q) return topEvents.value;
   return topEvents.value.filter(
     (it) =>
-      it.title.toLowerCase().includes(q) ||
-      (it.summary || "").toLowerCase().includes(q)
+      matchCat(it) &&
+      (!q ||
+        it.title.toLowerCase().includes(q) ||
+        (it.summary || "").toLowerCase().includes(q))
   );
 });
 
-// ── 比赛节点：按年份/月份/搜索过滤 ──
+// ── 比赛节点：按年份/月份/类型/搜索过滤 ──
 const filteredEventsByYear = computed(() => {
   return eventsByYear.value
     .filter((g) => selectedYear.value === null || Number(g.year) === selectedYear.value)
@@ -208,6 +262,7 @@ const filteredEventsByYear = computed(() => {
       ...g,
       items: g.items.filter((it) => {
         if (selectedMonth.value !== null && it.date && it.date.getMonth() + 1 !== selectedMonth.value) return false;
+        if (!matchCat({ kind: "event", ...it })) return false;
         const q = searchQuery.value.trim().toLowerCase();
         if (q && !it.name.toLowerCase().includes(q) && !(it.title || "").toLowerCase().includes(q) && !(it.summary || "").toLowerCase().includes(q)) return false;
         return true;
@@ -269,11 +324,37 @@ const filteredYears = computed(() => {
           </button>
         </div>
 
+        <!-- 事件类型筛选（颜色与卡片左边框一致） -->
+        <div class="sidebar-cats" v-if="!loading">
+          <p class="sidebar-cats-label">事件类型</p>
+          <div class="cat-chips">
+            <button
+              class="cat-chip"
+              :class="{ active: selectedCat === null }"
+              @click="selectedCat = null"
+            >
+              <span class="cat-dot" style="--cat: #b0bec5"></span>
+              <span>全部</span>
+            </button>
+            <button
+              v-for="m in availableCats"
+              :key="m.key"
+              class="cat-chip"
+              :class="['tl-card--' + m.key, { active: selectedCat === m.key }]"
+              @click="selectCat(m.key)"
+            >
+              <span class="cat-dot"></span>
+              <span>{{ m.label }}</span>
+              <span class="cat-count">{{ m.count }}</span>
+            </button>
+          </div>
+        </div>
+
         <!-- 年份 / 月份导航 -->
         <nav class="sidebar-nav" v-if="!loading">
           <button
             class="sn-item sn-all"
-            :class="{ active: selectedYear === null && !searchQuery }"
+            :class="{ active: selectedYear === null && selectedCat === null && !searchQuery }"
             @click="resetAll"
           >
             <span class="sn-bullet"></span>
@@ -523,6 +604,69 @@ const filteredYears = computed(() => {
 }
 .search-clear:hover {
   color: var(--text);
+}
+
+/* ── 事件类型筛选（颜色 chips，--cat 与卡片左边框一致）── */
+.sidebar-cats {
+  margin-bottom: var(--space-lg);
+}
+.sidebar-cats-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+.cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.cat-chip:hover {
+  border-color: var(--cat, #b0bec5);
+  color: var(--text);
+}
+.cat-chip.active {
+  border-color: var(--cat, #b0bec5);
+  background: var(--cat, #b0bec5);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cat, #b0bec5);
+  transition: background var(--transition-fast);
+}
+.cat-chip.active .cat-dot {
+  background: #fff;
+}
+.cat-count {
+  font-size: 0.68rem;
+  opacity: 0.75;
+}
+.cat-chip.active .cat-count {
+  opacity: 0.9;
 }
 
 /* ── 年份 / 月份导航（左侧竖轴）── */
