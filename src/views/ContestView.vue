@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
 
@@ -6,6 +7,19 @@ const { data: competitions, loading, error } = useJson('/data/competitions.json'
   initial: []
 })
 const { skeletons } = useSkeleton(8)
+
+// ICPC 与 CCPC 合并为一张 xCPC 大卡（1×2：一张卡片、两大赛事并排）。
+// 子卡保留各自原有内容布局，仅卡片合并；点击进入 /competition/xcpc 合并页。
+const cards = computed(() => {
+  const list = competitions.value || []
+  const icpc = list.find((c) => c.slug === 'icpc')
+  const ccpc = list.find((c) => c.slug === 'ccpc')
+  if (!icpc || !ccpc) return list
+  return [
+    { slug: 'xcpc', isXcpc: true, children: [icpc, ccpc] },
+    ...list.filter((c) => c.slug !== 'icpc' && c.slug !== 'ccpc'),
+  ]
+})
 </script>
 
 <template>
@@ -33,21 +47,38 @@ const { skeletons } = useSkeleton(8)
       <!-- 竞赛卡片 -->
       <div v-else class="grid">
         <RouterLink
-          v-for="(c, i) in competitions"
+          v-for="(c, i) in cards"
           :key="c.slug"
           v-reveal="'scale-in'"
           :style="{ '--reveal-index': i }"
           :to="`/competition/${c.slug}`"
           class="card"
+          :class="{ 'card--xcpc': c.isXcpc }"
         >
-          <div class="card-image-wrap">
-            <img :src="c.image" :alt="c.name" class="card-image" />
-          </div>
-          <div class="card-body">
-            <h2>{{ c.name }}</h2>
-            <p>{{ c.desc }}</p>
-            <span class="card-link">查看详情 <i class="fa-solid fa-arrow-right"></i></span>
-          </div>
+          <!-- xCPC 合并大卡：ICPC / CCPC 两张子卡并排（1×2），各自内容布局不变 -->
+          <template v-if="c.isXcpc">
+            <div v-for="child in c.children" :key="child.slug" class="xcpc-sub">
+              <div class="card-image-wrap">
+                <img :src="child.image" :alt="child.name" class="card-image" />
+              </div>
+              <div class="card-body">
+                <h2>{{ child.name }}</h2>
+                <p>{{ child.desc }}</p>
+                <span class="card-link">查看详情 <i class="fa-solid fa-arrow-right"></i></span>
+              </div>
+            </div>
+          </template>
+          <!-- 普通卡片 -->
+          <template v-else>
+            <div class="card-image-wrap">
+              <img :src="c.image" :alt="c.name" class="card-image" />
+            </div>
+            <div class="card-body">
+              <h2>{{ c.name }}</h2>
+              <p>{{ c.desc }}</p>
+              <span class="card-link">查看详情 <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </template>
         </RouterLink>
       </div>
     </div>
@@ -150,11 +181,14 @@ const { skeletons } = useSkeleton(8)
 }
 .card-image-wrap {
   overflow: hidden;
+  padding: var(--space-md); /* 图片与卡片边缘留出间距 */
+  background: #fff;
 }
 .card-image {
   width: 100%;
   height: 220px;
-  object-fit: cover;
+  object-fit: contain; /* 完整显示整张 logo，不裁剪；留白透出卡片白底 */
+  object-position: center;
   transition: transform var(--transition-slow);
 }
 .card:hover .card-image {
@@ -196,6 +230,23 @@ const { skeletons } = useSkeleton(8)
   gap: 10px;
 }
 
+/* ── xCPC 合并大卡（1×2：一张卡片、两大赛事并排，子卡内容布局与原卡片一致）── */
+.card--xcpc {
+  grid-column: span 2;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--space-lg); /* 两子卡间距 = grid 卡片间距 */
+}
+.card--xcpc .xcpc-sub {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.card--xcpc .xcpc-sub .card-body {
+  flex: 1;
+}
+
 /* ── 响应式 ── */
 @media (max-width: 768px) {
   .contest-page {
@@ -210,6 +261,11 @@ const { skeletons } = useSkeleton(8)
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--space-md);
+  }
+  .card--xcpc {
+    grid-column: auto;
+    flex-direction: column;
+    gap: var(--space-md); /* 移动端 grid 卡片间距 */
   }
 }
 @media (max-width: 576px) {

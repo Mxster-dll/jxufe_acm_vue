@@ -54,13 +54,20 @@ const dateText = computed(() => {
   return new Date(edition.value.date).toLocaleDateString('zh-CN')
 })
 
+// 隐藏优秀奖：蓝桥杯单届名单不展示优秀奖（数据源保留，仅展示层过滤）
+function hideExcellent(rows) {
+  return (rows || []).filter((r) => !/优秀奖/.test(r.award || ''))
+}
+const nationalPersonal = computed(() => hideExcellent(edition.value?.national?.personal))
+const provincialPersonal = computed(() => hideExcellent(edition.value?.provincial?.personal))
+
 const hasNational = computed(() => {
   const n = edition.value?.national
-  return !!n && (n.university?.length || n.teams?.length || n.personal?.length)
+  return !!n && (n.university?.length || n.teams?.length || nationalPersonal.value.length)
 })
 const hasProvincial = computed(() => {
   const p = edition.value?.provincial
-  return !!p && (p.university?.length || p.teams?.length || p.personal?.length)
+  return !!p && (p.university?.length || p.teams?.length || provincialPersonal.value.length)
 })
 const noAward = computed(
   () => !!edition.value && !hasNational.value && !hasProvincial.value
@@ -79,10 +86,10 @@ function awardClass(award) {
 // ── 蓝桥杯（个人赛）：按 C/C++·Java·Python × A/B 级 × 奖等 分组名单 ──
 const isLanqiao = computed(() => edition.value?.slug === 'lanqiao')
 const nationalGroups = computed(() =>
-  isLanqiao.value ? lanqiaoGroup(edition.value?.national?.personal || []) : []
+  isLanqiao.value ? lanqiaoGroup(nationalPersonal.value) : []
 )
 const provincialGroups = computed(() =>
-  isLanqiao.value ? lanqiaoGroup(edition.value?.provincial?.personal || []) : []
+  isLanqiao.value ? lanqiaoGroup(provincialPersonal.value) : []
 )
 </script>
 
@@ -152,7 +159,7 @@ const provincialGroups = computed(() =>
               </div>
 
               <!-- 个人奖 -->
-              <div v-if="edition.national.personal?.length" class="personal-wrap">
+              <div v-if="nationalPersonal.length" class="personal-wrap">
                 <!-- 蓝桥杯：分组名单（C/C++·Java·Python × A/B × 奖等） -->
                 <template v-if="isLanqiao">
                   <RosterGroup :groups="nationalGroups" />
@@ -166,7 +173,7 @@ const provincialGroups = computed(() =>
                         <tr><th>姓名</th><th>奖项</th><th>{{ edition.slug === 'lanqiao' ? '科目' : '成绩' }}</th></tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(p, i) in edition.national.personal" :key="i">
+                        <tr v-for="(p, i) in nationalPersonal" :key="i">
                           <td>{{ p.name }}</td>
                           <td :class="awardClass(p.award)">{{ p.award }}</td>
                           <td class="cell-score">{{ p.score }}</td>
@@ -176,7 +183,7 @@ const provincialGroups = computed(() =>
                   </div>
                   <!-- 移动端：双列卡片 -->
                   <div class="personal-grid">
-                    <div v-for="(p, i) in edition.national.personal" :key="'g' + i" class="p-chip">
+                    <div v-for="(p, i) in nationalPersonal" :key="'g' + i" class="p-chip">
                       <span class="p-name" :class="awardClass(p.award)">{{ p.name }}</span>
                       <span class="p-award">{{ p.award.replace(/^个人/, '') }}</span>
                       <span class="p-score">{{ p.score }}</span>
@@ -209,7 +216,7 @@ const provincialGroups = computed(() =>
               </div>
 
               <!-- 个人奖（蓝桥杯等个人赛：姓名/奖项/科目） -->
-              <div v-if="edition.provincial.personal?.length" class="personal-wrap">
+              <div v-if="provincialPersonal.length" class="personal-wrap">
                 <!-- 蓝桥杯：分组名单 -->
                 <template v-if="isLanqiao">
                   <RosterGroup :groups="provincialGroups" />
@@ -223,7 +230,7 @@ const provincialGroups = computed(() =>
                         <tr><th>姓名</th><th>奖项</th><th>科目</th></tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(p, i) in edition.provincial.personal" :key="i">
+                        <tr v-for="(p, i) in provincialPersonal" :key="i">
                           <td>{{ p.name }}</td>
                           <td :class="awardClass(p.award)">{{ p.award }}</td>
                           <td class="cell-score">{{ p.score }}</td>
@@ -233,7 +240,7 @@ const provincialGroups = computed(() =>
                   </div>
                   <!-- 移动端：双列卡片 -->
                   <div class="personal-grid">
-                    <div v-for="(p, i) in edition.provincial.personal" :key="'g' + i" class="p-chip">
+                    <div v-for="(p, i) in provincialPersonal" :key="'g' + i" class="p-chip">
                       <span class="p-name" :class="awardClass(p.award)">{{ p.name }}</span>
                       <span class="p-award">{{ p.award.replace(/^个人/, '') }}</span>
                       <span class="p-score">{{ p.score }}</span>
