@@ -925,5 +925,187 @@
         ]
       }
     ]
+  },
+  {
+    "slug": "2025-10-26-freshman",
+    "title": "新生选拔赛",
+    "date": "2025-10-26",
+    "isTop": false,
+    "summary": "2025级新生选拔赛：10月26日 15:00-18:30 在牛客平台线上举行，选拔有编程基础的同学加入协会",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "新生选拔赛是程序设计竞赛协会的传统赛事，意在选拔有基本程序设计能力的同学加入协会。",
+          "2025级新生选拔赛于 **2025年10月26日 15:00-18:30** 在牛客竞赛平台线上举行。"
+        ]
+      },
+      {
+        "type": "info",
+        "heading": "比赛信息",
+        "icon": "fa-info-circle",
+        "cards": [
+          {
+            "icon": "fa-calendar-alt",
+            "title": "比赛时间",
+            "desc": "2025年10月26日 15:00 - 18:30"
+          },
+          {
+            "icon": "fa-desktop",
+            "title": "比赛平台",
+            "desc": "牛客竞赛 OJ（线上）"
+          },
+          {
+            "icon": "fa-link",
+            "title": "比赛主页",
+            "desc": "[江西财经大学2025新生选拔赛](https://ac.nowcoder.com/acm/contest/121021)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "2026-3-7-lanqiao-select",
+    "title": "蓝桥杯校级选拔赛",
+    "date": "2026-03-07",
+    "isTop": false,
+    "summary": "2026蓝桥杯校级选拔赛：3月7日 14:00-17:00 在牛客平台线上举行",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "2026年蓝桥杯校级选拔赛于 **2026年3月7日 14:00-17:00** 在牛客竞赛平台线上举行，为校内选拔场次（牛客标注：高校选拔赛，ACM 赛制）。"
+        ]
+      },
+      {
+        "type": "info",
+        "heading": "比赛信息",
+        "icon": "fa-info-circle",
+        "cards": [
+          {
+            "icon": "fa-calendar-alt",
+            "title": "比赛时间",
+            "desc": "2026年3月7日 14:00 - 17:00"
+          },
+          {
+            "icon": "fa-desktop",
+            "title": "比赛平台",
+            "desc": "牛客竞赛 OJ（线上）"
+          },
+          {
+            "icon": "fa-link",
+            "title": "比赛主页",
+            "desc": "[2026蓝桥杯校赛](https://ac.nowcoder.com/acm/contest/129641)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "2026-3-15-tts-select",
+    "title": "团体程序设计天梯赛校级选拔赛",
+    "date": "2026-03-15",
+    "isTop": false,
+    "summary": "2026团体程序设计天梯赛校级选拔赛：3月15日 14:00-17:00 在 PTA 平台线上举行",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "2026年团体程序设计天梯赛校级选拔赛于 **2026年3月15日 14:00-17:00** 在 PTA（pintia.cn）平台线上举行。"
+        ]
+      },
+      {
+        "type": "info",
+        "heading": "比赛信息",
+        "icon": "fa-info-circle",
+        "cards": [
+          {
+            "icon": "fa-calendar-alt",
+            "title": "比赛时间",
+            "desc": "2026年3月15日 14:00 - 17:00"
+          },
+          {
+            "icon": "fa-desktop",
+            "title": "比赛平台",
+            "desc": "PTA（pintia.cn，线上）"
+          },
+          {
+            "icon": "fa-link",
+            "title": "比赛主页",
+            "desc": "[团体程序设计天梯赛校级选拔赛](https://pintia.cn/problem-sets/2032653701036605440/exam)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "2026-7-20-summer-training",
+    "title": "2026暑期集训（7月20日-8月20日）",
+    "date": "2026-07-20",
+    "isTop": false,
+    "summary": "程序设计竞赛协会2026年暑期集训：7月20日-8月20日，为备战 ICPC/CCPC 网络预选赛进行集中训练",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "为备战 9 月前后的 **ICPC/CCPC 网络预选赛**，程序设计竞赛协会将于 **2026年7月20日 - 8月20日** 开展暑期集训，进行为期一个月的算法与程序设计集中训练。",
+          "集训的报名登记、日程日历与组队帮助详见置顶新闻《[暑期集训报名及XCPC组队帮助](/action/2026-7-4-summer-training)》。"
+        ]
+      },
+      {
+        "type": "info",
+        "heading": "集训信息",
+        "icon": "fa-info-circle",
+        "cards": [
+          {
+            "icon": "fa-calendar-alt",
+            "title": "集训时间",
+            "desc": "2026年7月20日 - 8月20日"
+          },
+          {
+            "icon": "fa-file-alt",
+            "title": "报名与日程",
+            "desc": "点击查看：[暑期集训报名及XCPC组队帮助](/action/2026-7-4-summer-training)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "2026-8-24-xcpc-select",
+    "title": "XCPC网络赛校级选拔赛",
+    "date": "2026-08-24",
+    "isTop": false,
+    "summary": "2026年XCPC网络赛校级选拔赛：8月24日 14:00-19:00 在牛客平台线上举行",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": [
+          "2026年XCPC网络赛校级选拔赛于 **2026年8月24日 14:00-19:00** 在牛客竞赛平台线上举行，为 ICPC/CCPC 网络预选赛的校内选拔场次（牛客标注：高校选拔赛）。"
+        ]
+      },
+      {
+        "type": "info",
+        "heading": "比赛信息",
+        "icon": "fa-info-circle",
+        "cards": [
+          {
+            "icon": "fa-calendar-alt",
+            "title": "比赛时间",
+            "desc": "2026年8月24日 14:00 - 19:00"
+          },
+          {
+            "icon": "fa-desktop",
+            "title": "比赛平台",
+            "desc": "牛客竞赛 OJ（线上）"
+          },
+          {
+            "icon": "fa-link",
+            "title": "比赛主页",
+            "desc": "[2026江西财经大学xCPC网络赛校赛](https://ac.nowcoder.com/acm/contest/139925)"
+          }
+        ]
+      }
+    ]
   }
 ]
