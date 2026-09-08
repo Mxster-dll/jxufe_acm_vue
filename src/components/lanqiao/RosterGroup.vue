@@ -1,6 +1,10 @@
 <script setup>
-// 蓝桥杯分组名单渲染（赛事总页 / 单届详情页共用）：
-// 组标题（C/C++·Java·Python × A/B）→ 奖等行（奖等徽章 + 姓名表格，天梯赛式框线）
+// 分组名单渲染（赛事总页 / 单届详情页共用）：
+// 组标题 → 奖等行（奖等徽章 + 姓名表格，天梯赛式框线）
+// 组对象两种形态：
+//   1) lanqiao 形态 { lang, level, awards }  → 标题 = 「C/C++ · A组」（icon fa-code）
+//   2) 通用形态   { label, date?, icon?, awards } → 标题 = label（+ 日期角标），如百度之星「第一场 2023-08-12」
+// awards = [{ award: '金奖'|'一等奖'…, persons: [{ name, rank, title? }] }]
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { LANGS, lqAwardTone } from '../../utils/lanqiaoGroup'
 
@@ -9,6 +13,18 @@ const props = defineProps({
 })
 
 const LANQ_NAME = Object.fromEntries(LANGS)
+
+// 组显示标题：通用形态用 label；lanqiao 形态回退为 语言·组别
+function groupTitle(g) {
+  if (g.label) return g.label
+  return (LANQ_NAME[g.lang] || g.lang) + (g.level ? ` · ${g.level}组` : '')
+}
+function groupIcon(g) {
+  return g.icon || 'fa-code'
+}
+function groupKey(g) {
+  return g.label || `${g.lang}|${g.level}`
+}
 
 // 每行最大列数按表格实际可用宽度动态计算（ResizeObserver 监听组件宽度）：
 // 列宽目标 ≥112px（排名槽 64px + 姓名 ~48px，4 字姓名不省略），clamp 2..8。
@@ -56,15 +72,15 @@ function alignName(name) {
 </script>
 
 <template>
-  <div v-for="g in props.groups" :key="g.lang + g.level" class="lq-group" ref="groupsEl">
-    <h5 class="lq-group-title"><i class="fa-solid fa-code"></i> {{ LANQ_NAME[g.lang] }} <span class="lq-group-level">· {{ g.level }}组</span></h5>
+  <div v-for="g in props.groups" :key="groupKey(g)" class="lq-group" ref="groupsEl">
+    <h5 class="lq-group-title"><i class="fa-solid" :class="groupIcon(g)"></i> {{ groupTitle(g) }}<span v-if="g.date" class="lq-group-date">{{ g.date }}</span></h5>
     <div v-for="(aw, ai) in g.awards" :key="ai" class="lq-award-row">
       <span class="lq-award-tag" :class="lqAwardTone(aw.award)">{{ aw.award }}</span>
       <div class="lq-table-wrap">
         <table class="lq-name-table">
           <tbody>
             <tr v-for="(row, ri) in chunk(aw.persons, MAX_CELLS)" :key="ri">
-              <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell">
+              <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell" :title="p.title || ''">
                 <span class="lq-cell-inner">
                   <span v-if="p.rank != null" class="lq-rank-slot">
                     <span class="lq-rank-pill">#{{ p.rank }}</span>
@@ -101,6 +117,18 @@ function alignName(name) {
 .lq-group-level {
   color: var(--text-muted);
   font-weight: 600;
+}
+/* 通用形态组的日期角标（如百度之星各场次公示日期） */
+.lq-group-date {
+  margin-left: 8px;
+  padding: 1px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  white-space: nowrap;
 }
 /* 奖等行：徽章 + 姓名表格 */
 .lq-award-row {

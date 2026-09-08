@@ -62,11 +62,11 @@ export function lanqiaoGroup(rows) {
   return groups
 }
 
-// 奖项 → 配色类（与奖牌色一致；优秀奖浅金灰）
+// 奖项 → 配色类（与奖牌色一致；优秀奖浅金灰；兼容「一等奖/金奖」「二等奖/银奖」「三等奖/铜奖」两种措辞）
 export function lqAwardTone(award) {
-  if (/一等奖|特等奖/.test(award)) return 'medal-gold'
-  if (/二等奖/.test(award)) return 'medal-silver'
-  if (/三等奖/.test(award)) return 'medal-bronze'
+  if (/一等奖|特等奖|金奖|金牌/.test(award)) return 'medal-gold'
+  if (/二等奖|银奖|银牌/.test(award)) return 'medal-silver'
+  if (/三等奖|铜奖|铜牌/.test(award)) return 'medal-bronze'
   if (/优秀奖/.test(award)) return 'lq-excellent'
   return ''
 }
