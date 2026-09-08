@@ -29,9 +29,16 @@ export function useCompetitionEvents() {
         })
       )
 
+      // 大事记时间轴只展示获奖的 xcpc（ICPC/CCPC）场次：
+      // 未获奖场次（网络预选赛 / 区域赛 / 邀请赛 / 省赛等，summary 无 🥇🥈🥉）不生成卡片。
+      // 仅过滤展示层，events/*.json 数据保留（竞赛详情页参赛历史的日期对照仍在使用）。
+      const XCPC_SERIES = new Set(['icpc', 'ccpc'])
+      const hasAward = (s) => /[🥇🥈🥉]/.test(s || '')
+
       const groups = {}
       for (const comp of files) {
         for (const ev of comp.events) {
+          if (XCPC_SERIES.has(comp.slug) && !hasAward(ev.summary)) continue
           const year = String(ev.year)
           let date = null
           let dateStr = `${year}年` // 无具体日期时回退显示年份
