@@ -166,6 +166,19 @@ watch(
       }
       return
     }
+    // mode=baidu：百度之星为个人赛，我校获奖名单来自 /data/baidu.json（按年份分组）
+    if (c.mode === 'baidu') {
+      console.log('该赛事使用百度之星获奖名单（mode=baidu）:', c.slug)
+      try {
+        const res = await fetch('/data/baidu.json')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        baiduData.value = await res.json()
+      } catch (e) {
+        console.error('加载 /data/baidu.json 失败:', e)
+        baiduData.value = null
+      }
+      return
+    }
     try {
       const evRes = await fetch(`/data/events/${c.slug}.json`)
       if (!evRes.ok) throw new Error(`HTTP ${evRes.status}`)
@@ -431,6 +444,72 @@ const lqStages = [
   ['national', '国赛'],
   ['provincial', '省赛'],
 ]
+
+// ── 百度之星获奖名单（mode=baidu）：/data/baidu.json ──
+const baiduData = ref(null)
+
+// 环节元信息（决赛在上、初赛在下；视觉与蓝桥杯 国赛/省赛 两卡一致）
+const BAIDU_STAGE_META = {
+  final: { label: '决赛', icon: 'fa-trophy' },
+  preliminary: { label: '初赛', icon: 'fa-medal' },
+}
+const BAIDU_AWARD_RANK = { 金奖: 0, 银奖: 1, 铜奖: 2 }
+
+// 行数组 → 奖等行（{ award, persons:[{name, rank, title}] }），按 金→银→铜、奖内按公告序号升序
+function rollRows(rows) {
+  const byAward = new Map()
+  for (const r of rows || []) {
+    const award = r.award || '未标注'
+    if (!byAward.has(award)) byAward.set(award, [])
+    byAward.get(award).push({
+      name: r.name,
+      rank: r.rank != null ? Number(r.rank) : null,
+      title: r.src || '',
+    })
+  }
+  return [...byAward.entries()]
+    .map(([award, persons]) => ({
+      award,
+      persons: persons
+        .slice()
+        .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity)),
+    }))
+    .sort((a, b) => (BAIDU_AWARD_RANK[a.award] ?? 9) - (BAIDU_AWARD_RANK[b.award] ?? 9))
+}
+
+// 每年名单：决赛/初赛两卡（空环节保留，页面提示"暂无名单"）
+const baiduYears = computed(() => {
+  if (!baiduData.value?.years) return []
+  return baiduData.value.years.map((y) => {
+    const stages = (y.stages || []).map((st) => {
+      const meta = BAIDU_STAGE_META[st.key] || { label: st.key, icon: 'fa-trophy' }
+      const groups = (st.groups || []).map((g) => ({
+        label: g.label,
+        date: g.date,
+        awards: rollRows(g.rows),
+      }))
+      const total = groups.reduce(
+        (s, g) => s + g.awards.reduce((s2, a) => s2 + a.persons.length, 0),
+        0
+      )
+      return { key: st.key, label: meta.label, icon: meta.icon, groups, total }
+    })
+    return {
+      year: y.year,
+      edition: y.edition,
+      stages,
+      total: stages.reduce((s, st) => s + st.total, 0),
+    }
+  })
+})
+
+// 竞赛详情页"参赛历史/获奖名单"小节标题
+const sectionTitle = computed(() => {
+  const m = comp.value?.mode
+  if (m === 'lanqiao') return '我校蓝桥杯获奖总名单'
+  if (m === 'baidu') return '我校百度之星获奖名单'
+  return '我校参赛历史'
+})
 </script>
 
 <template>
@@ -515,7 +594,7 @@ const lqStages = [
         <!-- 参赛历史 -->
         <section class="comp-history">
           <div class="history-toolbar">
-            <h2 class="section-label"><i class="fas fa-timeline"></i> {{ comp.mode === 'lanqiao' ? '我校蓝桥杯获奖总名单' : '我校参赛历史' }}</h2>
+            <h2 class="section-label"><i class="fas fa-timeline"></i> {{ sectionTitle }}</h2>
             <div v-if="historyRows.length || teamRows.length" class="view-toggle" role="group" aria-label="切换视图">
               <button type="button" class="view-btn" :class="{ active: viewMode === 'table' }" @click="setView('table')" title="表格视图"><i class="fa-solid fa-table-list"></i> 表格</button>
               <button type="button" class="view-btn" :class="{ active: viewMode === 'card' }" @click="setView('card')" title="卡片视图"><i class="fa-solid fa-table-cells-large"></i> 卡片</button>
@@ -543,6 +622,32 @@ const lqStages = [
                     </div>
                     <RosterGroup v-if="y[st[0]].length" :groups="st[0] === 'national' ? y.nationalGroups : y.provincialGroups" />
                     <p v-else class="empty">本届无{{ st[1] }}获奖记录</p>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </template>
+
+          <!-- 百度之星获奖名单（个人赛：按年 → 决赛/初赛两卡 → 场次/组别分组 → 奖等 → 姓名表格，样式同蓝桥杯总名单） -->
+          <template v-else-if="comp.mode === 'baidu'">
+            <p v-if="!baiduData" class="empty">名单加载中…</p>
+            <template v-else>
+              <div class="lq-list">
+                <div v-for="y in baiduYears" :key="y.year" class="lq-year">
+                  <div class="lq-year-head">
+                    <h3>第{{ y.edition }}届百度之星（{{ y.year }}年）</h3>
+                    <span class="lq-count">{{ y.total }} 人次</span>
+                  </div>
+                  <div v-for="st in y.stages" :key="st.key" class="lq-stage-card" :class="'lq-bd-' + st.key">
+                    <div class="lq-stage-head">
+                      <h4 class="lq-stage-title">
+                        <i class="fa-solid" :class="st.icon"></i>
+                        {{ st.label }}
+                      </h4>
+                      <span class="lq-count">{{ st.total }} 人次</span>
+                    </div>
+                    <RosterGroup v-if="st.groups.length" :groups="st.groups" />
+                    <p v-else class="empty">本届暂无{{ st.label }}获奖名单</p>
                   </div>
                 </div>
               </div>
@@ -1003,6 +1108,13 @@ const lqStages = [
 .lq-stage-card.lq-provincial {
   border-left: 4px solid var(--primary);
 }
+/* 百度之星环节卡：决赛(accent,同国赛) / 初赛(primary,同省赛) */
+.lq-stage-card.lq-bd-final {
+  border-left: 4px solid var(--accent);
+}
+.lq-stage-card.lq-bd-preliminary {
+  border-left: 4px solid var(--primary);
+}
 .lq-stage-head {
   display: flex;
   align-items: center;
@@ -1028,6 +1140,12 @@ const lqStages = [
 }
 .lq-stage-card.lq-national .lq-stage-title i {
   color: var(--accent);
+}
+.lq-stage-card.lq-bd-final .lq-stage-title i {
+  color: var(--accent);
+}
+.lq-stage-card.lq-bd-preliminary .lq-stage-title i {
+  color: var(--primary);
 }
 .lq-stage-date {
   font-size: var(--font-size-xs);
