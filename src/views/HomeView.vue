@@ -206,13 +206,19 @@ onUnmounted(() => {
 });
 
 // ── 我们参与的赛事 logo ──
+// ICPC 与 CCPC 合并为一张卡（与竞赛详情页 xCPC 合并页同构：两块上下堆叠，各自 logo+名称）
 const contestLogos = [
-  { slug: "icpc", src: "/images/contest/icpc.png", alt: "ICPC", rot: -4 },
-  { slug: "ccpc", src: "/images/contest/ccpc_logo.png", alt: "CCPC", rot: 2 },
-  { slug: "gplt", src: "/images/contest/gplt.png", alt: "天梯赛", rot: -2 },
-  { slug: "baidu", src: "/images/contest/baidu.png", alt: "百度之星", rot: 3 },
-  { slug: "chuanzhi", src: "/images/contest/czb.png", alt: "传智杯", rot: -2 },
-  { slug: "lanqiao", src: "/images/contest/lqb.png", alt: "蓝桥杯", rot: -1 },
+  {
+    slug: "xcpc",
+    blocks: [
+      { src: "/images/contest/icpc.png", name: "ICPC程序设计竞赛" },
+      { src: "/images/contest/ccpc_logo.png", name: "CCPC程序设计竞赛" },
+    ],
+  },
+  { slug: "gplt", src: "/images/contest/gplt.png", label: "天梯赛" },
+  { slug: "baidu", src: "/images/contest/astar_logo.png", label: "百度之星" },
+  { slug: "chuanzhi", src: "/images/contest/czb.png", label: "传智杯" },
+  { slug: "lanqiao", src: "/images/contest/lqb.png", label: "蓝桥杯" },
 ];
 
 const features = [
@@ -456,11 +462,30 @@ const { newsList, loading, error } = useNews();
             :key="logo.slug"
             :to="`/competition/${logo.slug}`"
             class="contest-card"
+            :class="{ 'contest-card--xcpc': logo.blocks }"
           >
-            <div class="contest-card-img">
-              <img :src="logo.src" :alt="logo.alt" />
-            </div>
-            <span class="contest-card-label">{{ logo.alt }}</span>
+            <!-- xCPC 合并卡：与竞赛信息页 grid 的大卡同构 —— 横跨两列，ICPC/CCPC 左右两半 -->
+            <template v-if="logo.blocks">
+              <div class="contest-card-subs">
+                <div
+                  v-for="b in logo.blocks"
+                  :key="b.src"
+                  class="contest-card-sub"
+                >
+                  <div class="contest-card-sub-img">
+                    <img :src="b.src" :alt="b.name" />
+                  </div>
+                  <span class="contest-card-label">{{ b.name }}</span>
+                </div>
+              </div>
+            </template>
+            <!-- 普通赛事卡：logo + 名称 -->
+            <template v-else>
+              <div class="contest-card-img">
+                <img :src="logo.src" :alt="logo.label" />
+              </div>
+              <span class="contest-card-label">{{ logo.label }}</span>
+            </template>
           </RouterLink>
         </div>
       </div>
@@ -988,6 +1013,38 @@ const { newsList, loading, error } = useNews();
   max-height: 100%;
   object-fit: contain;
 }
+/* ICPC/CCPC 合并卡：与竞赛信息页 grid 大卡同构 —— 横跨两列，左右两半各一块 */
+.contest-card--xcpc {
+  grid-column: span 2;
+}
+.contest-card--xcpc .contest-card-subs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+}
+.contest-card--xcpc .contest-card-sub {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.contest-card--xcpc .contest-card-sub-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 64px;
+}
+.contest-card--xcpc .contest-card-sub-img img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
 .contest-card-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -1478,6 +1535,12 @@ const { newsList, loading, error } = useNews();
   }
   .contest-card-img {
     width: 60px;
+    height: 44px;
+  }
+  .contest-card--xcpc {
+    grid-column: 1 / -1;
+  }
+  .contest-card--xcpc .contest-card-sub-img {
     height: 44px;
   }
   .about {
