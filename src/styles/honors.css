@@ -63,3 +63,16 @@
   --tag-bg-hover: rgba(107, 114, 128, 0.08);
   --tag-border-hover: var(--honor-more);
 }
+
+/* 比赛战绩胶囊：由站点竞赛数据自动汇总（口径与生成逻辑见 utils/honorPills.js），
+   如「xCPC 区域赛🥈2🥉1 邀请赛🥇1🥈3🥉4」。
+   文字比手写荣誉长，故允许换行、左对齐，并限宽以免撑破卡片；窄屏下自动折行。
+   颜色仍走比赛色（--honor-contest）——xCPC / 天梯赛 / 百度之星 / 蓝桥杯同属比赛类，
+   系列之间靠开头的名字区分，奖牌档位靠 emoji 区分。 */
+.honor-tag--stat {
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}

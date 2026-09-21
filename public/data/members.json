@@ -4,7 +4,6 @@
     "class": "21计算机科学与技术1班",
     "photo": "/images/excellent_member/whf.png",
     "honors": [
-      { "text": "2023区域赛银牌", "type": "contest" },
       { "text": "2024ICPC江西省赛季军", "type": "contest" },
       { "text": "保研至北京邮电大学", "type": "destination" },
       { "text": "🛰️：wanghaifeng684568", "type": "contact" }
@@ -16,9 +15,7 @@
     "photo": "/images/excellent_member/wjj.png",
     "honors": [
       { "text": "保研至华东师范大学", "type": "destination" },
-      { "text": "2023-2024学年国家奖学金", "type": "honor" },
-      { "text": "蓝桥杯国家级一等奖 *2", "type": "contest" },
-      { "text": "2025团体程序设计天梯赛全国个人三等奖", "type": "contest" }
+      { "text": "2023-2024学年国家奖学金", "type": "honor" }
     ]
   },
   {
@@ -26,10 +23,7 @@
     "class": "22信息与计算科学1班",
     "photo": "/images/excellent_member/hjh.png",
     "honors": [
-      { "text": "保研至深圳大学VCC组", "type": "destination" },
-      { "text": "2023ICPC江西省铜牌", "type": "contest" },
-      { "text": "2024ICPC江西省铜牌", "type": "contest" },
-      { "text": "2025蓝桥杯国三", "type": "contest" }
+      { "text": "保研至深圳大学VCC组", "type": "destination" }
     ]
   },
   {
@@ -37,9 +31,7 @@
     "class": "---",
     "photo": "/images/excellent_member/hyb.png",
     "honors": [
-      { "text": "考研至上海交通大学计算机学院软件工程", "type": "destination" },
-      { "text": "CCPC湘潭邀请赛铜牌", "type": "contest" },
-      { "text": "江西省大学生程序设计大赛一等奖", "type": "contest" }
+      { "text": "考研至上海交通大学计算机学院软件工程", "type": "destination" }
     ]
   },
   {
@@ -47,9 +39,7 @@
     "class": "21计算机科学与技术1班",
     "photo": "/images/excellent_member/csk.png",
     "honors": [
-      { "text": "考研至中国科学技术大学软件工程", "type": "destination" },
-      { "text": "蓝桥杯国家级二等奖", "type": "contest" },
-      { "text": "ICPC江西省赛银牌", "type": "contest" }
+      { "text": "考研至中国科学技术大学软件工程", "type": "destination" }
     ]
   },
   {
@@ -68,41 +58,25 @@
     "name": "邓一帆",
     "class": "22软件工程9班",
     "photo": "/images/excellent_member/dyf.png",
-    "honors": [
-      { "text": "2023ICPC江西省赛铜牌", "type": "contest" },
-      { "text": "第十四届蓝桥杯国家级三等奖", "type": "contest" },
-      { "text": "第十五届蓝桥杯国家级优秀奖", "type": "contest" }
-    ]
+    "honors": []
   },
   {
     "name": "李鑫",
     "class": "计算机231",
     "photo": "/images/excellent_member/lx.png",
-    "honors": [
-      { "text": "2025CCPC全国邀请赛银牌*2", "type": "contest" },
-      { "text": "2025ICPC全国邀请赛铜牌*2", "type": "contest" },
-      { "text": "2024ICPC亚洲区域赛铜牌*1", "type": "contest" }
-    ]
+    "honors": []
   },
   {
     "name": "张瑞杰",
     "class": "软件231",
     "photo": "/images/excellent_member/zrj.png",
-    "honors": [
-      { "text": "2024ICPC区域赛昆明铜牌", "type": "contest" },
-      { "text": "2025ICPC邀请赛南昌铜牌", "type": "contest" },
-      { "text": "2025CCPC邀请赛南昌铜牌", "type": "contest" },
-      { "text": "蓝桥CB国二", "type": "contest" }
-    ]
+    "honors": []
   },
   {
     "name": "林俊坤",
     "class": "21计算机科学与技术1班",
     "photo": "/images/excellent_member/ljk.png",
     "honors": [
-      { "text": "蓝桥杯国家级二等奖", "type": "contest" },
-      { "text": "ICPC江西省赛银牌", "type": "contest" },
-      { "text": "ICPC昆明邀请赛铜牌", "type": "contest" },
       { "text": "sls亲传弟子(头像不是本人)", "type": "honor" }
     ]
   },
@@ -111,10 +85,7 @@
     "class": "21量化 & 25数学",
     "photo": "/images/excellent_member/pjj.png",
     "honors": [
-      { "text": "区域赛铜牌*1", "type": "contest" },
-      { "text": "邀请赛银牌*3，铜牌*5", "type": "contest" },
       { "text": "省赛季军+首刀", "type": "contest" },
-      { "text": "蓝桥杯CB，C研国一，CA国二", "type": "contest" },
       { "text": "关注B站红烧猪猪头谢谢喵、复活小聪明谢谢喵", "type": "contact" }
     ]
   },
@@ -123,10 +94,7 @@
     "class": "22计算机科学与技术2班",
     "photo": "/images/excellent_member/xjj.png",
     "honors": [
-      { "text": "邀请赛：银牌*2，铜牌*1", "type": "contest" },
-      { "text": "蓝桥杯：国一*2", "type": "contest" },
-      { "text": "睿抗：国一*1", "type": "contest" },
-      { "text": "天梯赛：团队国一，个人国二", "type": "contest" }
+      { "text": "睿抗：国一*1", "type": "contest" }
     ]
   },
   {
@@ -134,10 +102,6 @@
     "class": "23数据科学与大数据技术1班",
     "photo": "/images/excellent_member/wjz.png",
     "honors": [
-      { "text": "2025ICPC香港区域赛铜", "type": "contest" },
-      { "text": "2025长春CCPC邀请赛铜", "type": "contest" },
-      { "text": "2025ICPC南昌省银", "type": "contest" },
-      { "text": "蓝桥杯国一", "type": "contest" },
       { "text": "睿抗国一", "type": "contest" },
       { "text": "2024-2025学年国家奖学金", "type": "honor" }
     ]
@@ -147,10 +111,6 @@
     "class": "23计算机科学与技术2班",
     "photo": "/images/excellent_member/zyf.png",
     "honors": [
-      { "text": "2025ICPC香港区域赛铜", "type": "contest" },
-      { "text": "2025长春CCPC邀请赛铜", "type": "contest" },
-      { "text": "2025ICPC南昌省银", "type": "contest" },
-      { "text": "蓝桥杯国三", "type": "contest" },
       { "text": "2024-2025学年国家奖学金", "type": "honor" }
     ]
   },
@@ -159,7 +119,6 @@
     "class": "23软件工程3班",
     "photo": "/images/excellent_member/yyx.png",
     "honors": [
-      { "text": "蓝桥杯国家一等奖", "type": "contest" },
       { "text": "睿抗编程技能赛国家一等奖", "type": "contest" }
     ]
   },
@@ -168,8 +127,6 @@
     "class": "23软件工程12班",
     "photo": "/images/excellent_member/lxb.png",
     "honors": [
-      { "text": "ICPC全国邀请赛铜牌", "type": "contest" },
-      { "text": "蓝桥杯国家级三等奖", "type": "contest" },
       { "text": "睿抗国家级二等奖", "type": "contest" },
       { "text": "传智杯国家级二等奖", "type": "contest" }
     ]
@@ -179,9 +136,7 @@
     "class": "24计算机科学与技术2班",
     "photo": "/images/excellent_member/zhongjun.png",
     "honors": [
-      { "text": "2025ICPC江西省赛铜奖", "type": "contest" },
       { "text": "睿抗国家三等奖", "type": "contest" },
-      { "text": "蓝桥杯CB省二", "type": "contest" },
       { "text": "交换友链woodfish.site喵", "type": "contact" }
     ]
   },
@@ -190,10 +145,7 @@
     "class": "23网络空间安全1班",
     "photo": "/images/excellent_member/cf.png",
     "honors": [
-      { "text": "2025南昌ICPC省铜", "type": "contest" },
-      { "text": "天梯赛团体国家级一等奖", "type": "contest" },
-      { "text": "传智杯国家级二等奖", "type": "contest" },
-      { "text": "蓝桥杯国家级三等奖", "type": "contest" }
+      { "text": "传智杯国家级二等奖", "type": "contest" }
     ]
   },
   {
@@ -201,7 +153,6 @@
     "class": "24数据科学与大数据技术1班",
     "photo": "/images/excellent_member/yzn.png",
     "honors": [
-      { "text": "蓝桥杯省二", "type": "contest" },
       { "text": "睿抗国三", "type": "contest" },
       { "text": "关注小羊谢谢喵", "type": "contact" }
     ]
@@ -211,9 +162,7 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/lzh.png",
     "honors": [
-      { "text": "保研至厦门大学", "type": "destination" },
-      { "text": "蓝桥杯国二", "type": "contest" },
-      { "text": "天梯赛国三", "type": "contest" }
+      { "text": "保研至厦门大学", "type": "destination" }
     ]
   },
   {
@@ -221,7 +170,6 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/nzy.png",
     "honors": [
-      { "text": "蓝桥杯国二*1，国三*1", "type": "contest" },
       { "text": "睿抗国一*1", "type": "contest" },
       { "text": "传智杯国一*1", "type": "contest" }
     ]
@@ -231,8 +179,7 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/xht.png",
     "honors": [
-      { "text": "保研至北京交通大学", "type": "destination" },
-      { "text": "蓝桥杯国家二等奖", "type": "contest" }
+      { "text": "保研至北京交通大学", "type": "destination" }
     ]
   },
   {
@@ -259,7 +206,6 @@
     "photo": "/images/excellent_member/wsy.png",
     "honors": [
       { "text": "保研至西安电子科技大学计算机科学与技术专业", "type": "destination" },
-      { "text": "2025蓝桥杯省一", "type": "contest" },
       { "text": "22级信息学院课程加权年级第一", "type": "honor" },
       { "text": "国家奖学金", "type": "honor" }
     ]
@@ -279,8 +225,6 @@
     "honors": [
       { "text": "保研至厦门大学", "type": "destination" },
       { "text": "国家奖学金", "type": "honor" },
-      { "text": "蓝桥杯C/C++组国二", "type": "contest" },
-      { "text": "天梯赛团体国二、个人国三", "type": "contest" },
       { "text": "睿抗国二", "type": "contest" }
     ]
   },
@@ -299,7 +243,6 @@
     "photo": "/images/excellent_member/zrq.png",
     "honors": [
       { "text": "保研至南京师范大学", "type": "destination" },
-      { "text": "蓝桥杯C/C++组国三", "type": "contest" },
       { "text": "优秀团干", "type": "honor" }
     ]
   },
@@ -328,10 +271,7 @@
     "class": "23届大数据",
     "photo": "/images/excellent_member/lmh.png",
     "honors": [
-      { "text": "保研至中国科学技术大学", "type": "destination" },
-      { "text": "ICPC亚洲区域赛南京上海站铜奖", "type": "contest" },
-      { "text": "ICPC陕西邀请赛银奖", "type": "contest" },
-      { "text": "蓝桥杯国家一等奖", "type": "contest" }
+      { "text": "保研至中国科学技术大学", "type": "destination" }
     ]
   },
   {

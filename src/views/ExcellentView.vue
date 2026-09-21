@@ -1,8 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
+import { loadHonorPills } from '../utils/honorPills'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
@@ -12,6 +13,14 @@ const fallback = '/images/excellent_member/default.png'
 const list = computed(() =>
   (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
 )
+
+/** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
+    手写的比赛条目已改为由它呈现——口径与生成逻辑见 utils/honorPills.js。
+    数据异步加载，失败时不影响其它内容；两个页面共用同一份缓存。 */
+const pills = ref(new Map())
+onMounted(async () => {
+  pills.value = await loadHonorPills()
+})
 </script>
 
 <template>
@@ -58,8 +67,15 @@ const list = computed(() =>
             <h3>{{ m.name }}</h3>
             <p class="member-class">{{ m.class }}</p>
 
-            <!-- 荣誉标签：按类型分色（比赛 / 毕业去向 / 个人荣誉·职位 / 联系方式） -->
+            <!-- 荣誉标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->
             <div class="honor-tags">
+              <span
+                v-for="(p, i) in pills.get(m.name) || []"
+                :key="`pill-${i}`"
+                class="honor-tag honor-tag--contest honor-tag--stat"
+                title="比赛战绩，由站点竞赛数据自动汇总"
+                >{{ p }}</span
+              >
               <span
                 v-for="h in m.honors"
                 :key="h.text"
