@@ -1,6 +1,8 @@
 <script setup>
+import { computed } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
+import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
 
 const {
   data: leaders,
@@ -8,6 +10,14 @@ const {
   error,
 } = useJson("/data/leaders.json", { initial: [] });
 const { skeletons } = useSkeleton(5);
+
+/** 每条荣誉归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
+const list = computed(() =>
+  (leaders.value || []).map((l) => ({
+    ...l,
+    achievements: normalizeHonors(l.achievements),
+  }))
+);
 </script>
 
 <template>
@@ -72,7 +82,7 @@ const { skeletons } = useSkeleton(5);
       <!-- 负责人列表 -->
       <div v-else class="leader-grid">
         <article
-          v-for="(l, i) in leaders"
+          v-for="(l, i) in list"
           :key="l.name"
           v-reveal="'fade-up'"
           :style="{ '--reveal-index': i }"
@@ -93,11 +103,16 @@ const { skeletons } = useSkeleton(5);
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 
-            <!-- 成就标签 -->
+            <!-- 成就标签：按类型分色（比赛 / 毕业去向 / 个人荣誉·职位 / 联系方式） -->
             <div class="achievement-tags">
-              <span v-for="a in l.achievements" :key="a" class="ach-tag">{{
-                a
-              }}</span>
+              <span
+                v-for="a in l.achievements"
+                :key="a.text"
+                class="honor-tag"
+                :class="`honor-tag--${a.type}`"
+                :title="HONOR_TYPE_LABELS[a.type]"
+                >{{ a.text }}</span
+              >
             </div>
           </div>
         </article>
@@ -309,27 +324,18 @@ const { skeletons } = useSkeleton(5);
   overflow: hidden;
 }
 
-/* ── 成就标签 ── */
+/* ── 成就标签 ──
+   标签本身的几何与配色在 styles/honors.css（与优秀成员页共用）；
+   这里只管排布，以及卡片 hover 时按各自类型的颜色加深。 */
 .achievement-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: auto;
 }
-.ach-tag {
-  display: inline-block;
-  padding: 3px 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: rgba(26, 115, 232, 0.06);
-  border: 1px solid rgba(26, 115, 232, 0.1);
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
-.leader-card:hover .ach-tag {
-  background: rgba(26, 115, 232, 0.1);
-  border-color: rgba(26, 115, 232, 0.2);
+.leader-card:hover .honor-tag {
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */

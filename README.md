@@ -62,6 +62,7 @@ jxufe-acm-vue/
     ├── styles/
     │   ├── tokens.css             # 设计令牌（颜色 / 阴影 / 圆角 / 间距 / 字体）
     │   ├── base.css               # CSS 重置 + 全局样式 + 动画关键帧
+    │   ├── honors.css             # 荣誉标签（按类型分色，两页共用）
     │   └── index.css              # 样式入口
     ├── components/
     │   ├── AppHeader.vue          # 导航栏（滚动变色 + 移动端汉堡菜单）
@@ -82,7 +83,8 @@ jxufe-acm-vue/
     ├── data/
     │   └── navigation.js          # 导航菜单 + 页脚链接
     ├── utils/
-    │   └── inline.js              # 内联标记解析（**加粗**、[链接](url)）
+    │   ├── inline.js              # 内联标记解析（**加粗**、[链接](url)）
+    │   └── honorType.js           # 荣誉分类（比赛 / 毕业去向 / 荣誉职位 / 联系方式）
     └── views/
         ├── HomeView.vue           # 首页 /
         ├── AllActionView.vue      # 大事记列表 /all-action
@@ -213,12 +215,29 @@ npm run preview
   "class": "22计算机科学与技术1班",
   "photo": "/images/excellent_member/zhangsan.png",
   "honors": [
-    "2024 ICPC 区域赛金牌",
-    "蓝桥杯国家级一等奖",
-    "保研至XX大学"
+    { "text": "2024 ICPC 区域赛金牌", "type": "contest" },
+    { "text": "保研至XX大学", "type": "destination" },
+    { "text": "国家奖学金", "type": "honor" },
+    { "text": "🛰️：zhangsan123", "type": "contact" }
   ]
 }
 ```
+
+**honors 的每条荣誉都带一个类型，页面上按类型显示成不同颜色的标签：**
+
+| type | 含义 | 颜色 | 例子 |
+|------|------|------|------|
+| `contest` | 比赛 | 蓝 | 2024 ICPC 区域赛金牌、蓝桥杯国一 |
+| `destination` | 毕业去向（保研 / 考研 / 就业） | 橙 | 保研至北京邮电大学、小米科技 |
+| `honor` | 个人荣誉 / 职位 | 绿 | 国家奖学金、优秀学生干部、协会组织部负责人 |
+| `contact` | 联系方式 / 社交主页等彩蛋 | 灰 | 🛰️：xxx、关注小羊谢谢喵 |
+
+- `type` 也可以直接写中文：`"比赛"` / `"去向"` / `"荣誉"` / `"联系"`。
+- **`type` 可以整个省略**（甚至把荣誉写回纯字符串，如 `"蓝桥杯国一"`）：此时由
+  `src/utils/honorType.js` 的关键词规则自动归类，判不准的按「比赛」显示，
+  所以以后临时加一条也不会没颜色。
+- 配色改 `src/styles/tokens.css` 里的 `--honor-*`（四类各一组：主色 / 淡底 / 描边 / hover），
+  标签本身的几何与 hover 改 `src/styles/honors.css`——两个页面共用，改一处两页同时生效。
 
 **添加步骤：**
 
@@ -244,12 +263,18 @@ npm run preview
   "avatar": "/images/leader/2027.jpg",
   "message": "对协会的寄语，一段话即可。",
   "achievements": [
-    "ICPC 区域赛银牌",
-    "天梯赛个人国家级一等奖",
-    "..."
+    { "text": "ICPC 区域赛银牌", "type": "contest" },
+    { "text": "国家奖学金", "type": "honor" },
+    { "text": "...", "type": "more" }
   ]
 }
 ```
+
+**achievements 与优秀成员页的 honors 规则完全相同**（同一套分类与配色，见上一节）：
+
+- 省略 `type` 写纯字符串（`"ICPC 区域赛银牌"`）也能用，由关键词规则自动归类。
+- 结尾表示「还有更多荣誉」的省略号：写 `{ "text": "...", "type": "more" }` 显示成中性灰的虚线标签；
+  直接写 `"..."` 也会被认出来，效果一样。
 
 **添加步骤：**
 

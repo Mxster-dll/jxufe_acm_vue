@@ -1,10 +1,17 @@
 <script setup>
+import { computed } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
+import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
+
+/** 每条荣誉归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
+const list = computed(() =>
+  (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
+)
 </script>
 
 <template>
@@ -32,7 +39,7 @@ const fallback = '/images/excellent_member/default.png'
       <!-- 成员网格 -->
       <div v-else class="grid">
         <article
-          v-for="(m, i) in members"
+          v-for="(m, i) in list"
           :key="m.name"
           v-reveal="'scale-in'"
           :style="{ '--reveal-index': i }"
@@ -51,9 +58,16 @@ const fallback = '/images/excellent_member/default.png'
             <h3>{{ m.name }}</h3>
             <p class="member-class">{{ m.class }}</p>
 
-            <!-- 荣誉标签 -->
+            <!-- 荣誉标签：按类型分色（比赛 / 毕业去向 / 个人荣誉·职位 / 联系方式） -->
             <div class="honor-tags">
-              <span v-for="h in m.honors" :key="h" class="honor-tag">{{ h }}</span>
+              <span
+                v-for="h in m.honors"
+                :key="h.text"
+                class="honor-tag"
+                :class="`honor-tag--${h.type}`"
+                :title="HONOR_TYPE_LABELS[h.type]"
+                >{{ h.text }}</span
+              >
             </div>
           </div>
         </article>
@@ -247,7 +261,9 @@ const fallback = '/images/excellent_member/default.png'
   margin-bottom: var(--space-md);
 }
 
-/* ── 荣誉标签 ── */
+/* ── 荣誉标签 ──
+   标签本身的几何与配色在 styles/honors.css（与负责人页共用）；
+   这里只管排布，以及卡片 hover 时按各自类型的颜色加深。 */
 .honor-tags {
   display: flex;
   flex-wrap: wrap;
@@ -255,20 +271,9 @@ const fallback = '/images/excellent_member/default.png'
   gap: 6px;
   margin-top: auto;
 }
-.honor-tag {
-  display: inline-block;
-  padding: 3px 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: rgba(26,115,232,0.06);
-  border: 1px solid rgba(26,115,232,0.1);
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
 .member-card:hover .honor-tag {
-  background: rgba(26,115,232,0.1);
-  border-color: rgba(26,115,232,0.2);
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */
