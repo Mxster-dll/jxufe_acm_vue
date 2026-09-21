@@ -1,19 +1,15 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
 import { loadHonorPills } from '../utils/honorPills'
+import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
-
-/** 每条荣誉归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
-const list = computed(() =>
-  (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
-)
 
 /** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
     手写的比赛条目已改为由它呈现——口径与生成逻辑见 utils/honorPills.js。
@@ -21,6 +17,30 @@ const list = computed(() =>
 const pills = ref(new Map())
 onMounted(async () => {
   pills.value = await loadHonorPills()
+})
+
+/** 显示排名：比赛奖牌 + 手写战绩 + 荣誉加项折算成分值，决定卡片的显示顺序。
+    权重表、口径与排序键见 utils/honorRanking.js；数据加载与上面的胶囊共用同一份缓存。 */
+const byName = ref(null)
+const RANKING_TIMEOUT_MS = 3000
+watch(
+  members,
+  async (val) => {
+    if (!val?.length || byName.value) return
+    // 网络异常时不能把网格卡在骨架屏上：超时就按数据原始顺序渲染
+    const result = await Promise.race([
+      loadMemberRanking(val),
+      new Promise((resolve) => setTimeout(() => resolve(null), RANKING_TIMEOUT_MS)),
+    ])
+    byName.value = result ? result.byName : new Map()
+  },
+  { immediate: true }
+)
+
+/** 每条荣誉归一化成 { text, type }（类型判定见 utils/honorType.js），并按排名排列 */
+const list = computed(() => {
+  const arr = (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
+  return byName.value ? sortByRanking(arr, byName.value) : arr
 })
 
 /** 瀑布流：卡片高度按内容自适应，位置由 useMasonry 逐张放进当前最短的列（保持源顺序） */
@@ -41,8 +61,8 @@ const { containerRef } = useMasonry()
         <p class="page-desc">星光不问赶路人，时光不负有心人</p>
       </header>
 
-      <!-- Loading -->
-      <div v-if="loading" class="grid">
+      <!-- Loading（成员数据与排名都就绪再渲染网格，避免卡片先排好又跳位） -->
+      <div v-if="loading || (!byName && !error)" class="grid">
         <div v-for="n in skeletons" :key="n" class="skeleton" style="height:420px;border-radius:var(--radius-xl);"></div>
       </div>
 

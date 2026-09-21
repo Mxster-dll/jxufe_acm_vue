@@ -253,33 +253,57 @@ async function loadEditions(slug) {
   return editions.filter(Boolean)
 }
 
-let cache = null
+let recordsCache = null
+let pillsCache = null
 
 /**
- * 加载并缓存「姓名 → 胶囊」索引（两个页面共用同一份缓存，只请求一次）。
+ * 加载并缓存「姓名 → 获奖记录」原始索引。
+ * 排名（honorRanking.js）与胶囊共用这一份缓存，整站只请求一次。
  * 任何一份数据取不到都只影响对应赛事，不会让页面报错。
  */
-export function loadHonorPills() {
-  if (!cache) {
-    cache = Promise.all([
+export function loadHonorRecords() {
+  if (!recordsCache) {
+    recordsCache = Promise.all([
       Promise.all(EDITION_SLUGS.map(loadEditions)),
       fetchJson(`${DATA_ROOT}/baidu.json`).catch(() => null),
     ])
       .then(([sets, baidu]) =>
-        buildHonorPills({
-          editions: Object.fromEntries(EDITION_SLUGS.map((slug, i) => [slug, sets[i]])),
-          baidu,
-        })
+        collectRecords(
+          Object.fromEntries(EDITION_SLUGS.map((slug, i) => [slug, sets[i]])),
+          baidu
+        )
       )
       .catch((err) => {
         console.error('比赛战绩数据加载失败:', err)
         return new Map()
       })
   }
-  return cache
+  return recordsCache
+}
+
+/**
+ * 加载并缓存「姓名 → 胶囊」索引（两个页面共用同一份缓存）。
+ * 由上面的原始记录派生，保证胶囊与排名永远同一口径。
+ */
+export function loadHonorPills() {
+  if (!pillsCache) {
+    pillsCache = loadHonorRecords().then((records) => {
+      const pills = new Map()
+      for (const [name, list] of records) {
+        const texts = recordsToPills(list)
+        if (texts.length) pills.set(name, texts)
+      }
+      for (const [name, list] of Object.entries(MANUAL_PILLS)) {
+        if (!pills.has(name)) pills.set(name, [...list])
+      }
+      return pills
+    })
+  }
+  return pillsCache
 }
 
 /** 供核验脚本/调试用：清掉缓存后重新加载 */
 export function resetHonorPills() {
-  cache = null
+  recordsCache = null
+  pillsCache = null
 }
