@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
-import { useMasonry } from "../composables/useMasonry";
 import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
 import { loadHonorPills } from "../utils/honorPills";
 
@@ -29,8 +28,6 @@ onMounted(async () => {
   pills.value = await loadHonorPills();
 });
 
-/** 瀑布流：卡片高度按内容自适应，位置由 useMasonry 逐张放进当前最短的列（保持源顺序） */
-const { containerRef } = useMasonry();
 </script>
 
 <template>
@@ -93,7 +90,7 @@ const { containerRef } = useMasonry();
       <p v-else-if="error" class="hint">加载失败</p>
 
       <!-- 负责人列表 -->
-      <div v-else ref="containerRef" class="leader-grid">
+      <div v-else class="leader-grid">
         <article
           v-for="(l, i) in list"
           :key="l.name"
@@ -222,24 +219,16 @@ const { containerRef } = useMasonry();
   margin: 0 auto;
 }
 
-/* ── 双列布局 ── */
+/* ── 双列等高行 ──
+   负责人页刻意【不用】瀑布流（与优秀成员页相反）：这里只有 6 张卡、2 列，
+   同一行的两张卡必须上下边对齐 —— 靠 grid 默认的 align-items: stretch 把矮卡
+   拉到本行最高那张的高度，多出来的空白留在卡片底部（胶囊仍紧跟寄语，不贴底），
+   所以本页不要引 useMasonry。口径见 README「两个页面的卡片排布」节。 */
 .leader-grid {
-  /* 瀑布流：位置由 composables/useMasonry.js 逐张放进当前最短的列（保持源顺序），
-     列数/间距以 CSS 变量交给它；下面这套 grid 只是 JS 接管前的兜底。 */
-  --masonry-columns: 2;
-  --masonry-gap: var(--space-xl);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
   gap: var(--space-xl);
-}
-.leader-grid.is-masonry {
-  display: block;
-  position: relative;
-}
-.leader-grid.is-masonry > * {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 /* ── 卡片 ── */
@@ -375,7 +364,6 @@ const { containerRef } = useMasonry();
 /* ── 响应式 ── */
 @media (max-width: 992px) {
   .leader-grid {
-    --masonry-columns: 1;
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }

@@ -76,7 +76,7 @@ jxufe-acm-vue/
     │   ├── useNews.js             # 首页最新动态（最近 5 条）
     │   ├── useTimeline.js         # 大事记按年分组 + 置顶
     │   ├── useSkeleton.js         # 骨架屏占位
-    │   ├── useMasonry.js          # 瀑布流布局（优秀成员 / 负责人卡片，保持源顺序）
+    │   ├── useMasonry.js          # 瀑布流布局（仅优秀成员页用；负责人页是等高行）
     │   ├── useCodeTrail.js        # 代码字符拖尾特效
     │   └── useCursorRipple.js     # 光标涟漪特效
     ├── directives/
@@ -442,23 +442,31 @@ npm run preview
 
 本项目不使用任何 UI 框架，所有样式均为手写 CSS，修改自由度极高。
 
-### 优秀成员 / 负责人卡片的瀑布流
+### 两个页面的卡片排布（**不一样，别互相照搬**）
 
-两个页面的卡片是**瀑布流**（高度按内容自适应，逐张放进当前最短的列），
-算法在 `src/composables/useMasonry.js`，页面里只有一句 `const { containerRef } = useMasonry()`。
+| 页面 | 排布 | 说明 |
+|------|------|------|
+| 优秀成员页 `/excellent` | **瀑布流** | 33 张卡、4 列，高度差异大 —— 逐张放进当前最短的列（保持源顺序），不浪费竖向空间 |
+| 协会负责人页 `/leader` | **等高行** | 6 张卡、2 列 —— 同一行的两张卡上下边对齐，矮卡被拉到本行最高那张的高度 |
 
-改了卡片内容长短（多一条荣誉、换句寄语）不需要动任何布局代码——卡片高度一变会自动重排。
-要调列数 / 间距，改对应页面 `<style scoped>` 里 `.grid`（负责人页是 `.leader-grid`）上的两个变量即可：
+**优秀成员页**用瀑布流，算法在 `src/composables/useMasonry.js`，页面里只有一句
+`const { containerRef } = useMasonry()`。改了卡片内容长短（多一条荣誉、换句寄语）不需要动任何布局代码
+——卡片高度一变会自动重排。要调列数 / 间距，改 `ExcellentView.vue` 的 `<style scoped>` 里 `.grid` 上的两个变量：
 
 ```css
 .grid {
-  --masonry-columns: 4;          /* 列数，媒体查询里逐档改成 3 / 2 / 1 */
-  --masonry-gap: var(--space-lg); /* 卡片间距（负责人页用 --space-xl） */
+  --masonry-columns: 4;           /* 列数，媒体查询里逐档改成 3 / 2 / 1 */
+  --masonry-gap: var(--space-lg); /* 卡片间距 */
 }
 ```
 
 列数与断点必须写在这两个变量里（而不是 `grid-template-columns`）——JS 只读变量、负责算位置和容器高度；
 `grid-template-columns` 那套留着只是 JS 接管前的兜底。改完记得跑一次 `npm run build` 看效果。
+
+**协会负责人页刻意不用瀑布流**（会长 2026-09-22：「每行卡片还是要等高的」）：就是纯 CSS grid 的
+`align-items: stretch`，没有 JS 参与。矮卡多出来的空白留在**卡片底部**，荣誉胶囊仍紧跟寄语、不贴底。
+想在这一页也改用瀑布流：给 `.leader-grid` 加回 `--masonry-columns` / `--masonry-gap` 两个变量，
+在页面里引 `const { containerRef } = useMasonry()`，并把 `ref="containerRef"` 挂到 `.leader-grid` 上。
 
 ---
 
