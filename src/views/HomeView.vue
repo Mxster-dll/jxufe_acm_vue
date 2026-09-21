@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useNews } from "../composables/useNews";
 import AppFooter from "../components/AppFooter.vue";
+import AvatarMosaic from "../components/AvatarMosaic.vue";
 
 // ── 轮播图 ──
 const slides = Array.from({ length: 10 }, (_, i) => ({
@@ -303,6 +304,11 @@ const { newsList, loading, error } = useNews();
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
+    <!-- 头像墙底纹：固定层，不随页面滚动。首页本身已有滚动代码背景 + 8 个浮动形状
+         + 聚光灯，故瓷砖比优秀成员页更大（信息更稀）、不透明度更低，避免与它们抢。
+         0.16 是会长看对比图定的：0.09 时完全看不出是头像（实测视觉上只剩一层灰雾）。 -->
+    <AvatarMosaic :opacity="0.16" :tile="136" />
+
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div

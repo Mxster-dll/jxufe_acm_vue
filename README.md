@@ -14,6 +14,7 @@
 - **滚动入场动画** — 基于 IntersectionObserver 的 `v-reveal` 指令，声明式使用
 - **大事记 Block 渲染** — 类型化内容块系统，支持 13 种块类型（文本、图片、奖项、表格、FAQ 等）
 - **全局交互特效** — 光标涟漪（`useCursorRipple`）、代码拖尾（`useCodeTrail`）、骨架屏加载态
+- **成员头像墙** — 138 位协会成员的头像铺成一面缓慢漂移的背景墙（首页 + 协会成员页），协会成员页滚过正文后可直接悬停查看荣誉
 - **响应式设计** — 适配桌面端与移动端，导航栏支持汉堡菜单
 
 ## 🛠 技术栈
@@ -47,12 +48,14 @@ jxufe-acm-vue/
 │   │   │   └── <slug>/<year>.json # 每届一个文件：日期、参赛规模、国赛/省赛获奖（高校/团队/个人）
 │   │   ├── leaders.json           # 历届协会负责人
 │   │   ├── members.json           # 优秀成员列表
-│   │   └── links.json             # 友情链接
+│   │   ├── links.json             # 友情链接
+│   │   └── group_members.json     # 头像墙成员数据（群成员 + 优秀成员 + 协会负责人）
 │   └── images/                    # 静态图片
 │       ├── slider/                # 首页轮播图（slider1.jpg ~ slider10.jpg）
 │       ├── contest/               # 竞赛 logo
 │       ├── leader/                # 负责人头像（2021.jpg ~ 2026.jpg）
 │       ├── excellent_member/      # 优秀成员头像
+│       ├── group_members/         # 头像墙图片（thumbs/ 160px 缩略图、full/ 640px 原图）
 │       ├── links/                 # 友链 logo + 二维码
 │       └── ...
 └── src/
@@ -63,11 +66,13 @@ jxufe-acm-vue/
     │   ├── tokens.css             # 设计令牌（颜色 / 阴影 / 圆角 / 间距 / 字体）
     │   ├── base.css               # CSS 重置 + 全局样式 + 动画关键帧
     │   ├── honors.css             # 荣誉标签（按类型分色）+ 比赛战绩胶囊（两页共用）
+    │   ├── fluent.css             # Fluent 语义令牌层（WinUI 令牌名 → 站点令牌，头像墙用）
     │   └── index.css              # 样式入口
     ├── components/
     │   ├── AppHeader.vue          # 导航栏（滚动变色 + 移动端汉堡菜单）
     │   ├── AppFooter.vue          # 页脚（三栏布局 + ICP 备案）
     │   ├── FloatingJoin.vue       # 右下角悬浮"加入我们"按钮
+    │   ├── AvatarMosaic.vue       # 成员头像墙（首页底纹 / 协会成员页可交互墙）
     │   └── action/
     │       ├── BlockRenderer.vue  # 大事记块类型渲染器（13 种块）
     │       └── OrganizerGrid.vue  # 招新二维码卡片网格
@@ -431,6 +436,23 @@ npm run preview
 **文件：** `src/data/navigation.js`
 
 修改导航文字、顺序、页脚链接。也是 JSON 结构，修改后刷新即可。
+
+### 六、维护群成员头像墙
+
+**数据：** `public/data/group_members.json` ｜ **图片：** `public/images/group_members/`
+
+协会成员的头像墙：首页与协会成员页的背景层，协会成员页滚过正文后可直接悬停查看荣誉。
+**数据与图片都是生成物，不要手改** —— 由协会工作区的 `07_技术项目/qq-group-avatars/build_site_assets.py` 生成：
+输入 `群成员名单.csv`（QQ 群名单，唯一真源）+ 头像归档 `avatars.json` 与 `avatars/` + 站点现有的
+`public/data/members.json`、`leaders.json`，输出上面那份 JSON 与图片。改完名单重跑它即可，**页面代码不用动**。
+
+- 名单 = QQ 群 110 人 + 优秀成员 33 人 + 历届负责人 6 人，按**真名**去重后 **138 人**（陈煜仕 / 陶金杰 / 衷铭川既在群里又是负责人 → 合并成一格，不重复占位）。
+- 图片：`thumbs/<QQ号>.webp`（160×160 缩略图，墙上的瓷砖）+ `full/<QQ号>.jpg`（640 原图，悬停放大时才加载）；优秀成员与负责人**不重复存照片**，只按 `ex-` / `ld-` 前缀生成缩略图，原图直接引用站点已有的 `/images/excellent_member/`、`/images/leader/`。群主那张是全透明图（`blank.png`），墙上显示为空白白砖。
+- **显示真名还是群昵称**，由协会工作区的 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「真实姓名」列决定；**没有真名的人不显示任何荣誉**（宁可什么都不写，也不写“暂无获奖记录”）。
+- 荣誉三个来源合一张表：`honorPills.js` 自动汇总 + `members.json` 的 `honors` + `leaders.json` 的 `achievements`，同一人重复的按文本去重；配色**复用** `styles/honors.css` + `utils/honorType.js`，与两个成员页逐条同色。墙上只有负责人多一行职务（取 `leaders.json` 的 `session`，如「2026届会长」）。
+- 组件 `src/components/AvatarMosaic.vue`，两个页面各传一套 props：
+  首页 `<AvatarMosaic :opacity="0.16" :tile="136" />`（纯底纹，不响应鼠标）；协会成员页 `<AvatarMosaic :opacity="0.9" :top-fade="24" interactive :hires="lifted" />`（`interactive` 才挂悬停卡与荣誉；`hires` 跟着正文抬升走 —— 遮罩没了才把缩略图换成 640 原图）。
+- 瓷砖实际尺寸由组件按视口算（`tile` 只是目标值），运动是「一张环面 + 两条锯齿」，方向每次加载随机 —— 改运动模型或几何之前，先读组件头部那段注释。
 
 ---
 
