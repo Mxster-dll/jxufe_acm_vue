@@ -14,7 +14,11 @@
  *
  * ── 口径（2026-09 设计，改动前先看这里）──────────────────────────────────
  *  · 总分 = 比赛奖牌分 + 手写战绩分 + 荣誉加项 × HONOR_SCALE
- *  · 比赛奖牌分 = 档位基准分 × 赛事层级系数，按「同一层级同一档位」的第 k 次递减
+ *  · 比赛奖牌分 = 每个系列只取**最高的那一条**计满分，同系列其余记录一律 × EXTRA_FACTOR(0.1)
+ *    —— 2026-09-22 会长裁定：「单一比赛只计入最高，数量叠加只提供很小的贡献（10%）」。
+ *    「系列」= xCPC / 天梯赛 / 蓝桥杯 / 百度之星，即 xCPC 的区域赛＋邀请赛＋省赛
+ *    只按其中最高的那一条算，天梯赛的团体＋个人也只按最高的那一条算（其余各 10%）。
+ *  · 名次型奖项（冠军/亚军/季军）在档位基准分之上再乘 RANK_MULTIPLIER（季军也有小幅加成）
  *  · 档位基准 10/5/3 对应 ICPC 官方金:银:铜 = 10%:20%:30% 的名额比例
  *  · 层级系数以「xCPC 亚洲区域赛 = 1.0」为基准，其余按参赛规模与对手强度定档
  *  · 团体奖队内每人各计满额（沿用站点胶囊口径，见 honorPills.js）
@@ -62,12 +66,19 @@ export const LEVEL_WEIGHT = {
 /** 层级系数的兜底值：数据里出现了未登记的分段时，按最低档计，避免静默按 1.0 计满分 */
 export const LEVEL_FALLBACK = 0.1
 
-/* ───────────────────────── 表 3：重复递减 ───────────────────────── */
+/* ───────────────────────── 表 3：同一系列只计最高 ───────────────────────── */
 
 /**
- * 累计全部历史成绩会奖励「打得多」。同一层级同一档位的第 k 次乘 REPEAT_DECAY^(k-1)，
- * 下限 REPEAT_FLOOR。等比数列和 ≈ 1/(1-0.7) = 3.33，
- * 即**同一档位无论拿多少次，最多贡献 3.33 倍单次分值** —— 这是刻意的刷量上限。
+ * 每个系列只把最高的那一条计入满分，同系列其余记录（更低档位、或重复获奖）
+ * 一律按 EXTRA_FACTOR 折算 —— 这是刻意的刷量上限：
+ * 拿再多低档奖牌，也超不过「同系列里有一块高档奖牌」的人。
+ * 2026-09-22 会长裁定为 10%。
+ */
+export const EXTRA_FACTOR = 0.1
+
+/**
+ * 手写战绩里「睿抗国一*4」这种自带次数的写法仍用递减（会长只要求改比赛奖牌口径，
+ * 手写条目保持原样）。等比数列和 ≈ 1/(1-0.7) = 3.33。
  */
 export const REPEAT_DECAY = 0.7
 export const REPEAT_FLOOR = 0.2
@@ -83,8 +94,9 @@ export const HONOR_SCALE = 1.5
 /**
  * 名次型战绩的倍率（作用于金牌基准分 10）：
  * 冠/亚/季军本身就是前三名，含金量高于「金牌」档（后者是前 10%）。
+ * 2026-09-22 会长裁定：季军原来取 1.0（等于没有名次加成），改为 1.2 —— 冠亚军不动。
  */
-export const RANK_MULTIPLIER = { champion: 1.6, runnerup: 1.3, third: 1.0 }
+export const RANK_MULTIPLIER = { champion: 1.6, runnerup: 1.3, third: 1.2 }
 
 /** 手写「参赛经历」分值：条目只写了赛事名、没有任何档位/名次词时的保守取值 */
 export const ATTEND_POINTS = 0.6
@@ -153,20 +165,31 @@ const RANK_RULES = [
 /** 首刀（全场第一个过题）：附加成就，小幅加分 */
 export const FIRST_BLOOD_POINTS = 0.5
 
-/** 档位基准分 → 层级系数 → 递减，得到单条奖牌的分值 */
+/**
+ * 奖项文字里的名次倍率（冠军/亚军/季军）。
+ * 站点结构化数据里目前 0 条命中（榜单只写「金牌/一等」这类档位词），保留这条通路是为了
+ * 将来某届榜单直接写「冠军」时，与手写条目用同一套倍率，不会两处口径分叉。
+ */
+function rankFactorOf(award) {
+  const hit = RANK_RULES.find(([, re]) => re.test(String(award || '')))
+  return hit ? RANK_MULTIPLIER[hit[0]] : 1
+}
+
+/** 档位基准分 → 层级系数 → 名次倍率，得到单条奖牌的分值 */
 export function recordPoints(record) {
   const base = MEDAL_BASE[record?.medal] ?? 0
   if (!base) return 0
   const key = `${record.family}|${record.segment}`
   const level = LEVEL_WEIGHT[key] ?? LEVEL_FALLBACK
-  return base * level
+  return base * level * rankFactorOf(record?.award)
 }
 
 /** 第 k 次（k 从 0 起）的递减系数 */
 export const repeatFactor = (k) => Math.max(REPEAT_DECAY ** k, REPEAT_FLOOR)
 
 /**
- * 比赛奖牌记录 → 分值（含递减）。
+ * 比赛奖牌记录 → 分值：**按系列分组，只有最高的一条计满分，其余 × EXTRA_FACTOR**。
+ * 同分时按年份升序决定谁当「最高」，保证同一份数据每次得到同样的分配。
  * @param {{family:string, segment:string, medal:string, year:string, award:string}[]} records
  * @returns {{ total:number, count:number, best:number, items:{label:string,points:number}[] }}
  */
@@ -175,23 +198,32 @@ export function scoreRecords(records = []) {
   for (const r of records) {
     const pts = recordPoints(r)
     if (!pts) continue
-    const key = `${r.family}|${r.segment}|${r.medal}`
-    if (!groups.has(key)) groups.set(key, [])
-    groups.get(key).push({ record: r, pts })
+    if (!groups.has(r.family)) groups.set(r.family, [])
+    groups.get(r.family).push({ record: r, pts })
   }
   let total = 0
   let count = 0
   let best = 0
   const items = []
-  for (const [key, list] of groups) {
-    // 组内按年份升序，保证同一份数据每次得到同样的递减分配
-    list.sort((a, b) => String(a.record.year).localeCompare(String(b.record.year)))
+  for (const [family, list] of groups) {
+    // 分值降序（并列时年份早的在前），第 0 条是这一系列的最高奖
+    list.sort((a, b) => b.pts - a.pts || String(a.record.year).localeCompare(String(b.record.year)))
+    const topPoints = list[0]?.pts ?? 0
     list.forEach((entry, k) => {
-      const points = entry.pts * repeatFactor(k)
+      const points = k === 0 ? entry.pts : entry.pts * EXTRA_FACTOR
       total += points
       count += 1
       if (entry.pts > best) best = entry.pts
-      items.push({ key, label: describeRecord(entry.record), points, raw: entry.pts, nth: k + 1 })
+      items.push({
+        key: family,
+        label: describeRecord(entry.record),
+        points,
+        raw: entry.pts,
+        nth: k + 1,
+        top: k === 0,
+        // 供核验读：这条是不是该系列的最高奖（不是则只值 10%）
+        topPoints,
+      })
     })
   }
   return { total, count, best, items }
