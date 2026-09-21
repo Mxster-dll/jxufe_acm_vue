@@ -87,7 +87,7 @@
   {
     "name": "张瑞杰",
     "class": "软件231",
-    "photo": "https://pic1.imgdb.cn/item/68d3c017c5157e1a882cca2a.jpg",
+    "photo": "/images/excellent_member/zrj.png",
     "honors": [
       { "text": "2024ICPC区域赛昆明铜牌", "type": "contest" },
       { "text": "2025ICPC邀请赛南昌铜牌", "type": "contest" },
@@ -132,7 +132,7 @@
   {
     "name": "万俊哲",
     "class": "23数据科学与大数据技术1班",
-    "photo": "https://pic1.imgdb.cn/item/68d3cf53c5157e1a882cd399.jpg",
+    "photo": "/images/excellent_member/wjz.png",
     "honors": [
       { "text": "2025ICPC香港区域赛铜", "type": "contest" },
       { "text": "2025长春CCPC邀请赛铜", "type": "contest" },
@@ -145,7 +145,7 @@
   {
     "name": "张云菲",
     "class": "23计算机科学与技术2班",
-    "photo": "https://pic1.imgdb.cn/item/68d3cc7ec5157e1a882cd25a.jpg",
+    "photo": "/images/excellent_member/zyf.png",
     "honors": [
       { "text": "2025ICPC香港区域赛铜", "type": "contest" },
       { "text": "2025长春CCPC邀请赛铜", "type": "contest" },
@@ -157,7 +157,7 @@
   {
     "name": "杨源鑫",
     "class": "23软件工程3班",
-    "photo": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81eb.jpg",
+    "photo": "/images/excellent_member/yyx.png",
     "honors": [
       { "text": "蓝桥杯国家一等奖", "type": "contest" },
       { "text": "睿抗编程技能赛国家一等奖", "type": "contest" }
@@ -166,7 +166,7 @@
   {
     "name": "罗潇彬",
     "class": "23软件工程12班",
-    "photo": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81ec.jpg",
+    "photo": "/images/excellent_member/lxb.png",
     "honors": [
       { "text": "ICPC全国邀请赛铜牌", "type": "contest" },
       { "text": "蓝桥杯国家级三等奖", "type": "contest" },
@@ -177,7 +177,7 @@
   {
     "name": "钟俊",
     "class": "24计算机科学与技术2班",
-    "photo": "https://pic1.imgdb.cn/item/68d37166c5157e1a882c81f0.jpg",
+    "photo": "/images/excellent_member/zhongjun.png",
     "honors": [
       { "text": "2025ICPC江西省赛铜奖", "type": "contest" },
       { "text": "睿抗国家三等奖", "type": "contest" },
@@ -199,7 +199,7 @@
   {
     "name": "杨镇宁",
     "class": "24数据科学与大数据技术1班",
-    "photo": "https://pic1.imgdb.cn/item/68d3c14ec5157e1a882ccb51.jpg",
+    "photo": "/images/excellent_member/yzn.png",
     "honors": [
       { "text": "蓝桥杯省二", "type": "contest" },
       { "text": "睿抗国三", "type": "contest" },
@@ -209,7 +209,7 @@
   {
     "name": "娄子豪",
     "class": "22计算机科学与技术1班",
-    "photo": "https://pic1.imgdb.cn/item/68d39a07c5157e1a882c97a7.jpg",
+    "photo": "/images/excellent_member/lzh.png",
     "honors": [
       { "text": "保研至厦门大学", "type": "destination" },
       { "text": "蓝桥杯国二", "type": "contest" },
@@ -219,7 +219,7 @@
   {
     "name": "牛志义",
     "class": "22计算机科学与技术1班",
-    "photo": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f3.jpg",
+    "photo": "/images/excellent_member/nzy.png",
     "honors": [
       { "text": "蓝桥杯国二*1，国三*1", "type": "contest" },
       { "text": "睿抗国一*1", "type": "contest" },
@@ -229,7 +229,7 @@
   {
     "name": "徐昊天",
     "class": "22计算机科学与技术1班",
-    "photo": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f2.jpg",
+    "photo": "/images/excellent_member/xht.png",
     "honors": [
       { "text": "保研至北京交通大学", "type": "destination" },
       { "text": "蓝桥杯国家二等奖", "type": "contest" }
@@ -247,7 +247,7 @@
   {
     "name": "王柯迪",
     "class": "24信息管理与信息系统1班",
-    "photo": "https://pic1.imgdb.cn/item/68d3716dc5157e1a882c81f5.jpg",
+    "photo": "/images/excellent_member/wkd.png",
     "honors": [
       { "text": "信息学院学习部副部", "type": "honor" },
       { "text": "程序设计竞赛协会组织部负责人", "type": "honor" }
@@ -256,7 +256,7 @@
   {
     "name": "吴松烨",
     "class": "22信息管理与信息系统1班",
-    "photo": "https://ts1.tc.mm.bing.net/th/id/R-C.ce1c05fb570b19d02beb66c997d739bd?rik=O9Hk29CWyOy%2fLQ&pid=ImgRaw&r=0",
+    "photo": "/images/excellent_member/wsy.png",
     "honors": [
       { "text": "保研至西安电子科技大学计算机科学与技术专业", "type": "destination" },
       { "text": "2025蓝桥杯省一", "type": "contest" },
@@ -267,7 +267,7 @@
   {
     "name": "王广辉",
     "class": "21计算机科学与技术3班",
-    "photo": "https://ts1.tc.mm.bing.net/th/id/OIP-C.RSHE5V-WJ2Fw_O_cPjI4ZAHaHW?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/wgh.png",
     "honors": [
       { "text": "保研至中国科学院大学", "type": "destination" }
     ]
@@ -275,7 +275,7 @@
   {
     "name": "张锦宇",
     "class": "21计算机科学与技术2班",
-    "photo": "https://pic.616pic.com/ys_bnew_img/00/28/14/ODkC7vJxvS.jpg",
+    "photo": "/images/excellent_member/zjy.png",
     "honors": [
       { "text": "保研至厦门大学", "type": "destination" },
       { "text": "国家奖学金", "type": "honor" },
@@ -287,7 +287,7 @@
   {
     "name": "吴清辉",
     "class": "21计算机科学与技术2班",
-    "photo": "https://ts1.tc.mm.bing.net/th/id/OIP-C.1BRc8hrqt6dTtafNAwfCRgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/wqh.png",
     "honors": [
       { "text": "保研至苏州大学", "type": "destination" },
       { "text": "2022 - 2025三年国励奖学金", "type": "honor" }
@@ -296,7 +296,7 @@
   {
     "name": "赵锐奇",
     "class": "21计算机科学与技术3班",
-    "photo": "https://ts4.tc.mm.bing.net/th/id/OIP-C.2N_GvIVSBYaZR5u66XghVQHaHx?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/zrq.png",
     "honors": [
       { "text": "保研至南京师范大学", "type": "destination" },
       { "text": "蓝桥杯C/C++组国三", "type": "contest" },
@@ -306,7 +306,7 @@
   {
     "name": "张艺环",
     "class": "21计算机科学与技术1班",
-    "photo": "https://ts1.tc.mm.bing.net/th/id/OIP-C.EXE2tC7ljanFI0wPhdNK_QAAAA?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/zyh.png",
     "honors": [
       { "text": "保研至北京交通大学", "type": "destination" },
       { "text": "全国大学生数学建模竞赛国家二等奖", "type": "contest" },
@@ -316,7 +316,7 @@
   {
     "name": "张昊林",
     "class": "21计算机科学与技术3班",
-    "photo": "https://ts1.tc.mm.bing.net/th/id/OIP-C.VASQMDKdxvZaaR_TckmCEAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/zhl.png",
     "honors": [
       { "text": "保研至东北大学", "type": "destination" },
       { "text": "中共党员", "type": "honor" },
@@ -326,7 +326,7 @@
   {
     "name": "李梦豪",
     "class": "23届大数据",
-    "photo": "https://ts4.tc.mm.bing.net/th/id/OIP-C.oZckHv1nEM3Tl1NoQ2wBEQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "photo": "/images/excellent_member/lmh.png",
     "honors": [
       { "text": "保研至中国科学技术大学", "type": "destination" },
       { "text": "ICPC亚洲区域赛南京上海站铜奖", "type": "contest" },
@@ -337,7 +337,7 @@
   {
     "name": "罗文浩",
     "class": "22届大数据",
-    "photo": "https://pic3.zhimg.com/v2-87f8cd66da6a4a0d9eaf54fd10d61a8e_r.jpg",
+    "photo": "/images/excellent_member/lwh.png",
     "honors": [
       { "text": "小米科技", "type": "destination" }
     ]
