@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
+import { useMasonry } from '../composables/useMasonry'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
 import { loadHonorPills } from '../utils/honorPills'
 
@@ -21,6 +22,9 @@ const pills = ref(new Map())
 onMounted(async () => {
   pills.value = await loadHonorPills()
 })
+
+/** 瀑布流：卡片高度按内容自适应，位置由 useMasonry 逐张放进当前最短的列（保持源顺序） */
+const { containerRef } = useMasonry()
 </script>
 
 <template>
@@ -46,7 +50,7 @@ onMounted(async () => {
       <p v-else-if="error" class="hint">加载失败</p>
 
       <!-- 成员网格 -->
-      <div v-else class="grid">
+      <div v-else ref="containerRef" class="grid">
         <article
           v-for="(m, i) in list"
           :key="m.name"
@@ -161,11 +165,25 @@ onMounted(async () => {
   font-size: var(--font-size-lg);
 }
 
-/* ── 卡片网格 ── */
+/* ── 卡片网格 ──
+   瀑布流：卡片高度按内容自适应，位置由 composables/useMasonry.js 逐张放进当前最短的列
+   （保持源顺序）。列数/间距以 CSS 变量交给它，响应式断点因此仍留在 CSS 里。
+   下面这套 grid 只是 JS 接管前的兜底——is-masonry 一加上就换成绝对定位。 */
 .grid {
+  --masonry-columns: 4;
+  --masonry-gap: var(--space-lg);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-lg);
+}
+.grid.is-masonry {
+  display: block;
+  position: relative;
+}
+.grid.is-masonry > * {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* ── 卡片 ── */
@@ -285,7 +303,9 @@ onMounted(async () => {
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
-  margin-top: auto;
+  /* 紧跟正文（班级行自带 margin-bottom: var(--space-md)），不顶到卡片底部。
+     同一行卡片高度由最高的那张决定，若用 margin-top: auto 会把胶囊推到卡片底部，
+     内容少的卡片上方就空出一大块（实测最多 175px）。 */
 }
 .member-card:hover .honor-tag {
   background: var(--tag-bg-hover);
@@ -295,6 +315,7 @@ onMounted(async () => {
 /* ── 响应式 ── */
 @media (max-width: 992px) {
   .grid {
+    --masonry-columns: 3;
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -309,6 +330,7 @@ onMounted(async () => {
     font-size: 2rem;
   }
   .grid {
+    --masonry-columns: 2;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
   }
@@ -329,6 +351,7 @@ onMounted(async () => {
     font-size: 1.7rem;
   }
   .grid {
+    --masonry-columns: 1;
     grid-template-columns: 1fr;
   }
 }
