@@ -158,6 +158,18 @@ function yearOf(row, sessionToYear) {
   return ''
 }
 
+/**
+ * 排序用的日期（会长 2026-09-23 要求明细模式按时间顺序排）。
+ * 绝大多数记录带完整 date，直接用；没有日期的只有蓝桥杯省赛 ——
+ * 全库省赛一条日期都没有（有日期的全是国赛，422 条省赛全空），
+ * 旧数据源（scripts/source/editions/lanqiao/）同样只到「届 → 年」，无处可补，
+ * 故退回该年 1 月 1 日：同届省赛（春）自然排在国赛（初夏）之前，也不会跨到相邻届去。
+ */
+function sortDateOf(row, year) {
+  if (row?.date) return String(row.date)
+  return year ? `${year}-01-01` : ''
+}
+
 /** competitions.json → { slug: { session: year } }（sessions 是 year→session，这里反过来） */
 function sessionYearTable(competitions = []) {
   const table = {}
@@ -305,6 +317,7 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
             segment,
             medal,
             year,
+            date: sortDateOf(row, year),
             award: String(row.competition_name || ''),
             title: detailTitle(family, row, segment),
             medalText: medalTextOf(family, medal),
@@ -380,7 +393,12 @@ export function recordsToPills(records = [], mode = 'count') {
  *   emoji 单独给一份（会长 2026-09-23 要求每条前面挂一个奖牌 emoji）；
  *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱；
  *   奖牌说法按赛事分（medalText 在建记录时就定好，见 medalTextOf）。
- * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, family: string}[]}
+ *
+ * **按时间顺序排（会长 2026-09-23）**：原先按赛事分组（xCPC → 天梯赛 → 百度之星 → 蓝桥杯），
+ * 同一赛事内再按年份，读起来是「按比赛分堆」而不是一条时间线；现在第一排序键就是日期，
+ * 赛事与奖牌降级为**同日并列时的次序**（同一天拿的团队奖/个人奖仍挨在一起、按赛事既定顺序，
+ * 同一天同赛事的奖牌按 特等→金→银→铜）。要改成「最新在前」，把第一键取负 / 反转比较即可。
+ * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, date: string, family: string}[]}
  */
 export function recordsToDetails(records = []) {
   const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
@@ -392,12 +410,13 @@ export function recordsToDetails(records = []) {
       medalText: r.medalText || MEDAL_TEXT[r.medal],
       emoji: MEDAL_EMOJI[r.medal],
       year: r.year,
+      date: r.date || '',
       family: r.family,
     }))
     .sort(
       (a, b) =>
+        String(a.date).localeCompare(String(b.date)) ||
         (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
-        String(a.year).localeCompare(String(b.year)) ||
         MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
     )
 }
