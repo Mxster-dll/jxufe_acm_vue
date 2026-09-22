@@ -10,43 +10,104 @@ import HeroAvatarWall from "../components/HeroAvatarWall.vue";
 // ── 头像墙开关（纯叠加：false 时页面与改动前逐像素一致）──
 const wallOn = ref(false);
 
-// ── 露墙（2026-09-23 会长裁定：这套交互从优秀成员页搬到首页）──
-//   墙不动，**遮罩**朝内容位移的反方向让开：内容往上走（往下滚）→ 遮罩往下走；
-//   往回滚则反过来，遮罩往上收回来（同一个位移量，两边天然对称）。
-//   让开超过一屏的 10% 就整体滑出页面，只剩墙 —— 也就是优秀成员页那套「滚到底露墙」，
-//   换了页面、也把「内容整体抬走」换成了「遮罩让开」。
-const SCRIM_REVEAL_RATIO = 0.1;
-const scrimOut = ref(false);
-const scrimShift = ref(0);
-let scrimRaf = 0;
-let scrimLimit = 0;
+// ── 露墙（2026-09-23 会长裁定：**遮罩 = 除了墙和导航栏的整个页面**）──
+//   墙铺在遮罩下面、自己不动；遮罩就是首页的全部内容 —— 首页不渲染 App.vue 那份
+//   `<AppFooter v-if="route.name !== 'home'">`，而 HomeView 自己那份页脚在 #news 里，
+//   所以「整个页面」这个边界是天然干净的（导航栏在 App.vue，也在遮罩之外）。
+//   正常滚动：遮罩跟着页面上下走 —— 往下滚就是遮罩上移，于是看到 #about 的
+//   「以代码为桥梁 / 连接技术与未来」。
+//   在页首继续往上滚（过滚动）：遮罩被拉下来，露出上面的墙；拉过一屏的 10% 就整层
+//   滑出页面，只剩墙。往回滚一下就把遮罩请回来（两段对称）。
+const MASK_REVEAL_RATIO = 0.1;
+// 滚轮一格约 100px，若严格跟手，一屏 900px 的 10%(=90px) 一格就满 —— 太容易误触发。
+// 阻尼 0.5：两格到阈值，手感上又还是「跟手」。
+const MASK_DRAG_DAMP = 0.5;
+// 回程动画时长，与 CSS 里 .page-mask.is-returning 的 transition 保持一致
+const MASK_RETURN_MS = 520;
+const maskShift = ref(0);
+const maskOut = ref(false);
+const maskReturning = ref(false);
+let maskLimit = 0;
+let maskReturnTimer = 0;
+let touchY = 0;
 
-const onWallScroll = () => {
-  if (scrimRaf) return;
-  scrimRaf = requestAnimationFrame(() => {
-    scrimRaf = 0;
-    const y = Math.max(0, window.scrollY);
-    const out = y > scrimLimit;
-    // 未到阈值：严格跟手；过了阈值：整体滑出一屏（CSS 那边给这一段加缓动）
-    scrimShift.value = out ? window.innerHeight : y;
-    scrimOut.value = out;
-  });
+const resetMaskLimit = () => {
+  maskLimit = Math.max(80, window.innerHeight * MASK_REVEAL_RATIO);
 };
 
-const onWallResize = () => {
-  scrimLimit = window.innerHeight * SCRIM_REVEAL_RATIO;
-  onWallScroll();
+/** 把遮罩往下拉（dy < 0 = 露出上面的墙）或往上收（dy > 0）。返回是否吃掉了这次滚动 */
+const dragMask = (dy) => {
+  // 手指/滚轮重新接管：立刻结束回程动画，保证跟手
+  maskReturning.value = false;
+  if (window.scrollY > 0) {
+    // 不在页首：这是正常翻页，遮罩不参与
+    if (maskShift.value) maskShift.value = 0;
+    return false;
+  }
+  if (dy < 0) {
+    maskShift.value = Math.min(maskShift.value - dy, maskLimit);
+    if (maskShift.value >= maskLimit) maskOut.value = true;
+    return true;
+  }
+  if (maskShift.value > 0) {
+    maskShift.value = Math.max(0, maskShift.value - dy);
+    return true;
+  }
+  return false;
+};
+
+/** 已经滑出：只认「往下滚」 —— 先把遮罩请回来，这一次滚动不落到页面上 */
+const recallMask = (dy) => {
+  if (dy <= 0) return false;
+  // 滑出是 640ms 缓动，直接归零会「啪」地跳回一屏，所以回程也走一段缓动
+  maskReturning.value = true;
+  maskOut.value = false;
+  maskShift.value = 0;
+  // 遮罩被 translate 出去时会把文档撑高（实测 scrollHeight 2641 → 3279），
+  // 若这期间有人拖滚动条 / 按空格把文档滚下去了，请回来就会错位 —— 这里拉回页首。
+  if (window.scrollY > 0) window.scrollTo(0, 0);
+  window.clearTimeout(maskReturnTimer);
+  maskReturnTimer = window.setTimeout(() => {
+    maskReturning.value = false;
+  }, MASK_RETURN_MS);
+  return true;
+};
+
+const onWallWheel = (e) => {
+  // 注意：Chrome 把 window 上的 wheel/touchmove 默认当 passive，必须显式传 false 才有 preventDefault
+  const dy = e.deltaY * MASK_DRAG_DAMP;
+  if (maskOut.value) {
+    if (recallMask(dy)) e.preventDefault();
+    return;
+  }
+  if (dragMask(dy)) e.preventDefault();
+};
+
+const onWallTouchStart = (e) => {
+  touchY = e.touches[0]?.clientY ?? 0;
+};
+const onWallTouchMove = (e) => {
+  const y = e.touches[0]?.clientY ?? 0;
+  // 手指往下拖（y 增大）→ 遮罩下移，故取 touchY - y，与滚轮同一个符号约定
+  const dy = (touchY - y) * MASK_DRAG_DAMP;
+  touchY = y;
+  const eaten = maskOut.value ? recallMask(dy) : dragMask(dy);
+  if (eaten && e.cancelable) e.preventDefault();
 };
 
 onMounted(() => {
-  onWallResize();
-  window.addEventListener("scroll", onWallScroll, { passive: true });
-  window.addEventListener("resize", onWallResize, { passive: true });
+  resetMaskLimit();
+  window.addEventListener("wheel", onWallWheel, { passive: false });
+  window.addEventListener("touchstart", onWallTouchStart, { passive: true });
+  window.addEventListener("touchmove", onWallTouchMove, { passive: false });
+  window.addEventListener("resize", resetMaskLimit, { passive: true });
 });
 onUnmounted(() => {
-  window.removeEventListener("scroll", onWallScroll);
-  window.removeEventListener("resize", onWallResize);
-  if (scrimRaf) cancelAnimationFrame(scrimRaf);
+  window.removeEventListener("wheel", onWallWheel);
+  window.removeEventListener("touchstart", onWallTouchStart);
+  window.removeEventListener("touchmove", onWallTouchMove);
+  window.removeEventListener("resize", resetMaskLimit);
+  window.clearTimeout(maskReturnTimer);
 });
 
 // ── 轮播图 ──
@@ -341,6 +402,32 @@ const { newsList, loading, error } = useNews();
 </script>
 
 <template>
+  <!-- ── 墙：整页固定底纹 ──
+       它不在遮罩里，而是铺在遮罩**下面**；导航栏在 App.vue，天然也在遮罩之外。
+       形状与首页原来那份 hero_wall.json 完全一致（manifest + tiles），
+       所以组件一行没改，只多传几个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成，
+       人数：QQ 群 110 + 优秀成员 33 + 负责人 6，按真名去重后 138 人。 -->
+  <div class="page-wall">
+    <HeroAvatarWall
+      v-model:active="wallOn"
+      manifest-url="/data/group_wall.manifest.json"
+      copy-url="/data/group_wall.json"
+      thumbs-base="/images/group_wall_thumbs"
+      label="协会成员墙"
+      :dim-opacity="1"
+    />
+  </div>
+
+  <!-- ── 遮罩 = 除了墙和导航栏的整个页面 ──
+       正常滚动时它跟着页面上下走：往下滚就是遮罩上移，于是看到 #about 的
+       「以代码为桥梁 / 连接技术与未来」；在页首继续往上滚则是遮罩下移，
+       把上面的墙露出来 —— 拉过一屏的 10% 就整层滑出页面，只剩墙。
+       往回收也一样：滚一下就把遮罩请回来。（首页不渲染页脚，见 App.vue 的 v-if） -->
+  <div
+    class="page-mask"
+    :class="{ 'is-out': maskOut, 'is-returning': maskReturning }"
+    :style="{ '--mask-shift': maskShift + 'px' }"
+  >
   <!-- 英雄区 -->
   <section
     id="home"
@@ -350,35 +437,14 @@ const { newsList, loading, error } = useNews();
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
-    <!-- 头像墙：hero 的第一个子元素 = 同为 z-index:0 的那几层里最靠下的一层。
-         它自带那个开关按钮（在 .hero-inner 之外，所以文案退场后它还在）。
-         数据换成**协会成员头像墙**（138 人：QQ 群 110 + 优秀成员 33 + 负责人 6，去重后）
-         —— 形状与首页原来那份 hero_wall.json 完全一致（manifest + tiles），
-         所以组件一行没改，只多传三个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成。 -->
-    <HeroAvatarWall
-      v-model:active="wallOn"
-      manifest-url="/data/group_wall.manifest.json"
-      copy-url="/data/group_wall.json"
-      thumbs-base="/images/group_wall_thumbs"
-      label="协会成员墙"
-      :dim-opacity="1"
-    />
-
-    <!-- 遮罩：盖在墙上面、内容下面。墙不动，遮罩朝内容位移的**反方向**让开
-         （内容往上走 → 遮罩往下走；往回滚则反过来），让开超过一屏的 10% 就整体滑出页面，
-         只剩墙 —— 复刻优秀成员页那套「滚到底露墙」，只是换了页面、也换了让开的方向。 -->
-    <div
-      class="hero-scrim"
-      :class="{ 'is-out': scrimOut }"
-      :style="{ '--scrim-shift': scrimShift + 'px' }"
-      aria-hidden="true"
-    ></div>
-
-    <!-- 顶部提示：告诉访客「往上滚会露出整面成员墙」。遮罩滑走之后自己也退场 -->
-    <p class="wall-hint" :class="{ 'is-hidden': scrimOut }" aria-hidden="true">
+    <!-- 顶部提示：往上滚滚一下就会露出整面成员墙。遮罩滑出时它跟着一起走（它在遮罩里），
+         所以不需要自己的退场状态。
+         它留在 hero 里而不是挂在遮罩上：hero 有 position: relative，且 hero 的顶点是确定的
+         （负 margin 让它落在视口 y = -header-height），所以下面那个 top 算得准；
+         挂在遮罩上则会随「hero 的负 margin 有没有折叠出去」差出一个 header 高度。 -->
+    <p class="wall-hint" aria-hidden="true">
       <i class="fas fa-chevron-up"></i><span>向上滚动，露出成员墙</span>
     </p>
-
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div
@@ -680,6 +746,8 @@ const { newsList, loading, error } = useNews();
     </div>
     <AppFooter />
   </section>
+  </div>
+  <!-- /.page-mask（到此为止 = 除了墙和导航栏的整个页面） -->
 </template>
 
 <style scoped>
@@ -712,7 +780,16 @@ const { newsList, loading, error } = useNews();
         rgba(26, 115, 232, 0.06) 0%,
         transparent 60%
       ),
-    linear-gradient(175deg, #f8fafc 0%, #fff 40%, #fff 100%);
+    /* 底部过渡：向 About 区渐变。
+       这层原本是**不透明**的（#f8fafc → #fff）：墙搬到遮罩下面之后会被它盖死，
+       于是改成半透明 —— 浏览时墙照旧只是淡淡一层底纹（≈12% 透出来），
+       而遮罩整体让开时，让出来的位置没有这层东西，墙就是全亮的。 */
+    linear-gradient(
+      175deg,
+      rgba(248, 250, 252, 0.86) 0%,
+      rgba(255, 255, 255, 0.9) 40%,
+      rgba(255, 255, 255, 0.92) 100%
+    );
   background-size: 100% 100%;
   cursor: default;
 }
@@ -893,42 +970,43 @@ const { newsList, loading, error } = useNews();
   transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── 露墙：遮罩让开，墙露出来 ──
-   层序：墙（组件自带，z-index: 0）→ 遮罩（1）→ 内容与提示（2）。
-   遮罩的位移由 HomeView 的滚动处理器写进 --scrim-shift：
+/* ── 露墙：**遮罩 = 除了墙和导航栏的整个页面** ──
+   层序：墙（.page-wall 固定层，z-index: 0）→ 遮罩（.page-mask，1）→ 导航栏（在 App.vue，天然在外）。
+   遮罩铺在墙上面，所以首页照旧把墙当底纹用（hero 那层背景是半透明的）；
+   而它一旦让开，让出来的位置就是墙本身 —— 这就是「露出墙」。
+   位移由 HomeView 的滚轮 / 触摸处理器写进 --mask-shift：
    未到阈值时严格跟手（故这一档不能有 transition，否则每一帧都在追赶），
    过了阈值再加缓动整体滑出一屏。 */
-.hero-scrim {
-  position: absolute;
+.page-wall {
+  position: fixed;
   inset: 0;
+  z-index: 0;
+}
+.page-mask {
+  position: relative;
   z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.78) 0%,
-    rgba(255, 255, 255, 0.58) 45%,
-    rgba(255, 255, 255, 0.42) 100%
-  );
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-  transform: translate3d(0, var(--scrim-shift, 0px), 0);
+  transform: translate3d(0, var(--mask-shift, 0px), 0);
   transition: none;
-  pointer-events: none;
   will-change: transform;
 }
-.hero-scrim.is-out {
-  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+/* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来 */
+.page-mask.is-out {
+  transform: translate3d(0, 105vh, 0);
+  transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* 内容与提示压在遮罩之上（覆盖上面那条 .hero-inner 的 z-index: 1） */
-.hero > .hero-inner,
-.hero > .wall-hint,
-.hero > .scroll-down-arrow {
-  z-index: 2;
+/* 请回来的回程：滑出是 640ms 缓动，回程若直接归零就会「啪」地跳回一屏。
+   时长与 JS 里的 MASK_RETURN_MS 一致；用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
+.page-mask.is-returning {
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── 顶部提示：往上滚会露出整面成员墙 ── */
 .wall-hint {
   position: absolute;
-  top: calc(var(--header-height) + 14px);
+  /* ×2 而不是 ×1：hero 自己用 margin-top: -var(--header-height) 顶到视口之上
+     （为的是内容能衬在固定页头下面），所以 hero 内的 y 要比视口 y 多一个 header 才对齐。
+     这样算出来它落在页头下沿 14px 处。 */
+  top: calc(var(--header-height) * 2 + 14px);
   left: 50%;
   display: inline-flex;
   align-items: center;
@@ -955,11 +1033,6 @@ const { newsList, loading, error } = useNews();
   50% {
     transform: translateY(-2px);
   }
-}
-.wall-hint.is-hidden {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-8px);
-  pointer-events: none;
 }
 .hero-content {
   text-align: left;
