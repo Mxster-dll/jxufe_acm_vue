@@ -16,6 +16,9 @@
  *   单人赛（gplt-individual / lanqiao / baidu / chuanzhi）
  *     session, members, medal_level, medal_type, coach_names, date
  *     其中 lanqiao 额外含 language, group（插在 members 之后）
+ *
+ * medal_type 取值：gold / silver / bronze；lanqiao 另允许 grand（特等奖，
+ * 只有第五届国赛 陈天楚 这一条）。grand 与金/银/铜并列展示，不并入一等奖。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -27,6 +30,9 @@ const AWARDS = path.join(DATA, 'awards')
 const readJSON = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
 
 const MEDAL_TYPES = ['gold', 'silver', 'bronze']
+// 特等奖（grand）：只有蓝桥杯早期届次存在这一档（第五届国赛 陈天楚）。
+// 按文件限定，刻意不并进 MEDAL_TYPES —— 其它赛事的 medal_type 仍只能是金/银/铜。
+const GRAND_MEDAL_TYPES = ['grand', ...MEDAL_TYPES]
 const XCPC_LEVELS = ['regional', 'invitational', 'provincial', 'final']
 const SINGLE_LEVELS = ['provincial', 'national']
 const LANGS = ['C++', 'Java', 'Python']
@@ -58,7 +64,8 @@ const SCHEMA = {
     levels: SINGLE_LEVELS,
     team: false,
     langs: LANGS,
-    groups: GROUPS
+    groups: GROUPS,
+    medals: GRAND_MEDAL_TYPES
   },
   'baidu.json': {
     keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
@@ -91,7 +98,8 @@ function validateRecords(file, rows) {
     if ('session' in r && !Number.isInteger(r.session)) push(i, `session 非 int: ${JSON.stringify(r.session)}`)
     if (spec.levels && !spec.levels.includes(r.medal_level))
       push(i, `medal_level 非法: ${JSON.stringify(r.medal_level)}`)
-    if (!MEDAL_TYPES.includes(r.medal_type)) push(i, `medal_type 非法: ${JSON.stringify(r.medal_type)}`)
+    if (!(spec.medals || MEDAL_TYPES).includes(r.medal_type))
+      push(i, `medal_type 非法: ${JSON.stringify(r.medal_type)}`)
     if (!Array.isArray(r.members) || !r.members.length || !r.members.every((m) => typeof m === 'string' && m))
       push(i, `members 非法: ${JSON.stringify(r.members)}`)
     if (!Array.isArray(r.coach_names) || !r.coach_names.every((m) => typeof m === 'string'))
