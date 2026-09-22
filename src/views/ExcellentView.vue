@@ -44,6 +44,11 @@ const list = computed(() => {
   return byName.value ? sortByRanking(arr, byName.value) : arr
 })
 
+/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
+    他的真名仍然写在 `name` 里 —— 自动奖牌汇总（pills.get(m.name)）与显示排名都按真名匹配，
+    只是不显示出来；没有 displayName 的人两者相同，行为不变。 */
+const shownName = (m) => m.displayName || m.name
+
 /** 瀑布流：卡片高度按内容自适应，位置由 useMasonry 逐张放进当前最短的列（保持源顺序） */
 const { containerRef } = useMasonry()
 
@@ -159,13 +164,13 @@ onBeforeUnmount(() => {
             <div class="member-photo">
               <div class="photo-ring"></div>
               <div class="photo-frame">
-                <img :src="m.photo" :alt="m.name" @error="$event.target.src = fallback" />
+                <img :src="m.photo" :alt="shownName(m)" @error="$event.target.src = fallback" />
               </div>
             </div>
 
             <!-- 信息区 -->
             <div class="member-body">
-              <h3>{{ m.name }}</h3>
+              <h3>{{ shownName(m) }}</h3>
               <p class="member-class">{{ m.class }}</p>
 
               <!-- 荣誉标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->

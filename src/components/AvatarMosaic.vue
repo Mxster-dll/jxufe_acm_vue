@@ -134,9 +134,16 @@ onMounted(async () => {
     按 Unicode 大类别 C*（含未分配的 Cn）删净，另加「类别正常却渲染为空白」的那几个；
     删完为空就退回「成员 <QQ号>」—— 宁可显示 QQ，也不显示一片空白。 */
 const BLANK_RE = /[\p{C}\u2800\u3164\uffa0\u115f\u1160\u180e\ufe00-\ufe0f]/gu
-/** 显示哪个名字：填了真名就用真名（与优秀成员页口径一致），没填才用清洗过的群昵称。
-    真名来自「群成员真名对照表.csv」，同时它也是荣誉关联的键 —— 同一份数据，两处共用。 */
+/** 显示哪个名字 —— 三层，自上而下取第一个非空的：
+      1) `displayName`：**不愿透露姓名的同学**在数据里另设的对外文本（`members.json` 的
+         `displayName` 字段 / `群成员真名对照表.csv` 的「显示名」列）；
+      2) `realName`：真名，与优秀成员页口径一致；
+      3) 清洗过的群昵称，最后退回「成员 <QQ号>」。
+    **真名始终是荣誉关联的键**（`pills` 与 `manualHonors` 都按 `realName` 查）——
+    匿名只影响显示，不影响他能不能匹配到自己的奖项。 */
 const nameOf = (m) => {
+  const shown = (m.displayName || '').trim()
+  if (shown) return shown
   const real = (m.realName || '').trim()
   if (real) return real
   return (m.name || '').replace(BLANK_RE, '').trim() || `成员 ${m.qq}`

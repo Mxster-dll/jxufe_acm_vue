@@ -43,13 +43,12 @@
     ]
   },
   {
-    "name": "一位不愿透露姓名的学长",
+    "name": "石翰林",
+    "displayName": "一位不愿透露姓名的学长",
     "class": "----",
     "photo": "/images/excellent_member/shl.png",
     "honors": [
       { "text": "保研至电子科技大学", "type": "destination" },
-      { "text": "ICPC区域赛 *4", "type": "contest" },
-      { "text": "CCPC铜牌 *3", "type": "contest" },
       { "text": "第六届传智杯冠军", "type": "contest" },
       { "text": "csp满分", "type": "contest" }
     ]

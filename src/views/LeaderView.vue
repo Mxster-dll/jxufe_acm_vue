@@ -20,6 +20,10 @@ const list = computed(() =>
   }))
 );
 
+/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
+    真名仍写在 `name` 里 —— 自动奖牌汇总 `pills.get(l.name)` 按真名匹配，只是不显示出来。 */
+const shownName = (l) => l.displayName || l.name;
+
 /** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
     手写的比赛条目已改为由它呈现——口径与生成逻辑见 utils/honorPills.js。
     数据异步加载，失败时不影响其它内容；与优秀成员页共用同一份缓存。 */
@@ -104,12 +108,12 @@ onMounted(async () => {
           <!-- 头像区 -->
           <div class="leader-avatar-wrap">
             <div class="avatar-ring"></div>
-            <img :src="l.avatar" :alt="l.name" class="leader-avatar" />
+            <img :src="l.avatar" :alt="shownName(l)" class="leader-avatar" />
           </div>
 
           <!-- 信息区 -->
           <div class="leader-body">
-            <h2 class="leader-name">{{ l.name }}</h2>
+            <h2 class="leader-name">{{ shownName(l) }}</h2>
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 

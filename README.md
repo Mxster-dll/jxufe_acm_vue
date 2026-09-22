@@ -263,8 +263,9 @@ npm run preview
 
 - 零奖牌的档位不显示；同一场团队奖，队内每人各计一枚；CCPC 女生专场不并进计数，
   按「2021 CCPC女生专场 铜牌」按届单独列一条。
-- 站点数据里查不到的人（昵称、或刻意匿名）在 `honorPills.js` 的 `MANUAL_PILLS` 里逐人兜底
-  （如 `vesper`）；「一位不愿透露姓名的学长」刻意匿名，其手写条目原样保留。
+- 站点数据里查不到的人（昵称）在 `honorPills.js` 的 `MANUAL_PILLS` 里逐人兜底（如 `vesper`）。
+  **「不愿透露姓名」不属于这一类** —— 那只是显示层的事：真名照常写在 `name` 里用于匹配，
+  另给一个 `displayName` 决定显示什么，见下面《不愿透露姓名的成员（displayName）》。
 - **改动口径前先看 `honorPills.js` 文件头注释**——那里面是唯一权威的规则说明（含为什么这么定）。
 - 胶囊样式：`src/styles/honors.css` 的 `.honor-tag--stat`（花色仍走比赛色，靠奖牌 emoji 区分档位）。
 
@@ -310,6 +311,28 @@ npm run preview
 **photo 字段**支持两种写法：
 - 本地图片：`"/images/excellent_member/xxx.png"`
 - 外部 URL：`"https://example.com/avatar.jpg"`
+
+#### 不愿透露姓名的成员（`displayName`）
+
+有成员不愿公开姓名时，**不要把名字从数据里删掉** —— 名字是奖项匹配的键：
+
+```json
+{
+  "name": "石翰林",
+  "displayName": "一位不愿透露姓名的学长",
+  "class": "----",
+  "photo": "/images/excellent_member/shl.png",
+  "honors": []
+}
+```
+
+- `name` 必须是**真名**：自动奖牌汇总（`pills.get(m.name)`）与显示排名（`recordsByName.get(m.name)`）
+  都按它匹配；`displayName` 只是**对外显示文本**，页面显示的每一处（卡片标题、图片 `alt`、
+  头像墙浮出的卡片）都优先用它。没有这个字段的人两者一致，行为不变。
+- 可以有多个成员这样设置；`leaders.json` 字段名不同、规则相同（一样认 `displayName`）。
+- 群成员不走 JSON：在 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「显示名」列填一份即可。
+- **只影响显示**：`public/data/` 下的 JSON 里仍是真名，竞赛信息 / 大事记 / 获奖名单等页面的队伍名单
+  也不在范围内（那是站点的获奖记录，会长 2026-09-22 裁定暂不动）。
 
 ---
 
@@ -448,7 +471,7 @@ npm run preview
 
 - 名单 = QQ 群 110 人 + 优秀成员 33 人 + 历届负责人 6 人，按**真名**去重后 **138 人**（陈煜仕 / 陶金杰 / 衷铭川既在群里又是负责人 → 合并成一格，不重复占位）。
 - 图片：`thumbs/<QQ号>.webp`（160×160 缩略图，墙上的瓷砖）+ `full/<QQ号>.jpg`（640 原图，悬停放大时才加载）；优秀成员与负责人**不重复存照片**，只按 `ex-` / `ld-` 前缀生成缩略图，原图直接引用站点已有的 `/images/excellent_member/`、`/images/leader/`。群主那张是全透明图（`blank.png`），墙上显示为空白白砖。
-- **显示真名还是群昵称**，由协会工作区的 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「真实姓名」列决定；**没有真名的人不显示任何荣誉**（宁可什么都不写，也不写“暂无获奖记录”）。
+- **显示真名还是群昵称**，由协会工作区的 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「真实姓名」列决定；**没有真名的人不显示任何荣誉**（宁可什么都不写，也不写“暂无获奖记录”）。同表的「显示名」列（生成物里的 `displayName` 字段）专给**不愿透露姓名的成员**用：填了就只显示它，真名照常留着匹配荣誉与排序。
 - 荣誉三个来源合一张表：`honorPills.js` 自动汇总 + `members.json` 的 `honors` + `leaders.json` 的 `achievements`，同一人重复的按文本去重；配色**复用** `styles/honors.css` + `utils/honorType.js`，与两个成员页逐条同色。墙上只有负责人多一行职务（取 `leaders.json` 的 `session`，如「2026届会长」）。
 - 组件 `src/components/AvatarMosaic.vue`，两个页面各传一套 props：
   首页 `<AvatarMosaic :opacity="0.16" :tile="136" />`（纯底纹，不响应鼠标）；协会成员页 `<AvatarMosaic :opacity="0.9" :top-fade="24" interactive :hires="lifted" />`（`interactive` 才挂悬停卡与荣誉；`hires` 跟着正文抬升走 —— 遮罩没了才把缩略图换成 640 原图）。

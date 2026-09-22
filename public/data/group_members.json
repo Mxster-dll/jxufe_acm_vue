@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T03:42:52",
+  "generated_at": "2026-09-22T11:59:28",
   "source": "06_共享资源/图片资源/群成员头像/群成员名单.csv",
   "counts": {
     "total": 138,
@@ -9,6 +9,7 @@
     "excellent": 33,
     "leader": 6,
     "realName": 66,
+    "anonymous": 1,
     "blank": 1
   },
   "members": [
@@ -1176,15 +1177,16 @@
     },
     {
       "qq": null,
-      "name": "一位不愿透露姓名的学长",
+      "name": "石翰林",
       "role": "优秀成员",
       "roleKey": "excellent",
-      "realName": "一位不愿透露姓名的学长",
+      "realName": "石翰林",
       "excellent": true,
-      "initial": "一",
+      "initial": "石",
       "thumb": "/images/group_members/thumbs/ex-shl.webp",
       "photo": "/images/excellent_member/shl.png",
-      "blank": false
+      "blank": false,
+      "displayName": "一位不愿透露姓名的学长"
     },
     {
       "qq": null,
