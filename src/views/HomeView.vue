@@ -562,6 +562,7 @@ const { newsList, loading, error } = useNews();
   <div class="page-wall">
     <HeroAvatarWall
       v-model:active="wallOn"
+      :hover-card="maskOut"
       manifest-url="/data/group_wall.manifest.json"
       copy-url="/data/group_wall.json"
       thumbs-base="/images/group_wall_thumbs"

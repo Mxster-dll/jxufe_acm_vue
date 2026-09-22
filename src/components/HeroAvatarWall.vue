@@ -63,7 +63,13 @@ const props = defineProps({
       0.09 时肉眼只剩一层灰雾、看不出是头像，0.16 才读得出「一面人脸墙」。 */
   dimOpacity: { type: Number, default: 0.18 },
   /** 单个网格允许的最大格数 —— DOM 节点数上的偏好（最软的一条约束） */
-  blockBudget: { type: Number, default: 320 },
+  blockBudget: { type: Number, default: 700 },
+  /** 悬停/点击是否弹成员卡（会长 2026-09-23）。
+      与 active **分开**：首页的露墙是自有遮罩机制，墙并不进入作者的「激活态」
+      （激活态还会给导航栏加一层白纱），但那时恰恰要弹卡。
+      false = 底纹态的那套「放大并虚化」；true = 弹卡。
+      首页传 `:hover-card="maskOut"`：有遮罩时虚化、露墙后弹卡。 */
+  hoverCard: { type: Boolean, default: false },
   /** 可用的缩略图档位（<thumbsBase>/ 下的目录名） */
   sizes: { type: Array, default: () => [384, 256] },
   /** 缩略图根目录。默认是首页那 33 位优秀成员的墙；「协会成员头像墙」（138 人
@@ -306,7 +312,7 @@ const clampCard = (tile) => {
 /** 只在「换了一格」时才算，避免 pointerover 在子元素间反复触发时反复量布局。
     底纹态不需要（那时不弹卡），直接跳过 —— 省掉每次悬停的一次布局读取。 */
 const onGridOver = (e) => {
-  if (!canHover.value || !props.active) return
+  if (!canHover.value || !props.hoverCard) return
   const tile = e.target.closest?.('.wall__tile') || null
   if (tile === lastTile) return
   lastTile = tile
@@ -319,7 +325,7 @@ const onGridDown = (e) => {
   downPt = { x: e.clientX, y: e.clientY }
 }
 const onGridClick = (e) => {
-  if (!props.active) return // 底纹态：不响应点击
+  if (!props.hoverCard) return // 未开启弹卡：不响应点击
   if (canHover.value) return // 桌面端靠 :hover，点击不用管
   // 顶栏那一条的 pointer-events 已放开（横屏下墙要在那里也能悬停），
   // 但那是导航栏的地盘 —— 点在它的空白处不该弹出成员卡。
@@ -413,7 +419,7 @@ watch(openItem, (v) => {
     <div
       v-if="tiles.length"
       class="wall"
-      :class="{ 'is-active': active, 'is-paused': paused }"
+      :class="{ 'is-active': active, 'is-hovercard': hoverCard, 'is-paused': paused }"
       aria-hidden="true"
       :style="wallStyle"
       @pointerover="onGridOver"
@@ -463,9 +469,10 @@ watch(openItem, (v) => {
       </div>
     </div>
 
-    <!-- 触屏端的居中卡：不能放进网格里 —— 网格的祖先带 transform，
-         position: fixed 会相对那个祖先定位，而不是视口。 -->
-    <div v-if="active && openItem" class="wall-sheet" @click.self="closeCard">
+    <!-- 触屏端的居中卡（hover 设备用不上）。
+         ⚠ 不能放进网格里 —— 网格的祖先带 transform，fixed 会相对那个祖先定位。
+         门控与 JS 的弹卡同一口径：active（作者的激活态）或 hoverCard（首页露墙后的弹卡态）。 -->
+    <div v-if="(active || hoverCard) && openItem" class="wall-sheet" @click.self="closeCard">
       <div class="wall-sheet__card">
         <div class="wall-sheet__avatar">
           <img :src="thumbOf(openItem.file)" alt="" decoding="async" @error="onImgError($event, openItem)" />
@@ -524,8 +531,11 @@ watch(openItem, (v) => {
    ========================================================================== */
 .hero-avatar-wall {
   /* 瓷砖目标边长 —— 媒体查询调档，组件读它，再在 4px 网格上扫描取最优。
-     量的是本元素的盒子（= hero 的盒子），不是视口。 */
-  --wall-tile: 188px;
+     量的是本元素的盒子（= hero 的盒子），不是视口。
+     档位取自旧版头像墙的实测值（会长 2026-09-23：新版 188px 太大，按旧代码找回）：
+     旧组件 AvatarMosaic 首页用的是 :tile="136"，故这里以 136 为基准，
+     其余断点按同一比例（136/188 ≈ 0.72）缩到 4 的倍数。 */
+  --wall-tile: 136px;
 
   position: absolute;
   inset: 0;
@@ -535,13 +545,13 @@ watch(openItem, (v) => {
   pointer-events: none; /* 只有瓷砖和按钮自己打开事件，其余交给页面 */
 }
 @media (max-width: 1199px) {
-  .hero-avatar-wall { --wall-tile: 148px; }
+  .hero-avatar-wall { --wall-tile: 108px; }
 }
 @media (max-width: 991px) {
-  .hero-avatar-wall { --wall-tile: 132px; }
+  .hero-avatar-wall { --wall-tile: 96px; }
 }
 @media (max-width: 767px) {
-  .hero-avatar-wall { --wall-tile: 96px; }
+  .hero-avatar-wall { --wall-tile: 72px; }
 }
 
 /* ==========================================================================
@@ -625,10 +635,10 @@ watch(openItem, (v) => {
    于是边缘自然摊成十几像素的软过渡，不会是一块硬邦邦的方块；
    再抬 z-index 保证它压在相邻格子之上。只在底纹态生效，激活态交给悬停卡。 */
 @media (hover: hover) and (pointer: fine) {
-  .wall:not(.is-active) .wall__tile:hover {
+  .wall:not(.is-hovercard) .wall__tile:hover {
     z-index: 4;
   }
-  .wall:not(.is-active) .wall__tile:hover .wall__img {
+  .wall:not(.is-hovercard) .wall__tile:hover .wall__img {
     opacity: 0.55;
     filter: blur(18px) saturate(1.2);
     transform: scale(1.4);
@@ -652,7 +662,11 @@ watch(openItem, (v) => {
 .wall__card {
   --card-w: 360px;
   --avatar: 96px;
-  --pad: 16px;
+  /* 旧版头像墙（integration 的 AvatarMosaic）悬停卡的内边距是 12px、卡内间距 12px。
+     卡片视觉整体按旧版还原（会长 2026-09-23：无遮罩时的悬停要「之前我做的样式」）：
+     圆角 8px、边框 rgba(0,0,0,.058)、双层阴影、200ms cubic-bezier(.1,.9,.2,1)。
+     见 .tmp/ref/old-hover-card.md 里抄出的旧 CSS 原文。 */
+  --pad: 12px;
   /* 头像的起飞点：卡片正好以格子中心为锚 → 卡片中心 == 原格子中心。
      头像自然位置在卡片左侧，其中心距卡片中心 = 卡片半宽 − 内边距 − 头像半宽；
      于是「右移这么多 + 放大到格子尺寸」正好盖回原格子上，归零即飞到位。
@@ -667,22 +681,22 @@ watch(openItem, (v) => {
   z-index: 6;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: min(var(--card-w), calc(100vw - 32px));
   padding: var(--pad);
   background: #fff;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.058);
+  border-radius: 8px; /* 旧版用 --fluent-radius-overlay */
   box-shadow:
-    0 18px 48px rgba(15, 23, 42, 0.18),
-    0 2px 8px rgba(15, 23, 42, 0.06);
+    0 2px 21px rgba(0, 0, 0, 0.14),
+    0 32px 64px rgba(0, 0, 0, 0.24);
   text-align: left;
   opacity: 0;
   pointer-events: none;
   transform: translate(calc(-50% + var(--shift-x)), calc(-50% + var(--shift-y))) scale(0.88);
   transition:
-    opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 200ms cubic-bezier(0.1, 0.9, 0.2, 1),
+    transform 200ms cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 .wall__avatar {
   flex: none;
@@ -690,10 +704,10 @@ watch(openItem, (v) => {
   height: var(--avatar);
   padding: 3px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1a73e8, #4fc3f7);
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
   transform: translate(calc(var(--from-x) - var(--shift-x)), calc(0px - var(--shift-y)))
     scale(calc(var(--step) / var(--avatar)));
-  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 300ms cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 .wall__avatar img {
   display: block;
@@ -708,19 +722,19 @@ watch(openItem, (v) => {
   min-width: 0;
 }
 .wall__name {
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 600;
-  line-height: 1.35;
-  color: #0f172a;
+  line-height: 1.3;
+  color: #333;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .wall__line {
   margin-top: 2px;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #666;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -734,7 +748,7 @@ watch(openItem, (v) => {
 .wall__tag {
   font-size: 0.75rem;
   line-height: 1.7;
-  padding: 0 8px;
+  padding: 1px 8px;
   border-radius: 999px;
   background: rgba(26, 115, 232, 0.08);
   color: #1a73e8;
@@ -744,25 +758,26 @@ watch(openItem, (v) => {
 /* 带头像墙分色的标签（协会成员头像墙用）——颜色走全站那套：
    styles/honors.css 的 .honor-tag--contest|destination|honor|contact|leader|more，
    每个修饰类自己持有 --tag-* 私有变量。这里只压小卡内几何：整页那套 3px 12px 的内边距
-   在 360×132 的悬浮卡里会把卡片撑高。**不要**在这里回写颜色，否则六种色会退化成一种。 */
+   会把卡片撑高（旧版实测能撑到 262px），故压到 1px 8px。
+   **不要**在这里回写颜色，否则六种色会退化成一种。 */
 .wall__tag--typed {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   line-height: 1.7;
-  padding: 0 8px;
+  padding: 1px 8px;
   white-space: nowrap;
 }
 
 /* 悬停卡只在**激活态**出现 —— 底纹态悬停是上面那块模糊亮斑，不弹卡。
    用能力检测包住，触屏上不启用（iOS 会把第一次 tap 当 hover）。 */
 @media (hover: hover) and (pointer: fine) {
-  .wall.is-active .wall__tile:hover {
+  .wall.is-hovercard .wall__tile:hover {
     z-index: 5;
   }
-  .wall.is-active .wall__tile:hover .wall__card {
+  .wall.is-hovercard .wall__tile:hover .wall__card {
     opacity: 1;
     transform: translate(calc(-50% + var(--shift-x)), calc(-50% + var(--shift-y))) scale(1);
   }
-  .wall.is-active .wall__tile:hover .wall__avatar {
+  .wall.is-hovercard .wall__tile:hover .wall__avatar {
     transform: translate(0, 0) scale(1);
   }
 }
