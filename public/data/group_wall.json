@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json。",
-  "generated_at": "2026-09-22T18:04:20.245Z",
+  "generated_at": "2026-09-22T18:15:11.211Z",
   "tiles": {
     "2839393017.webp": {
       "name": "李志文",
@@ -57,11 +57,7 @@
           "type": "leader"
         },
         {
-          "text": "xCPC 邀请赛🥈2🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥉1",
+          "text": "xCPC 邀请赛🥈2🥉1 省赛🥉1",
           "type": "contest"
         },
         {
@@ -130,11 +126,7 @@
           "type": "honor"
         },
         {
-          "text": "xCPC 区域赛🥉1 邀请赛🥈4🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈2",
+          "text": "xCPC 区域赛🥉1 邀请赛🥈4🥉1 省赛🥈2",
           "type": "contest"
         },
         {
@@ -142,8 +134,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "百度之星 省赛🥉1",
+          "type": "contest"
+        },
+        {
+          "text": "蓝桥杯 国赛🥉1 省赛🥇1",
+          "type": "contest"
         }
       ]
     },
@@ -385,11 +381,7 @@
       "full": "/images/excellent_member/0224613.png",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉2 邀请赛🥈4🥉2",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈2🥉1",
+          "text": "xCPC 区域赛🥉2 邀请赛🥈4🥉2 省赛🥈2🥉1",
           "type": "contest"
         },
         {
@@ -560,11 +552,7 @@
       "full": "/images/group_members/full/2367559181.jpg",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥇1🥈3🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1🥉1",
+          "text": "xCPC 邀请赛🥇1🥈3🥉1 省赛🥈1🥉1",
           "type": "contest"
         },
         {
@@ -599,11 +587,7 @@
       "full": "/images/group_members/full/3525811526.jpg",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥈2🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥉1",
+          "text": "xCPC 邀请赛🥈2🥉1 省赛🥉1",
           "type": "contest"
         },
         {
@@ -626,11 +610,7 @@
       "full": "/images/excellent_member/shl.png",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉6 邀请赛🥇1🥈2🥉2",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1",
+          "text": "xCPC 区域赛🥉6 邀请赛🥇1🥈2🥉2 省赛🥈1",
           "type": "contest"
         },
         {
@@ -646,6 +626,10 @@
           "type": "contest"
         },
         {
+          "text": "保研至电子科技大学",
+          "type": "destination"
+        },
+        {
           "text": "…",
           "type": "more"
         }
@@ -657,11 +641,7 @@
       "full": "/images/excellent_member/0233430.png",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉2 邀请赛🥉3",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥉3",
+          "text": "xCPC 区域赛🥉2 邀请赛🥉3 省赛🥉3",
           "type": "contest"
         },
         {
@@ -974,11 +954,7 @@
       "full": "/images/group_members/full/3092087056.jpg",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥈2🥉4",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1🥉2",
+          "text": "xCPC 邀请赛🥈2🥉4 省赛🥈1🥉2",
           "type": "contest"
         },
         {
@@ -1047,11 +1023,7 @@
       "full": "/images/group_members/full/167161261.jpg",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥈1🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1🥉1",
+          "text": "xCPC 邀请赛🥈1🥉1 省赛🥈1🥉1",
           "type": "contest"
         },
         {
@@ -1156,11 +1128,7 @@
           "type": "leader"
         },
         {
-          "text": "xCPC 区域赛🥉6 邀请赛🥇1🥈2🥉2",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1",
+          "text": "xCPC 区域赛🥉6 邀请赛🥇1🥈2🥉2 省赛🥈1",
           "type": "contest"
         },
         {
@@ -1172,7 +1140,11 @@
           "type": "contest"
         },
         {
-          "text": "…",
+          "text": "蓝桥杯 国赛🥇2🥈1 省赛🥇4",
+          "type": "contest"
+        },
+        {
+          "text": "...",
           "type": "more"
         }
       ]
@@ -1242,11 +1214,7 @@
           "type": "leader"
         },
         {
-          "text": "xCPC 区域赛🥈1🥉5 邀请赛🥇1🥈2",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈1",
+          "text": "xCPC 区域赛🥈1🥉5 邀请赛🥇1🥈2 省赛🥈1",
           "type": "contest"
         },
         {
@@ -1255,6 +1223,10 @@
         },
         {
           "text": "百度之星 国赛🥉1 省赛🥇1",
+          "type": "contest"
+        },
+        {
+          "text": "蓝桥杯 国赛🥇1🥈1🥉1 省赛🥇3",
           "type": "contest"
         },
         {
@@ -1363,11 +1335,7 @@
       "full": "/images/group_members/full/2360334262.jpg",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉1 邀请赛🥈4🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈2",
+          "text": "xCPC 区域赛🥉1 邀请赛🥈4🥉1 省赛🥈2",
           "type": "contest"
         },
         {
@@ -1526,11 +1494,7 @@
       "full": "/images/group_members/full/277270982.jpg",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉3 邀请赛🥇1🥈6🥉4",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈2🥉1",
+          "text": "xCPC 区域赛🥉3 邀请赛🥇1🥈6🥉4 省赛🥈2🥉1",
           "type": "contest"
         },
         {
@@ -1557,11 +1521,7 @@
       "full": "/images/excellent_member/hyb.png",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥇1",
+          "text": "xCPC 邀请赛🥉1 省赛🥇1",
           "type": "contest"
         },
         {
@@ -1638,11 +1598,7 @@
       "full": "/images/excellent_member/0233614.png",
       "tags": [
         {
-          "text": "xCPC 邀请赛🥉1",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥉1",
+          "text": "xCPC 邀请赛🥉1 省赛🥉1",
           "type": "contest"
         },
         {
@@ -1696,11 +1652,7 @@
       "full": "/images/group_members/full/1677816720.jpg",
       "tags": [
         {
-          "text": "xCPC 区域赛🥉3 邀请赛🥇1🥈3🥉3",
-          "type": "contest"
-        },
-        {
-          "text": "xCPC 省赛🥈2🥉2",
+          "text": "xCPC 区域赛🥉3 邀请赛🥇1🥈3🥉3 省赛🥈2🥉2",
           "type": "contest"
         },
         {

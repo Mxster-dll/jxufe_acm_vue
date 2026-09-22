@@ -4,7 +4,7 @@ import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
 import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
 import { stripCoveredHonors } from "../utils/honorCoverage";
-import { loadHonorRecords, pillsForName, recordsToDetails } from "../utils/honorPills";
+import { loadHonorRecords, pillPartsForName, recordsToDetails } from "../utils/honorPills";
 import { honorView } from "../utils/honorView";
 import HonorViewSwitch from "../components/HonorViewSwitch.vue";
 
@@ -42,7 +42,7 @@ onMounted(async () => {
 
 /** 比赛战绩的三种显示模式共用这份原始记录（模式定义见 utils/honorView.js）：
     count/icons → 汇总胶囊，detail → 逐条赛事全名。与优秀成员页共用缓存。 */
-const pillOf = (l) => pillsForName(records.value, l.name, honorView.value);
+const pillPartsOf = (l) => pillPartsForName(records.value, l.name, honorView.value);
 const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
 </script>
 
@@ -143,18 +143,28 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
                   :key="`detail-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
-                  ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
-                  >{{ d.title }}{{ d.medalText }}</span
                 >
+                  <span class="honor-tag__seg"
+                    ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
+                    >{{ d.title }}</span
+                  >
+                  <span class="honor-tag__seg">{{ d.medalText }}</span>
+                </span>
               </template>
               <template v-else>
                 <span
-                  v-for="(p, i) in pillOf(l)"
+                  v-for="(parts, i) in pillPartsOf(l)"
                   :key="`pill-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   title="比赛战绩，由站点竞赛数据自动汇总"
-                  >{{ p }}</span
                 >
+                  <span
+                    v-for="(seg, j) in parts"
+                    :key="`seg-${j}`"
+                    class="honor-tag__seg"
+                    >{{ seg }}</span
+                  >
+                </span>
               </template>
               <span
                 v-for="a in l.achievements"

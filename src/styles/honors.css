@@ -75,14 +75,32 @@
 }
 
 /* 比赛战绩胶囊：由站点竞赛数据自动汇总（口径与生成逻辑见 utils/honorPills.js），
-   如「xCPC 区域赛🥈2🥉1 邀请赛🥇1🥈3🥉4」。
-   文字比手写荣誉长，故允许换行、左对齐，并限宽以免撑破卡片；窄屏下自动折行。
+   如「xCPC 区域赛🥈2🥉1 邀请赛🥇1🥈3🥉4 省赛🥇1」。
    颜色仍走比赛色（--honor-contest）——xCPC / 天梯赛 / 百度之星 / 蓝桥杯同属比赛类，
-   系列之间靠开头的名字区分，奖牌档位靠 emoji 区分（🥇🥈🥉，特等奖是 🏆）。 */
+   系列之间靠开头的名字区分，奖牌档位靠 emoji 区分（🥇🥈🥉，特等奖是 🏆）。
+
+   **折行只在「部分」之间发生**（会长 2026-09-23）：
+   页面把每一部分渲染成一个 .honor-tag__seg 子项（recordsToPillParts 给的分段），
+   这里用 inline-flex + flex-wrap + 段间列间距 —— flex 子项是整体换行的原子单位，
+   于是窄卡片里胶囊折行时只会从「区域赛 / 邀请赛 / 省赛」之间断开，
+   不会把「区域赛🥈2」切成两行。故本类不再自己写 white-space: normal（交给子项）。
+   段间不用空格撑开（Vue 的 condense 会把元素间含换行的空白节点删掉，靠不住），
+   间距一律由 column-gap 提供 —— 模板里各段各占一行即可。 */
 .honor-tag--stat {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.4em;
+  row-gap: 0.15em;
   max-width: 100%;
   white-space: normal;
   text-align: left;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
+}
+
+/* 一枚胶囊里的一段（一块奖牌统计、或明细模式里的一条赛事名）。
+   min-width: 0 让超长的一段（如带「暨河北省赛」的全名）能在段内兜底折行，不撑破卡片。 */
+.honor-tag__seg {
+  min-width: 0;
 }

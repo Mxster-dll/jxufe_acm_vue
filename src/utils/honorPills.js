@@ -82,7 +82,9 @@ const MEDAL_TEXT = { grand: '特等奖', gold: '金牌', silver: '银牌', bronz
 
 /** 分段顺序（xCPC 的省赛单独成胶囊，故不在此列） */
 const SEGMENT_ORDER = {
-  xcpc: ['区域赛', '邀请赛'],
+  // 省赛与区域赛/邀请赛同属一枚胶囊（会长 2026-09-23 合并，原先省赛单独成枚）。
+  // 三段各自是一个折行单位（见 recordsToPillParts），故合并后不会互相挤在一起。
+  xcpc: ['区域赛', '邀请赛', '省赛'],
   gplt: ['团体', '个人'],
   baidu: ['国赛', '省赛'],
   lanqiao: ['国赛', '省赛'],
@@ -97,7 +99,10 @@ const SEGMENT_ORDER = {
  * 另给一个 `displayName` 决定页面显示什么。所以有真名的人一律不进这张表。
  */
 export const MANUAL_PILLS = {
-  vesper: ['xCPC 邀请赛🥉1', 'xCPC 省赛🥇1'],
+  // 每枚胶囊是**分段数组**（与 recordsToPillParts 同一形状）：省赛与邀请赛同枚、
+  // 各自是一个折行单位（会长 2026-09-23 把 xCPC 省赛并回同枚）。
+  // 系列名只写在第一段上，避免折行后第二段孤零零出现「xCPC 省赛」。
+  vesper: [['xCPC 邀请赛🥉1', '省赛🥇1']],
 }
 
 /** CCPC 女生专场：单列，不并进计数分段 */
@@ -340,14 +345,18 @@ function segmentText(segment, counts, mode = 'count') {
 }
 
 /**
- * 一个人的获奖记录 → 胶囊文本数组。
- * 顺序：xCPC 区域赛/邀请赛 → xCPC 省赛 → 天梯赛 → 百度之星 → 蓝桥杯 → 女生专场。
+ * 一个人的获奖记录 → 胶囊的**分段数组**：一枚胶囊 = 一个数组，数组元素是它的各个部分。
+ * 分段是给页面折行用的（会长 2026-09-23）：页面把每段渲染成一个 flex 子项，
+ * 胶囊需要换行时便只在「区域赛 / 邀请赛 / 省赛」这样的部分之间折，
+ * 不会从「区域赛🥈2」当中断开。要整串文本的地方（头像墙标签、核验脚本）用 recordsToPills()。
+ * 顺序：xCPC 区域赛/邀请赛/省赛（同属一枚） → 天梯赛 → 百度之星 → 蓝桥杯 → 女生专场。
  * @param {object[]} records
  * @param {'count'|'icons'|'detail'} mode 见 utils/honorView.js
+ * @returns {string[][]}
  */
-export function recordsToPills(records = [], mode = 'count') {
+export function recordsToPillParts(records = [], mode = 'count') {
   if (mode === 'detail') {
-    return recordsToDetails(records).map((d) => d.emoji + d.title + d.medalText)
+    return recordsToDetails(records).map((d) => [d.emoji + d.title + d.medalText])
   }
 
   const counts = { xcpc: {}, gplt: {}, baidu: {}, lanqiao: {} }
@@ -370,21 +379,24 @@ export function recordsToPills(records = [], mode = 'count') {
   for (const family of FAMILY_ORDER) {
     const bySegment = counts[family]
     if (!Object.keys(bySegment).length) continue
-    const body = SEGMENT_ORDER[family]
+    const parts = SEGMENT_ORDER[family]
       .map((segment) => (bySegment[segment] ? segmentText(segment, bySegment[segment], mode) : ''))
       .filter(Boolean)
-      .join(' ')
-    if (body) pills.push(`${FAMILY_LABELS[family]} ${body}`)
-    // xCPC 省赛单独一枚胶囊，紧跟其后
-    if (family === 'xcpc' && bySegment['省赛']) {
-      pills.push(`${FAMILY_LABELS.xcpc} ${segmentText('省赛', bySegment['省赛'], mode)}`)
-    }
+    if (!parts.length) continue
+    // 系列名与第一段绑成一个折行单位：窄卡片折行时不会留下孤零零一行「xCPC」
+    parts[0] = `${FAMILY_LABELS[family]} ${parts[0]}`
+    pills.push(parts)
   }
   // 女生专场：按年份列出具体记录，不做奖牌计数
   for (const r of girls.slice().sort((a, b) => String(a.year).localeCompare(String(b.year)))) {
-    pills.push(`${r.year} CCPC女生专场 ${r.medalText || MEDAL_TEXT[r.medal]}`)
+    pills.push([`${r.year} CCPC女生专场`, r.medalText || MEDAL_TEXT[r.medal]])
   }
   return pills
+}
+
+/** 与 recordsToPillParts 同源，把每枚胶囊拼回整串文本（头像墙标签、核验脚本用这个）。 */
+export function recordsToPills(records = [], mode = 'count') {
+  return recordsToPillParts(records, mode).map((parts) => parts.join(' '))
 }
 
 /**
@@ -435,8 +447,23 @@ const expandMedalCounts = (text) =>
 export function pillsForName(records, name, mode = 'count') {
   const texts = recordsToPills(records?.get?.(name) || [], mode)
   if (texts.length) return texts
-  const manual = MANUAL_PILLS[name] || []
-  return mode === 'icons' ? manual.map(expandMedalCounts) : [...manual]
+  return (MANUAL_PILLS[name] || []).map((parts) => {
+    const text = parts.join(' ')
+    return mode === 'icons' ? expandMedalCounts(text) : text
+  })
+}
+
+/**
+ * 与 pillsForName 同源的**分段**版本（两个页面用这份）。
+ * 手工兜底那几条的分段写在 MANUAL_PILLS 里，与自动汇总同形。
+ * @returns {string[][]}
+ */
+export function pillPartsForName(records, name, mode = 'count') {
+  const parts = recordsToPillParts(records?.get?.(name) || [], mode)
+  if (parts.length) return parts
+  return (MANUAL_PILLS[name] || []).map((segs) =>
+    mode === 'icons' ? segs.map(expandMedalCounts) : [...segs]
+  )
 }
 
 /** 记录索引 → 「姓名 → 胶囊文本数组」，并补上手工兜底（只在自动汇总没有该 key 时写入） */
@@ -447,7 +474,7 @@ function pillsFromRecords(records) {
     if (texts.length) pills.set(name, texts)
   }
   for (const [name, list] of Object.entries(MANUAL_PILLS)) {
-    if (!pills.has(name)) pills.set(name, [...list])
+    if (!pills.has(name)) pills.set(name, list.map((parts) => parts.join(' ')))
   }
   return pills
 }

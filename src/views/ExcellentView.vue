@@ -5,7 +5,7 @@ import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
 import { stripCoveredHonors } from '../utils/honorCoverage'
-import { loadHonorRecords, pillsForName, recordsToDetails } from '../utils/honorPills'
+import { loadHonorRecords, pillPartsForName, recordsToDetails } from '../utils/honorPills'
 import { honorView } from '../utils/honorView'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
@@ -26,7 +26,7 @@ onMounted(async () => {
     （汇总口径见 utils/honorPills.js，三种模式的定义见 utils/honorView.js）：
       count / icons → 汇总成胶囊（🥇1🥈2 / 🥇🥈🥈）
       detail        → 逐条列出赛事全名，标题与奖牌分开渲染，奖牌按档位着色 */
-const pillOf = (m) => pillsForName(records.value, m.name, honorView.value)
+const pillPartsOf = (m) => pillPartsForName(records.value, m.name, honorView.value)
 const detailOf = (m) => recordsToDetails(records.value.get(m.name) || [])
 
 /** 协会职务胶囊：来自两份会长维护的干事名单生成的 /data/duties.json
@@ -148,18 +148,28 @@ const { containerRef } = useMasonry()
                   :key="`detail-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
-                  ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
-                  >{{ d.title }}{{ d.medalText }}</span
                 >
+                  <span class="honor-tag__seg"
+                    ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
+                    >{{ d.title }}</span
+                  >
+                  <span class="honor-tag__seg">{{ d.medalText }}</span>
+                </span>
               </template>
               <template v-else>
                 <span
-                  v-for="(p, i) in pillOf(m)"
+                  v-for="(parts, i) in pillPartsOf(m)"
                   :key="`pill-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   title="比赛战绩，由站点竞赛数据自动汇总"
-                  >{{ p }}</span
                 >
+                  <span
+                    v-for="(seg, j) in parts"
+                    :key="`seg-${j}`"
+                    class="honor-tag__seg"
+                    >{{ seg }}</span
+                  >
+                </span>
               </template>
               <span
                 v-for="h in m.honors"
