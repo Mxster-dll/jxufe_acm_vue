@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watchEffect } from "vue";
 import { useNews } from "../composables/useNews";
 import AppFooter from "../components/AppFooter.vue";
 /* 头像墙：独立叠加层。删掉这一行 import、下面那个 ref、模板里那一个标签、
@@ -102,12 +102,33 @@ onMounted(() => {
   window.addEventListener("touchmove", onWallTouchMove, { passive: false });
   window.addEventListener("resize", resetMaskLimit, { passive: true });
 });
+
+// 导航栏在 App.vue 里、属于遮罩之外（会长最早的口径就是「除了墙和导航栏」），
+// 但会长 2026-09-23 补了一条：遮罩被拉下去时导航栏也要**一起**下移。
+// 它没法靠 DOM 嵌套跟着走，于是把状态写到 <html> 上，由 AppHeader.vue 的样式消费。
+watchEffect(() => {
+  const root = document.documentElement;
+  root.style.setProperty("--mask-shift", `${maskShift.value}px`);
+  // 导航栏的位移过渡时长：拖动中必须为 0（否则每一帧都在追赶），滑出/回程各给一段缓动。
+  // 用变量传过去，AppHeader 那边就不用把 transition 清单抄成三份。
+  root.style.setProperty(
+    "--mask-ms",
+    maskOut.value ? "640ms" : maskReturning.value ? "520ms" : "0ms"
+  );
+  root.classList.toggle("is-mask-out", maskOut.value);
+  root.classList.toggle("is-mask-returning", maskReturning.value);
+});
+
 onUnmounted(() => {
   window.removeEventListener("wheel", onWallWheel);
   window.removeEventListener("touchstart", onWallTouchStart);
   window.removeEventListener("touchmove", onWallTouchMove);
   window.removeEventListener("resize", resetMaskLimit);
   window.clearTimeout(maskReturnTimer);
+  // watchEffect 会随组件销毁，但它写在 <html> 上的东西得自己擦掉
+  const root = document.documentElement;
+  root.style.removeProperty("--mask-shift");
+  root.classList.remove("is-mask-out", "is-mask-returning");
 });
 
 // ── 轮播图 ──

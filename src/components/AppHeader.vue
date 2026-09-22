@@ -256,3 +256,31 @@ header.menu-open .hamburger-icon {
   nav a { font-size: 1.05rem; padding: 12px 20px; }
 }
 </style>
+
+<!--
+  这一段**必须是非 scoped**：它要选 <html> 上的状态类，而 scoped 会给选择器加数据属性。
+  踩过的坑：在 scoped 块里写 `:global(html.is-mask-out) header`，本项目的 Vue 会把后半截
+  选择器丢掉，transform 直接落到 <html> 上 —— 结果是整页被推下去 105vh，连 position: fixed
+  的墙都因为「祖先被 transform」而改以 <html> 为包含块（高度当场变成文档高度）。
+  所以这里老老实实写全局规则，并用 #app > header 提高优先级压过上面那条 scoped 的 transition。
+  状态由 src/views/HomeView.vue 写在 <html> 上：
+  --mask-shift（拖动位移）/ --mask-ms（过渡时长）/ is-mask-out / is-mask-returning。
+-->
+<style>
+/* 会长 2026-09-23 裁定：首页把遮罩拉下去时，导航栏也要**一起**下移。
+   导航栏在 App.vue、属于遮罩之外（最早的口径就是「除了墙和导航栏」），靠不了 DOM 嵌套，
+   所以状态走 <html> 传过来。 */
+#app > header {
+  transform: translate3d(0, var(--mask-shift, 0px), 0);
+  transition:
+    transform var(--mask-ms, 0ms) cubic-bezier(0.22, 1, 0.36, 1),
+    background var(--transition-smooth),
+    box-shadow var(--transition-smooth),
+    border-color var(--transition-smooth),
+    backdrop-filter var(--transition-smooth);
+}
+/* 拉过一屏的 10%：遮罩整层滑出，导航栏同步滑出（位移量与 .page-mask.is-out 一致） */
+html.is-mask-out #app > header {
+  transform: translate3d(0, 105vh, 0);
+}
+</style>
