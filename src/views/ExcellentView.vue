@@ -1,10 +1,56 @@
 <script setup>
+import { computed, onMounted, ref, watch } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
+import { useMasonry } from '../composables/useMasonry'
+import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
+import { loadHonorPills } from '../utils/honorPills'
+import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
+
+/** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
+    手写的比赛条目已改为由它呈现 —— 口径与生成逻辑见 utils/honorPills.js。
+    数据异步加载，失败时不影响其它内容；两个页面共用同一份缓存。 */
+const pills = ref(new Map())
+onMounted(async () => {
+  pills.value = await loadHonorPills()
+})
+
+/** 显示排名：比赛奖牌 + 手写战绩 + 荣誉加项折算成分值，决定卡片的显示顺序。
+    权重表、口径与排序键见 utils/honorRanking.js；数据加载与上面的胶囊共用同一份缓存。 */
+const byName = ref(null)
+const RANKING_TIMEOUT_MS = 3000
+watch(
+  members,
+  async (val) => {
+    if (!val?.length || byName.value) return
+    // 网络异常时不能把网格卡在骨架屏上：超时就按数据原始顺序渲染
+    const result = await Promise.race([
+      loadMemberRanking(val),
+      new Promise((resolve) => setTimeout(() => resolve(null), RANKING_TIMEOUT_MS)),
+    ])
+    byName.value = result ? result.byName : new Map()
+  },
+  { immediate: true }
+)
+
+/** 每条荣誉归一化成 { text, type }（类型判定见 utils/honorType.js），并按排名排列 */
+const list = computed(() => {
+  const arr = (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
+  return byName.value ? sortByRanking(arr, byName.value) : arr
+})
+
+/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
+    他的真名仍然写在 `name` 里 —— 自动奖牌汇总（pills.get(m.name)）与显示排名都按真名匹配，
+    只是不显示出来；没有 displayName 的人两者相同，行为不变。 */
+const shownName = (m) => m.displayName || m.name
+
+/** 瀑布流：卡片高度按内容自适应（荣誉条数差别很大），位置由 useMasonry 逐张放进
+    当前最短的列并保持源顺序。列数/间距是 .grid 上的两个 CSS 变量，见样式区。 */
+const { containerRef } = useMasonry()
 </script>
 
 <template>
@@ -21,8 +67,8 @@ const fallback = '/images/excellent_member/default.png'
         <p class="page-desc">星光不问赶路人，时光不负有心人</p>
       </header>
 
-      <!-- Loading -->
-      <div v-if="loading" class="grid">
+      <!-- Loading（成员数据与排名都就绪再渲染网格，避免卡片先排好又跳位） -->
+      <div v-if="loading || (members.length && !byName)" class="grid">
         <div v-for="n in skeletons" :key="n" class="skeleton" style="height:420px;border-radius:var(--radius-xl);"></div>
       </div>
 
@@ -30,9 +76,9 @@ const fallback = '/images/excellent_member/default.png'
       <p v-else-if="error" class="hint">加载失败</p>
 
       <!-- 成员网格 -->
-      <div v-else class="grid">
+      <div v-else ref="containerRef" class="grid">
         <article
-          v-for="(m, i) in members"
+          v-for="(m, i) in list"
           :key="m.name"
           v-reveal="'scale-in'"
           :style="{ '--reveal-index': i }"
@@ -42,18 +88,32 @@ const fallback = '/images/excellent_member/default.png'
           <div class="member-photo">
             <div class="photo-ring"></div>
             <div class="photo-frame">
-              <img :src="m.photo" :alt="m.name" @error="$event.target.src = fallback" />
+              <img :src="m.photo" :alt="shownName(m)" @error="$event.target.src = fallback" />
             </div>
           </div>
 
           <!-- 信息区 -->
           <div class="member-body">
-            <h3>{{ m.name }}</h3>
+            <h3>{{ shownName(m) }}</h3>
             <p class="member-class">{{ m.class }}</p>
 
-            <!-- 荣誉标签 -->
+            <!-- 荣誉标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->
             <div class="honor-tags">
-              <span v-for="h in m.honors" :key="h" class="honor-tag">{{ h }}</span>
+              <span
+                v-for="(p, i) in pills.get(m.name) || []"
+                :key="`pill-${i}`"
+                class="honor-tag honor-tag--contest honor-tag--stat"
+                title="比赛战绩，由站点竞赛数据自动汇总"
+                >{{ p }}</span
+              >
+              <span
+                v-for="h in m.honors"
+                :key="h.text"
+                class="honor-tag"
+                :class="`honor-tag--${h.type}`"
+                :title="HONOR_TYPE_LABELS[h.type]"
+                >{{ h.text }}</span
+              >
             </div>
           </div>
         </article>
@@ -131,11 +191,29 @@ const fallback = '/images/excellent_member/default.png'
   font-size: var(--font-size-lg);
 }
 
-/* ── 卡片网格 ── */
+/* ── 卡片网格（瀑布流的兜底布局 + JS 接管后的定位契约）──
+   列数与间距只有这一处旋钮，媒体查询里也只改这两个变量：
+     · CSS 这边用它们写 grid 兜底布局（JS 还没接管时/未启用时）；
+     · useMasonry 也读同一个元素上的这两个变量算卡片宽度（读不到才用兜底 4 列 / 32px）。
+   两边同源，改列数只需改这里。**不要去改 grid-template-columns 的列数**。 */
 .grid {
+  --masonry-columns: 4;
+  --masonry-gap: var(--space-lg);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-lg);
+  grid-template-columns: repeat(var(--masonry-columns), 1fr);
+  gap: var(--masonry-gap);
+}
+/* useMasonry 接管后：卡片改成绝对定位，位置由 JS 写进内联 left/top。
+   用 left/top 而不是 transform，是为了让卡片自己的 hover translateY 继续生效；
+   容器高度也由 JS 写（所以这里不设 min-height）。 */
+.grid.is-masonry {
+  display: block;
+  position: relative;
+}
+.grid.is-masonry > * {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* ── 卡片 ── */
@@ -247,34 +325,28 @@ const fallback = '/images/excellent_member/default.png'
   margin-bottom: var(--space-md);
 }
 
-/* ── 荣誉标签 ── */
+/* ── 荣誉标签 ──
+   标签的几何与分色全在 styles/honors.css（那边的修饰类只换 --tag-* 五个私有变量），
+   这里只管容器排布与 hover 加深 —— 所以**不要**在这个文件里再写 .honor-tag 的颜色：
+   scoped 选择器的优先级高于 .honor-tag--xxx，写了就会把六种颜色压成一种。
+
+   胶囊紧跟正文（2026-09-22 会长裁定）：原先用 margin-top: auto 顶到卡片底部，
+   矮卡最多空出 175px；现在空白留在卡片底部。 */
 .honor-tags {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
-  margin-top: auto;
-}
-.honor-tag {
-  display: inline-block;
-  padding: 3px 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: rgba(26,115,232,0.06);
-  border: 1px solid rgba(26,115,232,0.1);
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
 }
 .member-card:hover .honor-tag {
-  background: rgba(26,115,232,0.1);
-  border-color: rgba(26,115,232,0.2);
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */
 @media (max-width: 992px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    --masonry-columns: 3;
   }
 }
 @media (max-width: 768px) {
@@ -288,8 +360,9 @@ const fallback = '/images/excellent_member/default.png'
     font-size: 2rem;
   }
   .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-md);
+    --masonry-columns: 2;
+    /* 间距必须走变量：useMasonry 读的就是它。若只改 gap 属性，JS 侧会仍按 32px 排版 */
+    --masonry-gap: var(--space-md);
   }
   .member-photo {
     height: 210px;
@@ -308,7 +381,7 @@ const fallback = '/images/excellent_member/default.png'
     font-size: 1.7rem;
   }
   .grid {
-    grid-template-columns: 1fr;
+    --masonry-columns: 1;
   }
 }
 </style>
