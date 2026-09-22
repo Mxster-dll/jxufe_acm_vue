@@ -16,11 +16,13 @@ const wallOn = ref(false);
 //   所以「整个页面」这个边界是天然干净的（导航栏在 App.vue，也在遮罩之外）。
 //   正常滚动：遮罩跟着页面上下走 —— 往下滚就是遮罩上移，于是看到 #about 的
 //   「以代码为桥梁 / 连接技术与未来」。
-//   在页首继续往上滚（过滚动）：遮罩被拉下来，露出上面的墙；拉过一屏的 10% 就整层
-//   滑出页面，只剩墙。往回滚一下就把遮罩请回来（两段对称）。
-const MASK_REVEAL_RATIO = 0.1;
-// 滚轮一格约 100px，若严格跟手，一屏 900px 的 10%(=90px) 一格就满 —— 太容易误触发。
-// 阻尼 0.5：两格到阈值，手感上又还是「跟手」。
+//   露墙的两套驱动（会长 2026-09-23 分派）：
+//     · 桌面（滚轮）—— **取消阈值**：在页首轻轻往上一动就整层收起，不必再拉过 10%。
+//     · 移动端（触摸）—— **保留一屏的 10%**：拖动时遮罩跟手，松手时不足 10% 回弹、
+//       够了才触发（见 onWallTouchEnd）。
+//   往下滚一下就把遮罩请回来；点导航栏那枚「成员墙」也是直接收起。
+const MASK_REVEAL_RATIO = 0.1; // 只给触摸用（桌面已取消阈值）
+// 触摸拖动的阻尼：免得手指挪一点点就把遮罩拉到底
 const MASK_DRAG_DAMP = 0.5;
 // 回程动画时长，与 CSS 里 .page-mask.is-returning 的 transition 保持一致
 const MASK_RETURN_MS = 520;
@@ -35,7 +37,18 @@ const resetMaskLimit = () => {
   maskLimit = Math.max(80, window.innerHeight * MASK_REVEAL_RATIO);
 };
 
-/** 把遮罩往下拉（dy < 0 = 露出上面的墙）或往上收（dy > 0）。返回是否吃掉了这次滚动 */
+/** 回程动画：归零之前先挂上 is-returning（CSS 那份 transition），到点再摘掉 */
+const startMaskReturn = () => {
+  maskReturning.value = true;
+  window.clearTimeout(maskReturnTimer);
+  maskReturnTimer = window.setTimeout(() => {
+    maskReturning.value = false;
+  }, MASK_RETURN_MS);
+};
+
+/** 累积拖动位移（dy < 0 = 往下拉、露出上面的墙）。返回是否吃掉了这次滚动。
+    这里**只累积、不触发** —— 什么时候算「拉够了」由调用方定：
+    桌面滚轮当场触发（onWallWheel），触摸等松手判定（onWallTouchEnd）。 */
 const dragMask = (dy) => {
   // 手指/滚轮重新接管：立刻结束回程动画，保证跟手
   maskReturning.value = false;
@@ -46,7 +59,6 @@ const dragMask = (dy) => {
   }
   if (dy < 0) {
     maskShift.value = Math.min(maskShift.value - dy, maskLimit);
-    if (maskShift.value >= maskLimit) maskOut.value = true;
     return true;
   }
   if (maskShift.value > 0) {
@@ -56,25 +68,22 @@ const dragMask = (dy) => {
   return false;
 };
 
-/** 已经滑出：只认「往下滚」 —— 先把遮罩请回来，这一次滚动不落到页面上 */
+/** 已经收起：只认「往下滚」 —— 先把遮罩请回来，这一次滚动不落到页面上 */
 const recallMask = (dy) => {
   if (dy <= 0) return false;
-  // 滑出是 640ms 缓动，直接归零会「啪」地跳回一屏，所以回程也走一段缓动
-  maskReturning.value = true;
+  // 收起是 640ms 缓动，直接归零会「啪」地跳回一屏，所以回程也走一段缓动
+  startMaskReturn();
   maskOut.value = false;
   maskShift.value = 0;
   // 遮罩被 translate 出去时会把文档撑高（实测 scrollHeight 2641 → 3279），
   // 若这期间有人拖滚动条 / 按空格把文档滚下去了，请回来就会错位 —— 这里拉回页首。
-  // 同样要 behavior: 'instant'，理由见 revealWall 的注释。
+  // 必须 behavior: 'instant'，理由见 revealWall 的注释。
   if (window.scrollY > 0) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  window.clearTimeout(maskReturnTimer);
-  maskReturnTimer = window.setTimeout(() => {
-    maskReturning.value = false;
-  }, MASK_RETURN_MS);
   return true;
 };
 
-/** 点导航栏那枚「成员墙」= 直接收起遮罩，等价于「把遮罩下拉过一屏的 10%」那一档。
+/** 收起遮罩，露出整面成员墙。三条路都汇到这里：
+    点导航栏那枚「成员墙」/ 桌面滚轮在页首往上动一下 / 移动端拖过一屏的 10% 松手。
     先把文档拉回页首：遮罩是靠 translate 让开的，若此刻页面已经滚到下面，
     光位移一屏它仍留在视口里，露不出墙。
     必须显式 behavior: 'instant' —— base.css:21 有 scroll-behavior: smooth，
@@ -126,16 +135,25 @@ const measureHint = () => {
   if (next !== hintLeft.value) hintLeft.value = next;
 };
 
+/** 滚轮 = 桌面。会长 2026-09-23：取消 10% 阈值 —— 在页首轻轻往上一动就整层收起。
+    （以前要先累积到一屏的 10%，现在第一下就算数。） */
 const onWallWheel = (e) => {
-  // 注意：Chrome 把 window 上的 wheel/touchmove 默认当 passive，必须显式传 false 才有 preventDefault
   const dy = e.deltaY * MASK_DRAG_DAMP;
   if (maskOut.value) {
     if (recallMask(dy)) e.preventDefault();
     return;
   }
+  if (dy < 0 && window.scrollY === 0) {
+    revealWall();
+    e.preventDefault();
+    return;
+  }
+  // 其余情况：正常翻页；若触摸留下的位移还没归零，顺手收掉
   if (dragMask(dy)) e.preventDefault();
 };
 
+/** 触摸 = 移动端。会长 2026-09-23：这里**保留一屏的 10%**，但改成「拖动 → 松手判定」——
+    拖动时遮罩跟手，松手不足 10% 回弹，够了才触发。 */
 const onWallTouchStart = (e) => {
   touchY = e.touches[0]?.clientY ?? 0;
 };
@@ -147,12 +165,23 @@ const onWallTouchMove = (e) => {
   const eaten = maskOut.value ? recallMask(dy) : dragMask(dy);
   if (eaten && e.cancelable) e.preventDefault();
 };
+const onWallTouchEnd = () => {
+  if (maskOut.value || maskShift.value <= 0) return;
+  if (maskShift.value >= maskLimit) {
+    maskOut.value = true; // 拉过一屏的 10%：触发（.is-out 自带 640ms 缓动）
+  } else {
+    startMaskReturn(); // 不足 10%：回弹
+    maskShift.value = 0;
+  }
+};
 
 onMounted(() => {
   resetMaskLimit();
   window.addEventListener("wheel", onWallWheel, { passive: false });
   window.addEventListener("touchstart", onWallTouchStart, { passive: true });
   window.addEventListener("touchmove", onWallTouchMove, { passive: false });
+  window.addEventListener("touchend", onWallTouchEnd, { passive: true });
+  window.addEventListener("touchcancel", onWallTouchEnd, { passive: true });
   window.addEventListener("resize", resetMaskLimit, { passive: true });
   // 「成员墙」入口的让位测量：等 Teleport 把节点挂上去之后再测
   nextTick(() => {
@@ -188,6 +217,8 @@ onUnmounted(() => {
   window.removeEventListener("wheel", onWallWheel);
   window.removeEventListener("touchstart", onWallTouchStart);
   window.removeEventListener("touchmove", onWallTouchMove);
+  window.removeEventListener("touchend", onWallTouchEnd);
+  window.removeEventListener("touchcancel", onWallTouchEnd);
   window.removeEventListener("resize", resetMaskLimit);
   window.clearTimeout(maskReturnTimer);
   hintRo?.disconnect();
