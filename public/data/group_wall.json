@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json。",
-  "generated_at": "2026-09-22T16:56:49.051Z",
+  "generated_at": "2026-09-22T17:00:32.544Z",
   "tiles": {
     "2839393017.webp": {
       "name": "李志文",
