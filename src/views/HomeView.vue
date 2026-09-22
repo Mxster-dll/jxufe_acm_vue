@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watchEffect } from "vue";
+import { ref, onMounted, onUnmounted, watchEffect, nextTick } from "vue";
 import { useNews } from "../composables/useNews";
 import AppFooter from "../components/AppFooter.vue";
 /* 头像墙：独立叠加层。删掉这一行 import、下面那个 ref、模板里那一个标签、
@@ -87,6 +87,45 @@ const revealWall = () => {
   maskOut.value = true;
 };
 
+// ── 导航栏里那枚「成员墙」的横向位置（会长 2026-09-23 第 2 条）──
+//   目标：有空间时落在导航栏的中线上；宽度变小、被 logo / 导航按钮夹住时**退开**，
+//   而不是像纯绝对定位那样叠在按钮上面（会长原话：「宽度较小时被导航栏按钮挤离中心」）。
+//   为什么不用纯 CSS：等权托板（两侧 flex: 1）只保证「两侧间距相等」，
+//   而 logo 比导航窄得多（实测 206 vs 569px），结果会被顶到中线左侧 182px，不叫居中；
+//   要用绝对定位精确居中，就必须实测邻居再把中线夹住 —— 那只能靠 JS。
+const HINT_NEIGHBOR_GAP = 12; // 与 logo / 导航至少留出的呼吸位
+const hintEl = ref(null);
+const hintLeft = ref(null); // null → CSS 回落到 50%
+let hintRo = null;
+
+const measureHint = () => {
+  const btn = hintEl.value;
+  const bar = btn?.closest(".bar");
+  if (!btn || !bar) return;
+  const br = bar.getBoundingClientRect();
+  const hw = btn.getBoundingClientRect().width;
+  if (!hw || !br.width) return;
+  // logo / nav 在小屏会被 display: none 掉，那种情况下 rect 全是 0，要靠 width 过滤
+  const box = (sel) => {
+    const el = bar.querySelector(sel);
+    const r = el ? el.getBoundingClientRect() : null;
+    return r && r.width > 0 ? r : null;
+  };
+  const logo = box(".logo");
+  const nav = box("nav");
+
+  const want = br.left + br.width / 2; // 理想位置：整条导航栏的中线
+  let lo = br.left + hw / 2; // 不越出导航栏
+  let hi = br.right - hw / 2;
+  if (logo) lo = Math.max(lo, logo.right + HINT_NEIGHBOR_GAP + hw / 2); // 不压 logo
+  if (nav) hi = Math.min(hi, nav.left - HINT_NEIGHBOR_GAP - hw / 2); // 不压导航
+
+  // lo > hi 说明两侧真的挤没了（比如极窄屏），取中点，至少保持对称
+  const center = lo > hi ? (lo + hi) / 2 : Math.min(Math.max(want, lo), hi);
+  const next = Math.round(center - br.left) + "px";
+  if (next !== hintLeft.value) hintLeft.value = next;
+};
+
 const onWallWheel = (e) => {
   // 注意：Chrome 把 window 上的 wheel/touchmove 默认当 passive，必须显式传 false 才有 preventDefault
   const dy = e.deltaY * MASK_DRAG_DAMP;
@@ -115,6 +154,18 @@ onMounted(() => {
   window.addEventListener("touchstart", onWallTouchStart, { passive: true });
   window.addEventListener("touchmove", onWallTouchMove, { passive: false });
   window.addEventListener("resize", resetMaskLimit, { passive: true });
+  // 「成员墙」入口的让位测量：等 Teleport 把节点挂上去之后再测
+  nextTick(() => {
+    measureHint();
+    const bar = hintEl.value?.closest(".bar");
+    if (bar) {
+      hintRo = new ResizeObserver(measureHint);
+      hintRo.observe(bar);
+      bar.querySelectorAll(".logo, nav").forEach((el) => hintRo.observe(el));
+    }
+    // 字体加载完文字宽度会变，补测一次
+    if (document.fonts?.ready) document.fonts.ready.then(measureHint).catch(() => {});
+  });
 });
 
 // 导航栏在 App.vue 里、属于遮罩之外（会长最早的口径就是「除了墙和导航栏」），
@@ -139,6 +190,8 @@ onUnmounted(() => {
   window.removeEventListener("touchmove", onWallTouchMove);
   window.removeEventListener("resize", resetMaskLimit);
   window.clearTimeout(maskReturnTimer);
+  hintRo?.disconnect();
+  hintRo = null;
   // watchEffect 会随组件销毁，但它写在 <html> 上的东西得自己擦掉
   const root = document.documentElement;
   root.style.removeProperty("--mask-shift");
@@ -456,11 +509,18 @@ const { newsList, loading, error } = useNews();
   <!-- ── 「成员墙」入口：会长 2026-09-23 要求搬进导航栏，且点一下就直接收起遮罩 ──
        Teleport 到 AppHeader 里的 #header-hint 锚点 —— DOM 上它成了导航栏的孩子，
        但状态与逻辑仍留在本页（遮罩归 HomeView 管），不必为它引一个全局 store。
-       箭头仍是卡片外的独立元素、仍是 24px，只是从「叠在文字上方」改成「并排在左」：
-       导航栏高 80px，24 + 8 + 44 = 76px 的竖排会顶到上下两条边，横排才放得下。
-       点击 = 把遮罩下拉过 10% 那一档（见 revealWall），不必再手动滚。 -->
+       横向位置由 measureHint() 实测后写进 --hint-left（见脚本里的说明）：
+       有空间时落在导航栏中线上，被 logo / 导航按钮夹住时退开 —— 就是会长说的
+       「宽度小时被导航栏按钮挤离中心」。 -->
   <Teleport to="#header-hint">
-    <button type="button" class="wall-hint" aria-label="露出成员墙" @click="revealWall">
+    <button
+      ref="hintEl"
+      type="button"
+      class="wall-hint"
+      :style="{ '--hint-left': hintLeft }"
+      aria-label="露出成员墙"
+      @click="revealWall"
+    >
       <i class="fas fa-chevron-up" aria-hidden="true"></i>
       <span class="wall-hint__label">成员墙</span>
     </button>
@@ -1049,19 +1109,18 @@ const { newsList, loading, error } = useNews();
 
 /* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──
    位置：Teleport 进导航栏的 #header-hint 锚点（DOM 上属于 AppHeader，逻辑与状态仍留在本页）。
-   锚点铺满 .bar 且自身 pointer-events: none，所以这里用「绝对居中」自己定位，
-   按钮再把指针事件收回来 —— 它是可点的。
-   结构（会长 2026-09-23 第 1 条）：箭头在上、字样在下，两者共用一条中轴；
-   箭头仍是卡片外的独立元素、仍是 24px。
-   竖排的尺寸账：24 + gap 4 + 卡片 44 = 72px，导航栏 80px，上下各余 4px。
+   锚点铺满 .bar，所以下面的 50% 就是整条导航栏的中线；横向位置再由 JS 实测邻居后
+   写进 --hint-left 覆盖（见本文件 measureHint）：有空间时中线居中，
+   被 logo / 导航按钮夹住时退开 —— 会长 2026-09-23 第 2 条要的就是这个让位行为。
+   结构：箭头在上、字样在下，共用一条中轴；箭头是卡片外的独立元素、24px。
+   竖排尺寸账：24 + gap 4 + 卡片 44 = 72px，导航栏 80px，上下各余 4px。
    卡片样式照搬我们删掉的那枚 .wall-toggle（HeroAvatarWall.vue:849-895）：
    白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
-   连「hover 抬 2px、active 缩到 0.97」也一并照搬，只是位移量要带上居中用的 -50%。 */
+   连「hover 抬 2px、active 缩到 0.97」也一并照搬。 */
 .wall-hint {
   position: absolute;
   top: 50%;
-  left: 50%;
-  z-index: 1;
+  left: var(--hint-left, 50%);
   transform: translate(-50%, -50%);
   display: inline-flex;
   flex-direction: column; /* 箭头在上、字样在下 */
@@ -1073,7 +1132,9 @@ const { newsList, loading, error } = useNews();
   background: none;
   cursor: pointer;
   pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    left 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .wall-hint:hover {
   transform: translate(-50%, calc(-50% - 2px));
@@ -1091,12 +1152,6 @@ const { newsList, loading, error } = useNews();
   line-height: 1;
   color: var(--primary);
   animation: wall-hint-bob 1.8s ease-in-out infinite;
-}
-@media (max-width: 991px) {
-  /* 小屏导航栏已换成汉堡菜单，中间放不下；露墙手势本来就是桌面滚轮为主的 */
-  .wall-hint {
-    display: none;
-  }
 }
 /* 卡片本体：与 .wall-toggle 同款（那枚按钮已按会长要求从首页撤掉，这里接上它的观感） */
 .wall-hint__label {

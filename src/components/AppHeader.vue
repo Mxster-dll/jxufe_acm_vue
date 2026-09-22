@@ -37,8 +37,10 @@ onUnmounted(() => {
       </RouterLink>
 
       <!-- 首页把「成员墙」入口传送进这里（HomeView 的 <Teleport to="#header-hint">）。
-           空槽铺满 .bar 且自身 pointer-events: none：它绝对定位、不进 flex 流，只作锚点，
-           所以既有三件（logo / 导航 / 汉堡按钮）的位置一点没被挤动。 -->
+           空槽铺满 .bar、自身 pointer-events: none，只作定位包含块。
+           它在导航栏里的位置由 HomeView 实测邻居后钳制（--hint-left）：
+           有空间时落在导航栏中线上，被 logo / 导航按钮夹住时退开，绝不重叠。
+           （会长 2026-09-23 第 2 条要的正是这个让位行为。） -->
       <div id="header-hint" class="header-hint"></div>
 
       <nav>
@@ -87,7 +89,7 @@ header.scrolled {
 }
 
 .bar {
-  position: relative; /* #header-hint 锚点要拿它当包含块；原本没有定位上下文 */
+  position: relative; /* #header-hint 锚点要拿它当定位包含块 */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,8 +97,8 @@ header.scrolled {
   height: 80px;
 }
 
-/* 传送锚点：铺满整条 bar 但不吃指针、不占位（绝对定位，不进 flex 流）。
-   HomeView 的「成员墙」按钮被传送进这里，并靠自己的绝对居中定位。 */
+/* 传送锚点：铺满整条 bar 但不吃指针、不占位（绝对定位，不进 flex 流），
+   只作定位包含块。里面那个按钮的位置由 HomeView 实测邻居后写入 --hint-left。 */
 .header-hint {
   position: absolute;
   inset: 0;
