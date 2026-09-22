@@ -464,9 +464,10 @@ const { newsList, loading, error } = useNews();
          视口 y = 0（负 margin 在遮罩这一层被挡住、没折到 body 上），所以 CSS 里那个 top
          算出来就是「页头下沿再下 --space-md」。挂在遮罩上会随「负 margin 有没有折出去」
          差出一个页头高度。 -->
-    <p class="wall-hint" aria-hidden="true">
-      <i class="fas fa-chevron-up"></i><span>成员墙</span>
-    </p>
+    <div class="wall-hint" aria-hidden="true">
+      <i class="fas fa-chevron-up"></i>
+      <span class="wall-hint__label">成员墙</span>
+    </div>
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div
@@ -1030,58 +1031,58 @@ const { newsList, loading, error } = useNews();
 }
 
 /* ── 顶部提示：往上滚会露出整面成员墙 ──
-   位置：水平居中、紧贴页头下沿。
-   它是 hero 的绝对定位子元素，而 hero 在遮罩（.page-mask）里 —— 遮罩整体下拉时它跟着走，
-   这正是要的：提示与页面一起让开，而不是钉在原地。
+   位置：水平居中、紧贴页头下沿。它是 hero 的绝对定位子元素，而 hero 在遮罩（.page-mask）里
+   —— 遮罩整体下拉时它跟着走，这正是要的：提示与页面一起让开，而不是钉在原地。
    实测 hero 的顶边就落在视口 y = 0（负 margin 在遮罩这一层被挡住没折出去），
-   所以 top 直接写「页头高 + 16px」就是视口里页头下沿再下 16px。 */
-/* 选择器写成 .hero .wall-hint（(0,2,0)）而不是 .wall-hint（(0,1,0)）：
-   下面那条 .hero p（(0,1,1)，fadeInUp 动画 + font-size: xl）原本压着这个提示 ——
-   动画带 both 填充，播完仍以「动画」身份生效，而 CSS 动画在层叠里高于普通声明，
-   于是 translateX(-50%) 被吃掉、提示偏到视口中心右侧半个身位，字号也悄悄变成 20px。
-   animation: none 是必须的：光靠特异性赢不了动画，只能把动画本身关掉。 */
-.hero .wall-hint {
+   所以 top 直接写「页头高 + --space-md」就是视口里页头下沿再下 16px。
+   结构：向上的箭头放在**卡片外面**并单独放大，卡片里只有「成员墙」三个字。
+   卡片样式照搬我们删掉的那个 .wall-toggle（HeroAvatarWall.vue:849-895）：
+   白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字。
+   注意这里用 div 而不是 p：.hero p 那条 fadeInUp 带 both 填充，动画在层叠里高于普通声明
+   （靠特异性赢不了），会把 transform 与字号一并压掉 —— 先前正是它让提示偏出半个身位。 */
+.wall-hint {
   position: absolute;
   top: calc(var(--header-height) + var(--space-md));
   left: 50%;
   z-index: 2;
   display: inline-flex;
-  flex-direction: column; /* 图标在上、文字在下，两者居中 */
-  align-items: center;
-  gap: var(--space-xs); /* 4px 栅格 */
+  flex-direction: column;
+  align-items: center; /* 箭头与卡片共用一条中轴 */
+  gap: var(--space-sm);
   margin: 0;
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--font-size-xs); /* 12px，与项目 Caption 档一致 */
-  line-height: 16px;
-  color: var(--text-light);
-  /* 材质与页头 .scrolled 同一套（同档白底透明度 / 同档模糊 / 同一根发丝边）——
-     它就挂在页头下面，视觉上连成一体，而不是另起一种卡片 */
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
   transform: translateX(-50%);
-  animation: none; /* 见上：不吃 .hero p 的 fadeInUp，否则 transform 会被它压住 */
   /* 纯提示、不可点：不吃指针，让悬停穿到后面的头像墙上 */
   pointer-events: none;
-  transition:
-    opacity var(--transition-fast),
-    transform var(--transition-fast);
 }
-.hero .wall-hint i {
-  font-size: var(--font-size-sm);
+.wall-hint i {
+  font-size: var(--font-size-2xl); /* 24px：放大到一眼能认出是「往上」的手势 */
+  line-height: 1;
   color: var(--primary);
   animation: wall-hint-bob 1.8s ease-in-out infinite;
+}
+/* 卡片本体：与 .wall-toggle 同款（那枚按钮已按会长要求从首页撤掉，这里接上它的观感） */
+.wall-hint__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* 与 .wall-toggle 同档的触控高度 */
+  padding: 0 var(--space-md);
+  border: 1px solid rgba(26, 115, 232, 0.24);
+  border-radius: var(--radius-full);
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+  color: var(--primary);
+  font-size: 0.9375rem; /* 15px，与 .wall-toggle 一致 */
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
 @keyframes wall-hint-bob {
   0%,
   100% {
-    transform: translateY(2px);
+    transform: translateY(4px);
   }
   50% {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
   }
 }
 .hero-content {
