@@ -88,6 +88,47 @@
   --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
   --gradient-soft: linear-gradient(180deg, var(--bg-light) 0%, var(--bg) 100%);
 
+  /* ===== 荣誉标签分类配色 =====
+     「优秀成员」「协会负责人」两页的荣誉标签按类型分色，四类各一组：
+       比赛（赛事奖项）/ 毕业去向（保研考研就业）/ 个人荣誉·职位 / 联系方式（彩蛋与社交）
+     另有第五类「会长身份」（金色）：只出现在协会成员头像墙的身份胶囊上（「2026学年会长」），
+     目的是让它一眼区别于荣誉与干事职务（2026-09-22 会长指定用金色）。
+     分类规则见 utils/honorType.js，标签样式见 styles/honors.css。
+     取值均为白底对比度 ≥ 4.5:1（WCAG AA 正文级），橙色与绿色比全站 accent 更深，
+     否则 0.72rem 的小字在浅底上读不清。 */
+  --honor-contest: #1a73e8;                  /* 比赛：沿用主色蓝 */
+  --honor-contest-bg: rgba(26, 115, 232, 0.07);
+  --honor-contest-border: rgba(26, 115, 232, 0.16);
+  --honor-contest-bg-hover: rgba(26, 115, 232, 0.14);
+  --honor-contest-border-hover: rgba(26, 115, 232, 0.3);
+
+  --honor-destination: #b45309;              /* 毕业去向：深琥珀 */
+  --honor-destination-bg: rgba(180, 83, 9, 0.09);
+  --honor-destination-border: rgba(180, 83, 9, 0.2);
+  --honor-destination-bg-hover: rgba(180, 83, 9, 0.16);
+  --honor-destination-border-hover: rgba(180, 83, 9, 0.34);
+
+  --honor-honor: #2e7d32;                    /* 个人荣誉 / 职位：深绿 */
+  --honor-honor-bg: rgba(46, 125, 50, 0.09);
+  --honor-honor-border: rgba(46, 125, 50, 0.2);
+  --honor-honor-bg-hover: rgba(46, 125, 50, 0.16);
+  --honor-honor-border-hover: rgba(46, 125, 50, 0.34);
+
+  --honor-contact: #5f6b7a;                  /* 联系方式 / 彩蛋：灰蓝，弱化处理 */
+  --honor-contact-bg: rgba(95, 107, 122, 0.08);
+  --honor-contact-border: rgba(95, 107, 122, 0.2);
+  --honor-contact-bg-hover: rgba(95, 107, 122, 0.15);
+  --honor-contact-border-hover: rgba(95, 107, 122, 0.32);
+
+  --honor-leader: #a16207;                   /* 会长身份：金色（比去向的暗琥珀更黄更亮，白底对比度 4.9:1） */
+  --honor-leader-bg: rgba(161, 98, 7, 0.1);
+  --honor-leader-border: rgba(161, 98, 7, 0.22);
+  --honor-leader-bg-hover: rgba(161, 98, 7, 0.18);
+  --honor-leader-border-hover: rgba(161, 98, 7, 0.38);
+
+  --honor-more: #6b7280;                     /* 「…」更多荣誉：中性灰虚线，不冒充任何一类 */
+  --honor-more-border: rgba(107, 114, 128, 0.4);
+
   /* ===== Z 轴层级 ===== */
   --z-dropdown: 100;
   --z-sticky: 200;
