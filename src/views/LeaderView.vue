@@ -1,6 +1,9 @@
 <script setup>
+import { computed, onMounted, ref } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
+import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
+import { loadHonorPills } from "../utils/honorPills";
 
 const {
   data: leaders,
@@ -8,6 +11,27 @@ const {
   error,
 } = useJson("/data/leaders.json", { initial: [] });
 const { skeletons } = useSkeleton(5);
+
+/** 每条荣誉归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
+const list = computed(() =>
+  (leaders.value || []).map((l) => ({
+    ...l,
+    achievements: normalizeHonors(l.achievements),
+  }))
+);
+
+/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
+    真名仍写在 `name` 里 —— 自动奖牌汇总 `pills.get(l.name)` 按真名匹配，只是不显示出来。 */
+const shownName = (l) => l.displayName || l.name;
+
+/** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
+    手写的比赛条目已改为由它呈现——口径与生成逻辑见 utils/honorPills.js。
+    数据异步加载，失败时不影响其它内容；与优秀成员页共用同一份缓存。 */
+const pills = ref(new Map());
+onMounted(async () => {
+  pills.value = await loadHonorPills();
+});
+
 </script>
 
 <template>
@@ -72,7 +96,7 @@ const { skeletons } = useSkeleton(5);
       <!-- 负责人列表 -->
       <div v-else class="leader-grid">
         <article
-          v-for="(l, i) in leaders"
+          v-for="(l, i) in list"
           :key="l.name"
           v-reveal="'fade-up'"
           :style="{ '--reveal-index': i }"
@@ -84,20 +108,32 @@ const { skeletons } = useSkeleton(5);
           <!-- 头像区 -->
           <div class="leader-avatar-wrap">
             <div class="avatar-ring"></div>
-            <img :src="l.avatar" :alt="l.name" class="leader-avatar" />
+            <img :src="l.avatar" :alt="shownName(l)" class="leader-avatar" />
           </div>
 
           <!-- 信息区 -->
           <div class="leader-body">
-            <h2 class="leader-name">{{ l.name }}</h2>
+            <h2 class="leader-name">{{ shownName(l) }}</h2>
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 
-            <!-- 成就标签 -->
+            <!-- 成就标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->
             <div class="achievement-tags">
-              <span v-for="a in l.achievements" :key="a" class="ach-tag">{{
-                a
-              }}</span>
+              <span
+                v-for="(p, i) in pills.get(l.name) || []"
+                :key="`pill-${i}`"
+                class="honor-tag honor-tag--contest honor-tag--stat"
+                title="比赛战绩，由站点竞赛数据自动汇总"
+                >{{ p }}</span
+              >
+              <span
+                v-for="a in l.achievements"
+                :key="a.text"
+                class="honor-tag"
+                :class="`honor-tag--${a.type}`"
+                :title="HONOR_TYPE_LABELS[a.type]"
+                >{{ a.text }}</span
+              >
             </div>
           </div>
         </article>
@@ -187,10 +223,15 @@ const { skeletons } = useSkeleton(5);
   margin: 0 auto;
 }
 
-/* ── 双列布局 ── */
+/* ── 双列等高行 ──
+   负责人页刻意【不用】瀑布流（与优秀成员页相反）：这里只有 6 张卡、2 列，
+   同一行的两张卡必须上下边对齐 —— 靠 grid 默认的 align-items: stretch 把矮卡
+   拉到本行最高那张的高度，多出来的空白留在卡片底部（胶囊仍紧跟寄语，不贴底），
+   所以本页不要引 useMasonry。口径见 README「两个页面的卡片排布」节。 */
 .leader-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
   gap: var(--space-xl);
 }
 
@@ -309,27 +350,19 @@ const { skeletons } = useSkeleton(5);
   overflow: hidden;
 }
 
-/* ── 成就标签 ── */
+/* ── 成就标签 ──
+   标签本身的几何与配色在 styles/honors.css（与优秀成员页共用）；
+   这里只管排布，以及卡片 hover 时按各自类型的颜色加深。 */
 .achievement-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
+  /* 紧跟寄语（.leader-message 自带 margin-bottom: var(--space-md)），不顶到卡片底部
+     —— 原因同优秀成员页 .honor-tags。 */
 }
-.ach-tag {
-  display: inline-block;
-  padding: 3px 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: rgba(26, 115, 232, 0.06);
-  border: 1px solid rgba(26, 115, 232, 0.1);
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
-.leader-card:hover .ach-tag {
-  background: rgba(26, 115, 232, 0.1);
-  border-color: rgba(26, 115, 232, 0.2);
+.leader-card:hover .honor-tag {
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */

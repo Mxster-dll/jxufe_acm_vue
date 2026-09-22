@@ -1,3 +1,7 @@
-/* 全局样式入口：先令牌，后基础。页面样式在各组件内 scoped。 */
+/* 全局样式入口：先令牌，后基础，再跨页复用的组件级样式。页面样式在各组件内 scoped。 */
 @import './tokens.css';
+/* Fluent 语义令牌层：把 WinUI 3 的令牌名映射到上面的站点令牌，供按 Fluent 规范
+   实现的组件引用（组件里不许出现 hex）。 */
+@import './fluent.css';
 @import './base.css';
+@import './honors.css';
