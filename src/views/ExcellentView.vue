@@ -5,8 +5,10 @@ import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
 import { stripCoveredHonors } from '../utils/honorCoverage'
-import { loadHonorPills } from '../utils/honorPills'
+import { loadHonorRecords, pillsForName, recordsToDetails } from '../utils/honorPills'
+import { honorView } from '../utils/honorView'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
+import HonorViewSwitch from '../components/HonorViewSwitch.vue'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
@@ -15,10 +17,17 @@ const fallback = '/images/excellent_member/default.png'
 /** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
     手写的比赛条目已改为由它呈现 —— 口径与生成逻辑见 utils/honorPills.js。
     数据异步加载，失败时不影响其它内容；两个页面共用同一份缓存。 */
-const pills = ref(new Map())
+const records = ref(new Map())
 onMounted(async () => {
-  pills.value = await loadHonorPills()
+  records.value = await loadHonorRecords()
 })
+
+/** 比赛战绩的**三种显示模式**共用这一份原始记录，切换模式不重新取数
+    （汇总口径见 utils/honorPills.js，三种模式的定义见 utils/honorView.js）：
+      count / icons → 汇总成胶囊（🥇1🥈2 / 🥇🥈🥈）
+      detail        → 逐条列出赛事全名，标题与奖牌分开渲染，奖牌按档位着色 */
+const pillOf = (m) => pillsForName(records.value, m.name, honorView.value)
+const detailOf = (m) => recordsToDetails(records.value.get(m.name) || [])
 
 /** 协会职务胶囊：来自两份会长维护的干事名单生成的 /data/duties.json
     （生成器在 07_技术项目/qq-group-avatars/build_duties.py，改名单重跑即可）。
@@ -87,6 +96,13 @@ const { containerRef } = useMasonry()
         <p class="page-desc">星光不问赶路人，时光不负有心人</p>
       </header>
 
+      <!-- 荣誉显示方式（Fluent SelectorBar，会长 2026-09-23）：放在标题与网格之间 ——
+           它管的是下面整片网格里每张卡片的画法，属于页面级命令区；两页共用一份偏好。 -->
+      <div class="page-toolbar">
+        <span class="page-toolbar__label">荣誉显示</span>
+        <HonorViewSwitch />
+      </div>
+
       <!-- Loading（成员数据与排名都就绪再渲染网格，避免卡片先排好又跳位） -->
       <div v-if="loading || (members.length && !byName)" class="grid">
         <div v-for="n in skeletons" :key="n" class="skeleton" style="height:420px;border-radius:var(--radius-xl);"></div>
@@ -127,13 +143,25 @@ const { containerRef } = useMasonry()
                 :title="HONOR_TYPE_LABELS.honor"
                 >{{ d.text }}</span
               >
-              <span
-                v-for="(p, i) in pills.get(m.name) || []"
-                :key="`pill-${i}`"
-                class="honor-tag honor-tag--contest honor-tag--stat"
-                title="比赛战绩，由站点竞赛数据自动汇总"
-                >{{ p }}</span
-              >
+              <template v-if="honorView === 'detail'">
+                <span
+                  v-for="(d, i) in detailOf(m)"
+                  :key="`detail-${i}`"
+                  class="honor-tag honor-tag--contest honor-tag--stat"
+                  :title="`${d.title}${d.medalText}`"
+                  >{{ d.title
+                  }}<span class="medal-text" :class="`medal-text--${d.medal}`">{{ d.medalText }}</span></span
+                >
+              </template>
+              <template v-else>
+                <span
+                  v-for="(p, i) in pillOf(m)"
+                  :key="`pill-${i}`"
+                  class="honor-tag honor-tag--contest honor-tag--stat"
+                  title="比赛战绩，由站点竞赛数据自动汇总"
+                  >{{ p }}</span
+                >
+              </template>
               <span
                 v-for="h in m.honors"
                 :key="h.text"
@@ -210,6 +238,38 @@ const { containerRef } = useMasonry()
 .page-desc {
   font-size: var(--font-size-base);
   color: var(--text-muted);
+}
+
+/* ── 页面命令区：荣誉显示方式（SelectorBar 本体在 components/HonorViewSwitch.vue）──
+   Fluent 的「设置行」排布：说明文字在前（次要色）、控件紧随其后，整体靠左；
+   间距走 4px 栅格（--space-sm = 8px），与下方网格之间留一段呼吸（--space-lg）。 */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+.page-toolbar__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-light);
+}
+
+/* 明细模式里那半截奖牌文字（如「金牌」）：按档位着色，与竞赛页的奖等配色同源
+   （金 #b8860b / 银 #64717e / 铜 #a35e2b，特等奖红 #c62828 —— 见 PR #13 的 chip-grand）。 */
+.medal-text {
+  font-weight: 600;
+}
+.medal-text--grand {
+  color: #c62828;
+}
+.medal-text--gold {
+  color: #b8860b;
+}
+.medal-text--silver {
+  color: #64717e;
+}
+.medal-text--bronze {
+  color: #a35e2b;
 }
 
 .hint {

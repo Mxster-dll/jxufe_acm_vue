@@ -4,7 +4,9 @@ import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
 import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
 import { stripCoveredHonors } from "../utils/honorCoverage";
-import { loadHonorPills } from "../utils/honorPills";
+import { loadHonorRecords, pillsForName, recordsToDetails } from "../utils/honorPills";
+import { honorView } from "../utils/honorView";
+import HonorViewSwitch from "../components/HonorViewSwitch.vue";
 
 const {
   data: leaders,
@@ -33,10 +35,15 @@ const shownName = (l) => l.displayName || l.name;
 
     注意本页**不按显示排名重排**：显示排名只决定优秀成员页的卡片顺序
     （见 utils/honorRanking.js），负责人页保持 leaders.json 的原顺序（届次从新到旧）。 */
-const pills = ref(new Map());
+const records = ref(new Map());
 onMounted(async () => {
-  pills.value = await loadHonorPills();
+  records.value = await loadHonorRecords();
 });
+
+/** 比赛战绩的三种显示模式共用这份原始记录（模式定义见 utils/honorView.js）：
+    count/icons → 汇总胶囊，detail → 逐条赛事全名。与优秀成员页共用缓存。 */
+const pillOf = (l) => pillsForName(records.value, l.name, honorView.value);
+const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
 </script>
 
 <template>
@@ -81,6 +88,13 @@ onMounted(async () => {
         <p class="page-desc">这故事开始一个人，我认真写成了我们</p>
       </header>
 
+      <!-- 荣誉显示方式（Fluent SelectorBar，会长 2026-09-23）：与优秀成员页同一份偏好，
+           切换在这里改、两页同时生效（偏好存 localStorage，见 utils/honorView.js）。 -->
+      <div class="page-toolbar">
+        <span class="page-toolbar__label">荣誉显示</span>
+        <HonorViewSwitch />
+      </div>
+
       <!-- Loading -->
       <div v-if="loading" class="skeleton-list">
         <div
@@ -122,15 +136,27 @@ onMounted(async () => {
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 
-            <!-- 成就标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->
+            <!-- 成就标签：比赛战绩（三种显示模式，会长 2026-09-23）在前，手写荣誉在后；均按类型分色 -->
             <div class="achievement-tags">
-              <span
-                v-for="(p, i) in pills.get(l.name) || []"
-                :key="`pill-${i}`"
-                class="honor-tag honor-tag--contest honor-tag--stat"
-                title="比赛战绩，由站点竞赛数据自动汇总"
-                >{{ p }}</span
-              >
+              <template v-if="honorView === 'detail'">
+                <span
+                  v-for="(d, i) in detailOf(l)"
+                  :key="`detail-${i}`"
+                  class="honor-tag honor-tag--contest honor-tag--stat"
+                  :title="`${d.title}${d.medalText}`"
+                  >{{ d.title
+                  }}<span class="medal-text" :class="`medal-text--${d.medal}`">{{ d.medalText }}</span></span
+                >
+              </template>
+              <template v-else>
+                <span
+                  v-for="(p, i) in pillOf(l)"
+                  :key="`pill-${i}`"
+                  class="honor-tag honor-tag--contest honor-tag--stat"
+                  title="比赛战绩，由站点竞赛数据自动汇总"
+                  >{{ p }}</span
+                >
+              </template>
               <span
                 v-for="a in l.achievements"
                 :key="a.text"
@@ -215,6 +241,36 @@ onMounted(async () => {
 .page-desc {
   font-size: var(--font-size-base);
   color: var(--text-muted);
+}
+
+/* ── 页面命令区：荣誉显示方式（SelectorBar 本体在 components/HonorViewSwitch.vue）──
+   Fluent 的「设置行」排布：说明文字在前（次要色）、控件紧随其后；间距走 4px 栅格。 */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+.page-toolbar__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-light);
+}
+
+/* 明细模式里那半截奖牌文字（如「金牌」）：按档位着色，与竞赛页奖等配色同源。 */
+.medal-text {
+  font-weight: 600;
+}
+.medal-text--grand {
+  color: #c62828;
+}
+.medal-text--gold {
+  color: #b8860b;
+}
+.medal-text--silver {
+  color: #64717e;
+}
+.medal-text--bronze {
+  color: #a35e2b;
 }
 
 .hint {

@@ -190,6 +190,46 @@ function jiangxiProvincialKeys(rows = []) {
 }
 
 /**
+ * 明细模式（会长 2026-09-23 第 3 种视图）要的那句人话标题，例：第45届ICPC亚洲区域赛 南京站。
+ *
+ * 届数从哪来：
+ *   · xcpc —— awards 里没有届数，只能按工作区 AGENTS.md 的赛季规则从日期推：
+ *       赛季判定：比赛月份 ≥ 9 月 → (年)-(年+1)，否则 (年-1)-(年)；
+ *       ICPC 届数 = 赛季止年 − 1976；CCPC 届数 = 赛季起年 − 2014。
+ *     icpc 与 ccpc 混在同一个 family 里，靠 competition_name 里有没有 CCPC 区分。
+ *   · gplt / lanqiao / baidu —— 数据里直接带 session（届数），但没有赛事全名，按字段拼。
+ * 赛事全名一律用数据里的 competition_name（形如「CCPC全国邀请赛（南昌）暨江西省赛」）。
+ */
+function xcpcEdition(row) {
+  const date = String(row?.date || '')
+  const year = Number(date.slice(0, 4))
+  const month = Number(date.slice(5, 7))
+  if (!year || !month) return ''
+  const isCcpc = /CCPC/i.test(String(row?.competition_name || ''))
+  const seasonStart = month >= 9 ? year : year - 1
+  const edition = isCcpc ? seasonStart - 2014 : seasonStart + 1 - 1976
+  return edition > 0 ? `第${edition}届` : ''
+}
+
+function detailTitle(family, row, segment) {
+  const name = String(row?.competition_name || '')
+  if (family === 'xcpc') return `${xcpcEdition(row)}${name}`.trim()
+
+  const edition = row?.session ? `第${row.session}届` : ''
+  if (family === 'gplt') return `${edition}天梯赛（${segment}）`
+  if (family === 'lanqiao') {
+    const level = row?.medal_level === 'national' ? '国赛' : '省赛'
+    const language = row?.language ? ` ${row.language}` : ''
+    const group = row?.group ? `·${row.group}组` : ''
+    return `${edition}蓝桥杯${level}${language}${group}`
+  }
+  if (family === 'baidu') {
+    return `${edition}百度之星${row?.medal_level === 'national' ? '国赛' : '省赛'}`
+  }
+  return `${edition}${name}`.trim()
+}
+
+/**
  * 把 awards 数据展平成「姓名 → 获奖记录」。
  * @param {{ awards?: { [file: string]: object[] }, competitions?: object[] }} sources
  * @returns {Map<string, {family: string, segment: string, medal: string, year: string, award: string}[]>}
@@ -233,6 +273,7 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
             medal,
             year,
             award: String(row.competition_name || ''),
+            title: detailTitle(family, row, segment),
           })
         }
       }
@@ -242,16 +283,24 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
   return index
 }
 
-/** 「区域赛🥈2🥉1」——零奖牌的档位不写；特等奖排在金牌之前 */
-function segmentText(segment, counts) {
+/** 「区域赛🥈2🥉1」——零奖牌的档位不写；特等奖排在金牌之前。
+    mode = 'icons' 时改写成「区域赛🥈🥈🥉」，每块奖牌各占一个图标（会长 2026-09-23 第 2 种视图）。 */
+function segmentText(segment, counts, mode = 'count') {
   const medals = MEDAL_ORDER.filter((m) => counts[m] > 0)
-    .map((m) => MEDAL_EMOJI[m] + counts[m])
+    .map((m) => (mode === 'icons' ? MEDAL_EMOJI[m].repeat(counts[m]) : MEDAL_EMOJI[m] + counts[m]))
     .join('')
   return medals ? segment + medals : ''
 }
 
-/** 一个人的获奖记录 → 胶囊文本数组（顺序：xCPC 区域赛/邀请赛 → xCPC 省赛 → 天梯赛 → 百度之星 → 蓝桥杯 → 女生专场） */
-export function recordsToPills(records = []) {
+/**
+ * 一个人的获奖记录 → 胶囊文本数组。
+ * 顺序：xCPC 区域赛/邀请赛 → xCPC 省赛 → 天梯赛 → 百度之星 → 蓝桥杯 → 女生专场。
+ * @param {object[]} records
+ * @param {'count'|'icons'|'detail'} mode 见 utils/honorView.js
+ */
+export function recordsToPills(records = [], mode = 'count') {
+  if (mode === 'detail') return recordsToDetails(records).map((d) => d.title + d.medalText)
+
   const counts = { xcpc: {}, gplt: {}, baidu: {}, lanqiao: {} }
   const girls = []
 
@@ -273,13 +322,13 @@ export function recordsToPills(records = []) {
     const bySegment = counts[family]
     if (!Object.keys(bySegment).length) continue
     const body = SEGMENT_ORDER[family]
-      .map((segment) => (bySegment[segment] ? segmentText(segment, bySegment[segment]) : ''))
+      .map((segment) => (bySegment[segment] ? segmentText(segment, bySegment[segment], mode) : ''))
       .filter(Boolean)
       .join(' ')
     if (body) pills.push(`${FAMILY_LABELS[family]} ${body}`)
     // xCPC 省赛单独一枚胶囊，紧跟其后
     if (family === 'xcpc' && bySegment['省赛']) {
-      pills.push(`${FAMILY_LABELS.xcpc} ${segmentText('省赛', bySegment['省赛'])}`)
+      pills.push(`${FAMILY_LABELS.xcpc} ${segmentText('省赛', bySegment['省赛'], mode)}`)
     }
   }
   // 女生专场：按年份列出具体记录，不做奖牌计数
@@ -287,6 +336,48 @@ export function recordsToPills(records = []) {
     pills.push(`${r.year} CCPC女生专场 ${MEDAL_TEXT[r.medal]}`)
   }
   return pills
+}
+
+/**
+ * 明细模式：一条记录一项，带上赛事全名与奖牌，供页面按结构化数据渲染
+ * （标题与「金牌」分开成两个 span，奖牌那半按档位着色 —— 例：第45届ICPC亚洲区域赛 南京站 铜牌）。
+ * @returns {{title: string, medal: string, medalText: string, year: string, family: string}[]}
+ */
+export function recordsToDetails(records = []) {
+  const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
+  return records
+    .filter((r) => r?.title && MEDAL_TEXT[r.medal])
+    .map((r) => ({
+      title: r.title,
+      medal: r.medal,
+      medalText: MEDAL_TEXT[r.medal],
+      year: r.year,
+      family: r.family,
+    }))
+    .sort(
+      (a, b) =>
+        (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
+        String(a.year).localeCompare(String(b.year)) ||
+        MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
+    )
+}
+
+/** 手工兜底那几条是写死的「🥉1」文本，图标模式下同样要摊开成「🥉」 */
+const expandMedalCounts = (text) =>
+  String(text).replace(/([\u{1F3C6}\u{1F947}\u{1F948}\u{1F949}])(\d+)/gu, (_, emoji, n) =>
+    emoji.repeat(Number(n))
+  )
+
+/**
+ * 页面用：某人的胶囊文本。自动汇总为主，一条记录都没有才退回 MANUAL_PILLS
+ * —— 与 pillsFromRecords 同口径，只是支持按显示模式切换（会长 2026-09-23）。
+ * @param {Map<string, object[]>} records loadHonorRecords() 的返回值
+ */
+export function pillsForName(records, name, mode = 'count') {
+  const texts = recordsToPills(records?.get?.(name) || [], mode)
+  if (texts.length) return texts
+  const manual = MANUAL_PILLS[name] || []
+  return mode === 'icons' ? manual.map(expandMedalCounts) : [...manual]
 }
 
 /** 记录索引 → 「姓名 → 胶囊文本数组」，并补上手工兜底（只在自动汇总没有该 key 时写入） */
