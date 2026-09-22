@@ -114,7 +114,16 @@ const revealWall = () => {
 const HINT_NEIGHBOR_GAP = 12; // 与 logo / 导航至少留出的呼吸位
 const hintEl = ref(null);
 const hintLeft = ref(null); // null → CSS 回落到 50%
+// 会长 2026-09-23：往下滚动了（scrollY > 0）就把这枚入口收起来 ——
+// 它是「请上去看墙」的邀请，人已经往反方向（往下）走了，就不该再占着导航栏。
+// 回到页首自动回来；阈值就是 0，没有任何缓冲量。
+const hintHidden = ref(false);
 let hintRo = null;
+
+const onWallHintScroll = () => {
+  const next = window.scrollY > 0;
+  if (next !== hintHidden.value) hintHidden.value = next;
+};
 
 const measureHint = () => {
   const btn = hintEl.value;
@@ -204,6 +213,8 @@ onMounted(() => {
   window.addEventListener("touchend", onWallTouchEnd, { passive: true });
   window.addEventListener("touchcancel", onWallTouchEnd, { passive: true });
   window.addEventListener("resize", resetMaskLimit, { passive: true });
+  window.addEventListener("scroll", onWallHintScroll, { passive: true });
+  onWallHintScroll(); // 进来时可能就带着 scrollY（刷新后恢复滚动位置）
   // 「成员墙」入口的让位测量：等 Teleport 把节点挂上去之后再测
   nextTick(() => {
     measureHint();
@@ -241,6 +252,7 @@ onUnmounted(() => {
   window.removeEventListener("touchend", onWallTouchEnd);
   window.removeEventListener("touchcancel", onWallTouchEnd);
   window.removeEventListener("resize", resetMaskLimit);
+  window.removeEventListener("scroll", onWallHintScroll);
   window.clearTimeout(maskReturnTimer);
   hintRo?.disconnect();
   hintRo = null;
@@ -569,6 +581,7 @@ const { newsList, loading, error } = useNews();
       ref="hintEl"
       type="button"
       class="wall-hint"
+      :class="{ 'is-hidden': hintHidden }"
       :style="{ '--hint-left': hintLeft }"
       aria-label="露出成员墙"
       @click="revealWall"
@@ -581,7 +594,7 @@ const { newsList, loading, error } = useNews();
   <!-- ── 遮罩 = 除了墙和导航栏的整个页面 ──
        正常滚动时它跟着页面上下走：往下滚就是遮罩上移，于是看到 #about 的
        「以代码为桥梁 / 连接技术与未来」；在页首继续往上滚则是遮罩下移，
-       把上面的墙露出来 —— 拉过一屏的 10% 就整层滑出页面，只剩墙。
+       把上面的墙露出来（桌面滚轮一动即触发；移动端要拉过一屏的 10% 再松手）。
        往回收也一样：滚一下就把遮罩请回来。（首页不渲染页脚，见 App.vue 的 v-if） -->
   <div
     class="page-mask"
@@ -1191,7 +1204,14 @@ const { newsList, loading, error } = useNews();
   pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
   transition:
     left 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面 */
+.wall-hint.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-10px);
 }
 .wall-hint:hover {
   transform: translateX(-50%) translateY(-2px);

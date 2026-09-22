@@ -299,4 +299,14 @@ header.menu-open .hamburger-icon {
 html.is-mask-out #app > header {
   transform: translate3d(0, 105vh, 0);
 }
+/* 首页那枚「成员墙」入口收起后必须**真的**不接收指针。
+   光靠 HomeView 里 scoped 的 `.wall-hint.is-hidden` 不够：它是 (0,3,0)，
+   而 HeroAvatarWall.vue:997 的全局规则
+     `body.hero-wall-present #app > header a, body.hero-wall-present #app > header button`
+   带 id，是 (1,1,3)，会把 pointer-events 压回 auto（实测 opacity 已 0、pe 仍 auto，
+   于是留了个看不见却可点的坑）。这里用 (1,2,1) 压回来 —— 不改成 visibility: hidden，
+   是因为那会让 200ms 的淡出失效（visibility 不做平滑过渡）。 */
+#app > header .wall-hint.is-hidden {
+  pointer-events: none;
+}
 </style>
