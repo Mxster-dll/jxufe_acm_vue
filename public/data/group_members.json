@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T11:59:28",
+  "generated_at": "2026-09-22T12:15:53",
   "source": "06_共享资源/图片资源/群成员头像/群成员名单.csv",
   "counts": {
     "total": 138,
@@ -8,7 +8,7 @@
     "member": 106,
     "excellent": 33,
     "leader": 6,
-    "realName": 66,
+    "realName": 68,
     "anonymous": 1,
     "blank": 1
   },
@@ -145,7 +145,7 @@
       "name": "shallowseek .V250-sle",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "",
+      "realName": "王隶诚",
       "thumb": "/images/group_members/thumbs/536085627.webp",
       "photo": "/images/group_members/full/536085627.jpg",
       "blank": false
@@ -459,7 +459,7 @@
       "name": "MIUMA",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "",
+      "realName": "蒋滔",
       "thumb": "/images/group_members/thumbs/2117410945.webp",
       "photo": "/images/group_members/full/2117410945.jpg",
       "blank": false
@@ -489,7 +489,7 @@
       "name": "皮卡黄｡◕‿◕｡",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "",
+      "realName": "王振杰",
       "thumb": "/images/group_members/thumbs/2159230534.webp",
       "photo": "/images/group_members/full/2159230534.jpg",
       "blank": false
@@ -820,7 +820,7 @@
       "name": "大数据241蒋滔",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "蒋滔",
+      "realName": "",
       "thumb": "/images/group_members/thumbs/2893816531.webp",
       "photo": "/images/group_members/full/2893816531.jpg",
       "blank": false
@@ -910,10 +910,11 @@
       "name": "木&索66ccff",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "杨鑫源",
+      "realName": "杨源鑫",
       "thumb": "/images/group_members/thumbs/3092087056.webp",
       "photo": "/images/group_members/full/3092087056.jpg",
-      "blank": false
+      "blank": false,
+      "excellent": true
     },
     {
       "qq": "3163564041",
@@ -1050,11 +1051,10 @@
       "name": "ed-Domch",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "万俊哲",
+      "realName": "李承志",
       "thumb": "/images/group_members/thumbs/3525811526.webp",
       "photo": "/images/group_members/full/3525811526.jpg",
-      "blank": false,
-      "excellent": true
+      "blank": false
     },
     {
       "qq": "3533382348",
@@ -1238,6 +1238,18 @@
     },
     {
       "qq": null,
+      "name": "万俊哲",
+      "role": "优秀成员",
+      "roleKey": "excellent",
+      "realName": "万俊哲",
+      "excellent": true,
+      "initial": "万",
+      "thumb": "/images/group_members/thumbs/ex-wjz.webp",
+      "photo": "/images/excellent_member/wjz.png",
+      "blank": false
+    },
+    {
+      "qq": null,
       "name": "张云菲",
       "role": "优秀成员",
       "roleKey": "excellent",
@@ -1246,18 +1258,6 @@
       "initial": "张",
       "thumb": "/images/group_members/thumbs/ex-zyf.webp",
       "photo": "/images/excellent_member/zyf.png",
-      "blank": false
-    },
-    {
-      "qq": null,
-      "name": "杨源鑫",
-      "role": "优秀成员",
-      "roleKey": "excellent",
-      "realName": "杨源鑫",
-      "excellent": true,
-      "initial": "杨",
-      "thumb": "/images/group_members/thumbs/ex-yyx.webp",
-      "photo": "/images/excellent_member/yyx.png",
       "blank": false
     },
     {
