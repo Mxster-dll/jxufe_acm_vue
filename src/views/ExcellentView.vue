@@ -20,6 +20,15 @@ onMounted(async () => {
   pills.value = await loadHonorPills()
 })
 
+/** 协会职务胶囊：来自两份会长维护的干事名单生成的 /data/duties.json
+    （生成器在 07_技术项目/qq-group-avatars/build_duties.py，改名单重跑即可）。
+    文字口径「<年份>学年<职务>」，部门负责人一律带「协会」前缀；同一年既有带职务行又有裸名行时
+    只取带职务那条。**只用于显示，不进排名分值** —— 手写职务则会按「学生职务」算 1.5 分，
+    所以名单里的人不要再在 honors 里手写职务（口径见 AGENTS.md）。
+    显示顺序：职务在最前，然后是自动汇总的比赛战绩，最后是手写荣誉。 */
+const { data: duties } = useJson('/data/duties.json', { initial: {} })
+const dutyOf = (m) => (m.name && duties.value?.people?.[m.name]) || []
+
 /** 手写荣誉：先过掉已被自动汇总覆盖的，再归一化出类型。
     **显示与排名必须用同一份** —— 否则同一块奖牌会在卡片上显示两遍、在分值里算两遍
     （上游名单里还手写着 105 条胶囊已覆盖的竞赛条目，口径与判定见 utils/honorCoverage.js）。 */
@@ -108,8 +117,16 @@ const { containerRef } = useMasonry()
             <h3>{{ shownName(m) }}</h3>
             <p class="member-class">{{ m.class }}</p>
 
-            <!-- 荣誉标签：比赛战绩胶囊（自动汇总）在前，手写荣誉在后；均按类型分色 -->
+            <!-- 荣誉标签：职务胶囊（duties.json）在前，比赛战绩胶囊（自动汇总）居中，
+                 手写荣誉在后；均按类型分色 -->
             <div class="honor-tags">
+              <span
+                v-for="(d, i) in dutyOf(m)"
+                :key="`duty-${i}`"
+                class="honor-tag honor-tag--honor"
+                :title="HONOR_TYPE_LABELS.honor"
+                >{{ d.text }}</span
+              >
               <span
                 v-for="(p, i) in pills.get(m.name) || []"
                 :key="`pill-${i}`"
