@@ -189,8 +189,33 @@ function jiangxiProvincialKeys(rows = []) {
   return keys
 }
 
+/** 奖牌说法按赛事官方口径分开（会长 2026-09-23）：
+    xCPC 与百度之星写金/银/铜，蓝桥杯与天梯赛写一等/二等/三等 —— 后两个赛事官方就这么叫，
+    明细模式照抄官方说法，别把「省赛一等奖」硬翻成「省赛金牌」。 */
+const MEDAL_TEXT_RANK = { grand: '特等奖', gold: '一等奖', silver: '二等奖', bronze: '三等奖' }
+const RANK_TEXT_FAMILIES = new Set(['lanqiao', 'gplt'])
+
+function medalTextOf(family, medal) {
+  return (RANK_TEXT_FAMILIES.has(family) ? MEDAL_TEXT_RANK : MEDAL_TEXT)[medal] || ''
+}
+
 /**
- * 明细模式（会长 2026-09-23 第 3 种视图）要的那句人话标题，例：第45届ICPC亚洲区域赛 南京站。
+ * 「ICPC亚洲区域赛 南京站」→「ICPC 亚洲区域赛（南京）」「CCPC全国赛 绵阳站」→「CCPC 全国赛（绵阳）」
+ * 会长 2026-09-23 的排版要求：站名一律写成括号；ICPC / CCPC 字样前后要有空格。
+ * 数据里两种写法并存（区域赛用「xx站」、邀请赛已带「（xx）」），所以只做这两件必要的事：
+ *   · 末尾「xx站」搬进括号 —— 字符类排除空白，所以只会圈住站名前那一小段，不会把整个赛名吞进去；
+ *   · 给 ICPC / CCPC 前后补空格，再收敛多余空白。
+ */
+function formatXcpcName(name) {
+  return String(name)
+    .replace(/\s*([^\s（()]+?)站$/, '（$1）')
+    .replace(/\s*(ICPC|CCPC)\s*/g, ' $1 ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * 明细模式（会长 2026-09-23 第 3 种视图）要的那句人话标题，例：第45届 ICPC 亚洲区域赛（南京）。
  *
  * 届数从哪来：
  *   · xcpc —— awards 里没有届数，只能按工作区 AGENTS.md 的赛季规则从日期推：
@@ -198,7 +223,7 @@ function jiangxiProvincialKeys(rows = []) {
  *       ICPC 届数 = 赛季止年 − 1976；CCPC 届数 = 赛季起年 − 2014。
  *     icpc 与 ccpc 混在同一个 family 里，靠 competition_name 里有没有 CCPC 区分。
  *   · gplt / lanqiao / baidu —— 数据里直接带 session（届数），但没有赛事全名，按字段拼。
- * 赛事全名一律用数据里的 competition_name（形如「CCPC全国邀请赛（南昌）暨江西省赛」）。
+ * 奖牌那半截不在这里，由 medalTextOf() 追加（见 recordsToDetails）。
  */
 function xcpcEdition(row) {
   const date = String(row?.date || '')
@@ -213,15 +238,23 @@ function xcpcEdition(row) {
 
 function detailTitle(family, row, segment) {
   const name = String(row?.competition_name || '')
-  if (family === 'xcpc') return `${xcpcEdition(row)}${name}`.trim()
+  if (family === 'xcpc') return `${xcpcEdition(row)} ${formatXcpcName(name)}`.trim()
 
   const edition = row?.session ? `第${row.session}届` : ''
-  if (family === 'gplt') return `${edition}天梯赛（${segment}）`
+  // 天梯赛 —— 「第6届天梯赛个人国家级三等奖」：团体/个人 + 国家级/省级
+  if (family === 'gplt') {
+    const level = row?.medal_level === 'provincial' ? '省级' : '国家级'
+    return `${edition}天梯赛${segment}${level}`
+  }
+  // 蓝桥杯 —— 「第14届蓝桥杯 C++·B组省赛一等奖」：科目·组别 + 国赛/省赛
+  //   注意 group 本身就可能是「研究生组」，直接补「组」会变成「研究生组组」。
   if (family === 'lanqiao') {
+    const group = String(row?.group || '')
+    const subject = [String(row?.language || ''), group && (group.endsWith('组') ? group : `${group}组`)]
+      .filter(Boolean)
+      .join('·')
     const level = row?.medal_level === 'national' ? '国赛' : '省赛'
-    const language = row?.language ? ` ${row.language}` : ''
-    const group = row?.group ? `·${row.group}组` : ''
-    return `${edition}蓝桥杯${level}${language}${group}`
+    return `${edition}蓝桥杯${subject ? ` ${subject}` : ''}${level}`
   }
   if (family === 'baidu') {
     return `${edition}百度之星${row?.medal_level === 'national' ? '国赛' : '省赛'}`
@@ -274,6 +307,7 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
             year,
             award: String(row.competition_name || ''),
             title: detailTitle(family, row, segment),
+            medalText: medalTextOf(family, medal),
           })
         }
       }
@@ -335,26 +369,27 @@ export function recordsToPills(records = [], mode = 'count') {
   }
   // 女生专场：按年份列出具体记录，不做奖牌计数
   for (const r of girls.slice().sort((a, b) => String(a.year).localeCompare(String(b.year)))) {
-    pills.push(`${r.year} CCPC女生专场 ${MEDAL_TEXT[r.medal]}`)
+    pills.push(`${r.year} CCPC女生专场 ${r.medalText || MEDAL_TEXT[r.medal]}`)
   }
   return pills
 }
 
 /**
  * 明细模式：一条记录一项，带上赛事全名与奖牌，供页面按结构化数据渲染。
- * 例：🥇第45届ICPC亚洲区域赛 南京站 金牌
+ * 例：🥇第45届 ICPC 亚洲区域赛（南京）金牌 / 🥇第14届蓝桥杯 C++·B组省赛一等奖
  *   emoji 单独给一份（会长 2026-09-23 要求每条前面挂一个奖牌 emoji）；
- *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱。
+ *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱；
+ *   奖牌说法按赛事分（medalText 在建记录时就定好，见 medalTextOf）。
  * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, family: string}[]}
  */
 export function recordsToDetails(records = []) {
   const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
   return records
-    .filter((r) => r?.title && MEDAL_TEXT[r.medal])
+    .filter((r) => r?.title && (r.medalText || MEDAL_TEXT[r.medal]))
     .map((r) => ({
       title: r.title,
       medal: r.medal,
-      medalText: MEDAL_TEXT[r.medal],
+      medalText: r.medalText || MEDAL_TEXT[r.medal],
       emoji: MEDAL_EMOJI[r.medal],
       year: r.year,
       family: r.family,

@@ -117,11 +117,30 @@ export function resolveHonorType(item) {
 }
 
 /**
+ * ICPC / CCPC 这类拉丁缩写前后补一个空格（会长 2026-09-23）：
+ *   「2024ICPC江西省赛季军」→「2024 ICPC 江西省赛季军」
+ *   「CCPC湘潭邀请赛铜牌」 →「CCPC 湘潭邀请赛铜牌」（开头那个空格会被 trim 掉）
+ * 只动空白、不改别的字符；本来就带空格的（「CCPC 东盟…」）结果不变。
+ * 放在**展示归一化**里做而不是去改数据：需要它的是渲染，数据里那 40 多条手写条目
+ * 保持原样；口径判定（honorCoverage / honorRanking）匹配的是中文关键词与「优秀奖」
+ * 这类字样，不受空格影响，而且它们都在这一步之前跑。
+ */
+export function spaceAcronyms(text) {
+  return String(text)
+    .replace(/\s*(ICPC|CCPC)\s*/g, ' $1 ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
+/**
  * 把 honors / achievements 数组统一成 [{ text, type }]。
  * @param {Array<string|{text:string,type?:string}>} list
  * @returns {Array<{text:string,type:string}>}
  */
 export function normalizeHonors(list) {
   if (!Array.isArray(list)) return []
-  return list.map((item) => ({ text: honorText(item), type: resolveHonorType(item) }))
+  return list.map((item) => ({
+    text: spaceAcronyms(honorText(item)),
+    type: resolveHonorType(item),
+  }))
 }
