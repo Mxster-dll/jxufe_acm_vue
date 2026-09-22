@@ -22,6 +22,9 @@ const wallOn = ref(false);
 //       够了才触发（见 onWallTouchEnd）。
 //   往下滚一下就把遮罩请回来；点导航栏那枚「成员墙」也是直接收起。
 const MASK_REVEAL_RATIO = 0.1; // 只给触摸用（桌面已取消阈值）
+// 触摸能拉多远：一直到遮罩整层移出视口为止（与 CSS `.page-mask.is-out` 的 105vh 一致）。
+// 10% 只决定「松手后触不触发」，**不限制手指能拉多远** —— 拉过 10% 照旧跟手。
+const MASK_MAX_RATIO = 1.05;
 // 触摸拖动的阻尼：免得手指挪一点点就把遮罩拉到底
 const MASK_DRAG_DAMP = 0.5;
 // 回程动画时长，与 CSS 里 .page-mask.is-returning 的 transition 保持一致
@@ -30,11 +33,16 @@ const maskShift = ref(0);
 const maskOut = ref(false);
 const maskReturning = ref(false);
 let maskLimit = 0;
+let maskMax = 0;
 let maskReturnTimer = 0;
 let touchY = 0;
+// 本次手势里已经「请回」过一次：剩下的位移一并吃掉，
+// 否则遮罩刚回来，同一段上划会顺手把页面滚下去（实测停在 scrollY 90）。
+let touchRecall = false;
 
 const resetMaskLimit = () => {
   maskLimit = Math.max(80, window.innerHeight * MASK_REVEAL_RATIO);
+  maskMax = window.innerHeight * MASK_MAX_RATIO;
 };
 
 /** 回程动画：归零之前先挂上 is-returning（CSS 那份 transition），到点再摘掉 */
@@ -58,7 +66,8 @@ const dragMask = (dy) => {
     return false;
   }
   if (dy < 0) {
-    maskShift.value = Math.min(maskShift.value - dy, maskLimit);
+    // 夹的是「整层移出视口」那个位置，不是 10% 阈值 —— 阈值只管松手判定
+    maskShift.value = Math.min(maskShift.value - dy, maskMax);
     return true;
   }
   if (maskShift.value > 0) {
@@ -156,14 +165,26 @@ const onWallWheel = (e) => {
     拖动时遮罩跟手，松手不足 10% 回弹，够了才触发。 */
 const onWallTouchStart = (e) => {
   touchY = e.touches[0]?.clientY ?? 0;
+  touchRecall = false;
 };
 const onWallTouchMove = (e) => {
   const y = e.touches[0]?.clientY ?? 0;
   // 手指往下拖（y 增大）→ 遮罩下移，故取 touchY - y，与滚轮同一个符号约定
   const dy = (touchY - y) * MASK_DRAG_DAMP;
   touchY = y;
-  const eaten = maskOut.value ? recallMask(dy) : dragMask(dy);
-  if (eaten && e.cancelable) e.preventDefault();
+  if (touchRecall) {
+    // 本次手势已经请回过，余下的位移吃掉（见 touchRecall 的注释）
+    if (e.cancelable) e.preventDefault();
+    return;
+  }
+  if (maskOut.value) {
+    if (recallMask(dy)) {
+      touchRecall = true;
+      if (e.cancelable) e.preventDefault();
+    }
+    return;
+  }
+  if (dragMask(dy) && e.cancelable) e.preventDefault();
 };
 const onWallTouchEnd = () => {
   if (maskOut.value || maskShift.value <= 0) return;
