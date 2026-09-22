@@ -406,10 +406,11 @@ export function recordsToPills(records = [], mode = 'count') {
  *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱；
  *   奖牌说法按赛事分（medalText 在建记录时就定好，见 medalTextOf）。
  *
- * **按时间顺序排（会长 2026-09-23）**：原先按赛事分组（xCPC → 天梯赛 → 百度之星 → 蓝桥杯），
- * 同一赛事内再按年份，读起来是「按比赛分堆」而不是一条时间线；现在第一排序键就是日期，
- * 赛事与奖牌降级为**同日并列时的次序**（同一天拿的团队奖/个人奖仍挨在一起、按赛事既定顺序，
- * 同一天同赛事的奖牌按 特等→金→银→铜）。要改成「最新在前」，把第一键取负 / 反转比较即可。
+ * **按时间降序排（会长 2026-09-23 定稿）**：最新的一条在最前面。原先按赛事分组
+ * （xCPC → 天梯赛 → 百度之星 → 蓝桥杯），同一赛事内再按年份，读起来是「按比赛分堆」
+ * 而不是一条时间线；现在第一排序键就是日期，赛事与奖牌降级为**同日并列时的次序**
+ * （同一天拿的团队奖/个人奖仍挨在一起、按赛事既定顺序，同一天同赛事的奖牌按 特等→金→银→铜）。
+ * 要改成「最旧在前」，把第一比较键换成 `String(a.date).localeCompare(String(b.date))` 即可。
  * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, date: string, family: string}[]}
  */
 export function recordsToDetails(records = []) {
@@ -427,7 +428,7 @@ export function recordsToDetails(records = []) {
     }))
     .sort(
       (a, b) =>
-        String(a.date).localeCompare(String(b.date)) ||
+        String(b.date).localeCompare(String(a.date)) ||
         (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
         MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
     )

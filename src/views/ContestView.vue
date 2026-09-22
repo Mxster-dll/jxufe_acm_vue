@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
+import CompetitionSchedule from '../components/CompetitionSchedule.vue'
 
 const { data: competitions, loading, error } = useJson('/data/competitions.json', {
   initial: []
@@ -44,8 +45,9 @@ const cards = computed(() => {
       <!-- Error -->
       <p v-else-if="error" class="hint">加载失败</p>
 
-      <!-- 竞赛卡片 -->
-      <div v-else class="grid">
+      <!-- 竞赛卡片 + 全年赛程时间轴（同一份数据，故共用加载态） -->
+      <template v-else>
+      <div class="grid">
         <RouterLink
           v-for="(c, i) in cards"
           :key="c.slug"
@@ -81,6 +83,10 @@ const cards = computed(() => {
           </template>
         </RouterLink>
       </div>
+
+      <!-- 全年赛程：各赛事的阶段区间（赛程数据在 competitions.json 的 schedule 字段） -->
+      <CompetitionSchedule :competitions="competitions || []" />
+      </template>
     </div>
   </main>
 </template>
