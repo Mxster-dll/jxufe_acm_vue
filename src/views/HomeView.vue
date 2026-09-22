@@ -1003,6 +1003,13 @@ const { newsList, loading, error } = useNews();
   inset: 0;
   z-index: 0;
 }
+/* 会长 2026-09-23：不要那个「协会成员墙」开关按钮。
+   组件自带它（.wall-toggle，文案由 label / labelActive 两个 prop 给），但首页露墙已经
+   是「上滚把遮罩拉下去」这套手势了，角上再挂个按钮既重复又抢视线 —— 这里藏掉，
+   不动组件本身（组件是上游的，我们的改动越少越好在 PR 里对齐）。 */
+.page-wall :deep(.wall-toggle) {
+  display: none;
+}
 .page-mask {
   position: relative;
   z-index: 1;
