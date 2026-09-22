@@ -88,10 +88,9 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
         <p class="page-desc">这故事开始一个人，我认真写成了我们</p>
       </header>
 
-      <!-- 荣誉显示方式（Fluent SelectorBar，会长 2026-09-23）：与优秀成员页同一份偏好，
-           切换在这里改、两页同时生效（偏好存 localStorage，见 utils/honorView.js）。 -->
+      <!-- 荣誉显示方式（会长 2026-09-23）：与优秀成员页同一份偏好，切换在这里改、
+           两页同时生效（偏好存 localStorage，见 utils/honorView.js）；不加说明文字。 -->
       <div class="page-toolbar">
-        <span class="page-toolbar__label">荣誉显示</span>
         <HonorViewSwitch />
       </div>
 
@@ -144,8 +143,8 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
                   :key="`detail-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
-                  >{{ d.title
-                  }}<span class="medal-text" :class="`medal-text--${d.medal}`">{{ d.medalText }}</span></span
+                  ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
+                  >{{ d.title }}{{ d.medalText }}</span
                 >
               </template>
               <template v-else>
@@ -243,34 +242,17 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
   color: var(--text-muted);
 }
 
-/* ── 页面命令区：荣誉显示方式（SelectorBar 本体在 components/HonorViewSwitch.vue）──
-   Fluent 的「设置行」排布：说明文字在前（次要色）、控件紧随其后；间距走 4px 栅格。 */
+/* ── 页面命令区：荣誉显示方式（view-toggle 样式在 styles/view-toggle.css）──
+   只剩控件本身、不带说明文字（会长 2026-09-23）。 */
 .page-toolbar {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
   margin-bottom: var(--space-lg);
 }
-.page-toolbar__label {
-  font-size: var(--font-size-sm);
-  color: var(--text-light);
-}
 
-/* 明细模式里那半截奖牌文字（如「金牌」）：按档位着色，与竞赛页奖等配色同源。 */
-.medal-text {
-  font-weight: 600;
-}
-.medal-text--grand {
-  color: #c62828;
-}
-.medal-text--gold {
-  color: #b8860b;
-}
-.medal-text--silver {
-  color: #64717e;
-}
-.medal-text--bronze {
-  color: #a35e2b;
+/* 明细模式每条前面的奖牌 emoji；奖牌文字本身不再着色（理由见 ExcellentView 同名规则）。 */
+.medal-emoji {
+  margin-right: var(--space-xs);
 }
 
 .hint {

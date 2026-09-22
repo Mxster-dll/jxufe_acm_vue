@@ -299,7 +299,9 @@ function segmentText(segment, counts, mode = 'count') {
  * @param {'count'|'icons'|'detail'} mode 见 utils/honorView.js
  */
 export function recordsToPills(records = [], mode = 'count') {
-  if (mode === 'detail') return recordsToDetails(records).map((d) => d.title + d.medalText)
+  if (mode === 'detail') {
+    return recordsToDetails(records).map((d) => d.emoji + d.title + d.medalText)
+  }
 
   const counts = { xcpc: {}, gplt: {}, baidu: {}, lanqiao: {} }
   const girls = []
@@ -339,9 +341,11 @@ export function recordsToPills(records = [], mode = 'count') {
 }
 
 /**
- * 明细模式：一条记录一项，带上赛事全名与奖牌，供页面按结构化数据渲染
- * （标题与「金牌」分开成两个 span，奖牌那半按档位着色 —— 例：第45届ICPC亚洲区域赛 南京站 铜牌）。
- * @returns {{title: string, medal: string, medalText: string, year: string, family: string}[]}
+ * 明细模式：一条记录一项，带上赛事全名与奖牌，供页面按结构化数据渲染。
+ * 例：🥇第45届ICPC亚洲区域赛 南京站 金牌
+ *   emoji 单独给一份（会长 2026-09-23 要求每条前面挂一个奖牌 emoji）；
+ *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱。
+ * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, family: string}[]}
  */
 export function recordsToDetails(records = []) {
   const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
@@ -351,6 +355,7 @@ export function recordsToDetails(records = []) {
       title: r.title,
       medal: r.medal,
       medalText: MEDAL_TEXT[r.medal],
+      emoji: MEDAL_EMOJI[r.medal],
       year: r.year,
       family: r.family,
     }))

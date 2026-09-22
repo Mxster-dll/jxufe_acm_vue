@@ -96,10 +96,9 @@ const { containerRef } = useMasonry()
         <p class="page-desc">星光不问赶路人，时光不负有心人</p>
       </header>
 
-      <!-- 荣誉显示方式（Fluent SelectorBar，会长 2026-09-23）：放在标题与网格之间 ——
-           它管的是下面整片网格里每张卡片的画法，属于页面级命令区；两页共用一份偏好。 -->
+      <!-- 荣誉显示方式（会长 2026-09-23）：放在标题与网格之间 —— 它管的是下面整片网格里
+           每张卡片的画法，属于页面级命令区；两页共用一份偏好、控件本身不加说明文字。 -->
       <div class="page-toolbar">
-        <span class="page-toolbar__label">荣誉显示</span>
         <HonorViewSwitch />
       </div>
 
@@ -149,8 +148,8 @@ const { containerRef } = useMasonry()
                   :key="`detail-${i}`"
                   class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
-                  >{{ d.title
-                  }}<span class="medal-text" :class="`medal-text--${d.medal}`">{{ d.medalText }}</span></span
+                  ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
+                  >{{ d.title }}{{ d.medalText }}</span
                 >
               </template>
               <template v-else>
@@ -240,36 +239,19 @@ const { containerRef } = useMasonry()
   color: var(--text-muted);
 }
 
-/* ── 页面命令区：荣誉显示方式（SelectorBar 本体在 components/HonorViewSwitch.vue）──
-   Fluent 的「设置行」排布：说明文字在前（次要色）、控件紧随其后，整体靠左；
-   间距走 4px 栅格（--space-sm = 8px），与下方网格之间留一段呼吸（--space-lg）。 */
+/* ── 页面命令区：荣誉显示方式（view-toggle 样式在 styles/view-toggle.css）──
+   只剩控件本身、不带说明文字（会长 2026-09-23）；与下方网格之间留一段呼吸。 */
 .page-toolbar {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
   margin-bottom: var(--space-lg);
 }
-.page-toolbar__label {
-  font-size: var(--font-size-sm);
-  color: var(--text-light);
-}
 
-/* 明细模式里那半截奖牌文字（如「金牌」）：按档位着色，与竞赛页的奖等配色同源
-   （金 #b8860b / 银 #64717e / 铜 #a35e2b，特等奖红 #c62828 —— 见 PR #13 的 chip-grand）。 */
-.medal-text {
-  font-weight: 600;
-}
-.medal-text--grand {
-  color: #c62828;
-}
-.medal-text--gold {
-  color: #b8860b;
-}
-.medal-text--silver {
-  color: #64717e;
-}
-.medal-text--bronze {
-  color: #a35e2b;
+/* 明细模式每条前面的奖牌 emoji：只负责「一眼看出这块牌子是什么档位」。
+   奖牌文字本身**不再着色**（会长 2026-09-23）—— 整条胶囊保持它自己的蓝色，
+   档位信息由 emoji 承担，段内再换颜色会把一条胶囊拆成两截色。 */
+.medal-emoji {
+  margin-right: var(--space-xs);
 }
 
 .hint {
