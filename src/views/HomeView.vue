@@ -460,11 +460,12 @@ const { newsList, loading, error } = useNews();
   >
     <!-- 顶部提示：往上滚滚一下就会露出整面成员墙。遮罩滑出时它跟着一起走（它在遮罩里），
          所以不需要自己的退场状态。
-         它留在 hero 里而不是挂在遮罩上：hero 有 position: relative，且 hero 的顶点是确定的
-         （负 margin 让它落在视口 y = -header-height），所以下面那个 top 算得准；
-         挂在遮罩上则会随「hero 的负 margin 有没有折叠出去」差出一个 header 高度。 -->
+         它留在 hero 里而不是挂在遮罩上：hero 有 position: relative，实测其顶边就落在
+         视口 y = 0（负 margin 在遮罩这一层被挡住、没折到 body 上），所以 CSS 里那个 top
+         算出来就是「页头下沿再下 --space-md」。挂在遮罩上会随「负 margin 有没有折出去」
+         差出一个页头高度。 -->
     <p class="wall-hint" aria-hidden="true">
-      <i class="fas fa-chevron-up"></i><span>向上滚动，露出成员墙</span>
+      <i class="fas fa-chevron-up"></i><span>成员墙</span>
     </p>
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
