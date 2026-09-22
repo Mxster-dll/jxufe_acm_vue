@@ -744,40 +744,8 @@ function setView(v) {
   padding-bottom: 0;
   border-bottom: none;
 }
-.view-toggle {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(26, 115, 232, 0.06);
-  border: 1px solid rgba(26, 115, 232, 0.12);
-  border-radius: var(--radius-full);
-}
-.view-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-.view-btn:hover {
-  color: var(--primary);
-}
-.view-btn.active {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
-}
-/* 视图显隐：表格/卡片二选一展示 */
-.view-hidden {
-  display: none !important;
-}
+/* .view-toggle / .view-btn / .view-hidden 已提到 styles/view-toggle.css（全局）——
+   会长 2026-09-23 要求「荣誉显示」也复用同一套，两处样式从此同源，不要再拷回这里。 */
 
 /* ── 蓝桥杯总名单（个人赛：姓名/科目/奖项，按年分组；每年国赛/省赛两个卡片）── */
 .lq-list {

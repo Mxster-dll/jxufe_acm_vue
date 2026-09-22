@@ -1,0 +1,41 @@
+/* ==========================================================================
+   视图切换（View Toggle）—— 跨页复用的分段控件
+   原先只写在 CompetitionDetailView.vue 的 scoped 块里（参赛历史「表格 / 卡片」二选一）；
+   2026-09-23 提成全局：优秀成员页与协会负责人页的「荣誉显示」三种视图也用它，
+   两处观感从此同源 —— 改这里两页一起变。
+   注：会长 2026-09-23 明确要求复用这套既有样式，而不是另造一套新的切换控件。
+   ========================================================================== */
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(26, 115, 232, 0.06);
+  border: 1px solid rgba(26, 115, 232, 0.12);
+  border-radius: var(--radius-full);
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.view-btn:hover {
+  color: var(--primary);
+}
+.view-btn.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+}
+/* 视图显隐：表格/卡片二选一展示 */
+.view-hidden {
+  display: none !important;
+}

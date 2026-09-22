@@ -11,9 +11,27 @@
 import { ref, watch } from 'vue'
 
 export const HONOR_VIEWS = [
-  { value: 'count', label: '计数', sample: '🥇1🥈2🥉2', hint: '只写每种奖牌的数量' },
-  { value: 'icons', label: '图标', sample: '🥇🥈🥈🥉🥉', hint: '每块奖牌各占一个图标' },
-  { value: 'detail', label: '明细', sample: '第45届ICPC亚洲区域赛 南京站 铜牌', hint: '逐条列出赛事全名与奖牌' },
+  {
+    value: 'count',
+    label: '计数',
+    icon: 'fa-solid fa-hashtag',
+    sample: '🥇1🥈2🥉2',
+    hint: '只写每种奖牌的数量',
+  },
+  {
+    value: 'icons',
+    label: '图标',
+    icon: 'fa-solid fa-medal',
+    sample: '🥇🥈🥈🥉🥉',
+    hint: '每块奖牌各占一个图标',
+  },
+  {
+    value: 'detail',
+    label: '明细',
+    icon: 'fa-solid fa-list-ul',
+    sample: '第45届ICPC亚洲区域赛 南京站 铜牌',
+    hint: '逐条列出赛事全名与奖牌',
+  },
 ]
 
 export const DEFAULT_HONOR_VIEW = 'count'
