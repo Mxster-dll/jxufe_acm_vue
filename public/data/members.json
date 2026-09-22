@@ -69,7 +69,12 @@
     "name": "张瑞杰",
     "class": "软件231",
     "photo": "/images/excellent_member/zrj.png",
-    "honors": []
+    "honors": [
+      { "text": "2024ICPC区域赛昆明铜牌", "type": "contest" },
+      { "text": "2025ICPC邀请赛南昌铜牌", "type": "contest" },
+      { "text": "2025CCPC邀请赛南昌铜牌", "type": "contest" },
+      { "text": "蓝桥CB国二", "type": "contest" }
+    ]
   },
   {
     "name": "林俊坤",
@@ -118,6 +123,7 @@
     "class": "23软件工程3班",
     "photo": "/images/excellent_member/yyx.png",
     "honors": [
+      { "text": "蓝桥杯国家一等奖", "type": "contest" },
       { "text": "睿抗编程技能赛国家一等奖", "type": "contest" }
     ]
   },
@@ -152,6 +158,7 @@
     "class": "24数据科学与大数据技术1班",
     "photo": "/images/excellent_member/yzn.png",
     "honors": [
+      { "text": "蓝桥杯省二", "type": "contest" },
       { "text": "睿抗国三", "type": "contest" },
       { "text": "关注小羊谢谢喵", "type": "contact" }
     ]
@@ -161,7 +168,9 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/lzh.png",
     "honors": [
-      { "text": "保研至厦门大学", "type": "destination" }
+      { "text": "保研至厦门大学", "type": "destination" },
+      { "text": "蓝桥杯国二", "type": "contest" },
+      { "text": "天梯赛国三", "type": "contest" }
     ]
   },
   {
@@ -169,6 +178,7 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/nzy.png",
     "honors": [
+      { "text": "蓝桥杯国二*1，国三*1", "type": "contest" },
       { "text": "睿抗国一*1", "type": "contest" },
       { "text": "传智杯国一*1", "type": "contest" }
     ]
@@ -178,7 +188,8 @@
     "class": "22计算机科学与技术1班",
     "photo": "/images/excellent_member/xht.png",
     "honors": [
-      { "text": "保研至北京交通大学", "type": "destination" }
+      { "text": "保研至北京交通大学", "type": "destination" },
+      { "text": "蓝桥杯国家二等奖", "type": "contest" }
     ]
   },
   {
@@ -242,6 +253,7 @@
     "photo": "/images/excellent_member/zrq.png",
     "honors": [
       { "text": "保研至南京师范大学", "type": "destination" },
+      { "text": "蓝桥杯C/C++组国三", "type": "contest" },
       { "text": "优秀团干", "type": "honor" }
     ]
   },
