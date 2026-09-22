@@ -36,6 +36,11 @@ onUnmounted(() => {
         </div>
       </RouterLink>
 
+      <!-- 首页把「成员墙」入口传送进这里（HomeView 的 <Teleport to="#header-hint">）。
+           空槽铺满 .bar 且自身 pointer-events: none：它绝对定位、不进 flex 流，只作锚点，
+           所以既有三件（logo / 导航 / 汉堡按钮）的位置一点没被挤动。 -->
+      <div id="header-hint" class="header-hint"></div>
+
       <nav>
         <ul>
           <li v-for="link in navLinks" :key="link.to">
@@ -82,11 +87,20 @@ header.scrolled {
 }
 
 .bar {
+  position: relative; /* #header-hint 锚点要拿它当包含块；原本没有定位上下文 */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--space-md);
   height: 80px;
+}
+
+/* 传送锚点：铺满整条 bar 但不吃指针、不占位（绝对定位，不进 flex 流）。
+   HomeView 的「成员墙」按钮被传送进这里，并靠自己的绝对居中定位。 */
+.header-hint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 /* ---- Logo ---- */

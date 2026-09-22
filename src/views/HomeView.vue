@@ -73,6 +73,16 @@ const recallMask = (dy) => {
   return true;
 };
 
+/** 点导航栏那枚「成员墙」= 直接收起遮罩，等价于「把遮罩下拉过一屏的 10%」那一档。
+    先把文档拉回页首：遮罩是靠 translate 让开的，若此刻页面已经滚到下面，
+    光位移一屏它仍留在视口里，露不出墙。 */
+const revealWall = () => {
+  if (window.scrollY > 0) window.scrollTo(0, 0);
+  maskReturning.value = false;
+  maskShift.value = maskLimit;
+  maskOut.value = true;
+};
+
 const onWallWheel = (e) => {
   // 注意：Chrome 把 window 上的 wheel/touchmove 默认当 passive，必须显式传 false 才有 preventDefault
   const dy = e.deltaY * MASK_DRAG_DAMP;
@@ -439,6 +449,19 @@ const { newsList, loading, error } = useNews();
     />
   </div>
 
+  <!-- ── 「成员墙」入口：会长 2026-09-23 要求搬进导航栏，且点一下就直接收起遮罩 ──
+       Teleport 到 AppHeader 里的 #header-hint 锚点 —— DOM 上它成了导航栏的孩子，
+       但状态与逻辑仍留在本页（遮罩归 HomeView 管），不必为它引一个全局 store。
+       箭头仍是卡片外的独立元素、仍是 24px，只是从「叠在文字上方」改成「并排在左」：
+       导航栏高 80px，24 + 8 + 44 = 76px 的竖排会顶到上下两条边，横排才放得下。
+       点击 = 把遮罩下拉过 10% 那一档（见 revealWall），不必再手动滚。 -->
+  <Teleport to="#header-hint">
+    <button type="button" class="wall-hint" aria-label="露出成员墙" @click="revealWall">
+      <i class="fas fa-chevron-up" aria-hidden="true"></i>
+      <span class="wall-hint__label">成员墙</span>
+    </button>
+  </Teleport>
+
   <!-- ── 遮罩 = 除了墙和导航栏的整个页面 ──
        正常滚动时它跟着页面上下走：往下滚就是遮罩上移，于是看到 #about 的
        「以代码为桥梁 / 连接技术与未来」；在页首继续往上滚则是遮罩下移，
@@ -458,16 +481,6 @@ const { newsList, loading, error } = useNews();
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
-    <!-- 顶部提示：往上滚滚一下就会露出整面成员墙。遮罩滑出时它跟着一起走（它在遮罩里），
-         所以不需要自己的退场状态。
-         它留在 hero 里而不是挂在遮罩上：hero 有 position: relative，实测其顶边就落在
-         视口 y = 0（负 margin 在遮罩这一层被挡住、没折到 body 上），所以 CSS 里那个 top
-         算出来就是「页头下沿再下 --space-md」。挂在遮罩上会随「负 margin 有没有折出去」
-         差出一个页头高度。 -->
-    <div class="wall-hint" aria-hidden="true">
-      <i class="fas fa-chevron-up"></i>
-      <span class="wall-hint__label">成员墙</span>
-    </div>
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div
@@ -1030,35 +1043,54 @@ const { newsList, loading, error } = useNews();
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── 顶部提示：往上滚会露出整面成员墙 ──
-   位置：水平居中、紧贴页头下沿。它是 hero 的绝对定位子元素，而 hero 在遮罩（.page-mask）里
-   —— 遮罩整体下拉时它跟着走，这正是要的：提示与页面一起让开，而不是钉在原地。
-   实测 hero 的顶边就落在视口 y = 0（负 margin 在遮罩这一层被挡住没折出去），
-   所以 top 直接写「页头高 + --space-md」就是视口里页头下沿再下 16px。
-   结构：向上的箭头放在**卡片外面**并单独放大，卡片里只有「成员墙」三个字。
-   卡片样式照搬我们删掉的那个 .wall-toggle（HeroAvatarWall.vue:849-895）：
-   白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字。
-   注意这里用 div 而不是 p：.hero p 那条 fadeInUp 带 both 填充，动画在层叠里高于普通声明
-   （靠特异性赢不了），会把 transform 与字号一并压掉 —— 先前正是它让提示偏出半个身位。 */
+/* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──
+   位置：Teleport 进导航栏的 #header-hint 锚点（DOM 上属于 AppHeader，逻辑与状态仍留在本页）。
+   锚点铺满 .bar 且自身 pointer-events: none，所以这里用「绝对居中」自己定位，
+   按钮再把指针事件收回来 —— 它是可点的。
+   结构：向上的箭头在**卡片外面**、单独放大到 24px；卡片里只有「成员墙」三个字。
+   箭头与卡片改成并排（不再叠放）：导航栏高 80px，竖排 24 + 8 + 44 = 76px 会顶到上下两条边。
+   卡片样式照搬我们删掉的那枚 .wall-toggle（HeroAvatarWall.vue:849-895）：
+   白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
+   连「hover 抬 2px、active 缩到 0.97」也一并照搬，只是位移量要带上居中用的 -50%。 */
 .wall-hint {
   position: absolute;
-  top: calc(var(--header-height) + var(--space-md));
+  top: 50%;
   left: 50%;
-  z-index: 2;
+  z-index: 1;
+  transform: translate(-50%, -50%);
   display: inline-flex;
-  flex-direction: column;
-  align-items: center; /* 箭头与卡片共用一条中轴 */
+  align-items: center; /* 箭头与卡片共用一条中线 */
   gap: var(--space-sm);
   margin: 0;
-  transform: translateX(-50%);
-  /* 纯提示、不可点：不吃指针，让悬停穿到后面的头像墙上 */
-  pointer-events: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wall-hint:hover {
+  transform: translate(-50%, calc(-50% - 2px));
+}
+.wall-hint:active {
+  transform: translate(-50%, -50%) scale(0.97);
+}
+.wall-hint:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-full);
 }
 .wall-hint i {
-  font-size: var(--font-size-2xl); /* 24px：放大到一眼能认出是「往上」的手势 */
+  font-size: var(--font-size-2xl); /* 24px：放大到一眼能认出是「往上」 */
   line-height: 1;
   color: var(--primary);
   animation: wall-hint-bob 1.8s ease-in-out infinite;
+}
+@media (max-width: 991px) {
+  /* 小屏导航栏已换成汉堡菜单，中间放不下；露墙手势本来就是桌面滚轮为主的 */
+  .wall-hint {
+    display: none;
+  }
 }
 /* 卡片本体：与 .wall-toggle 同款（那枚按钮已按会长要求从首页撤掉，这里接上它的观感） */
 .wall-hint__label {
