@@ -9,6 +9,7 @@ import { loadHonorRecords, pillPartsForName, recordsToDetails } from '../utils/h
 import { honorView } from '../utils/honorView'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
+import HonorPill from '../components/HonorPill.vue'
 
 const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
 const { skeletons } = useSkeleton(9)
@@ -143,10 +144,9 @@ const { containerRef } = useMasonry()
                 >{{ d.text }}</span
               >
               <template v-if="honorView === 'detail'">
-                <span
+                <HonorPill
                   v-for="(d, i) in detailOf(m)"
                   :key="`detail-${i}`"
-                  class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
                 >
                   <span class="honor-tag__seg"
@@ -154,13 +154,12 @@ const { containerRef } = useMasonry()
                     >{{ d.title }}</span
                   >
                   <span class="honor-tag__seg">{{ d.medalText }}</span>
-                </span>
+                </HonorPill>
               </template>
               <template v-else>
-                <span
+                <HonorPill
                   v-for="(parts, i) in pillPartsOf(m)"
                   :key="`pill-${i}`"
-                  class="honor-tag honor-tag--contest honor-tag--stat"
                   title="比赛战绩，由站点竞赛数据自动汇总"
                 >
                   <span
@@ -169,7 +168,7 @@ const { containerRef } = useMasonry()
                     class="honor-tag__seg"
                     >{{ seg }}</span
                   >
-                </span>
+                </HonorPill>
               </template>
               <span
                 v-for="h in m.honors"

@@ -7,6 +7,7 @@ import { stripCoveredHonors } from "../utils/honorCoverage";
 import { loadHonorRecords, pillPartsForName, recordsToDetails } from "../utils/honorPills";
 import { honorView } from "../utils/honorView";
 import HonorViewSwitch from "../components/HonorViewSwitch.vue";
+import HonorPill from "../components/HonorPill.vue";
 
 const {
   data: leaders,
@@ -138,10 +139,9 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
             <!-- 成就标签：比赛战绩（三种显示模式，会长 2026-09-23）在前，手写荣誉在后；均按类型分色 -->
             <div class="achievement-tags">
               <template v-if="honorView === 'detail'">
-                <span
+                <HonorPill
                   v-for="(d, i) in detailOf(l)"
                   :key="`detail-${i}`"
-                  class="honor-tag honor-tag--contest honor-tag--stat"
                   :title="`${d.title}${d.medalText}`"
                 >
                   <span class="honor-tag__seg"
@@ -149,13 +149,12 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
                     >{{ d.title }}</span
                   >
                   <span class="honor-tag__seg">{{ d.medalText }}</span>
-                </span>
+                </HonorPill>
               </template>
               <template v-else>
-                <span
+                <HonorPill
                   v-for="(parts, i) in pillPartsOf(l)"
                   :key="`pill-${i}`"
-                  class="honor-tag honor-tag--contest honor-tag--stat"
                   title="比赛战绩，由站点竞赛数据自动汇总"
                 >
                   <span
@@ -164,7 +163,7 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
                     class="honor-tag__seg"
                     >{{ seg }}</span
                   >
-                </span>
+                </HonorPill>
               </template>
               <span
                 v-for="a in l.achievements"
