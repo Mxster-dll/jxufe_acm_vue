@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
 import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
+import { stripCoveredHonors } from "../utils/honorCoverage";
 import { loadHonorPills } from "../utils/honorPills";
 
 const {
@@ -13,11 +14,12 @@ const {
 /* 6 位负责人 —— 原先写 5，骨架屏条数与实际列表不等 */
 const { skeletons } = useSkeleton(6);
 
-/** 每条荣誉归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
+/** 每条荣誉：先过掉已被自动汇总覆盖的（口径见 utils/honorCoverage.js），
+    再归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
 const list = computed(() =>
   (leaders.value || []).map((l) => ({
     ...l,
-    achievements: normalizeHonors(l.achievements),
+    achievements: normalizeHonors(stripCoveredHonors(l.achievements)),
   }))
 );
 

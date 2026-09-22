@@ -4,6 +4,7 @@ import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
 import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
+import { stripCoveredHonors } from '../utils/honorCoverage'
 import { loadHonorPills } from '../utils/honorPills'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 
@@ -19,12 +20,22 @@ onMounted(async () => {
   pills.value = await loadHonorPills()
 })
 
+/** 手写荣誉：先过掉已被自动汇总覆盖的，再归一化出类型。
+    **显示与排名必须用同一份** —— 否则同一块奖牌会在卡片上显示两遍、在分值里算两遍
+    （上游名单里还手写着 105 条胶囊已覆盖的竞赛条目，口径与判定见 utils/honorCoverage.js）。 */
+const cleanedMembers = computed(() =>
+  (members.value || []).map((m) => ({
+    ...m,
+    honors: normalizeHonors(stripCoveredHonors(m.honors)),
+  }))
+)
+
 /** 显示排名：比赛奖牌 + 手写战绩 + 荣誉加项折算成分值，决定卡片的显示顺序。
     权重表、口径与排序键见 utils/honorRanking.js；数据加载与上面的胶囊共用同一份缓存。 */
 const byName = ref(null)
 const RANKING_TIMEOUT_MS = 3000
 watch(
-  members,
+  cleanedMembers,
   async (val) => {
     if (!val?.length || byName.value) return
     // 网络异常时不能把网格卡在骨架屏上：超时就按数据原始顺序渲染
@@ -37,9 +48,9 @@ watch(
   { immediate: true }
 )
 
-/** 每条荣誉归一化成 { text, type }（类型判定见 utils/honorType.js），并按排名排列 */
+/** 卡片顺序：按显示排名重排，数据没就绪时保持 members.json 原序 */
 const list = computed(() => {
-  const arr = (members.value || []).map((m) => ({ ...m, honors: normalizeHonors(m.honors) }))
+  const arr = cleanedMembers.value
   return byName.value ? sortByRanking(arr, byName.value) : arr
 })
 

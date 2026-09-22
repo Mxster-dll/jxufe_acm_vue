@@ -64,8 +64,13 @@ const props = defineProps({
   dimOpacity: { type: Number, default: 0.18 },
   /** 单个网格允许的最大格数 —— DOM 节点数上的偏好（最软的一条约束） */
   blockBudget: { type: Number, default: 320 },
-  /** 可用的缩略图档位（public/images/hero_wall_thumbs/ 下的目录名） */
+  /** 可用的缩略图档位（<thumbsBase>/ 下的目录名） */
   sizes: { type: Array, default: () => [384, 256] },
+  /** 缩略图根目录。默认是首页那 33 位优秀成员的墙；「协会成员头像墙」（138 人
+      群成员 + 优秀成员 + 负责人）传自己的目录即可，不用动组件。 */
+  thumbsBase: { type: String, default: '/images/hero_wall_thumbs' },
+  /** 缩略图扩展名。默认 .jpg（hero_wall_thumbs 是 GDI+ 转出来的）；群成员墙用 .webp */
+  thumbsExt: { type: String, default: '.jpg' },
   /** 有哪些图（生成物） */
   manifestUrl: { type: String, default: '/data/hero_wall.manifest.json' },
   /** 悬浮卡片的文案（手写物） */
@@ -109,6 +114,24 @@ const measure = () => {
 }
 
 /* ── 数据：清单（有哪些图）× 文案（写什么） ── */
+/**
+ * 卡片标签的两种写法都收：
+ *   · 纯字符串 —— 首页那 33 位优秀成员的 hero_wall.json 就是这么写的（中性蓝胶囊）；
+ *   · { text, type } —— 协会成员头像墙，type 交给全站那套分色（styles/honors.css 的
+ *     .honor-tag--contest|destination|honor|contact|leader|more）。
+ * 统一成 { text, type }，type 为空字符串时按纯字符串渲染。
+ */
+const normalizeTags = (list) => {
+  if (!Array.isArray(list)) return []
+  return list
+    .map((t) =>
+      typeof t === 'string'
+        ? { text: t, type: '' }
+        : { text: String(t?.text ?? ''), type: String(t?.type ?? '') }
+    )
+    .filter((t) => t.text.trim())
+}
+
 async function loadData() {
   const getJson = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null)
   const [man, copy] = await Promise.all([getJson(props.manifestUrl), getJson(props.copyUrl)])
@@ -119,9 +142,11 @@ async function loadData() {
     const c = dict[file] || {}
     return {
       file,
+      // 原图（缩略图失败时的兜底）。留空则退回 manifest 的 source 前缀。
+      full: typeof c.full === 'string' ? c.full : '',
       name: typeof c.name === 'string' ? c.name : '',
       line: typeof c.line === 'string' ? c.line : '',
-      tags: Array.isArray(c.tags) ? c.tags.filter((t) => typeof t === 'string' && t.trim()) : [],
+      tags: normalizeTags(c.tags),
     }
   })
 }
@@ -133,14 +158,17 @@ const thumbSize = computed(() => {
   const need = tileTarget.value * Math.min(window.devicePixelRatio || 1, 2)
   return list.find((s) => s >= need) || list[list.length - 1]
 })
-const thumbOf = (file) => `/images/hero_wall_thumbs/${thumbSize.value}/${file.replace(/\.[^.]+$/, '.jpg')}`
-const originalOf = (file) => sourceBase.value + file
+const thumbOf = (file) =>
+  `${props.thumbsBase}/${thumbSize.value}/${file.replace(/\.[^.]+$/, props.thumbsExt)}`
+/** 原图：只在缩略图失败时兜底。tiles 里写了 `full`（站内绝对路径）就直接用它 ——
+    群成员墙的原图分散在三个目录（群头像 / 优秀成员 / 负责人），单一 source 前缀盖不住。 */
+const originalOf = (file, full) => (full ? String(full) : sourceBase.value + file)
 
 const onImgError = (e, item) => {
   const el = e.target
   if (el.dataset.fallback === '1') return // 原图也失败就认了，别再循环
   el.dataset.fallback = '1'
-  el.src = originalOf(item.file)
+  el.src = originalOf(item.file, item.full)
 }
 
 /* ── 环面周期：装得下所有人 且 不小于视口，在此前提下格数最少 ── */
@@ -420,7 +448,12 @@ watch(openItem, (v) => {
                   <p class="wall__name">{{ m.name || ' ' }}</p>
                   <p v-if="m.line" class="wall__line">{{ m.line }}</p>
                   <div v-if="m.tags.length" class="wall__tags">
-                    <span v-for="(t, j) in m.tags" :key="j" class="wall__tag">{{ t }}</span>
+                    <span
+                      v-for="(t, j) in m.tags"
+                      :key="j"
+                      :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
+                      >{{ t.text }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -440,7 +473,12 @@ watch(openItem, (v) => {
         <p class="wall-sheet__name">{{ openItem.name || ' ' }}</p>
         <p v-if="openItem.line" class="wall-sheet__line">{{ openItem.line }}</p>
         <div v-if="openItem.tags.length" class="wall-sheet__tags">
-          <span v-for="(t, j) in openItem.tags" :key="j" class="wall__tag">{{ t }}</span>
+          <span
+            v-for="(t, j) in openItem.tags"
+            :key="j"
+            :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
+            >{{ t.text }}</span
+          >
         </div>
         <p class="wall-sheet__hint">点空白处关闭</p>
       </div>
@@ -700,6 +738,17 @@ watch(openItem, (v) => {
   border-radius: 999px;
   background: rgba(26, 115, 232, 0.08);
   color: #1a73e8;
+  white-space: nowrap;
+}
+
+/* 带头像墙分色的标签（协会成员头像墙用）——颜色走全站那套：
+   styles/honors.css 的 .honor-tag--contest|destination|honor|contact|leader|more，
+   每个修饰类自己持有 --tag-* 私有变量。这里只压小卡内几何：整页那套 3px 12px 的内边距
+   在 360×132 的悬浮卡里会把卡片撑高。**不要**在这里回写颜色，否则六种色会退化成一种。 */
+.wall__tag--typed {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  padding: 0 8px;
   white-space: nowrap;
 }
 
