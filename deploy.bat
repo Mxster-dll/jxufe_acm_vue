@@ -24,8 +24,11 @@ set SITE_URL=https://jxufe-acm.cn
 :: ---- Local config (leave as is) ----
 :: scripts\gen_hero_wall.mjs 必须上传：package.json 的 prebuild 钩子在服务器上 npm run build
 :: 时会跑它，重扫 public/images/excellent_member/ 生成头像墙清单。
-:: （scripts 里的其它文件服务器上用不到，只传这一个。）
-set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs
+:: scripts\gen_group_wall.mjs 同理 —— 它从 group_members.json / duties.json / awards/ 生成
+:: 协会成员头像墙的清单与文案（prebuild 也跑它）。**两个都要传**，少一个服务器构建直接失败。
+:: （scripts 里的其它文件服务器上用不到，只传这两个。缩略图生成器是 PowerShell 脚本，
+::   只在本地跑，不进 UPLOAD_ITEMS。）
+set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs scripts\gen_group_wall.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519
 set TAR_FILE=%TEMP%\jxufe_acm_deploy.tar.gz
 set REMOTE_TAR=/tmp/jxufe_acm_deploy.tar.gz

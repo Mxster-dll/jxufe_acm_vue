@@ -10,6 +10,45 @@ import HeroAvatarWall from "../components/HeroAvatarWall.vue";
 // ── 头像墙开关（纯叠加：false 时页面与改动前逐像素一致）──
 const wallOn = ref(false);
 
+// ── 露墙（2026-09-23 会长裁定：这套交互从优秀成员页搬到首页）──
+//   墙不动，**遮罩**朝内容位移的反方向让开：内容往上走（往下滚）→ 遮罩往下走；
+//   往回滚则反过来，遮罩往上收回来（同一个位移量，两边天然对称）。
+//   让开超过一屏的 10% 就整体滑出页面，只剩墙 —— 也就是优秀成员页那套「滚到底露墙」，
+//   换了页面、也把「内容整体抬走」换成了「遮罩让开」。
+const SCRIM_REVEAL_RATIO = 0.1;
+const scrimOut = ref(false);
+const scrimShift = ref(0);
+let scrimRaf = 0;
+let scrimLimit = 0;
+
+const onWallScroll = () => {
+  if (scrimRaf) return;
+  scrimRaf = requestAnimationFrame(() => {
+    scrimRaf = 0;
+    const y = Math.max(0, window.scrollY);
+    const out = y > scrimLimit;
+    // 未到阈值：严格跟手；过了阈值：整体滑出一屏（CSS 那边给这一段加缓动）
+    scrimShift.value = out ? window.innerHeight : y;
+    scrimOut.value = out;
+  });
+};
+
+const onWallResize = () => {
+  scrimLimit = window.innerHeight * SCRIM_REVEAL_RATIO;
+  onWallScroll();
+};
+
+onMounted(() => {
+  onWallResize();
+  window.addEventListener("scroll", onWallScroll, { passive: true });
+  window.addEventListener("resize", onWallResize, { passive: true });
+});
+onUnmounted(() => {
+  window.removeEventListener("scroll", onWallScroll);
+  window.removeEventListener("resize", onWallResize);
+  if (scrimRaf) cancelAnimationFrame(scrimRaf);
+});
+
 // ── 轮播图 ──
 const slides = Array.from({ length: 10 }, (_, i) => ({
   src: `/images/slider/slider${i + 1}.jpg`,
@@ -312,8 +351,33 @@ const { newsList, loading, error } = useNews();
     @mouseleave="onMouseLeave"
   >
     <!-- 头像墙：hero 的第一个子元素 = 同为 z-index:0 的那几层里最靠下的一层。
-         它自带那个开关按钮（在 .hero-inner 之外，所以文案退场后它还在）。 -->
-    <HeroAvatarWall v-model:active="wallOn" />
+         它自带那个开关按钮（在 .hero-inner 之外，所以文案退场后它还在）。
+         数据换成**协会成员头像墙**（138 人：QQ 群 110 + 优秀成员 33 + 负责人 6，去重后）
+         —— 形状与首页原来那份 hero_wall.json 完全一致（manifest + tiles），
+         所以组件一行没改，只多传三个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成。 -->
+    <HeroAvatarWall
+      v-model:active="wallOn"
+      manifest-url="/data/group_wall.manifest.json"
+      copy-url="/data/group_wall.json"
+      thumbs-base="/images/group_wall_thumbs"
+      label="协会成员墙"
+      :dim-opacity="1"
+    />
+
+    <!-- 遮罩：盖在墙上面、内容下面。墙不动，遮罩朝内容位移的**反方向**让开
+         （内容往上走 → 遮罩往下走；往回滚则反过来），让开超过一屏的 10% 就整体滑出页面，
+         只剩墙 —— 复刻优秀成员页那套「滚到底露墙」，只是换了页面、也换了让开的方向。 -->
+    <div
+      class="hero-scrim"
+      :class="{ 'is-out': scrimOut }"
+      :style="{ '--scrim-shift': scrimShift + 'px' }"
+      aria-hidden="true"
+    ></div>
+
+    <!-- 顶部提示：告诉访客「往上滚会露出整面成员墙」。遮罩滑走之后自己也退场 -->
+    <p class="wall-hint" :class="{ 'is-hidden': scrimOut }" aria-hidden="true">
+      <i class="fas fa-chevron-up"></i><span>向上滚动，露出成员墙</span>
+    </p>
 
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
@@ -827,6 +891,75 @@ const { newsList, loading, error } = useNews();
 .hero.is-wall-on .hero-particles {
   opacity: 0;
   transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── 露墙：遮罩让开，墙露出来 ──
+   层序：墙（组件自带，z-index: 0）→ 遮罩（1）→ 内容与提示（2）。
+   遮罩的位移由 HomeView 的滚动处理器写进 --scrim-shift：
+   未到阈值时严格跟手（故这一档不能有 transition，否则每一帧都在追赶），
+   过了阈值再加缓动整体滑出一屏。 */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.58) 45%,
+    rgba(255, 255, 255, 0.42) 100%
+  );
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  transform: translate3d(0, var(--scrim-shift, 0px), 0);
+  transition: none;
+  pointer-events: none;
+  will-change: transform;
+}
+.hero-scrim.is-out {
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 内容与提示压在遮罩之上（覆盖上面那条 .hero-inner 的 z-index: 1） */
+.hero > .hero-inner,
+.hero > .wall-hint,
+.hero > .scroll-down-arrow {
+  z-index: 2;
+}
+
+/* ── 顶部提示：往上滚会露出整面成员墙 ── */
+.wall-hint {
+  position: absolute;
+  top: calc(var(--header-height) + 14px);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 14px;
+  font-size: var(--font-size-xs);
+  color: var(--text-light);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  transform: translateX(-50%);
+  transition: opacity 320ms ease, transform 320ms ease;
+}
+.wall-hint i {
+  animation: wall-hint-bob 1.8s ease-in-out infinite;
+}
+@keyframes wall-hint-bob {
+  0%,
+  100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+.wall-hint.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-8px);
+  pointer-events: none;
 }
 .hero-content {
   text-align: left;
