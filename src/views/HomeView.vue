@@ -1118,10 +1118,15 @@ const { newsList, loading, error } = useNews();
    白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
    连「hover 抬 2px、active 缩到 0.97」也一并照搬。 */
 .wall-hint {
+  /* 竖排尺寸账：箭头 24 + gap 4 + 卡片 44 = 72px，导航栏 80px。
+     会长 2026-09-23：整块居中会让箭头偏上（箭头中心落在 y=16），改为让**箭头**居中 ——
+     top 减去半个箭头高度，箭头中心就落在导航栏中线上；代价是卡片底边伸出导航栏下沿
+     （y≈102 > 80，页头是透明的，会悬在下面）。调位置只改这一个 top 即可。 */
+  --hint-arrow: var(--font-size-2xl); /* 24px */
   position: absolute;
-  top: 50%;
+  top: calc(50% - var(--hint-arrow) / 2);
   left: var(--hint-left, 50%);
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   display: inline-flex;
   flex-direction: column; /* 箭头在上、字样在下 */
   align-items: center; /* 两者共用一条中轴 */
@@ -1137,10 +1142,10 @@ const { newsList, loading, error } = useNews();
     transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .wall-hint:hover {
-  transform: translate(-50%, calc(-50% - 2px));
+  transform: translateX(-50%) translateY(-2px);
 }
 .wall-hint:active {
-  transform: translate(-50%, -50%) scale(0.97);
+  transform: translateX(-50%) scale(0.97);
 }
 .wall-hint:focus-visible {
   outline: 2px solid var(--primary);
@@ -1148,7 +1153,7 @@ const { newsList, loading, error } = useNews();
   border-radius: var(--radius-full);
 }
 .wall-hint i {
-  font-size: var(--font-size-2xl); /* 24px：放大到一眼能认出是「往上」 */
+  font-size: var(--hint-arrow); /* 24px：放大到一眼能认出是「往上」 */
   line-height: 1;
   color: var(--primary);
   animation: wall-hint-bob 1.8s ease-in-out infinite;
