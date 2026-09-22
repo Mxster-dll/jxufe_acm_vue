@@ -65,7 +65,8 @@ const recallMask = (dy) => {
   maskShift.value = 0;
   // 遮罩被 translate 出去时会把文档撑高（实测 scrollHeight 2641 → 3279），
   // 若这期间有人拖滚动条 / 按空格把文档滚下去了，请回来就会错位 —— 这里拉回页首。
-  if (window.scrollY > 0) window.scrollTo(0, 0);
+  // 同样要 behavior: 'instant'，理由见 revealWall 的注释。
+  if (window.scrollY > 0) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   window.clearTimeout(maskReturnTimer);
   maskReturnTimer = window.setTimeout(() => {
     maskReturning.value = false;
@@ -75,9 +76,12 @@ const recallMask = (dy) => {
 
 /** 点导航栏那枚「成员墙」= 直接收起遮罩，等价于「把遮罩下拉过一屏的 10%」那一档。
     先把文档拉回页首：遮罩是靠 translate 让开的，若此刻页面已经滚到下面，
-    光位移一屏它仍留在视口里，露不出墙。 */
+    光位移一屏它仍留在视口里，露不出墙。
+    必须显式 behavior: 'instant' —— base.css:21 有 scroll-behavior: smooth，
+    默认的 scrollTo(0,0) 会走成异步平滑滚动，而紧接着遮罩位移会改变文档高度，
+    那次动画会被打断、页面停在原地（实测停在 scrollY 358）。 */
 const revealWall = () => {
-  if (window.scrollY > 0) window.scrollTo(0, 0);
+  if (window.scrollY > 0) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   maskReturning.value = false;
   maskShift.value = maskLimit;
   maskOut.value = true;
@@ -1047,8 +1051,9 @@ const { newsList, loading, error } = useNews();
    位置：Teleport 进导航栏的 #header-hint 锚点（DOM 上属于 AppHeader，逻辑与状态仍留在本页）。
    锚点铺满 .bar 且自身 pointer-events: none，所以这里用「绝对居中」自己定位，
    按钮再把指针事件收回来 —— 它是可点的。
-   结构：向上的箭头在**卡片外面**、单独放大到 24px；卡片里只有「成员墙」三个字。
-   箭头与卡片改成并排（不再叠放）：导航栏高 80px，竖排 24 + 8 + 44 = 76px 会顶到上下两条边。
+   结构（会长 2026-09-23 第 1 条）：箭头在上、字样在下，两者共用一条中轴；
+   箭头仍是卡片外的独立元素、仍是 24px。
+   竖排的尺寸账：24 + gap 4 + 卡片 44 = 72px，导航栏 80px，上下各余 4px。
    卡片样式照搬我们删掉的那枚 .wall-toggle（HeroAvatarWall.vue:849-895）：
    白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
    连「hover 抬 2px、active 缩到 0.97」也一并照搬，只是位移量要带上居中用的 -50%。 */
@@ -1059,8 +1064,9 @@ const { newsList, loading, error } = useNews();
   z-index: 1;
   transform: translate(-50%, -50%);
   display: inline-flex;
-  align-items: center; /* 箭头与卡片共用一条中线 */
-  gap: var(--space-sm);
+  flex-direction: column; /* 箭头在上、字样在下 */
+  align-items: center; /* 两者共用一条中轴 */
+  gap: var(--space-xs);
   margin: 0;
   padding: 0;
   border: 0;
