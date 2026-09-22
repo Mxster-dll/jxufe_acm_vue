@@ -1028,29 +1028,50 @@ const { newsList, loading, error } = useNews();
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── 顶部提示：往上滚会露出整面成员墙 ── */
-.wall-hint {
+/* ── 顶部提示：往上滚会露出整面成员墙 ──
+   位置：水平居中、紧贴页头下沿。
+   它是 hero 的绝对定位子元素，而 hero 在遮罩（.page-mask）里 —— 遮罩整体下拉时它跟着走，
+   这正是要的：提示与页面一起让开，而不是钉在原地。
+   实测 hero 的顶边就落在视口 y = 0（负 margin 在遮罩这一层被挡住没折出去），
+   所以 top 直接写「页头高 + 16px」就是视口里页头下沿再下 16px。 */
+/* 选择器写成 .hero .wall-hint（(0,2,0)）而不是 .wall-hint（(0,1,0)）：
+   下面那条 .hero p（(0,1,1)，fadeInUp 动画 + font-size: xl）原本压着这个提示 ——
+   动画带 both 填充，播完仍以「动画」身份生效，而 CSS 动画在层叠里高于普通声明，
+   于是 translateX(-50%) 被吃掉、提示偏到视口中心右侧半个身位，字号也悄悄变成 20px。
+   animation: none 是必须的：光靠特异性赢不了动画，只能把动画本身关掉。 */
+.hero .wall-hint {
   position: absolute;
-  /* ×2 而不是 ×1：hero 自己用 margin-top: -var(--header-height) 顶到视口之上
-     （为的是内容能衬在固定页头下面），所以 hero 内的 y 要比视口 y 多一个 header 才对齐。
-     这样算出来它落在页头下沿 14px 处。 */
-  top: calc(var(--header-height) * 2 + 14px);
+  top: calc(var(--header-height) + var(--space-md));
   left: 50%;
+  z-index: 2;
   display: inline-flex;
+  flex-direction: column; /* 图标在上、文字在下，两者居中 */
   align-items: center;
-  gap: 8px;
+  gap: var(--space-xs); /* 4px 栅格 */
   margin: 0;
-  padding: 6px 14px;
-  font-size: var(--font-size-xs);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-xs); /* 12px，与项目 Caption 档一致 */
+  line-height: 16px;
   color: var(--text-light);
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  /* 材质与页头 .scrolled 同一套（同档白底透明度 / 同档模糊 / 同一根发丝边）——
+     它就挂在页头下面，视觉上连成一体，而不是另起一种卡片 */
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   transform: translateX(-50%);
-  transition: opacity 320ms ease, transform 320ms ease;
+  animation: none; /* 见上：不吃 .hero p 的 fadeInUp，否则 transform 会被它压住 */
+  /* 纯提示、不可点：不吃指针，让悬停穿到后面的头像墙上 */
+  pointer-events: none;
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
 }
-.wall-hint i {
+.hero .wall-hint i {
+  font-size: var(--font-size-sm);
+  color: var(--primary);
   animation: wall-hint-bob 1.8s ease-in-out infinite;
 }
 @keyframes wall-hint-bob {
