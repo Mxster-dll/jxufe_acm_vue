@@ -5,22 +5,28 @@
  *   - 团队赛（xcpc）：competition_name / medal_level / team_name / medal_type / members / coach_names / date
  *   - 天梯赛团队奖：  session / team_name / medal_type / members / coach_names / date
  *   - 单人赛：        session / members / [language / group] / medal_level / medal_type / coach_names / date
+ *
+ * medal_type 取值：gold / silver / bronze；蓝桥杯另允许 grand（特等奖）。
+ * grand 是独立一档（排在金之前、单独计数），只存在于蓝桥杯早期届次。
  */
 
 // 奖牌 → 文案：xcpc / 百度之星 / 天梯赛团队奖用「金/银/铜奖」措辞
-export const MEDAL_TEXT = { gold: '金奖', silver: '银奖', bronze: '铜奖' }
+// grand（特等奖）是蓝桥杯早期届次才有的最高档，两种措辞体系下都写作「特等奖」
+export const MEDAL_TEXT = { grand: '特等奖', gold: '金奖', silver: '银奖', bronze: '铜奖' }
 // 奖牌 → 文案：蓝桥杯 / 天梯赛个人奖用「一/二/三等奖」措辞
-export const RANK_TEXT = { gold: '一等奖', silver: '二等奖', bronze: '三等奖' }
+export const RANK_TEXT = { grand: '特等奖', gold: '一等奖', silver: '二等奖', bronze: '三等奖' }
 // medal_level → 表格行类别（决定行背景色）
 export const LEVEL_CAT = { invitational: 'inv', regional: 'reg', final: 'reg', provincial: 'prov' }
 // medal_level → 徽章小字
 export const LEVEL_TAG = { invitational: '邀请赛', regional: '区域赛', final: '区域赛', provincial: '省赛' }
 
-export const MEDAL_KEYS = ['gold', 'silver', 'bronze']
-export const MEDAL_ORDER = { gold: 1, silver: 2, bronze: 3 }
+// 顺序即展示顺序：特等奖 → 金 → 银 → 铜
+export const MEDAL_KEYS = ['grand', 'gold', 'silver', 'bronze']
+export const MEDAL_ORDER = { grand: 0, gold: 1, silver: 2, bronze: 3 }
 
 /** 奖牌 → 奖牌色类（供 medal-gold / chip-gold 等样式复用） */
 export function medalClass(medal) {
+  if (medal === 'grand') return 'medal-grand'
   if (medal === 'gold') return 'medal-gold'
   if (medal === 'silver') return 'medal-silver'
   if (medal === 'bronze') return 'medal-bronze'
@@ -29,11 +35,13 @@ export function medalClass(medal) {
 
 /**
  * 奖等文案 → 徽章配色类（RosterGroup 用）。
- * 兼容「一等奖/金奖」两种措辞；优秀奖为浅金灰；无法识别返回空串（默认色）。
+ * 兼容「一等奖/金奖」两种措辞；特等奖单独一色（红）必须先判，否则会被金分支吃掉；
+ * 优秀奖为浅金灰；无法识别返回空串（默认色）。
  */
 export function awardTone(award) {
   if (!award) return ''
-  if (/一等奖|特等奖|金奖|金牌/.test(award)) return 'medal-gold'
+  if (/特等奖/.test(award)) return 'medal-grand'
+  if (/一等奖|金奖|金牌/.test(award)) return 'medal-gold'
   if (/二等奖|银奖|银牌/.test(award)) return 'medal-silver'
   if (/三等奖|铜奖|铜牌/.test(award)) return 'medal-bronze'
   if (/优秀奖/.test(award)) return 'lq-excellent'
