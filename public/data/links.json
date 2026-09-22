@@ -2,9 +2,9 @@
   "official": [
     {
       "name": "江西财经大学计算机协会",
-      "icon": "/images/links/ca_logo.png",
-      "desc": "计算机协会是面向新手小白教学的，激起学计算机的兴趣，教会大家如何学好计算机，还会涉及一些AI、脚本、插件等实用的电脑小技巧。计协分为5个部门宣传部、维修部、软件部、量化部、办公室，但教学是统一教学，所以在这你会学到基础但实用的计算机技巧。由于是面向小白教学，所以会带大家一步一步学好计算机。跟上计协的教学，期末高分so easy。来加入计协，让你感受什么是科技的力量。",
-      "qrCode": "/images/links/ca_code.png"
+      "icon": "https://www.jxufe-cs.top/img/logo.png",
+      "desc": "计算机协会",
+      "website": "https://www.jxufe-cs.top/"
     },
     {
       "name": "江西财经大学网络安全协会",
