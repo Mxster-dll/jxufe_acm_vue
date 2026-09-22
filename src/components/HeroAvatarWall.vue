@@ -85,7 +85,7 @@ const props = defineProps({
   label: { type: String, default: '成员墙' },
   labelActive: { type: String, default: '返回' },
 })
-const emit = defineEmits(['update:active'])
+const emit = defineEmits(['update:active', 'tile-hover'])
 
 /* 这个类在 setup 期就挂上，而不是等 onMounted ——
    它控制的是「hero 在手机上一屏高」这条布局规则，晚一帧挂就会看到首屏先 683px、
@@ -276,10 +276,14 @@ const CARD_W = 360
 const CARD_H = 132
 let lastTile = null
 
-/** 顶栏下沿（视口坐标）。顶栏是 fixed 的，所以它的下沿就是「内容不该钻进去」的那条线。 */
+/** 顶栏下沿（视口坐标）。顶栏是 fixed 的，所以它的下沿就是「内容不该钻进去」的那条线。
+    ⚠ 必须用 offsetTop/offsetHeight，**不能**用 getBoundingClientRect()：首页露墙时导航栏
+    被 translate3d(0,105vh,0) 推走，rect.bottom 会变成 900+，于是 clampCard 里
+    「不许钻到导航栏底下」这条会把**每一张**卡都往下推 ~700px —— 整卡飞到屏幕外。
+    offsetTop/offsetHeight 走的是布局盒，不受 transform 影响。 */
 const headerBottom = () => {
   const h = typeof document !== 'undefined' ? document.querySelector('#app > header') : null
-  return h ? h.getBoundingClientRect().bottom : 0
+  return h ? h.offsetTop + h.offsetHeight : 0
 }
 
 const clampCard = (tile) => {
@@ -318,6 +322,33 @@ const onGridOver = (e) => {
   lastTile = tile
   if (tile) clampCard(tile)
 }
+
+/* ── 底纹态（有遮罩）下的悬停：指针到不了瓷砖，按坐标算 ──
+   首页的遮罩（.page-mask）整层盖在墙上面，指针事件全被它接走 —— 瓷砖的 :hover 永远
+   不会发生，于是「透过遮罩看悬浮效果」根本无从触发。这里在 window 上听 pointermove，
+   按栅格几何算出指针落在哪一格，给它挂 .is-pointer（CSS 与 :hover 共用同一套声明），
+   并 emit 出去让页面把遮罩压薄（否则 0.86 的白底把墙压到只剩 12% 可见，等于没效果）。
+   只在**未开启弹卡**时工作：露墙后指针能直接摸到瓷砖，走 :hover / pointerover 那条路。 */
+let pointerTile = null
+const setPointerTile = (tile) => {
+  if (tile === pointerTile) return
+  pointerTile?.classList.remove('is-pointer')
+  pointerTile = tile
+  pointerTile?.classList.add('is-pointer')
+  emit('tile-hover', !!tile)
+}
+const onWindowMove = (e) => {
+  if (!canHover.value || props.hoverCard) return setPointerTile(null)
+  const grid = rootEl.value?.querySelector('.wall__grid')
+  const n = geom.value
+  if (!grid || !n.s) return setPointerTile(null)
+  const r = grid.getBoundingClientRect()
+  const col = Math.floor((e.clientX - r.left) / n.s)
+  const row = Math.floor((e.clientY - r.top) / n.s)
+  if (col < 0 || col >= n.cols || row < 0) return setPointerTile(null)
+  setPointerTile(grid.children[row * n.cols + col] || null)
+}
+const clearPointerTile = () => setPointerTile(null)
 
 /* ── 点击：只有激活态才弹卡（底纹态点一下什么都不做，滑动手势也交给浏览器） ── */
 let downPt = null
@@ -389,6 +420,8 @@ onMounted(async () => {
   }
   document.addEventListener('visibilitychange', onVis)
   window.addEventListener('keydown', onKeydown)
+  window.addEventListener('pointermove', onWindowMove, { passive: true })
+  document.addEventListener('pointerleave', clearPointerTile)
 
   await loadData()
 })
@@ -400,6 +433,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', measure)
   window.removeEventListener('keydown', onKeydown)
   document.removeEventListener('visibilitychange', onVis)
+  window.removeEventListener('pointermove', onWindowMove)
+  document.removeEventListener('pointerleave', clearPointerTile)
   if (typeof document !== 'undefined') document.body.classList.remove('hero-wall-present', 'hero-wall-on')
 })
 
@@ -407,6 +442,9 @@ onBeforeUnmount(() => {
 watch(openItem, (v) => {
   if (!v) lastTile = null
 })
+
+// 露墙（弹卡态）时把「隔着遮罩」的那格清掉：否则遮罩收回去时会带着 is-peek 一起回来
+watch(() => props.hoverCard, () => clearPointerTile())
 </script>
 
 <template>
@@ -635,10 +673,14 @@ watch(openItem, (v) => {
    于是边缘自然摊成十几像素的软过渡，不会是一块硬邦邦的方块；
    再抬 z-index 保证它压在相邻格子之上。只在底纹态生效，激活态交给悬停卡。 */
 @media (hover: hover) and (pointer: fine) {
-  .wall:not(.is-hovercard) .wall__tile:hover {
+  /* .is-pointer = 指针隔着遮罩停在格子上时 JS 挂的类（见 onWindowMove）：
+     遮罩挡住指针事件，:hover 不会发生，但效果要一样 —— 两条选择器共用同一套声明。 */
+  .wall:not(.is-hovercard) .wall__tile:hover,
+  .wall:not(.is-hovercard) .wall__tile.is-pointer {
     z-index: 4;
   }
-  .wall:not(.is-hovercard) .wall__tile:hover .wall__img {
+  .wall:not(.is-hovercard) .wall__tile:hover .wall__img,
+  .wall:not(.is-hovercard) .wall__tile.is-pointer .wall__img {
     opacity: 0.55;
     filter: blur(18px) saturate(1.2);
     transform: scale(1.4);

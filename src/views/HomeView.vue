@@ -32,6 +32,9 @@ const MASK_RETURN_MS = 520;
 const maskShift = ref(0);
 const maskOut = ref(false);
 const maskReturning = ref(false);
+// 指针正停在墙上某一格（由 HeroAvatarWall 的 @tile-hover 报上来）：遮罩压薄，让那格的
+// 模糊放大透出来。会长 2026-09-23：「有遮罩时，可以透过遮罩显示悬浮效果」。
+const maskPeek = ref(false);
 let maskLimit = 0;
 let maskMax = 0;
 let maskReturnTimer = 0;
@@ -568,6 +571,7 @@ const { newsList, loading, error } = useNews();
       thumbs-base="/images/group_wall_thumbs"
       label="协会成员墙"
       :dim-opacity="1"
+      @tile-hover="maskPeek = $event"
     />
   </div>
 
@@ -599,7 +603,7 @@ const { newsList, loading, error } = useNews();
        往回收也一样：滚一下就把遮罩请回来。（首页不渲染页脚，见 App.vue 的 v-if） -->
   <div
     class="page-mask"
-    :class="{ 'is-out': maskOut, 'is-returning': maskReturning }"
+    :class="{ 'is-out': maskOut, 'is-returning': maskReturning, 'is-peek': maskPeek }"
     :style="{ '--mask-shift': maskShift + 'px' }"
   >
   <!-- 英雄区 -->
@@ -949,15 +953,21 @@ const { newsList, loading, error } = useNews();
     /* 底部过渡：向 About 区渐变。
        这层原本是**不透明**的（#f8fafc → #fff）：墙搬到遮罩下面之后会被它盖死，
        于是改成半透明 —— 浏览时墙照旧只是淡淡一层底纹（≈12% 透出来），
-       而遮罩整体让开时，让出来的位置没有这层东西，墙就是全亮的。 */
+       而遮罩整体让开时，让出来的位置没有这层东西，墙就是全亮的。
+
+       --hero-veil 是给「悬停遮罩下的墙」用的压薄系数（会长 2026-09-23：
+       「有遮罩时，可以透过遮罩显示悬浮效果」）：指针悬停在某一格上时
+       .page-mask 加 is-peek，把这三层淡下去，墙的那格模糊放大才看得见。
+       用 @property 注册过才能对 alpha 做过渡；老浏览器只是没有过渡，效果照旧。 */
     linear-gradient(
       175deg,
-      rgba(248, 250, 252, 0.86) 0%,
-      rgba(255, 255, 255, 0.9) 40%,
-      rgba(255, 255, 255, 0.92) 100%
+      rgba(248, 250, 252, calc(0.86 * var(--hero-veil, 1))) 0%,
+      rgba(255, 255, 255, calc(0.9 * var(--hero-veil, 1))) 40%,
+      rgba(255, 255, 255, calc(0.92 * var(--hero-veil, 1))) 100%
     );
   background-size: 100% 100%;
   cursor: default;
+  transition: --hero-veil 220ms ease;
 }
 
 /* ── 横滚代码背景 ── */
@@ -1171,6 +1181,18 @@ const { newsList, loading, error } = useNews();
    时长与 JS 里的 MASK_RETURN_MS 一致；用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
 .page-mask.is-returning {
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 指针停在遮罩底下的墙上：把英雄区那三层背景压薄，墙的那一格（放大 + 模糊）才透得出来。
+   悬停时要压到 ~0.42 —— 遮罩是 0.86~0.92 的不透明白，不压薄的话墙只剩 12% 可见，
+   再叠上组件自己那套 opacity .55 的虚化，等于什么都看不见。
+   @property 注册过才能对 alpha 做过渡（Chrome/Safari 16.4+）；老浏览器只是没有过渡。 */
+@property --hero-veil {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+.page-mask.is-peek {
+  --hero-veil: 0.42;
 }
 
 /* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──
