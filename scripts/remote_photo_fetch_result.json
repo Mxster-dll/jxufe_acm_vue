@@ -1,0 +1,85 @@
+{
+  "appliedAt": "2026-09-22T12:13:57.820Z",
+  "results": [
+    {
+      "name": "王广辉",
+      "file": "wgh.png",
+      "ok": true,
+      "from": "webp",
+      "w": 474,
+      "h": 470,
+      "srcBytes": 23546,
+      "pngBytes": 107492
+    },
+    {
+      "name": "张锦宇",
+      "file": "zjy.png",
+      "ok": true,
+      "from": "jpeg",
+      "w": 800,
+      "h": 800,
+      "srcBytes": 213902,
+      "pngBytes": 274400
+    },
+    {
+      "name": "吴清辉",
+      "file": "wqh.png",
+      "ok": true,
+      "from": "webp",
+      "w": 200,
+      "h": 200,
+      "srcBytes": 12038,
+      "pngBytes": 31246
+    },
+    {
+      "name": "赵锐奇",
+      "file": "zrq.png",
+      "ok": true,
+      "from": "webp",
+      "w": 474,
+      "h": 497,
+      "srcBytes": 17390,
+      "pngBytes": 94262
+    },
+    {
+      "name": "张艺环",
+      "file": "zyh.png",
+      "ok": true,
+      "from": "webp",
+      "w": 468,
+      "h": 489,
+      "srcBytes": 23900,
+      "pngBytes": 108345
+    },
+    {
+      "name": "张昊林",
+      "file": "zhl.png",
+      "ok": true,
+      "from": "webp",
+      "w": 360,
+      "h": 360,
+      "srcBytes": 16000,
+      "pngBytes": 64722
+    },
+    {
+      "name": "李梦豪",
+      "file": "lmh.png",
+      "ok": true,
+      "from": "webp",
+      "w": 474,
+      "h": 474,
+      "srcBytes": 23342,
+      "pngBytes": 96942
+    },
+    {
+      "name": "罗文浩",
+      "file": "lwh.png",
+      "ok": true,
+      "from": "png",
+      "w": 550,
+      "h": 550,
+      "srcBytes": 22991,
+      "pngBytes": 12644
+    }
+  ]
+}

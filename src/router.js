@@ -4,12 +4,7 @@ import { nextTick } from 'vue'
 const routes = [
   { path: '/', name: 'home', component: () => import('./views/HomeView.vue') },
   { path: '/all-action', name: 'all-action', component: () => import('./views/AllActionView.vue') },
-  { path: '/action/:slug', name: 'action', component: () => import('./views/ActionDetailView.vue') },
-  {
-    path: '/contest-news/:cid',
-    name: 'contest-news',
-    component: () => import('./views/ActionDetailView.vue')
-  },
+  { path: '/post/:id', name: 'post', component: () => import('./views/PostView.vue') },
   { path: '/contest', name: 'contest', component: () => import('./views/ContestView.vue') },
   {
     path: '/competition/:slug/:year',

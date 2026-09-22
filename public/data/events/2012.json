@@ -1,0 +1,144 @@
+{
+  "cards": [
+    {
+      "kind": "event",
+      "date": "2012-05-27",
+      "category": "lanqiao",
+      "title": "第三届蓝桥杯国赛",
+      "tagline": "决赛再战，键盘敲出火花",
+      "link": "2012-5-27-lanqiao-national"
+    },
+    {
+      "kind": "event",
+      "date": "2012",
+      "category": "lanqiao",
+      "title": "第三届蓝桥杯省赛",
+      "tagline": "三届磨砺，奖状越来越厚",
+      "link": "2012-lanqiao-provincial"
+    }
+  ],
+  "articles": {
+    "2012-5-27-lanqiao-national": {
+      "title": "第三届蓝桥杯国赛",
+      "date": "2012-05-27",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 13 人次获奖、国赛 7 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "国赛获奖情况",
+          "icon": "fa-trophy"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · 本科",
+              "二等奖",
+              "2 人",
+              "付昊、章逸群"
+            ],
+            [
+              "Java · 本科",
+              "三等奖",
+              "1 人",
+              "毕锦程"
+            ],
+            [
+              "Java · 本科",
+              "优秀奖",
+              "1 人",
+              "汪志强"
+            ],
+            [
+              "C++ · 本科",
+              "三等奖",
+              "3 人",
+              "吴军军、徐鹏、黄超强"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    },
+    "2012-lanqiao-provincial": {
+      "title": "第三届蓝桥杯省赛",
+      "date": "2012",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 13 人次获奖、国赛 7 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · 本科",
+              "一等奖",
+              "3 人",
+              "付昊、毕锦程、章逸群"
+            ],
+            [
+              "Java · 本科",
+              "二等奖",
+              "2 人",
+              "汪志强、赖明剑"
+            ],
+            [
+              "C++ · 本科",
+              "一等奖",
+              "3 人",
+              "吴军军、徐鹏、黄超强"
+            ],
+            [
+              "C++ · 本科",
+              "二等奖",
+              "2 人",
+              "张毅、王月月"
+            ],
+            [
+              "C++ · 本科",
+              "三等奖",
+              "3 人",
+              "戴爱美、谭寅、邓淑瑛"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    }
+  }
+}

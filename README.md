@@ -10,12 +10,16 @@
 
 - **Vue 3 组件化** — `<script setup>` + Composition API，路由级懒加载，首屏极速
 - **内容数据驱动** — 新闻、竞赛、成员、负责人、友链等全部抽离为 JSON，增删改无需改代码
+- **首页头像墙** — hero 区底纹：成员头像铺成一面缓慢漂移的墙，点按钮切换成可悬停交互的成员墙（见「头像墙」一节）
 - **手写 CSS 体系** — 设计令牌（`tokens.css`）+ 全局基础样式 + 组件 Scoped，无 UI 框架依赖
 - **滚动入场动画** — 基于 IntersectionObserver 的 `v-reveal` 指令，声明式使用
 - **大事记 Block 渲染** — 类型化内容块系统，支持 13 种块类型（文本、图片、奖项、表格、FAQ 等）
 - **全局交互特效** — 光标涟漪（`useCursorRipple`）、代码拖尾（`useCodeTrail`）、骨架屏加载态
-- **成员头像墙** — 138 位协会成员的头像铺成一面缓慢漂移的背景墙（首页 + 协会成员页），协会成员页滚过正文后可直接悬停查看荣誉
 - **响应式设计** — 适配桌面端与移动端，导航栏支持汉堡菜单
+
+> 📖 **要往网站里加内容，先看 [`knowledge.md`](./knowledge.md)** —— 它按「我要做什么」组织，
+> 逐字段说明大事记 / 获奖记录 / 优秀成员 / 负责人 / 头像墙怎么加，以及怎么部署。
+> 本 README 偏技术实现。
 
 ## 🛠 技术栈
 
@@ -39,49 +43,67 @@ jxufe-acm-vue/
 ├── deploy.bat                     # Windows 一键部署脚本
 ├── public/
 │   ├── data/                      # ★ 所有内容数据（JSON），修改即生效，无需重新构建
-│   │   ├── actions.json           # 大事记 / 新闻（含文章正文）
-│   │   ├── competitions.json      # 竞赛信息 + 参赛历史
-│   │   ├── events/                # 各赛事举办时间（参赛历史“日期”列 + 大事记比赛卡片共用）
-│   │   │   ├── index.json         # 赛事清单（slug + 名称）
-│   │   │   └── <slug>.json        # 每个赛事一个时间文件
-│   │   ├── editions/              # 单届比赛详情（大事记卡片点击进入 /competition/<slug>/<year>）
-│   │   │   └── <slug>/<year>.json # 每届一个文件：日期、参赛规模、国赛/省赛获奖（高校/团队/个人）
+│   │   ├── awards/                # ★★ 获奖数据唯一真源（每个赛事一个文件，见「获奖数据格式」）
+│   │   │   ├── icpc.json          # ICPC 获奖（团队赛）
+│   │   │   ├── ccpc.json          # CCPC 获奖（团队赛）
+│   │   │   ├── gplt-team.json     # 天梯赛（国赛）团队奖
+│   │   │   ├── gplt-individual.json # 天梯赛（国赛）个人奖
+│   │   │   ├── lanqiao.json       # 蓝桥杯（单人赛）
+│   │   │   ├── baidu.json         # 百度之星（单人赛）
+│   │   │   └── chuanzhi.json      # 传智杯（单人赛，暂空）
+│   │   ├── competitions.json      # 竞赛展示元信息：slug / 名称 / logo / 简介 / 详情卡 / mode / awards / sessions
+│   │   ├── events/                # ★ 大事记的全部数据（一年一个文件，卡片 + 文章正文）
+│   │   │   │                       #   与 competitions.json / awards/ 完全独立，允许重复
+│   │   │   ├── top.json           # 置顶卡片
+│   │   │   └── <year>.json        # 该年全部数据：{ cards: [...], articles: { <id>: {...} } }
+│   │   │                           #   每张卡片的 link 恒等于本文件 articles 里的一个 key
 │   │   ├── leaders.json           # 历届协会负责人
 │   │   ├── members.json           # 优秀成员列表
-│   │   ├── links.json             # 友情链接
-│   │   └── group_members.json     # 头像墙成员数据（群成员 + 优秀成员 + 协会负责人）
+│   │   ├── hero_wall.json         # ★ 头像墙悬浮卡片的文案（手写；key = 图片文件名）
+│   │   ├── hero_wall.manifest.json # 头像墙图片清单（由 scripts/gen_hero_wall.mjs 生成）
+│   │   └── links.json             # 友情链接
 │   └── images/                    # 静态图片
 │       ├── slider/                # 首页轮播图（slider1.jpg ~ slider10.jpg）
 │       ├── contest/               # 竞赛 logo
 │       ├── leader/                # 负责人头像（2021.jpg ~ 2026.jpg）
-│       ├── excellent_member/      # 优秀成员头像
-│       ├── group_members/         # 头像墙图片（thumbs/ 160px 缩略图、full/ 640px 原图）
+│       ├── excellent_member/      # ★ 头像墙图片真源（一个文件一个人）
+│       ├── hero_wall_thumbs/      # 头像墙缩略图 384/ 与 256/ 两档（由 ps1 脚本生成）
 │       ├── links/                 # 友链 logo + 二维码
 │       └── ...
+├── knowledge.md                   # ★ 内容维护手册（加内容 / 改字段 / 部署，面向内容维护者）
+├── scripts/
+│   ├── check_awards.mjs           # 全量数据校验
+│   ├── gen_events_articles.mjs    # 由 scripts/source/ 生成「赛事卡片」的大事记文章
+│   ├── gen_hero_wall.mjs          # 扫头像墙图片目录 → 生成清单 + 补齐文案骨架（挂在 predev/prebuild）
+│   ├── gen_hero_wall_thumbs.ps1   # 生成头像墙缩略图（本地 Windows 专用，不参与服务器构建）
+│   └── source/                    # 生成器专用输入（不参与运行时，不部署）
+│       ├── editions/gplt/<年>.json    # 天梯赛：国赛/省赛 × 高校奖/团队奖/个人奖 + scale
+│       ├── editions/lanqiao/<年>.json # 蓝桥杯：国赛/省赛 × 个人奖（含科目/排名）
+│       └── baidu.json                 # 百度之星：决赛/初赛场次 × 获奖名单
+
 └── src/
     ├── main.js                    # 应用入口
     ├── App.vue                    # 根组件（Header + RouterView + Footer + FloatingJoin）
-    ├── router.js                  # 9 条路由，全部懒加载
+    ├── router.js                  # 10 条路由，全部懒加载
     ├── styles/
     │   ├── tokens.css             # 设计令牌（颜色 / 阴影 / 圆角 / 间距 / 字体）
     │   ├── base.css               # CSS 重置 + 全局样式 + 动画关键帧
-    │   ├── honors.css             # 荣誉标签（按类型分色）+ 比赛战绩胶囊（两页共用）
-    │   ├── fluent.css             # Fluent 语义令牌层（WinUI 令牌名 → 站点令牌，头像墙用）
     │   └── index.css              # 样式入口
     ├── components/
     │   ├── AppHeader.vue          # 导航栏（滚动变色 + 移动端汉堡菜单）
     │   ├── AppFooter.vue          # 页脚（三栏布局 + ICP 备案）
     │   ├── FloatingJoin.vue       # 右下角悬浮"加入我们"按钮
-    │   ├── AvatarMosaic.vue       # 成员头像墙（首页底纹 / 协会成员页可交互墙）
-    │   └── action/
-    │       ├── BlockRenderer.vue  # 大事记块类型渲染器（13 种块）
-    │       └── OrganizerGrid.vue  # 招新二维码卡片网格
+    │   ├── HeroAvatarWall.vue     # ★ 首页 hero 头像墙（环面漂移 + 悬停卡 + 触屏交互 + 开关按钮）
+    │   ├── action/
+    │   │   ├── BlockRenderer.vue  # 大事记块类型渲染器
+    │   │   └── OrganizerGrid.vue  # 招新二维码卡片网格
+    │   └── lanqiao/
+    │       └── RosterGroup.vue    # 获奖分组名单（奖等徽章 + 姓名表格）
     ├── composables/
     │   ├── useJson.js             # 通用 JSON 数据加载器
-    │   ├── useNews.js             # 首页最新动态（最近 5 条）
-    │   ├── useTimeline.js         # 大事记按年分组 + 置顶
+    │   ├── useNews.js             # 首页最新动态（从 events/ 按年取最近 5 条新闻）
+    │   ├── useTimeline.js         # ★ 大事记数据源（按年懒加载 + 归一化 + 分组）
     │   ├── useSkeleton.js         # 骨架屏占位
-    │   ├── useMasonry.js          # 瀑布流布局（仅优秀成员页用；负责人页是等高行）
     │   ├── useCodeTrail.js        # 代码字符拖尾特效
     │   └── useCursorRipple.js     # 光标涟漪特效
     ├── directives/
@@ -90,15 +112,15 @@ jxufe-acm-vue/
     │   └── navigation.js          # 导航菜单 + 页脚链接
     ├── utils/
     │   ├── inline.js              # 内联标记解析（**加粗**、[链接](url)）
-    │   ├── honorType.js           # 荣誉分类（比赛 / 毕业去向 / 荣誉职位 / 联系方式）
-    │   ├── honorPills.js          # 比赛战绩胶囊：从竞赛数据自动汇总奖牌（四系列口径都在这）
-    │   └── honorRanking.js        # 显示排名：奖牌 + 手写战绩 + 荣誉 → 分值（四张权重表都在这）
+    │   ├── awardGroups.js         # ★ 获奖数据展示工具（两个竞赛页共用）
+    │   └── eventsSource.js        # ★ 大事记数据源读写封装（events/ 目录唯一入口：卡片/置顶/索引/文章）
     └── views/
         ├── HomeView.vue           # 首页 /
         ├── AllActionView.vue      # 大事记列表 /all-action
-        ├── ActionDetailView.vue   # 大事记详情 /action/:slug
+        ├── PostView.vue           # 大事记文章 /post/:id（新闻 / 战报 / 赛事卡片文章共用）
         ├── ContestView.vue        # 竞赛信息 /contest
         ├── CompetitionDetailView.vue  # 竞赛详情 /competition/:slug
+        ├── CompetitionEventView.vue   # 单届详情 /competition/:slug/:year
         ├── LeaderView.vue         # 协会负责人 /leader
         ├── ExcellentView.vue      # 优秀成员 /excellent
         ├── LinksView.vue          # 友链 /links
@@ -121,19 +143,58 @@ npm run build
 npm run preview
 ```
 
+> ⚠️ `preview` 的地址必须用 **http://localhost:4173** —— 别用 `127.0.0.1`。
+> Vite 只监听了 IPv6 的 `::1`，用 `127.0.0.1` 会得到「连接被拒绝」。
+
+`dev` 与 `build` 都会先自动执行 `scripts/gen_hero_wall.mjs`（`predev` / `prebuild` 钩子），
+重扫头像墙图片目录 —— 所以往 `public/images/excellent_member/` 丢完图，不用手动跑任何命令。
+唯一的例外是**缩略图**，它得单独跑：
+
+```bash
+npm run data:hero-wall      # 只重扫清单（dev/build 会自动跑，一般不用手动）
+npm run data:hero-thumbs    # 生成头像墙缩略图 ← 加图后必须跑，不会自动
+npm run data:check          # 数据校验
+```
+
 ## 📦 部署
 
-项目使用 `deploy.bat` 一键部署到服务器：
+**双击 `deploy.bat` 即可**（Windows 一键脚本，SSH 密钥免密登录，全程无需输入密码）。
 
-1. 确保本机代码已 `git commit`
-2. 双击 `deploy.bat`
-3. 脚本自动：检测变更文件 → 增量上传 → 服务器构建 → 重载 Nginx
+脚本按顺序做五件事，任何一步失败都会停下并打印原因：
 
-首次运行全量上传，后续只上传有变化的文件/目录。详见脚本内注释。
+| 步骤 | 做什么 |
+|---|---|
+| 1 | 本地检查：部署密钥、`src/main.js`、`package.json`、`tar` 是否就位 |
+| 2 | 把 `src` `public` `package.json` `package-lock.json` `vite.config.js` `index.html` `scripts/gen_hero_wall.mjs` 打成 tar.gz |
+| 3 | 上传到服务器 `/tmp`，解包到 `/var/www/jxufe_acm_vue`（会先删掉远端的旧 `src` 与 `public`） |
+| 4 | 服务器上 `npm install` + `npm run build`（`prebuild` 钩子会自动重扫头像墙清单） |
+| 5 | `nginx -t` → `systemctl reload nginx` → curl 验证站点返回 `HTTP 200` |
+
+最后打印 `Deploy success!` 与 `https://jxufe-acm.cn`。
+
+| | |
+|---|---|
+| 服务器 | `root@47.99.92.213` |
+| 站点目录 | `/var/www/jxufe_acm_vue`（Nginx 根目录是其中的 `dist/`） |
+| 登录方式 | SSH 密钥 `.deploy/id_ed25519`（**不要删、不要外传**，已在 `.gitignore` 里） |
+
+> **每次都是全量上传 `src` 与 `public`**（约 36 MB），不做增量比对 —— 用一轮 tar 换掉逐文件
+> 判断，出问题的可能性更低。第一次部署与第十次耗时相同。
+
+> ⚠️ **头像墙的缩略图必须在本地先生成**（`npm run data:hero-thumbs`）——
+> 那个脚本依赖 Windows 的图形库，服务器是 Linux 跑不了。忘了跑不会坏版（会回退加载原图），只是慢。
+> 图片清单则相反，服务器构建时会自动重扫。
+
+详见 `deploy.bat` 内注释，以及 [`knowledge.md` 第 7 节](./knowledge.md)。
 
 ---
 
 ## 📝 内容维护指南
+
+> 📖 **只想加内容、不想读代码？直接看 [`knowledge.md`](./knowledge.md)。**
+> 那份文档按「我要做什么」组织（开头就是速查表），逐字段说明大事记 / 获奖记录 /
+> 优秀成员 / 协会负责人 / 首页头像墙怎么改，以及更新部署的全流程。
+> 下面这一节讲的是**数据格式与设计取舍**，偏实现。
 
 所有可变内容存放在 `public/data/` 目录下的 JSON 文件中。**修改后刷新页面即可生效，无需重启，无需重新构建。**
 
@@ -143,73 +204,75 @@ npm run preview
 
 ### 一、如何添加 / 修改 News（大事记）
 
-**文件：** `public/data/actions.json`
+大事记的数据**全部在 `public/data/events/` 一个目录里，一年一个文件**：
 
-每条记录的结构如下：
+| 文件 | 装什么 |
+|---|---|
+| `events/top.json` | 置顶卡片（扁平数组；置顶的不要同时留在年份文件里） |
+| `events/<年>.json` | 该年**全部**数据：`cards`（时间轴卡片）+ `articles`（该年所有文章正文，key = id） |
 
-```json
-{
-  "slug": "2025-4-19-tts",          // 唯一标识，用于 URL（/action/2025-4-19-tts）
-  "title": "时隔8年，我校再获天梯赛团体国一",
-  "date": "2025-04-19",
-  "isTop": false,                    // true = 置顶
-  "summary": "简短摘要，显示在首页和列表页",
-  "subtitle": "副标题（可选，详情页显示）",
-  "blocks": [ ... ]                  // 文章正文，见下方 Block 类型
-}
+```
+events/2026.json
+├── cards     [ { kind, date, category, title, tagline, link }, … ]   19 张时间轴卡片
+└── articles  { "<id>": { title, date, subtitle?, blocks }, … }        16 篇文章正文
 ```
 
-#### Block 类型一览
-
-`blocks` 是一个数组，每个元素有一个 `type` 字段。**正文中的 `**加粗**` 和 `[文字](链接)` 会自动转换为 HTML。**
-
-| type | 用途 | 关键字段 |
-|------|------|---------|
-| `text` | 正文段落 | `paras: string[]` |
-| `heading` | 小标题 | `text`, `icon?`（Font Awesome 类名） |
-| `images` | 图片 | `items: [{ src, alt?, caption? }]` |
-| `awards` | 获奖卡片 | `heading?`, `cards: [{ title, fields, highlight?, images }]` |
-| `highlight` | 引用 / 高亮文本 | `text: string` |
-| `partners` | 合作高校 Logo 墙 | `logos: [{ src, alt }]`, `note?` |
-| `list` | 列表 | `intro?`, `items: string[]` |
-| `table` | 表格 | `headers?`, `rows: 二维数组` |
-| `info` | 信息卡片网格 | `heading?`, `icon?`, `cards: [{ icon, title, desc }]` |
-| `organizers` | 招新二维码卡片（可点击展开） | `heading?`, `icon?`, `items: [{ icon, name, qr?, text? }]` |
-| `join` | 二维码加入区 | `heading?`, `icon?`, `qq?`, `images`, `note?` |
-| `platformList` | 学习平台列表 | `items: [{ name, desc }]` |
-| `faq` | 折叠问答（答案可嵌套任意 Block） | `items: [{ q, a: Block[] }]` |
+> **为什么卡片和正文不分成两个文件**：HTTP 只能整文件下载。放在同一个文件里，从时间轴点开文章时正文已经在内存里（**0 额外请求**）；代价是只看时间轴的访客也要把该年正文一起下载（首屏约 123 KB，压成单行约 69 KB）。这个取舍是按「一年一个文件」的要求做的。
 
 #### 添加一条新 News
 
-在 `actions.json` 数组最前面插入一条新对象即可。示例：
+**两步，都在同一个文件 `public/data/events/<年>.json` 里：**
+
+**① 在 `articles` 里写正文**（key = 文章 id）：
+
+```json
+"articles": {
+  "2026-6-27-new-contest": {
+    "title": "我校在XX竞赛中取得佳绩",
+    "date": "2026-06-27",
+    "subtitle": "副标题（可省略，仅详情页显示）",
+    "blocks": [
+      {
+        "type": "text",
+        "paras": ["第一段正文。**加粗文字**会自动渲染。", "第二段正文。访问 [官网](https://jxufe-acm.cn) 了解更多。"]
+      },
+      {
+        "type": "heading",
+        "text": "获奖详情",
+        "icon": "fa-solid fa-trophy"
+      },
+      {
+        "type": "images",
+        "items": [
+          { "src": "/images/slider/slider1.jpg", "alt": "描述", "caption": "图片说明" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**② 在同一个文件的 `cards` 里加一张时间轴卡片**（字段顺序保持 `kind, date, category, title, tagline, link`）：
 
 ```json
 {
-  "slug": "2026-6-27-new-contest",
-  "title": "我校在XX竞赛中取得佳绩",
+  "kind": "news",
   "date": "2026-06-27",
-  "isTop": false,
-  "summary": "简短的摘要描述",
-  "subtitle": "副标题（可省略）",
-  "blocks": [
-    {
-      "type": "text",
-      "paras": ["第一段正文。**加粗文字**会自动渲染。", "第二段正文。访问 [官网](https://jxufe-acm.cn) 了解更多。"]
-    },
-    {
-      "type": "heading",
-      "text": "获奖详情",
-      "icon": "fa-solid fa-trophy"
-    },
-    {
-      "type": "images",
-      "items": [
-        { "src": "/images/slider/slider1.jpg", "alt": "描述", "caption": "图片说明" }
-      ]
-    }
-  ]
+  "category": "club",
+  "title": "我校在XX竞赛中取得佳绩",
+  "tagline": "简短的摘要描述",
+  "link": "2026-6-27-new-contest"
 }
 ```
+
+`link` 就是 ① 里的 id（**纯 id，不带任何路由前缀**）—— 值必须与 `articles` 的 key 完全一致。
+
+> 全部 114 张卡片的 `link` 无一例外都是 `articles` 里的 key。赛事卡片（天梯赛 / 蓝桥杯 / 百度之星）的文章由 `scripts/gen_events_articles.mjs` 从 `scripts/source/` 生成，见下文「大事记与竞赛数据的关系」。
+
+- 要**置顶**：卡片放到 `public/data/events/top.json`（数组最前面 = 最先显示），**正文照旧写在年份文件的 `articles` 里**。切勿两处都放卡片，否则时间轴会出现两次（校验会报「新闻在时间轴里重复出现」）
+- 卡片的 `title` / `date` 必须与 `articles` 里那条一致，校验脚本会强制检查
+- 只想给个直达链接、**不上时间轴**：就只写 `articles`，不写 `cards`（校验会把它记为「无卡片入口的文章」，这是允许的）
+- 加完跑 `npm run data:check` 校验。**没有索引文件需要维护**：目录里有哪些年份由前端自动探测，月份与分类计数随年份文件加载实时算出
 
 ---
 
@@ -223,84 +286,12 @@ npm run preview
   "class": "22计算机科学与技术1班",
   "photo": "/images/excellent_member/zhangsan.png",
   "honors": [
-    { "text": "全国大学生数学建模竞赛国家二等奖", "type": "contest" },
-    { "text": "保研至XX大学", "type": "destination" },
-    { "text": "国家奖学金", "type": "honor" },
-    { "text": "🛰️：zhangsan123", "type": "contact" }
+    "2024 ICPC 区域赛金牌",
+    "蓝桥杯国家级一等奖",
+    "保研至XX大学"
   ]
 }
 ```
-
-**honors 的每条荣誉都带一个类型，页面上按类型显示成不同颜色的标签：**
-
-| type | 含义 | 颜色 | 例子 |
-|------|------|------|------|
-| `contest` | 比赛 | 蓝 | 数学建模国二、睿抗国一、传智杯国二 |
-| `destination` | 毕业去向（保研 / 考研 / 就业） | 橙 | 保研至北京邮电大学、小米科技 |
-| `honor` | 个人荣誉 / 职位 | 绿 | 国家奖学金、优秀学生干部、协会组织部负责人 |
-| `contact` | 联系方式 / 社交主页等彩蛋 | 灰 | 🛰️：xxx、关注小羊谢谢喵 |
-
-- `type` 也可以直接写中文：`"比赛"` / `"去向"` / `"荣誉"` / `"联系"`。
-- **`type` 可以整个省略**（甚至把荣誉写回纯字符串，如 `"睿抗国一"`）：此时由
-  `src/utils/honorType.js` 的关键词规则自动归类，判不准的按「比赛」显示，
-  所以以后临时加一条也不会没颜色。
-- 配色改 `src/styles/tokens.css` 里的 `--honor-*`（四类各一组：主色 / 淡底 / 描边 / hover），
-  标签本身的几何与 hover 改 `src/styles/honors.css`——两个页面共用，改一处两页同时生效。
-
-#### 比赛战绩胶囊（ICPC / CCPC / 天梯赛 / 百度之星 / 蓝桥杯 —— 不用手写）
-
-这五个系列**不要在 `honors` 里手写了**：它们由站点自己的竞赛数据自动汇总，在荣誉列表
-最前面显示成一枚枚战报胶囊，如 `xCPC 区域赛🥈2🥉1 邀请赛🥇1🥈3🥉4`、`蓝桥杯 国赛🥇1 省赛🥇2`。
-汇总逻辑在 `src/utils/honorPills.js`，页面加载时读 `/data/editions/<slug>/<year>.json` 与
-`/data/baidu.json`（就是竞赛页用到的同一批数据），**所以竞赛数据一更新，两页自动跟上**。
-
-| 系列 | 胶囊分段 | 口径要点 |
-|------|----------|----------|
-| xCPC | `区域赛` `邀请赛` ＋ 独立一枚 `xCPC 省赛…` | ICPC 与 CCPC 合并成一个 xCPC；`ICPC全国邀请赛（南昌）暨江西省赛` 这类在邀请赛与省赛**各计一次**；**省赛只认江西省赛**——其他省的省赛 / 区赛（广东、河南、广西、山东、吉林、东北、湖北、福建、河北、贵州…）不计入省赛段，非江西的「暨X省赛」只计邀请赛那一次 |
-| 天梯赛 | `团体` `个人` | 团体只统计国赛团队奖——分省团队奖在数据里没有成员名单，无法归属到人 |
-| 百度之星 | `国赛` `省赛` | 数据只有决赛 / 初赛两档（百度之星没有省赛），胶囊里统一写成国赛 / 省赛 |
-| 蓝桥杯 | `国赛` `省赛` | 优秀奖不计入（与竞赛页展示层一致） |
-
-- 零奖牌的档位不显示；同一场团队奖，队内每人各计一枚；CCPC 女生专场不并进计数，
-  按「2021 CCPC女生专场 铜牌」按届单独列一条。
-- 站点数据里查不到的人（昵称）在 `honorPills.js` 的 `MANUAL_PILLS` 里逐人兜底（如 `vesper`）。
-  **「不愿透露姓名」不属于这一类** —— 那只是显示层的事：真名照常写在 `name` 里用于匹配，
-  另给一个 `displayName` 决定显示什么，见下面《不愿透露姓名的成员（displayName）》。
-- **改动口径前先看 `honorPills.js` 文件头注释**——那里面是唯一权威的规则说明（含为什么这么定）。
-- 胶囊样式：`src/styles/honors.css` 的 `.honor-tag--stat`（花色仍走比赛色，靠奖牌 emoji 区分档位）。
-
-#### 卡片显示顺序（排名算法 —— 改 JSON 里的位置没有用）
-
-优秀成员页的卡片**不按 `members.json` 里的先后顺序显示**，而是按 `src/utils/honorRanking.js`
-算出的分值从高到低排。分值只来自站点自己的数据（竞赛数据 + `honors` 里的手写条目），
-不依赖任何外部评级：
-
-```
-总分 = Σ(每个系列只取最高的那条奖牌 × 赛事层级权重 × 名次倍率)
-                                        ← 同系列其余记录只值 10%
-     + Σ(手写战绩分)                          ← 胶囊表达不了的名次类条目
-     + Σ(荣誉加项) × HONOR_SCALE               ← 奖学金 / 绩点 / 职务 / 毕业去向
-```
-
-| 表 | 取值 | 位置 |
-|----|------|------|
-| 奖牌基分 | 金 10 / 银 5 / 铜 3（对应 ICPC 官方金银铜 ≈ 10%:20%:30% 的稀缺度） | `MEDAL_BASE` |
-| 赛事层级权重 | 区域赛 1.0（基准）· 天梯赛 0.55 · 邀请赛 / 蓝桥国赛 / 百度国赛 0.5 · 女生专场 0.35 · xCPC 省赛 0.2 · 蓝桥省赛 / 百度省赛 0.12 | `LEVEL_WEIGHT` |
-| 同系列只计最高 | **每个系列只把最高的那条算满分，其余一律 × 0.1**（2026-09 会长裁定：「单一比赛只计入最高，数量叠加只提供很小的贡献」）。系列 = xCPC / 天梯赛 / 蓝桥杯 / 百度之星 —— 即 xCPC 的区域赛＋邀请赛＋省赛只按最高那条算，天梯赛的团体＋个人也只按最高那条算 | `EXTRA_FACTOR` |
-| 荣誉加项 | 保研 / 考研上岸 4.0 · 国奖 3.0 · 名企就业 2.5 · 绩点 / 年级第一 2.0 · 国励 1.5 · 优秀学生 / 干部 / 职务 1.0 · 党员 0.5 | `DESTINATION_RULES` `HONOR_RULES` |
-| 总旋钮 | `HONOR_SCALE = 1.5`（2026-09 会长裁定：学业 / 职务类荣誉比比赛成绩略重） | `HONOR_SCALE` |
-
-- 手写战绩按赛事关键词定层级（睿抗 0.4、传智杯 0.35、数学建模 0.45，含「区域赛 / 邀请赛 / 省赛」字样的按 xCPC 对应层级）；
-  带名次的加成：冠军 ×1.6、亚军 ×1.3、**季军 ×1.2**，首刀单独 +0.5；只写赛事名没写档位的按「参赛经历」0.6 计。
-  手写条目里的「×N」次数仍按 0.7 递减（会长只要求改比赛奖牌口径，手写条目保持原样）。
-- **副作用要知道**：「同系列只计最高」对**奖牌多但档位平**的成员是重罚（实测李鑫 25 条奖牌从第 3 掉到第 10、
-  林俊坤掉 12 位、张瑞杰掉 8 位），而对**荣誉重 / 手写条目强**的成员有利（王海峰 ↑2、李梦豪 ↑3、
-  张锦宇 ↑5、吴松烨 ↑6）。想回到「区域赛与邀请赛各算一场」的粒度，就把分组键从 `family` 改回
-  `family|segment`（`scoreRecords` 里一行）。
-- **排序键是确定的**：总分 → 单条最高分 → 比赛记录条数 → 姓名拼音，所以同级不会每次刷新乱跳。
-- 想调口径**只改 `honorRanking.js` 顶部那几张表**，不要动排序逻辑。改完把 `HONOR_SCALE`
-  在 0.5 / 1 / 1.5 / 2 之间试几档：实测前 4 名在这几档下恒定，头部由比赛成绩决定。
-- 数据取不到或超过 3 秒未就绪时，页面**退回 `members.json` 的原始顺序**并照常渲染，不会卡在加载态。
 
 **添加步骤：**
 
@@ -311,28 +302,6 @@ npm run preview
 **photo 字段**支持两种写法：
 - 本地图片：`"/images/excellent_member/xxx.png"`
 - 外部 URL：`"https://example.com/avatar.jpg"`
-
-#### 不愿透露姓名的成员（`displayName`）
-
-有成员不愿公开姓名时，**不要把名字从数据里删掉** —— 名字是奖项匹配的键：
-
-```json
-{
-  "name": "石翰林",
-  "displayName": "一位不愿透露姓名的学长",
-  "class": "----",
-  "photo": "/images/excellent_member/shl.png",
-  "honors": []
-}
-```
-
-- `name` 必须是**真名**：自动奖牌汇总（`pills.get(m.name)`）与显示排名（`recordsByName.get(m.name)`）
-  都按它匹配；`displayName` 只是**对外显示文本**，页面显示的每一处（卡片标题、图片 `alt`、
-  头像墙浮出的卡片）都优先用它。没有这个字段的人两者一致，行为不变。
-- 可以有多个成员这样设置；`leaders.json` 字段名不同、规则相同（一样认 `displayName`）。
-- 群成员不走 JSON：在 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「显示名」列填一份即可。
-- **只影响显示**：`public/data/` 下的 JSON 里仍是真名，竞赛信息 / 大事记 / 获奖名单等页面的队伍名单
-  也不在范围内（那是站点的获奖记录，会长 2026-09-22 裁定暂不动）。
 
 ---
 
@@ -348,20 +317,12 @@ npm run preview
   "avatar": "/images/leader/2027.jpg",
   "message": "对协会的寄语，一段话即可。",
   "achievements": [
-    { "text": "睿抗编程技能赛国家一等奖", "type": "contest" },
-    { "text": "国家奖学金", "type": "honor" },
-    { "text": "...", "type": "more" }
+    "ICPC 区域赛银牌",
+    "天梯赛个人国家级一等奖",
+    "..."
   ]
 }
 ```
-
-**achievements 与优秀成员页的 honors 规则完全相同**（同一套分类与配色，见上一节）：
-
-- **ICPC / CCPC / 天梯赛 / 百度之星 / 蓝桥杯 不要手写**：这五个系列同样由比赛战绩胶囊
-  自动汇总（口径见上一节「比赛战绩胶囊」），手写的这几类条目已全部删除。
-- 省略 `type` 写纯字符串（`"睿抗国一"`）也能用，由关键词规则自动归类。
-- 结尾表示「还有更多荣誉」的省略号：写 `{ "text": "...", "type": "more" }` 显示成中性灰的虚线标签；
-  直接写 `"..."` 也会被认出来，效果一样。
 
 **添加步骤：**
 
@@ -373,86 +334,241 @@ npm run preview
 
 ### 四、如何添加 / 修改 Competitions（竞赛）
 
-**文件：** `public/data/competitions.json`
+竞赛相关数据分三层，各司其职：
+
+| 文件 | 职责 | 是否含获奖数据 |
+|---|---|---|
+| `public/data/awards/*.json` | **获奖数据唯一真源** | ✅ 是 |
+| `public/data/competitions.json` | 展示元信息（名称 / logo / 简介 / 详情卡 / 渲染模式 / 年份→届数） | ❌ 否 |
+| `public/data/events/` | 大事记时间轴节点（该年的新闻 + 比赛卡片） | ❌ 否 |
+
+---
+
+#### 4.1 获奖数据 `public/data/awards/*.json`
+
+**这是获奖数据的唯一来源。** 竞赛详情页与单届详情页的获奖名单、参赛历史、分组名单全部由它渲染，字段使用统一 schema（不再有 `history` / `editions` 两套并存的数据）。
+
+| 文件 | 赛事 | 记录粒度 |
+|---|---|---|
+| `icpc.json` | ICPC | 一支队伍在一个场次中的成绩 |
+| `ccpc.json` | CCPC | 同上 |
+| `gplt-team.json` | 天梯赛（仅国赛） | 一支队伍 |
+| `gplt-individual.json` | 天梯赛（仅国赛） | 一个人 |
+| `lanqiao.json` | 蓝桥杯 | 一个人次 |
+| `baidu.json` | 百度之星 | 一个人次 |
+| `chuanzhi.json` | 传智杯 | 一个人次（当前为空数组） |
+
+**团队赛（ICPC / CCPC）**——数组，按 `date` 升序：
 
 ```json
 {
-  "slug": "icpc",
-  "name": "ICPC 国际大学生程序设计竞赛",
-  "image": "/images/contest/icpc.png",
-  "desc": "简短描述",
-  "subtitle": "国际级赛事",
-  "intro": ["段落1", "段落2"],
-  "details": [
-    { "icon": "fa-solid fa-clock", "title": "比赛时间", "lines": ["每年9-12月"] }
-  ],
-  "history": [
-    {
-      "year": "2025",
-      "entries": [
-        {
-          "title": "第50届 ICPC 西安邀请赛",
-          "desc": "金牌（历史首金）",
-          "level": "国际级",
-          "members": "黄亦诚、王玛琪、石翰林"
-        }
-      ]
-    }
-  ]
+  "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+  "medal_level": "invitational",
+  "team_name": "天空之矛",
+  "medal_type": "bronze",
+  "members": ["张瑞杰", "曹京顺", "李鑫"],
+  "coach_names": [],
+  "date": "2026-05-24"
 }
 ```
 
-#### 赛事举办时间（events 文件）
+**天梯赛团队奖（gplt-team）**——无 `medal_level`（数据源只收录国赛）：
 
-每个赛事在 `public/data/events/` 下有一个同名 JSON 文件（如 `gplt.json`），记录历届比赛的举办时间与获奖情况，**同时**驱动：
+```json
+{ "session": 11, "team_name": "JXUFE_C1", "medal_type": "gold", "members": ["…"], "coach_names": ["李季"], "date": "2025-04-19" }
+```
 
-- 竞赛详情页参赛历史的 **“日期”列**（有具体日期显示完整日期，缺省回退显示年份）
-- 大事记页时间轴中的 **比赛卡片**（与其他新闻卡片同样式、按日期排序，点击跳转竞赛详情页）
+**单人赛（gplt-individual / lanqiao / baidu / chuanzhi）**——`members` 固定一个元素；蓝桥杯额外含 `language` / `group`：
 
-文件结构：
+```json
+{
+  "session": 17,
+  "members": ["万俊哲"],
+  "language": "C++",
+  "group": "B",
+  "medal_level": "provincial",
+  "medal_type": "gold",
+  "coach_names": [],
+  "date": "2026-04-12"
+}
+```
+
+字段取值：
+
+| 字段 | 取值 |
+|---|---|
+| `session` | 届数（int），如 `11` = 第十一届 |
+| `medal_level` | `regional` / `invitational` / `provincial` / `final`（团队赛）；`provincial` / `national`（单人赛） |
+| `medal_type` | `gold` / `silver` / `bronze`（分别渲染为 金/银/铜奖 或 一/二/三等奖） |
+| `language` | `C++` / `Java` / `Python` / `null`（仅蓝桥杯） |
+| `group` | `A` / `B` / `研究生组` / `null`（仅蓝桥杯） |
+| `date` | `YYYY-MM-DD`；**未知填 `null`**（数组内 `null` 排末尾） |
+
+> 新增/修改获奖记录：直接编辑对应文件即可（保持数组按 `date` 升序、`null` 末尾）。
+> 改完执行 `npm run data:check` 校验格式。
+
+#### 4.2 赛事元信息 `public/data/competitions.json`
+
+只放展示所需字段，**不含任何获奖记录**：
 
 ```json
 {
   "slug": "gplt",
   "name": "团体程序设计天梯赛",
-  "events": [
-    { "year": "2026", "date": "2026-04-18", "title": "第十一届团体程序设计天梯赛", "summary": "国赛：团体🥇1🥈1🥉1、个人🥇1🥈13🥉18\n省赛：团体🥇2🥈1" },
-    { "year": "2018", "date": null, "title": "第三届团体程序设计天梯赛", "summary": "国赛：团体🥈1\n省赛：团体🥇1🥈2" }
-  ]
+  "shortName": "团体程序设计天梯赛",
+  "image": "/images/contest/gplt.png",
+  "desc": "简短描述",
+  "subtitle": "副标题",
+  "intro": ["段落1", "段落2"],
+  "details": [
+    { "icon": "fa-solid fa-clock", "title": "比赛时间", "lines": ["每年 4 月"] }
+  ],
+  "mode": "gplt",
+  "awards": ["gplt-team", "gplt-individual"]
 }
 ```
 
-- 国赛与省赛之间用 `\n` 换行分隔（卡片内自动换行显示）；`团体`/`个人` 之间用 `、`
-- 大事记页的比赛卡片点击后进入**单届比赛详情页** `/competition/<slug>/<year>`，数据来自 `public/data/editions/<slug>/<year>.json`：
+- `shortName`：届次标题用的简称（如「第十七届**蓝桥杯**（2026年）」）
+- `mode`：决定竞赛详情页用哪种渲染，`xcpc`（团队赛表格）/ `gplt`（天梯赛六列表）/ `roster`（分组名单）/ `none`（无数据）
+- `awards`：该赛事对应的 `awards/*.json` 文件名列表；视图只用这个列表去加载获奖数据，**新增赛事时改这里即可，无需改代码**
+- `sessions`：`{ "年份": 届数 }` 对照表，供单届详情页把 URL 里的自然年换算成 awards 的 `session`（如 `{"2026": 11}`）。ICPC/CCPC 标题不含届数，故为空对象
+- 页面标题里的 xCPC 合并页（`/competition/xcpc`）由代码在运行时合并 `icpc` + `ccpc` 得到
+
+#### 4.3 大事记时间轴 `public/data/events/`
+
+**一年一个文件**，该年的卡片与全部文章正文都在里面：
+
+```
+events/
+├── top.json      置顶卡片（扁平数组）
+├── 2026.json     { cards: [...19 张卡片], articles: {...16 篇文章} }
+├── 2025.json     { cards: [...24], articles: {...25} }
+└── …             共 17 个年份文件
+```
+
+**`cards`** —— 该年的时间轴卡片，按 `date` 倒序、`null` 排最后。`year` 由文件名给出，卡片内不重复存：
 
 ```json
 {
-  "slug": "gplt",
-  "year": "2026",
-  "edition": "第十一届",
-  "title": "第十一届团体程序设计天梯赛",
+  "kind": "event",
   "date": "2026-04-18",
-  "scale": "来自全国 31 个省级行政区、595 所高校、1822 支队伍、18062 位参赛学生",
-  "national": {
-    "university": ["全国高校二等奖"],
-    "teams": [{ "name": "JXUFE_1", "award": "全国团队一等奖", "members": "肖丛宇、钟明皓、…" }],
-    "personal": [{ "name": "钟明皓", "award": "个人一等奖", "score": 256 }]
-  },
-  "provincial": {
-    "university": ["江西省高校一等奖"],
-    "teams": [{ "name": "JXUFE_1", "award": "分省团队一等奖" }]
-  }
+  "category": "tts",
+  "title": "第十一届团体程序设计天梯赛",
+  "tagline": "时隔八年，再夺团队国一",
+  "link": "2026-4-18-gplt"
 }
 ```
 
-- `date` 未知填 `null`；`university` 为高校奖（学校获奖），`teams` 为团队奖（含成员），`personal` 为个人奖（含成绩），全部为空时详情页显示"本届无我校获奖记录"
+| 字段 | 说明 |
+|---|---|
+| `kind` | `news`（新闻）或 `event`（比赛） |
+| `date` | `YYYY-MM-DD` / `YYYY-MM` / `YYYY`，**未知填 `null`**（此时按所在年份文件归年） |
+| `category` | 决定卡片左边框配色与筛选 chips，取值见下 |
+| `title` | 卡片标题 |
+| `tagline` | 卡片正文 |
+| `link` | **纯 id**，恒等于本文件 `articles` 里的一个 key（不允许出现 `/`）。路由侧固定拼成 `/post/<id>` |
 
-> **参赛历史表**：存在 `editions/` 数据的赛事（当前为天梯赛），其竞赛详情页参赛历史自动渲染为"日期 / 届数 / 队名 / 国赛 / 省赛 / 参赛成员"六列表格（数据直接来自 events + editions，无需在 `competitions.json` 的 `history` 中重复维护）：同届多队合并日期与届数格子；成员姓名按个人奖项以金/银/铜牌色标注（未获奖为默认色）。其余赛事仍使用通用表格（`history` 字段）。
+**`articles`** —— 该年所有文章的正文，key 是文章 id，内容 `{ title, date, subtitle?, blocks }`。
 
-- `date` 为 `YYYY-MM-DD`；**未知日期填 `null`**（参赛历史回退显示年份，大事记卡片显示"2018年"并排在该年最后）
-- `summary` 为获奖情况说明文本，显示在时间轴卡片上（取自协会工作目录 `01_竞赛赛季/天梯赛/` 下的各年获奖名单，提取后落盘到本文件，网页只读此文件）
-- `title` 用于参赛历史表格按年份匹配日期，建议与 `history.entries[].title` 一致
-- 新增赛事时需同步在 `public/data/events/index.json` 中登记 `slug` + `name`
+id 统一为 `<年>-<月>-<日>-<名字>` 风格（月/日不补零，与 `date` 字段的补零写法不同），例如：
+
+| 类型 | id 示例 |
+|---|---|
+| 协会新闻 | `2026-8-24-xcpc-select` |
+| 比赛战报 | `2026-7-29-icpc-invitational-shenyang` |
+| 省赛战报 | `2024-5-12-gxcpc9th` |
+| 赛事卡片文章（生成） | `2026-4-18-gplt`、`2026-4-12-lanqiao-provincial`、`2026-9-3-baidu-preliminary-1` |
+
+> **新闻的卡片标题与文章标题必须一致**；**战报/赛事的卡片是短标签（「ICPC全国邀请赛（沈阳）」）、文章是官方全称（「2026 年 ICPC 国际大学生程序设计竞赛全国邀请赛（沈阳）」），故意不同**，校验脚本对此不作要求。
+> **没有卡片入口的文章**（参赛但未获奖的场次、网络预选赛共 44 篇）也在 `articles` 里，手输 `/post/<id>` 能打开，但不上时间轴。
+
+### 没有索引文件：年份是自动探出来的
+
+`public/data/events/` 里**只有一个 `top.json` + 若干个 `<年>.json`**，没有 index 之类的清单文件。
+静态站没法列目录，所以前端启动时自己探一遍（`src/utils/eventsSource.js` 的 `discoverYears()`）：
+
+1. 从「今年 + 1」向上探 1 年（新一年的文件可能已准备好）
+2. 从今年开始向下，**每批 24 年并行发 `HEAD` 请求**（无响应体，一次往返）
+3. 某一批的末尾连续两年都不存在 → 认为到底了，停止
+4. 结果缓存在模块作用域，一次会话只探一次
+
+> ⚠️ 探测会同时检查 `content-type`。很多托管（含 `vite preview`）对不存在的路径也返回
+> `200 + index.html`（SPA 兜底），只看状态码会把所有年份都误判为存在。
+
+实测：17 个年份文件 → 25 个 HEAD 请求（一批并发，约一次往返）。
+
+**新增一年的数据，不需要改任何配置**：放上 `2027.json`，刷新页面侧栏就有 2027。
+
+其余东西全部由读到的文件实时算出，也不存在需要重建的派生文件：
+
+| 界面上的 | 怎么来的 |
+|---|---|
+| 侧栏年份列表 | `discoverYears()` 的探测结果 |
+| 侧栏月份 | 该年文件加载完成后，从卡片日期算出（未加载则该年不展开月份） |
+| 分类 chips 计数 | 已加载年份的卡片 + `top.json` 实时统计（点「全部」后即全量） |
+| 打开某篇文章 | id 前 4 位就是年份（如 `2026-4-18-gplt` → `2026.json`），不需要 id→年份 映射表 |
+| 首页「最新动态」5 条 | 从最新年份往下读，凑够 5 条新闻就停（最多读 3 个年份文件） |
+
+
+### 大事记与竞赛数据的关系
+
+两者是**完全独立的两套数据**，刻意允许重复：
+
+| | 大事记 | 竞赛信息 / 获奖列表 |
+|---|---|---|
+| 数据 | `public/data/events/`（自给自足） | `public/data/competitions.json` + `awards/*.json` |
+| 入口 | `/all-action` → `/post/<id>` | `/contest` → `/competition/<slug>` |
+| 获奖内容 | 写死在文章 `blocks` 里（团队奖全列 + 省赛/国赛个人奖统计表） | 由结构化获奖记录实时渲染 |
+| 维护 | 编辑文章 JSON（赛事文章可由脚本重新生成） | 维护 `awards/*.json` |
+
+改一边不会影响另一边。大事记文章末尾的 `related` block 只是**一个链接**，指向 `/competition/<slug>` 竞赛介绍页，不产生数据依赖。
+
+**赛事卡片文章重新生成**（源数据在 `scripts/source/`，改完重跑即可）：
+
+```bash
+node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
+```
+
+它会为每张 `赛事卡片` 生成：摘要（赛事规模）→ 国赛/省赛 `heading` → 高校奖/团队奖 `awards` block → 个人奖 `table`（组别 / 奖项 / 人数 / 名单）→ `related` 链接。
+
+`category` 取值（侧栏分类 chips 与卡片配色共用）：
+
+| 值 | 含义 | | 值 | 含义 |
+|---|---|---|---|---|
+| `inv` | 邀请赛 | | `lanqiao` | 蓝桥杯 |
+| `reg` | 区域赛·全国赛 | | `chuanzhi` | 传智杯 |
+| `prov` | 省赛·区赛 | | `baidu` | 百度之星 |
+| `net` | 网络赛 | | `school` | 校赛 |
+| `tts` | 天梯赛 | | `club` | 社团活动 / `other` 其他 |
+
+**加载策略**（`useTimeline.js` / `useNews.js` / `eventsSource.js`）：
+
+| 时机 | 请求 |
+|---|---|
+| 首页 LATEST NEWS | `top.json` + 最新的 1~3 个年份文件（凑够 5 条新闻就停） |
+| 大事记首屏 | `top.json` + **最新的两个年份**（年份清单由启动时的探测得到） |
+| 点击侧栏某年 | 该年文件（首次，之后走内存缓存） |
+| 打开一篇文章 | id 前 4 位就是年份 → 该年文件；**若从时间轴点进去则该年已在内存，0 请求** |
+
+> 已加载的年份文件会被缓存（`eventsSource.js`），所以同一页面内点开文章不会再发请求。
+
+#### 4.4 单届页如何取数
+
+`/competition/<slug>/<year>` 的数据全部来自 `competitions.json` + `awards/*.json`（两次请求，无 events 文件）：
+
+1. 读 `comp.sessions[year]` 得到该届的 `session`（届数）
+2. 加载该赛事 `awards` 列出的文件
+3. 按 `session` 过滤，再按 `medal_level` 分成「国赛 / 省赛」两段
+4. 段内按有无 `team_name` 区分团队奖（卡片）与个人奖（蓝桥杯走分组名单，其余走表格）
+
+> **参赛历史表**：`mode` 决定渲染形态——
+> - `xcpc`：按场次分组的「日期 / 赛事 / 队名 / 成绩 / 参赛成员」表格（数据来自 `awards/icpc|ccpc.json`，**只含获奖记录**）
+> - `gplt`：「日期 / 届数 / 队名 / 国赛 / 省赛 / 参赛成员」六列表格，成员姓名按 `gplt-individual.json` 的个人奖以金/银/铜牌色标注
+> - `roster`：按届 → 国赛/省赛 → 分组 → 奖等 → 姓名的分组名单（蓝桥杯按语言×组别分组）
+>
+> 表格与卡片视图可切换（桌面默认表格、移动端默认卡片，选择记入 localStorage）。
+
+- 新增赛事时需要：① `competitions.json` 加条目（含 `shortName` / `mode` / `awards` / `sessions`）；② 按需新增 `awards/<file>.json`；③ 若该赛事要上大事记时间轴，再往 `events/<年>.json` 加卡片 + 一篇自己的文章（两者互不影响）
 
 ### 五、维护页面导航
 
@@ -460,22 +576,56 @@ npm run preview
 
 修改导航文字、顺序、页脚链接。也是 JSON 结构，修改后刷新即可。
 
-### 六、维护群成员头像墙
+---
 
-**数据：** `public/data/group_members.json` ｜ **图片：** `public/images/group_members/`
+## 🖼 头像墙（首页 hero 底纹）
 
-协会成员的头像墙：首页与协会成员页的背景层，协会成员页滚过正文后可直接悬停查看荣誉。
-**数据与图片都是生成物，不要手改** —— 由协会工作区的 `07_技术项目/qq-group-avatars/build_site_assets.py` 生成：
-输入 `群成员名单.csv`（QQ 群名单，唯一真源）+ 头像归档 `avatars.json` 与 `avatars/` + 站点现有的
-`public/data/members.json`、`leaders.json`，输出上面那份 JSON 与图片。改完名单重跑它即可，**页面代码不用动**。
+组件：`src/components/HeroAvatarWall.vue` ｜ 数据：`public/data/hero_wall*.json` ｜
+图片：`public/images/excellent_member/` ｜ 缩略图：`public/images/hero_wall_thumbs/{384,256}/`
 
-- 名单 = QQ 群 110 人 + 优秀成员 33 人 + 历届负责人 6 人，按**真名**去重后 **138 人**（陈煜仕 / 陶金杰 / 衷铭川既在群里又是负责人 → 合并成一格，不重复占位）。
-- 图片：`thumbs/<QQ号>.webp`（160×160 缩略图，墙上的瓷砖）+ `full/<QQ号>.jpg`（640 原图，悬停放大时才加载）；优秀成员与负责人**不重复存照片**，只按 `ex-` / `ld-` 前缀生成缩略图，原图直接引用站点已有的 `/images/excellent_member/`、`/images/leader/`。群主那张是全透明图（`blank.png`），墙上显示为空白白砖。
-- **显示真名还是群昵称**，由协会工作区的 `07_技术项目/qq-group-avatars/群成员真名对照表.csv` 的「真实姓名」列决定；**没有真名的人不显示任何荣誉**（宁可什么都不写，也不写“暂无获奖记录”）。同表的「显示名」列（生成物里的 `displayName` 字段）专给**不愿透露姓名的成员**用：填了就只显示它，真名照常留着匹配荣誉与排序。
-- 荣誉三个来源合一张表：`honorPills.js` 自动汇总 + `members.json` 的 `honors` + `leaders.json` 的 `achievements`，同一人重复的按文本去重；配色**复用** `styles/honors.css` + `utils/honorType.js`，与两个成员页逐条同色。墙上只有负责人多一行职务（取 `leaders.json` 的 `session`，如「2026届会长」）。
-- 组件 `src/components/AvatarMosaic.vue`，两个页面各传一套 props：
-  首页 `<AvatarMosaic :opacity="0.16" :tile="136" />`（纯底纹，不响应鼠标）；协会成员页 `<AvatarMosaic :opacity="0.9" :top-fade="24" interactive :hires="lifted" />`（`interactive` 才挂悬停卡与荣誉；`hires` 跟着正文抬升走 —— 遮罩没了才把缩略图换成 640 原图）。
-- 瓷砖实际尺寸由组件按视口算（`tile` 只是目标值），运动是「一张环面 + 两条锯齿」，方向每次加载随机 —— 改运动模型或几何之前，先读组件头部那段注释。
+首页 hero 铺一层成员头像，**两种状态共用同一套几何**（同样的瓷砖、同样的环面），切换只是一次纯淡入淡出，
+不重排、不重启动画：
+
+| | 底纹态（默认） | 激活态（点「成员墙」按钮） |
+|---|---|---|
+| 不透明度 | `0.18`（`dimOpacity`） | `1` |
+| 速度 | `11 px/s`（`speedBackdrop`） | `22 px/s`（`speed`） |
+| 悬停 | 该格亮起并模糊成一团软斑 | 弹出姓名 / 班级 / 奖项卡片 |
+| 点击 | 无响应 | 触屏弹居中卡 |
+| 其他 | 文案与轮播正常 | 文案与轮播淡出、顶栏加白纱+阴影 |
+
+### 运动模型：一张环面 + 两条锯齿
+
+把整面墙铺成一张**环面** —— 第 `(r, c)` 格取 `list[((r % Py) * Px + (c % Px)) % n]`
+（横向周期 `Px` 列、纵向周期 `Py` 行）。环面的周期是轴对齐的，所以要让两个轴**各自**走满一个周期
+（`0 → ±Px·step`、`0 → ±Py·step`，时长各 = 自己的周期 ÷ 自己轴上的速度）：
+任一轴走到头时画面正好平移了自己一整个周期，**逐像素与起点相同**，那次跳回看不见；
+两个轴各跳各的，合起来就是一条**任意角度的匀速直线**。
+
+- ⚠️ 两条动画必须落在**两个不同的元素**上（这里是两层嵌套 wrapper），否则同元素上的两条
+  `transform` 动画会互相覆盖。刻意**不用 `translate` 这个独立变换属性** —— 它 iOS 14.1 以下
+  不支持，一旦不支持横向那条整条失效。
+- ⚠️ 前提是**瓷砖边界本身不可见**（gap 0、无边框、无圆角）。给瓷砖加圆角或间隙，这套立刻就露馅。
+- 周期取值：装得下所有图（`Px × Py ≥ n`）**且**不小于视口（视口里看不到重复图案），
+  在此前提下取网格总格数最小的一组。tile 只给目标值，实际尺寸由组件按容器盒子扫描决定。
+- **图不够会重复**：`n` 张图铺 `m` 格就重复 `⌈m/n⌉` 次。往图片目录加图不用改代码 ——
+  `n` 变大 → 周期变大 → 重复自然减少。
+
+### 响应式与兼容
+
+- 几何量的是**组件自己的盒子**（= hero 的盒子）而不是视口 → 手机地址栏收放、横竖屏切换、
+  `min-height: auto` 全都自动跟随；`100vh` 而非 `dvh`，避免地址栏变化导致几何反复重算。
+- 瓷砖尺寸由 CSS 变量 `--wall-tile` + 媒体查询分档（188 / 148 / 132 / 96 px），组件读它再扫描，
+  断点因此留在 CSS 里。
+- 交互按能力检测分两套：`(hover: hover) and (pointer: fine)` → 悬停卡；否则 → 点击弹居中卡。
+- 瓷砖必须 `touch-action: pan-y`，否则墙会吃掉触摸事件、手机上在 hero 区域滑不动页面。
+- 悬停穿透：`.hero-inner` 设 `pointer-events: none`，只给圆点和按钮放行；
+  激活态改用 `visibility: hidden`（保留布局占位、同时退出命中测试与绘制）。
+
+### 增删图片
+
+见 [`knowledge.md` 第 6.1 节](./knowledge.md) —— 一句话版本：**图片丢进
+`public/images/excellent_member/`，然后 `npm run data:hero-thumbs`**（清单会在 dev/build 时自动重扫）。
 
 ---
 
@@ -487,46 +637,44 @@ npm run preview
 
 本项目不使用任何 UI 框架，所有样式均为手写 CSS，修改自由度极高。
 
-### 两个页面的卡片排布（**不一样，别互相照搬**）
-
-| 页面 | 排布 | 说明 |
-|------|------|------|
-| 优秀成员页 `/excellent` | **瀑布流** | 33 张卡、4 列，高度差异大 —— 逐张放进当前最短的列（保持源顺序），不浪费竖向空间 |
-| 协会负责人页 `/leader` | **等高行** | 6 张卡、2 列 —— 同一行的两张卡上下边对齐，矮卡被拉到本行最高那张的高度 |
-
-**优秀成员页**用瀑布流，算法在 `src/composables/useMasonry.js`，页面里只有一句
-`const { containerRef } = useMasonry()`。改了卡片内容长短（多一条荣誉、换句寄语）不需要动任何布局代码
-——卡片高度一变会自动重排。要调列数 / 间距，改 `ExcellentView.vue` 的 `<style scoped>` 里 `.grid` 上的两个变量：
-
-```css
-.grid {
-  --masonry-columns: 4;           /* 列数，媒体查询里逐档改成 3 / 2 / 1 */
-  --masonry-gap: var(--space-lg); /* 卡片间距 */
-}
-```
-
-列数与断点必须写在这两个变量里（而不是 `grid-template-columns`）——JS 只读变量、负责算位置和容器高度；
-`grid-template-columns` 那套留着只是 JS 接管前的兜底。改完记得跑一次 `npm run build` 看效果。
-
-**协会负责人页刻意不用瀑布流**（会长 2026-09-22：「每行卡片还是要等高的」）：就是纯 CSS grid 的
-`align-items: stretch`，没有 JS 参与。矮卡多出来的空白留在**卡片底部**，荣誉胶囊仍紧跟寄语、不贴底。
-想在这一页也改用瀑布流：给 `.leader-grid` 加回 `--masonry-columns` / `--masonry-gap` 两个变量，
-在页面里引 `const { containerRef } = useMasonry()`，并把 `ref="containerRef"` 挂到 `.leader-grid` 上。
-
 ---
 
 ## 📄 路由一览
 
 | 路径 | 页面 | 数据源 |
 |------|------|--------|
-| `/` | 首页 | `actions.json`（最近 5 条） |
-| `/all-action` | 大事记 | `actions.json`（全部，按年分组） |
-| `/action/:slug` | 大事记详情 | `actions.json` |
-| `/contest` | 竞赛信息 | `competitions.json` |
-| `/competition/:slug` | 竞赛详情 | `competitions.json` |
+| `/` | 首页 | `events/top.json` + 最新 1~3 个年份文件，直接拼 `/post/<id>`；hero 底纹另有 `hero_wall.manifest.json` + `hero_wall.json` |
+| `/all-action` | 大事记 | `events/`（置顶 + 年份文件按需懒加载，年份靠 HEAD 探测，**无索引文件**） |
+| `/post/:id` | 大事记文章（新闻 / 战报 / 赛事，共用一页） | `events/<年>.json` 的 `articles`（**靠 id 前 4 位定位年份文件**） |
+| `/contest` | 竞赛信息 | `competitions.json`（元信息） |
+| `/competition/:slug` | 竞赛详情 | `competitions.json` + `awards/*.json` |
+| `/competition/:slug/:year` | 单届获奖详情 | `competitions.json`（sessions）+ `awards/*.json` |
 | `/leader` | 协会负责人 | `leaders.json` |
 | `/excellent` | 优秀成员 | `members.json` |
 | `/links` | 友链 | `links.json` |
+| `*` | 404 | — |
+
+---
+
+## ✅ 数据校验
+
+```bash
+npm run data:check         # 全量校验（awards + competitions + events + top）
+npm run data:gen           # 由 scripts/source/ 重新生成「赛事卡片」的大事记文章（幂等）
+npm run data:hero-wall     # 重扫头像墙图片目录，刷新清单并补文案骨架（幂等，dev/build 会自动跑）
+npm run data:hero-thumbs   # 生成头像墙缩略图（384/256 两档；增量，本机 Windows 专用）
+```
+
+`check_awards.mjs` 校验内容：
+
+- `awards/*.json`：字段名与顺序、枚举取值、类型、日期格式与升序排列
+- `competitions.json`：`awards` 引用、`shortName`、`sessions` 合法性
+- `events/<年>.json` 的 `cards`：字段与顺序、`kind` / `category` 取值、`link` 必须是纯 id（不含 `/`）、日期倒序
+- `events/<年>.json` 的 `articles`：文章字段与顺序、`blocks` 非空、日期年份与所在文件一致、`related` block 指向的赛事必须存在、**id 必须以所在年份开头**（前端靠它定位文件）
+- `events/top.json`：节点格式，且置顶条目不得在年份文件里重复出现
+- **每一张卡片的 `link` 必须在 `articles` 里存在对应文章**，`date` 与卡片一致（`kind: news` 还要求 `title` 一致）；无卡片入口的文章允许存在，报告里会列出数量
+
+存在问题时以退出码 1 结束，可挂在提交前或 CI 上。
 
 ---
 

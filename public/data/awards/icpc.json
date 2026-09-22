@@ -1,0 +1,418 @@
+[
+  {
+    "competition_name": "ICPC亚洲区域赛 南京站",
+    "medal_level": "regional",
+    "team_name": "地球往事",
+    "medal_type": "bronze",
+    "members": [
+      "刘力溯",
+      "王安",
+      "黄友民"
+    ],
+    "coach_names": [],
+    "date": "2020-12-20"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 南京站",
+    "medal_level": "regional",
+    "team_name": "均衡存乎万物之间",
+    "medal_type": "bronze",
+    "members": [
+      "倪超骏",
+      "李梦豪",
+      "罗文浩"
+    ],
+    "coach_names": [],
+    "date": "2021-12-04"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 南京站",
+    "medal_level": "regional",
+    "team_name": "逐梦",
+    "medal_type": "bronze",
+    "members": [
+      "何洋",
+      "王玛琪",
+      "石翰林"
+    ],
+    "coach_names": [],
+    "date": "2022-12-18"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 西安站",
+    "medal_level": "regional",
+    "team_name": "三只小猪",
+    "medal_type": "bronze",
+    "members": [
+      "何洋",
+      "王玛琪",
+      "石翰林"
+    ],
+    "coach_names": [],
+    "date": "2023-10-22"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 济南站",
+    "medal_level": "regional",
+    "team_name": "从第一个WA开始",
+    "medal_type": "silver",
+    "members": [
+      "廖凌翔",
+      "王海峰",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2023-12-03"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（武汉）",
+    "medal_level": "invitational",
+    "team_name": "三只小猪",
+    "medal_type": "bronze",
+    "members": [
+      "王海峰",
+      "王玛琪",
+      "石翰林"
+    ],
+    "coach_names": [],
+    "date": "2024-05-02"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（西安）",
+    "medal_level": "invitational",
+    "team_name": "志在必得！",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "林俊坤",
+      "王海峰"
+    ],
+    "coach_names": [],
+    "date": "2024-05-19"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（昆明）",
+    "medal_level": "invitational",
+    "team_name": "彩虹海",
+    "medal_type": "bronze",
+    "members": [
+      "喻琰",
+      "肖丛宇",
+      "郭宇航"
+    ],
+    "coach_names": [],
+    "date": "2024-05-26"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（昆明）",
+    "medal_level": "invitational",
+    "team_name": "志在必得!",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "林俊坤",
+      "王海峰"
+    ],
+    "coach_names": [],
+    "date": "2024-05-26"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 杭州站",
+    "medal_level": "regional",
+    "team_name": "她还爱我对不队",
+    "medal_type": "bronze",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2024-11-10"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 上海站",
+    "medal_level": "regional",
+    "team_name": "我队友自带三金",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "王海峰"
+    ],
+    "coach_names": [],
+    "date": "2024-11-17"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 昆明站",
+    "medal_level": "regional",
+    "team_name": "她还爱我对不队",
+    "medal_type": "bronze",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2024-12-01"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 昆明站",
+    "medal_level": "regional",
+    "team_name": "彩虹海",
+    "medal_type": "bronze",
+    "members": [
+      "喻琰",
+      "张瑞杰",
+      "肖丛宇"
+    ],
+    "coach_names": [],
+    "date": "2024-12-01"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（西安）",
+    "medal_level": "invitational",
+    "team_name": "拿牌掰弯xzy",
+    "medal_type": "gold",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2025-05-04"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "ACM败犬太多了",
+    "medal_type": "bronze",
+    "members": [
+      "张瑞杰",
+      "杨源鑫",
+      "罗潇彬"
+    ],
+    "coach_names": [],
+    "date": "2025-05-18"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "廉颇老矣",
+    "medal_type": "silver",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2025-05-18"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "彩虹海",
+    "medal_type": "bronze",
+    "members": [
+      "周政",
+      "喻琰",
+      "肖丛宇"
+    ],
+    "coach_names": [],
+    "date": "2025-05-18"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "注意力涣散",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2025-05-18"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 西安站",
+    "medal_level": "regional",
+    "team_name": "关注哔站复活小聪明谢谢喵",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2025-10-19"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 成都站",
+    "medal_level": "regional",
+    "team_name": "魂殿十天尊——瑞杰",
+    "medal_type": "bronze",
+    "members": [
+      "张瑞杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2025-10-26"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 武汉站",
+    "medal_level": "regional",
+    "team_name": "别开香槟开早了",
+    "medal_type": "bronze",
+    "members": [
+      "周政",
+      "孙天成",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2025-11-02"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 沈阳站",
+    "medal_level": "regional",
+    "team_name": "我从丹东来,抽中真嗨77",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "肖俊杰",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2025-11-16"
+  },
+  {
+    "competition_name": "ICPC亚洲区域赛 香港站",
+    "medal_level": "regional",
+    "team_name": "Fondness? Delusion!",
+    "medal_type": "bronze",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2025-11-30"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（深圳）",
+    "medal_level": "invitational",
+    "team_name": "天空之矛",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2026-04-11"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（西安）",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "silver",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-05-02"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（西安）",
+    "medal_level": "invitational",
+    "team_name": "服务器未响应",
+    "medal_type": "bronze",
+    "members": [
+      "杨镇宁",
+      "陈帆",
+      "陈煜仕"
+    ],
+    "coach_names": [],
+    "date": "2026-05-02"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "~到了赛场上就要拿出真本事~",
+    "medal_type": "silver",
+    "members": [
+      "喻芷珊",
+      "曹京顺",
+      "王翔"
+    ],
+    "coach_names": [],
+    "date": "2026-05-17"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "天空之矛",
+    "medal_type": "silver",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2026-05-17"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（武汉）暨湖北省赛",
+    "medal_level": "invitational",
+    "team_name": "别开香槟开早了",
+    "medal_type": "bronze",
+    "members": [
+      "孙天成",
+      "杨源鑫",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2026-05-17"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（沈阳）",
+    "medal_level": "invitational",
+    "team_name": "三人驭六丸",
+    "medal_type": "silver",
+    "members": [
+      "周君",
+      "彭俊杰",
+      "詹宇飞"
+    ],
+    "coach_names": [],
+    "date": "2026-07-29"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（沈阳）",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "bronze",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-07-29"
+  },
+  {
+    "competition_name": "ICPC全国邀请赛（沈阳）",
+    "medal_level": "invitational",
+    "team_name": "服务器未响应",
+    "medal_type": "silver",
+    "members": [
+      "杨镇宁",
+      "陈帆",
+      "陈煜仕"
+    ],
+    "coach_names": [],
+    "date": "2026-07-29"
+  }
+]

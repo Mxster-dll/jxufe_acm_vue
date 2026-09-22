@@ -1,0 +1,132 @@
+{
+  "cards": [
+    {
+      "kind": "event",
+      "date": "2010-08-19",
+      "category": "lanqiao",
+      "title": "第一届蓝桥杯国赛",
+      "tagline": "首都首秀，代码一路向北",
+      "link": "2010-8-19-lanqiao-national"
+    },
+    {
+      "kind": "event",
+      "date": "2010-05",
+      "category": "lanqiao",
+      "title": "第一届蓝桥杯省赛",
+      "tagline": "初代蓝桥，酱菜初试牛刀",
+      "link": "2010-5-lanqiao-provincial"
+    }
+  ],
+  "articles": {
+    "2010-8-19-lanqiao-national": {
+      "title": "第一届蓝桥杯国赛",
+      "date": "2010-08-19",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 11 人次获奖、国赛 5 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "国赛获奖情况",
+          "icon": "fa-trophy"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "C++ · 本科",
+              "三等奖",
+              "2 人",
+              "陈启明、饶娟"
+            ],
+            [
+              "个人赛",
+              "三等奖",
+              "2 人",
+              "陈启明、饶娟"
+            ],
+            [
+              "个人赛",
+              "优秀奖",
+              "1 人",
+              "徐晓枫"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    },
+    "2010-5-lanqiao-provincial": {
+      "title": "第一届蓝桥杯省赛",
+      "date": "2010-05",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 11 人次获奖、国赛 5 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "C++ · 本科",
+              "一等奖",
+              "1 人",
+              "徐晓枫"
+            ],
+            [
+              "C++ · 本科",
+              "二等奖",
+              "2 人",
+              "陈启明、饶娟"
+            ],
+            [
+              "C++ · 本科",
+              "三等奖",
+              "5 人",
+              "万小妹、万齐智、张帅、江恒、赵奕伟"
+            ],
+            [
+              "C++ · 本科",
+              "优秀奖",
+              "3 人",
+              "付志辉、张名云、汪国彬"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    }
+  }
+}

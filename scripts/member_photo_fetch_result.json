@@ -1,0 +1,211 @@
+{
+  "appliedAt": "2026-09-22T12:09:38.021Z",
+  "apply": true,
+  "results": [
+    {
+      "sno": "0233614",
+      "name": "罗潇彬",
+      "url": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81ec.jpg",
+      "ok": true,
+      "bytes": 169199,
+      "w": 640,
+      "h": 640,
+      "srcBytes": 60650
+    },
+    {
+      "sno": "0233750",
+      "name": "杨源鑫",
+      "url": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81eb.jpg",
+      "ok": false,
+      "error": "refuse to overwrite non-placeholder 0233750.png"
+    },
+    {
+      "sno": "0243936",
+      "name": "钟俊",
+      "url": "https://pic1.imgdb.cn/item/68d37166c5157e1a882c81f0.jpg",
+      "ok": true,
+      "bytes": 378901,
+      "w": 960,
+      "h": 960,
+      "srcBytes": 192897
+    },
+    {
+      "sno": "0224568",
+      "name": "徐昊天",
+      "url": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f2.jpg",
+      "ok": true,
+      "bytes": 412739,
+      "w": 1080,
+      "h": 1080,
+      "srcBytes": 119473
+    },
+    {
+      "sno": "0224571",
+      "name": "牛志义",
+      "url": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f3.jpg",
+      "ok": true,
+      "bytes": 427860,
+      "w": 1080,
+      "h": 1080,
+      "srcBytes": 158107
+    },
+    {
+      "sno": "0240890",
+      "name": "王柯迪",
+      "url": "https://pic1.imgdb.cn/item/68d3716dc5157e1a882c81f5.jpg",
+      "ok": true,
+      "bytes": 146119,
+      "w": 640,
+      "h": 640,
+      "srcBytes": 27257
+    },
+    {
+      "sno": "0224585",
+      "name": "娄子豪",
+      "url": "https://pic1.imgdb.cn/item/68d39a07c5157e1a882c97a7.jpg",
+      "ok": true,
+      "bytes": 103619,
+      "w": 400,
+      "h": 400,
+      "srcBytes": 37712
+    },
+    {
+      "sno": "0233430",
+      "name": "张瑞杰",
+      "url": "https://pic1.imgdb.cn/item/68d3c017c5157e1a882cca2a.jpg",
+      "ok": false,
+      "error": "refuse to overwrite non-placeholder 0233430.png"
+    },
+    {
+      "sno": "0235011",
+      "name": "张云菲",
+      "url": "https://pic1.imgdb.cn/item/68d3cc7ec5157e1a882cd25a.jpg",
+      "ok": false,
+      "error": "refuse to overwrite non-placeholder 0235011.png"
+    },
+    {
+      "sno": "0235108",
+      "name": "万俊哲",
+      "url": "https://pic1.imgdb.cn/item/68d3cf53c5157e1a882cd399.jpg",
+      "ok": false,
+      "error": "refuse to overwrite non-placeholder 0235108.png"
+    },
+    {
+      "sno": "0240751",
+      "name": "杨镇宁",
+      "url": "https://pic1.imgdb.cn/item/68d3c14ec5157e1a882ccb51.jpg",
+      "ok": true,
+      "bytes": 222068,
+      "w": 600,
+      "h": 600,
+      "srcBytes": 96840
+    }
+  ],
+  "originalRemoteUrls": {
+    "note": "members.json 原本指向的远程图片。两个 .bak 快照已删除，此处保留原始 URL 以便需要时恢复。",
+    "imgdbHostEntries": [
+      {
+        "name": "罗潇彬",
+        "sno": "0233614",
+        "url": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81ec.jpg"
+      },
+      {
+        "name": "杨源鑫",
+        "sno": "0233750",
+        "url": "https://pic1.imgdb.cn/item/68d37164c5157e1a882c81eb.jpg"
+      },
+      {
+        "name": "钟俊",
+        "sno": "0243936",
+        "url": "https://pic1.imgdb.cn/item/68d37166c5157e1a882c81f0.jpg"
+      },
+      {
+        "name": "徐昊天",
+        "sno": "0224568",
+        "url": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f2.jpg"
+      },
+      {
+        "name": "牛志义",
+        "sno": "0224571",
+        "url": "https://pic1.imgdb.cn/item/68d37168c5157e1a882c81f3.jpg"
+      },
+      {
+        "name": "王柯迪",
+        "sno": "0240890",
+        "url": "https://pic1.imgdb.cn/item/68d3716dc5157e1a882c81f5.jpg"
+      },
+      {
+        "name": "娄子豪",
+        "sno": "0224585",
+        "url": "https://pic1.imgdb.cn/item/68d39a07c5157e1a882c97a7.jpg"
+      },
+      {
+        "name": "张瑞杰",
+        "sno": "0233430",
+        "url": "https://pic1.imgdb.cn/item/68d3c017c5157e1a882cca2a.jpg"
+      },
+      {
+        "name": "张云菲",
+        "sno": "0235011",
+        "url": "https://pic1.imgdb.cn/item/68d3cc7ec5157e1a882cd25a.jpg"
+      },
+      {
+        "name": "万俊哲",
+        "sno": "0235108",
+        "url": "https://pic1.imgdb.cn/item/68d3cf53c5157e1a882cd399.jpg"
+      },
+      {
+        "name": "杨镇宁",
+        "sno": "0240751",
+        "url": "https://pic1.imgdb.cn/item/68d3c14ec5157e1a882ccb51.jpg"
+      },
+      {
+        "name": "吴松烨",
+        "sno": "0224766",
+        "url": "https://ts1.tc.mm.bing.net/th/id/R-C.ce1c05fb570b19d02beb66c997d739bd?rik=O9Hk29CWyOy%2fLQ&pid=ImgRaw&r=0"
+      }
+    ],
+    "stillRemoteWhenBackupsDeleted": [
+      {
+        "name": "王广辉",
+        "file": "wgh.png",
+        "url": "https://ts1.tc.mm.bing.net/th/id/OIP-C.RSHE5V-WJ2Fw_O_cPjI4ZAHaHW?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "张锦宇",
+        "file": "zjy.png",
+        "url": "https://pic.616pic.com/ys_bnew_img/00/28/14/ODkC7vJxvS.jpg"
+      },
+      {
+        "name": "吴清辉",
+        "file": "wqh.png",
+        "url": "https://ts1.tc.mm.bing.net/th/id/OIP-C.1BRc8hrqt6dTtafNAwfCRgAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "赵锐奇",
+        "file": "zrq.png",
+        "url": "https://ts4.tc.mm.bing.net/th/id/OIP-C.2N_GvIVSBYaZR5u66XghVQHaHx?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "张艺环",
+        "file": "zyh.png",
+        "url": "https://ts1.tc.mm.bing.net/th/id/OIP-C.EXE2tC7ljanFI0wPhdNK_QAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "张昊林",
+        "file": "zhl.png",
+        "url": "https://ts1.tc.mm.bing.net/th/id/OIP-C.VASQMDKdxvZaaR_TckmCEAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "李梦豪",
+        "file": "lmh.png",
+        "url": "https://ts4.tc.mm.bing.net/th/id/OIP-C.oZckHv1nEM3Tl1NoQ2wBEQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+      },
+      {
+        "name": "罗文浩",
+        "file": "lwh.png",
+        "url": "https://pic3.zhimg.com/v2-87f8cd66da6a4a0d9eaf54fd10d61a8e_r.jpg"
+      }
+    ]
+  }
+}

@@ -1,27 +1,57 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { lanqiaoGroup } from '../utils/lanqiaoGroup'
+import { useJson } from '../composables/useJson'
 import RosterGroup from '../components/lanqiao/RosterGroup.vue'
+import {
+  MEDAL_TEXT,
+  RANK_TEXT,
+  medalClass,
+  fmtCnDate,
+  editionLabel,
+  subjectGroups
+} from '../utils/awardGroups.js'
 
 const route = useRoute()
-const edition = ref(null)
+const { data: competitions } = useJson('/data/competitions.json', { initial: [] })
+
+const comp = computed(() => (competitions.value || []).find((c) => c.slug === route.params.slug))
+
+// 该届获奖记录
+// 路由参数是自然年 <year>，而 awards 以 session（届数）标识届次；
+// 年份 → 届数 的对照表就在 competitions.json 的 sessions 字段里（无需额外请求）。
 const loading = ref(true)
 const error = ref(false)
+const records = ref([])
 
-// 加载该届比赛数据：/data/editions/<slug>/<year>.json
+const session = computed(() => {
+  const c = comp.value
+  const year = route.params.year
+  if (!c || !year) return null
+  return c.sessions?.[String(year)] ?? null
+})
+
 watch(
-  () => [route.params.slug, route.params.year],
-  async ([slug, year]) => {
-    if (!slug || !year) return
+  [comp, () => route.params.year],
+  async ([c, year]) => {
     loading.value = true
     error.value = false
+    records.value = []
+    if (!c || !year) {
+      loading.value = false
+      return
+    }
     try {
-      const res = await fetch(`/data/editions/${slug}/${year}.json`)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      edition.value = await res.json()
+      const lists = await Promise.all(
+        (c.awards || []).map((f) =>
+          fetch(`/data/awards/${f}.json`)
+            .then((r) => (r.ok ? r.json() : []))
+            .catch(() => [])
+        )
+      )
+      records.value = lists.flat()
     } catch (e) {
-      console.error(`加载 /data/editions/${slug}/${year}.json 失败:`, e)
+      console.error(`加载 /competition/${c.slug}/${year} 失败:`, e)
       error.value = true
     } finally {
       loading.value = false
@@ -30,67 +60,76 @@ watch(
   { immediate: true }
 )
 
-// 比赛日期格式化：'2025-06-15' → '2025年6月15日'；'2010-05' → '2010年5月'；空 → ''
-function fmtLqDate(d) {
-  if (!d) return ''
-  const m = String(d).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/)
-  if (!m) return d
-  return m[3] ? `${m[1]}年${+m[2]}月${+m[3]}日` : `${m[1]}年${+m[2]}月`
-}
+const rows = computed(() =>
+  session.value == null ? [] : records.value.filter((r) => r.session === session.value)
+)
 
-// 举办日期（未知时回退显示“日期待考”；蓝桥杯省赛/国赛各一场、日期分列）
+const isGplt = computed(() => comp.value?.slug === 'gplt')
+const isLanqiao = computed(() => comp.value?.slug === 'lanqiao')
+
+// 天梯赛团队奖的数据源只收录国赛，没有 medal_level 字段；其余赛事按 medal_level 分国赛/省赛
+const nationalRows = computed(() =>
+  isGplt.value ? rows.value : rows.value.filter((r) => r.medal_level === 'national')
+)
+const provincialRows = computed(() =>
+  isGplt.value ? [] : rows.value.filter((r) => r.medal_level === 'provincial')
+)
+
+const teamsOf = (list) => list.filter((r) => r.team_name)
+const personalOf = (list) => list.filter((r) => !r.team_name && r.members && r.members.length)
+
+const nationalTeams = computed(() => teamsOf(nationalRows.value))
+const provincialTeams = computed(() => teamsOf(provincialRows.value))
+const nationalPersonal = computed(() => personalOf(nationalRows.value))
+const provincialPersonal = computed(() => personalOf(provincialRows.value))
+const hasNational = computed(() => nationalRows.value.length > 0)
+const hasProvincial = computed(() => provincialRows.value.length > 0)
+const noAward = computed(() => !!comp.value && !hasNational.value && !hasProvincial.value)
+
+/** 届次标题：第十一届团体程序设计天梯赛 / 第十七届蓝桥杯 / 第二十二届百度之星 */
+const pageTitle = computed(() => {
+  const c = comp.value
+  if (!c) return ''
+  const short = c.shortName || c.name
+  const label = editionLabel(session.value)
+  return label ? `${label}${short}` : short
+})
+
+const firstDate = (list) => list.map((r) => r.date).filter(Boolean).sort()[0] || null
+
+/** 举办日期：蓝桥杯省赛 / 总决赛分列，其余赛事取该届日期 */
 const dateText = computed(() => {
-  if (!edition.value) return '日期待考'
-  if (edition.value.slug === 'lanqiao' && edition.value.dates) {
-    const p = fmtLqDate(edition.value.dates.provincial)
-    const n = fmtLqDate(edition.value.dates.national)
+  if (isLanqiao.value) {
     const parts = []
+    const p = fmtCnDate(firstDate(provincialRows.value))
+    const n = fmtCnDate(firstDate(nationalRows.value))
     if (p) parts.push('省赛 ' + p)
     if (n) parts.push('总决赛 ' + n)
-    if (parts.length) return parts.join(' · ')
-    return '日期待考'
+    return parts.join(' · ') || '日期待考'
   }
-  if (!edition.value.date) return '日期待考'
-  return new Date(edition.value.date).toLocaleDateString('zh-CN')
+  const d = firstDate(rows.value)
+  return d ? new Date(d).toLocaleDateString('zh-CN') : '日期待考'
 })
 
-// 隐藏优秀奖：蓝桥杯单届名单不展示优秀奖（数据源保留，仅展示层过滤）
-function hideExcellent(rows) {
-  return (rows || []).filter((r) => !/优秀奖/.test(r.award || ''))
-}
-const nationalPersonal = computed(() => hideExcellent(edition.value?.national?.personal))
-const provincialPersonal = computed(() => hideExcellent(edition.value?.provincial?.personal))
-
-const hasNational = computed(() => {
-  const n = edition.value?.national
-  return !!n && (n.university?.length || n.teams?.length || nationalPersonal.value.length)
-})
-const hasProvincial = computed(() => {
-  const p = edition.value?.provincial
-  return !!p && (p.university?.length || p.teams?.length || provincialPersonal.value.length)
-})
-const noAward = computed(
-  () => !!edition.value && !hasNational.value && !hasProvincial.value
-)
-
-// 奖项等级 → 配色（与参赛历史表格的奖牌色一致；优秀奖为浅金灰）
-function awardClass(award) {
-  if (!award) return ''
-  if (/一等奖|金奖|冠军/.test(award)) return 'award-gold'
-  if (/二等奖|银奖|亚军/.test(award)) return 'award-silver'
-  if (/三等奖|铜奖|季军/.test(award)) return 'award-bronze'
-  if (/优秀奖/.test(award)) return 'award-excellent'
-  return ''
+/** 团队奖文案：天梯赛国赛沿用「全国团队X等奖」措辞 */
+function teamAwardText(t) {
+  const rank = RANK_TEXT[t.medal_type] || MEDAL_TEXT[t.medal_type] || ''
+  return isGplt.value ? `全国团队${rank}` : rank
 }
 
-// ── 蓝桥杯（个人赛）：按 C/C++·Java·Python × A/B 级 × 奖等 分组名单 ──
-const isLanqiao = computed(() => edition.value?.slug === 'lanqiao')
-const nationalGroups = computed(() =>
-  isLanqiao.value ? lanqiaoGroup(nationalPersonal.value) : []
-)
-const provincialGroups = computed(() =>
-  isLanqiao.value ? lanqiaoGroup(provincialPersonal.value) : []
-)
+/** 个人奖文案：天梯赛沿用「个人X等奖」措辞 */
+function personalAwardText(p) {
+  const rank = RANK_TEXT[p.medal_type] || MEDAL_TEXT[p.medal_type] || ''
+  return isGplt.value ? `个人${rank}` : rank
+}
+
+/** 蓝桥杯个人奖按 语言 × 组别 分组 */
+const personalGroups = (list) => subjectGroups(list, RANK_TEXT)
+
+/** 奖牌色样式（复用 old 的 award-gold / award-silver / award-bronze） */
+function awardClass(medal) {
+  return medalClass(medal).replace('medal-', 'award-')
+}
 </script>
 
 <template>
@@ -107,27 +146,18 @@ const provincialGroups = computed(() =>
         <div v-for="n in 6" :key="n" class="skeleton" style="height:80px;border-radius:var(--radius-md);margin-bottom:var(--space-md);"></div>
       </div>
       <p v-else-if="error" class="hint">加载失败</p>
-      <p v-else-if="!edition" class="hint">未找到该届比赛</p>
+      <p v-else-if="!comp || session == null" class="hint">未找到该届比赛</p>
 
       <template v-else>
         <!-- 标题区 -->
         <header class="event-hero">
           <p class="event-label">COMPETITION EVENT</p>
-          <h1>{{ edition.title }}</h1>
+          <h1>{{ pageTitle }}</h1>
           <div class="header-divider"></div>
           <p class="event-subtitle">
             <i class="fa-regular fa-calendar"></i> 举办日期：{{ dateText }}
           </p>
         </header>
-
-        <!-- 参赛规模 -->
-        <section class="scale-card">
-          <div class="scale-icon"><i class="fa-solid fa-users"></i></div>
-          <div class="scale-text">
-            <h3>参赛规模</h3>
-            <p>{{ edition.scale }}</p>
-          </div>
-        </section>
 
         <!-- 无获奖记录 -->
         <section v-if="noAward" class="no-award">
@@ -138,31 +168,24 @@ const provincialGroups = computed(() =>
         <template v-else>
           <!-- 国赛获奖情况 -->
           <section class="award-section" :class="isLanqiao ? 'lq-award-card lq-national' : ''">
-            <h2 class="section-label"><i class="fa-solid fa-trophy"></i> 国赛获奖情况<span v-if="isLanqiao && edition.dates?.national" class="lq-stage-date">{{ fmtLqDate(edition.dates.national) }}</span></h2>
+            <h2 class="section-label"><i class="fa-solid fa-trophy"></i> 国赛获奖情况<span v-if="isLanqiao && firstDate(nationalRows)" class="lq-stage-date">{{ fmtCnDate(firstDate(nationalRows)) }}</span></h2>
 
             <p v-if="!hasNational" class="empty">本届无获奖记录</p>
             <template v-else>
-              <!-- 高校奖 -->
-              <div v-if="edition.national.university?.length" class="uni-row">
-                <span class="uni-chip" v-for="(u, i) in edition.national.university" :key="i">
-                  <i class="fa-solid fa-school"></i> {{ u }}
-                </span>
-              </div>
-
               <!-- 团队奖 -->
-              <div v-if="edition.national.teams?.length" class="team-grid">
-                <div v-for="(t, i) in edition.national.teams" :key="i" class="team-card">
-                  <span class="award-badge" :class="awardClass(t.award)">{{ t.award }}</span>
-                  <h4>{{ t.name }}</h4>
-                  <p class="team-members"><span class="label">成员</span>{{ t.members }}</p>
+              <div v-if="nationalTeams.length" class="team-grid">
+                <div v-for="(t, i) in nationalTeams" :key="i" class="team-card">
+                  <span class="award-badge" :class="awardClass(t.medal_type)">{{ teamAwardText(t) }}</span>
+                  <h4>{{ t.team_name }}</h4>
+                  <p v-if="t.members && t.members.length" class="team-members"><span class="label">成员</span>{{ t.members.join('、') }}</p>
                 </div>
               </div>
 
               <!-- 个人奖 -->
               <div v-if="nationalPersonal.length" class="personal-wrap">
-                <!-- 蓝桥杯：分组名单（C/C++·Java·Python × A/B × 奖等） -->
+                <!-- 蓝桥杯：按 语言 × 组别 分组名单 -->
                 <template v-if="isLanqiao">
-                  <RosterGroup :groups="nationalGroups" />
+                  <RosterGroup :groups="personalGroups(nationalPersonal)" />
                 </template>
                 <!-- 其他赛事：表格 + 移动端卡片 -->
                 <template v-else>
@@ -170,13 +193,13 @@ const provincialGroups = computed(() =>
                   <div class="table-wrap">
                     <table class="personal-table">
                       <thead>
-                        <tr><th>姓名</th><th>奖项</th><th>{{ edition.slug === 'lanqiao' ? '科目' : '成绩' }}</th></tr>
+                        <tr><th>姓名</th><th>奖项</th><th>成绩</th></tr>
                       </thead>
                       <tbody>
                         <tr v-for="(p, i) in nationalPersonal" :key="i">
-                          <td>{{ p.name }}</td>
-                          <td :class="awardClass(p.award)">{{ p.award }}</td>
-                          <td class="cell-score">{{ p.score }}</td>
+                          <td>{{ p.members[0] }}</td>
+                          <td :class="awardClass(p.medal_type)">{{ personalAwardText(p) }}</td>
+                          <td class="cell-score">—</td>
                         </tr>
                       </tbody>
                     </table>
@@ -184,9 +207,9 @@ const provincialGroups = computed(() =>
                   <!-- 移动端：双列卡片 -->
                   <div class="personal-grid">
                     <div v-for="(p, i) in nationalPersonal" :key="'g' + i" class="p-chip">
-                      <span class="p-name" :class="awardClass(p.award)">{{ p.name }}</span>
-                      <span class="p-award">{{ p.award.replace(/^个人/, '') }}</span>
-                      <span class="p-score">{{ p.score }}</span>
+                      <span class="p-name" :class="awardClass(p.medal_type)">{{ p.members[0] }}</span>
+                      <span class="p-award">{{ personalAwardText(p) }}</span>
+                      <span class="p-score">—</span>
                     </div>
                   </div>
                 </template>
@@ -196,54 +219,45 @@ const provincialGroups = computed(() =>
 
           <!-- 省赛获奖情况 -->
           <section class="award-section" :class="isLanqiao ? 'lq-award-card lq-provincial' : ''">
-            <h2 class="section-label"><i class="fa-solid fa-medal"></i> 省赛获奖情况<span v-if="isLanqiao && edition.dates?.provincial" class="lq-stage-date">{{ fmtLqDate(edition.dates.provincial) }}</span></h2>
+            <h2 class="section-label"><i class="fa-solid fa-medal"></i> 省赛获奖情况<span v-if="isLanqiao && firstDate(provincialRows)" class="lq-stage-date">{{ fmtCnDate(firstDate(provincialRows)) }}</span></h2>
 
             <p v-if="!hasProvincial" class="empty">本届无获奖记录</p>
             <template v-else>
-              <!-- 高校奖 -->
-              <div v-if="edition.provincial.university?.length" class="uni-row">
-                <span class="uni-chip" v-for="(u, i) in edition.provincial.university" :key="i">
-                  <i class="fa-solid fa-school"></i> {{ u }}
-                </span>
-              </div>
-
               <!-- 团队奖 -->
-              <div v-if="edition.provincial.teams?.length" class="team-grid">
-                <div v-for="(t, i) in edition.provincial.teams" :key="i" class="team-card">
-                  <span class="award-badge" :class="awardClass(t.award)">{{ t.award }}</span>
-                  <h4>{{ t.name }}</h4>
+              <div v-if="provincialTeams.length" class="team-grid">
+                <div v-for="(t, i) in provincialTeams" :key="i" class="team-card">
+                  <span class="award-badge" :class="awardClass(t.medal_type)">{{ teamAwardText(t) }}</span>
+                  <h4>{{ t.team_name }}</h4>
+                  <p v-if="t.members && t.members.length" class="team-members"><span class="label">成员</span>{{ t.members.join('、') }}</p>
                 </div>
               </div>
 
-              <!-- 个人奖（蓝桥杯等个人赛：姓名/奖项/科目） -->
+              <!-- 个人奖 -->
               <div v-if="provincialPersonal.length" class="personal-wrap">
-                <!-- 蓝桥杯：分组名单 -->
                 <template v-if="isLanqiao">
-                  <RosterGroup :groups="provincialGroups" />
+                  <RosterGroup :groups="personalGroups(provincialPersonal)" />
                 </template>
-                <!-- 其他赛事：表格 + 移动端卡片 -->
                 <template v-else>
                   <h3 class="sub-label"><i class="fa-solid fa-user"></i> 个人奖</h3>
                   <div class="table-wrap">
                     <table class="personal-table">
                       <thead>
-                        <tr><th>姓名</th><th>奖项</th><th>科目</th></tr>
+                        <tr><th>姓名</th><th>奖项</th><th>成绩</th></tr>
                       </thead>
                       <tbody>
                         <tr v-for="(p, i) in provincialPersonal" :key="i">
-                          <td>{{ p.name }}</td>
-                          <td :class="awardClass(p.award)">{{ p.award }}</td>
-                          <td class="cell-score">{{ p.score }}</td>
+                          <td>{{ p.members[0] }}</td>
+                          <td :class="awardClass(p.medal_type)">{{ personalAwardText(p) }}</td>
+                          <td class="cell-score">—</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                  <!-- 移动端：双列卡片 -->
                   <div class="personal-grid">
                     <div v-for="(p, i) in provincialPersonal" :key="'g' + i" class="p-chip">
-                      <span class="p-name" :class="awardClass(p.award)">{{ p.name }}</span>
-                      <span class="p-award">{{ p.award.replace(/^个人/, '') }}</span>
-                      <span class="p-score">{{ p.score }}</span>
+                      <span class="p-name" :class="awardClass(p.medal_type)">{{ p.members[0] }}</span>
+                      <span class="p-award">{{ personalAwardText(p) }}</span>
+                      <span class="p-score">—</span>
                     </div>
                   </div>
                 </template>
@@ -256,8 +270,8 @@ const provincialGroups = computed(() =>
           <RouterLink to="/all-action" class="back-link">
             <i class="fa-solid fa-arrow-left"></i> 返回大事记
           </RouterLink>
-          <RouterLink :to="`/competition/${edition.slug}`" class="intro-link">
-            查看{{ edition.name || '该赛事' }}介绍 <i class="fa-solid fa-arrow-right"></i>
+          <RouterLink :to="`/competition/${comp.slug}`" class="intro-link">
+            查看{{ comp.name || '该赛事' }}介绍 <i class="fa-solid fa-arrow-right"></i>
           </RouterLink>
         </div>
       </template>

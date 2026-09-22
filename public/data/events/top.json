@@ -1,0 +1,18 @@
+[
+  {
+    "kind": "news",
+    "date": "2025-10-01",
+    "category": "club",
+    "title": "新生问题大解答",
+    "tagline": "欢迎你来！新生关于程设竞赛与入会的常见问题大解答",
+    "link": "2025-10-1-ans"
+  },
+  {
+    "kind": "news",
+    "date": "2026-07-04",
+    "category": "club",
+    "title": "暑期集训报名及XCPC组队帮助",
+    "tagline": "程序设计竞赛协会暑期集训报名启动，截止7月8日，备战ICPC/CCPC网络预选赛",
+    "link": "2026-7-4-summer-training"
+  }
+]

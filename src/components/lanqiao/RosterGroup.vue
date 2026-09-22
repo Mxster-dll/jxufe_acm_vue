@@ -1,29 +1,25 @@
 <script setup>
-// 分组名单渲染（赛事总页 / 单届详情页共用）：
+// 获奖分组名单渲染（竞赛详情页 / 单届详情页共用）：
 // 组标题 → 奖等行（奖等徽章 + 姓名表格，天梯赛式框线）
-// 组对象两种形态：
-//   1) lanqiao 形态 { lang, level, awards }  → 标题 = 「C/C++ · A组」（icon fa-code）
-//   2) 通用形态   { label, date?, icon?, awards } → 标题 = label（+ 日期角标），如百度之星「第一场 2023-08-12」
-// awards = [{ award: '金奖'|'一等奖'…, persons: [{ name, rank, title? }] }]
+// 组对象形态：{ label, icon?, date?, awards }
+//   awards = [{ award: '一等奖' | '金奖' …, persons: [{ name, rank?, title? }] }]
+// 分组、排序与奖等文案由 utils/awardGroups.js 计算，本组件只负责渲染
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { LANGS, lqAwardTone } from '../../utils/lanqiaoGroup'
+import { awardTone } from '../../utils/awardGroups.js'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },
 })
 
-const LANQ_NAME = Object.fromEntries(LANGS)
-
-// 组显示标题：通用形态用 label；lanqiao 形态回退为 语言·组别
+// 组显示标题（「语言 · 组别」已由分组逻辑拼好放进 label）
 function groupTitle(g) {
-  if (g.label) return g.label
-  return (LANQ_NAME[g.lang] || g.lang) + (g.level ? ` · ${g.level}组` : '')
+  return g.label || ''
 }
 function groupIcon(g) {
   return g.icon || 'fa-code'
 }
 function groupKey(g) {
-  return g.label || `${g.lang}|${g.level}`
+  return g.label || 'group'
 }
 
 // 每行最大列数按表格实际可用宽度动态计算（ResizeObserver 监听组件宽度）：
@@ -75,7 +71,7 @@ function alignName(name) {
   <div v-for="g in props.groups" :key="groupKey(g)" class="lq-group" ref="groupsEl">
     <h5 class="lq-group-title"><i class="fa-solid" :class="groupIcon(g)"></i> {{ groupTitle(g) }}<span v-if="g.date" class="lq-group-date">{{ g.date }}</span></h5>
     <div v-for="(aw, ai) in g.awards" :key="ai" class="lq-award-row">
-      <span class="lq-award-tag" :class="lqAwardTone(aw.award)">{{ aw.award }}</span>
+      <span class="lq-award-tag" :class="awardTone(aw.award)">{{ aw.award }}</span>
       <div class="lq-table-wrap">
         <table class="lq-name-table">
           <tbody>

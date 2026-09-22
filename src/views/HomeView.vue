@@ -2,7 +2,13 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useNews } from "../composables/useNews";
 import AppFooter from "../components/AppFooter.vue";
-import AvatarMosaic from "../components/AvatarMosaic.vue";
+/* 头像墙：独立叠加层。删掉这一行 import、下面那个 ref、模板里那一个标签、
+   .hero-inner 上的 :class，以及 <style> 末尾那段 .is-wall-on 规则，即完全回滚。
+   它自己不读也不改轮播/文案的任何状态，只由 wallOn 决定谁在前面。 */
+import HeroAvatarWall from "../components/HeroAvatarWall.vue";
+
+// ── 头像墙开关（纯叠加：false 时页面与改动前逐像素一致）──
+const wallOn = ref(false);
 
 // ── 轮播图 ──
 const slides = Array.from({ length: 10 }, (_, i) => ({
@@ -301,13 +307,13 @@ const { newsList, loading, error } = useNews();
     id="home"
     ref="heroEl"
     class="hero container-fluid"
+    :class="{ 'is-wall-on': wallOn }"
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
-    <!-- 头像墙底纹：固定层，不随页面滚动。首页本身已有滚动代码背景 + 8 个浮动形状
-         + 聚光灯，故瓷砖比优秀成员页更大（信息更稀）、不透明度更低，避免与它们抢。
-         0.16 是会长看对比图定的：0.09 时完全看不出是头像（实测视觉上只剩一层灰雾）。 -->
-    <AvatarMosaic :opacity="0.16" :tile="136" />
+    <!-- 头像墙：hero 的第一个子元素 = 同为 z-index:0 的那几层里最靠下的一层。
+         它自带那个开关按钮（在 .hero-inner 之外，所以文案退场后它还在）。 -->
+    <HeroAvatarWall v-model:active="wallOn" />
 
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
@@ -367,6 +373,7 @@ const { newsList, loading, error } = useNews();
 
     <div
       class="container hero-inner"
+      :class="{ 'is-wall-on': wallOn }"
       :style="{
         '--mx': mx,
         '--my': my,
@@ -568,7 +575,7 @@ const { newsList, loading, error } = useNews();
       <div v-else class="news-grid">
         <article
           v-for="(item, i) in newsList"
-          :key="item.slug"
+          :key="item.id"
           v-reveal="'fade-up'"
           :style="{ '--reveal-index': i }"
           class="news-card"
@@ -584,7 +591,7 @@ const { newsList, loading, error } = useNews();
             <h3 class="nc-title">{{ item.title }}</h3>
             <p class="nc-summary">{{ item.summary }}</p>
           </div>
-          <RouterLink :to="`/action/${item.slug}`" class="nc-link"
+          <RouterLink :to="`/post/${item.id}`" class="nc-link"
             >阅读更多 <i class="fas fa-arrow-right"></i
           ></RouterLink>
         </article>
@@ -755,6 +762,71 @@ const { newsList, loading, error } = useNews();
   grid-template-columns: 1fr 1fr;
   gap: var(--space-xl);
   align-items: center;
+}
+
+/* ── 头像墙打开时，原有文案与轮播「退场」 ──
+   刻意用 opacity 而不是 display: none：
+   内容仍然占位 → hero 的高度不变 → 墙的盒子、瓷砖几何、环面周期全都不跳。
+   （≤768px 时 .hero 是 min-height: auto，高度由内容撑 —— 用 display: none 会当场塌陷。）
+   文案与轮播的脚本一行未动，setInterval 照常在跑，只是被盖住了。 */
+.hero-inner {
+  transition:
+    opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s; /* 返回时立即恢复可见，不等淡入 */
+}
+
+/* ── 让悬停穿过 hero 内容，落到背后的头像墙上 ──
+   .hero-inner 是 z-index: 1，压在墙（z-index: 0）上面。默认它会**吃掉**指针事件，
+   于是只有 hero 上下两条没被盖住的墙能收到悬停，正中那一片（也就是鼠标最常待的地方）
+   反而没反应。把这一层放开，指针就能落到墙的瓷砖上。
+   代价（都很小，且都是刻意的）：
+     · hero 里的文字不能再框选 —— 纯装饰性标题；
+     · 轮播图 hover 的蓝色光晕（只有 box-shadow）不再触发 —— 图片本身仍跟着鼠标做 3D 倾斜，
+       那个用的是 --mx/--my，由 hero 的 mousemove 驱动，不受影响。
+   真正需要点击的两处单独放行：轮播圆点、以及「了解更多」。
+   ⚠ 放行要限定在 `:not(.is-wall-on)`：激活态那一档内容已经 visibility: hidden 退场了，
+     若仍然接收指针，看不见的轮播会把墙正中的点击整片吃掉（实测点不出卡片）。 */
+.hero-inner {
+  pointer-events: none;
+}
+/* 项目原本给当前帧单独放开了指针（`.slide { none }` + `.slide.active { auto }`，
+   本意是让堆叠在下面的其它帧不挡住当前帧）。但当前帧那张图**本身没有任何点击行为**，
+   留着它只会把墙正中的悬停整片吃掉 —— 实测手机上轮播那一条占 hero 的 35%。
+   收回来不影响任何交互（其它帧本来就已经是 none）。 */
+.hero-inner:not(.is-wall-on) .slide.active {
+  pointer-events: none;
+}
+.hero-inner:not(.is-wall-on) .hero-buttons,
+.hero-inner:not(.is-wall-on) .dots {
+  pointer-events: auto;
+}
+
+.hero-inner.is-wall-on {
+  opacity: 0;
+  /* visibility: hidden 而不是 display: none ——
+     前者**保留布局占位**（hero 高度不变，墙的几何不会跳），同时彻底退出命中测试与绘制。
+     只靠 opacity: 0 + pointer-events: none 是不够的：实测轮播那张 3D 变换的图
+     仍会被 Chrome 当作命中目标（整条链的 pointer-events 都已是 none，它照样挡住墙正中的点击）。
+     退场时把 visibility 延后到淡出结束再切，返回时立即恢复（见下面两条 transition）。 */
+  visibility: hidden;
+  transform: translateY(-14px) scale(0.985);
+  pointer-events: none; /* 双保险 */
+  transition:
+    opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 480ms;
+}
+
+/* 墙打开时，把几层装饰底纹也一并让出去。
+   它们（横滚代码 / 浮动形状 / 粒子）比墙更晚出现在 DOM 里、同为 z-index: 0，
+   于是绘制顺序上压在墙上面 —— 原本是给「干净的浅色 hero」填空用的，
+   压在人像墙上只会让画面发脏。 */
+.hero.is-wall-on .code-scroll-bg,
+.hero.is-wall-on .float-shapes,
+.hero.is-wall-on .hero-particles {
+  opacity: 0;
+  transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hero-content {
   text-align: left;

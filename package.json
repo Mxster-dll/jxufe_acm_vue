@@ -5,9 +5,15 @@
   "description": "江西财经大学程序设计竞赛协会官网 - Vue 迁移版",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/gen_hero_wall.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/gen_hero_wall.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "data:check": "node scripts/check_awards.mjs",
+    "data:gen": "node scripts/gen_events_articles.mjs",
+    "data:hero-wall": "node scripts/gen_hero_wall.mjs",
+    "data:hero-thumbs": "powershell -ExecutionPolicy Bypass -File scripts/gen_hero_wall_thumbs.ps1"
   },
   "dependencies": {
     "vue": "^3.4.0",

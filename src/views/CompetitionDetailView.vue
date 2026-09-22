@@ -2,16 +2,32 @@
 import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useJson } from '../composables/useJson'
-import { lanqiaoGroup } from '../utils/lanqiaoGroup'
 import RosterGroup from '../components/lanqiao/RosterGroup.vue'
+import {
+  MEDAL_TEXT,
+  RANK_TEXT,
+  LEVEL_CAT,
+  LEVEL_TAG,
+  MEDAL_ORDER,
+  medalClass,
+  dateTextOf,
+  yearOf,
+  editionLabel,
+  alignName,
+  subjectGroups,
+  sessionGroups
+} from '../utils/awardGroups.js'
 
 const route = useRoute()
-const { data: competitions, loading, error } = useJson('/data/competitions.json', {
+const { data: competitions, loading: compLoading, error } = useJson('/data/competitions.json', {
   initial: []
 })
 
-// xCPC 合并页（slug=xcpc）：由 ICPC + CCPC 合成——参赛历史合并显示，
-// 简介与详情卡通过 comp.children 分开介绍；其余竞赛按原 slug 查找
+// ==========================================================================
+// 赛事元信息（含 xcpc 运行时合并页）
+// competitions.json 只保留展示元信息：名称 / logo / 简介 / 详情卡 / mode / awards
+// 获奖数据一律来自 /data/awards/<file>.json，由 comp.awards 列出
+// ==========================================================================
 const comp = computed(() => {
   const slug = route.params.slug
   const list = competitions.value || []
@@ -24,361 +40,212 @@ const comp = computed(() => {
       name: 'xCPC 程序设计竞赛',
       subtitle: 'ICPC × CCPC —— 国际与中国大学生程序设计竞赛',
       image: icpc.image,
-      mode: 'history',
+      mode: 'xcpc',
       intro: [],
       details: [],
       children: [icpc, ccpc],
-      history: [...(icpc.history || []), ...(ccpc.history || [])],
+      awards: ['icpc', 'ccpc']
     }
   }
   return list.find((c) => c.slug === slug)
 })
 
-// 举办时间数据：/data/events/<slug>.json（与大事记共用同一数据源）；
-// xCPC 合并页同时加载 icpc + ccpc 两份事件数据用于日期匹配
-const events = ref([])
+// ── 获奖数据：按 comp.awards 逐个加载 ──
+const awardsByFile = ref({})
+const awardsLoading = ref(true)
+
 watch(
-  () => route.params.slug,
-  async (slug) => {
-    if (!slug) return
-    try {
-      const slugs = slug === 'xcpc' ? ['icpc', 'ccpc'] : [slug]
-      const all = []
-      for (const s of slugs) {
-        const res = await fetch(`/data/events/${s}.json`)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        all.push(...((await res.json()).events || []))
-      }
-      events.value = all
-    } catch (e) {
-      console.error(`加载 /data/events/${slug}.json 失败:`, e)
-      events.value = []
+  comp,
+  async (c) => {
+    awardsByFile.value = {}
+    if (!c) {
+      awardsLoading.value = false
+      return
     }
+    awardsLoading.value = true
+    const pairs = await Promise.all(
+      (c.awards || []).map(async (f) => {
+        try {
+          const res = await fetch(`/data/awards/${f}.json`)
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          return [f, await res.json()]
+        } catch (e) {
+          console.error(`加载 /data/awards/${f}.json 失败:`, e)
+          return [f, []]
+        }
+      })
+    )
+    awardsByFile.value = Object.fromEntries(pairs)
+    awardsLoading.value = false
   },
   { immediate: true }
 )
 
-// 将按年分组的 history 展平为表格行：
-//  - xcpc（ICPC/CCPC）只保留获奖项：去掉网络预选赛与未获奖（medals 为空）
-//  - 严格按赛事举办日期降序（无日期条目按当年年末兜底，保证同年后置）
-const historyRows = computed(() => {
-  if (!comp.value?.history) return []
-  const isXcpc = ['icpc', 'ccpc', 'xcpc'].includes(comp.value.slug)
-  const rows = comp.value.history.flatMap((g) =>
-    (g.entries || []).map((e) => ({ year: g.year, ...e }))
-  )
-  const filtered = isXcpc
-    ? rows.filter(
-        (r) =>
-          !(r.title || '').includes('网络预选赛') &&
-          Array.isArray(r.medals) &&
-          r.medals.length > 0
-      )
-    : rows
-  return [...filtered].sort((a, b) => rowSortKey(b).localeCompare(rowSortKey(a)))
-})
+const loading = computed(() => compLoading.value || awardsLoading.value)
 
-// 排序键：优先取 events/<slug>.json 中匹配赛事的举办日期（YYYY-MM-DD 可直接字符串比较），
-// 无匹配赛事或无日期时回退为“年份-12-31”，保证同年内有日期的条目排前
-function rowSortKey(row) {
-  const evs = (events.value || []).filter((e) => String(e.year) === String(row.year))
-  const hit = evs.find(
-    (e) => e.title && (row.title.includes(e.title) || e.title.includes(row.title))
-  )
-  const d = (hit && hit.date) || row.year
-  const s = String(d)
-  return s.includes('-') ? s : `${s}-12-31`
-}
+/** 本次页面涉及的全部获奖记录（xcpc 合并页含 icpc + ccpc 两份） */
+const awards = computed(() => (comp.value?.awards || []).flatMap((f) => awardsByFile.value[f] || []))
 
-// 日期列：优先取该年份的赛事举办时间（date），缺省回退为年份
-function rowDate(row) {
-  const evs = (events.value || []).filter((e) => String(e.year) === String(row.year))
-  if (!evs.length) return row.year
-  const hit =
-    evs.find(
-      (e) =>
-        e.title &&
-        (row.title.includes(e.title) || e.title.includes(row.title))
-    ) || evs[0]
-  return hit.date || row.year
-}
+// 展示常量与工具统一放在 utils/awardGroups.js，与单届详情页共用
+const byDateDesc = (a, b) => String(b.date || '').localeCompare(String(a.date || ''))
 
-// 通用参赛史（mode=history）天梯赛式分组：
-// 按 (年份, 场次) 分组，同场多队 rowspan 合并"日期/赛事"列；
-// 组内按排名升序（rank 缺失/无效排最后，同分稳定保持原顺序）
-const groupedHistoryRows = computed(() => {
+// ==========================================================================
+// xcpc（ICPC / CCPC）：获奖记录表
+// awards 只收录获奖记录，未获奖与网络预选赛不在数据源中
+// ==========================================================================
+const xcpcGroups = computed(() => {
+  if (comp.value?.mode !== 'xcpc') return []
   const groups = []
   const map = new Map()
-  for (const row of historyRows.value) {
-    const key = row.year + '|' + row.title
+  for (const row of awards.value.filter((r) => r.competition_name).sort(byDateDesc)) {
+    const key = `${row.date}|${row.competition_name}`
     if (!map.has(key)) {
-      const dt = rowDate(row)
       map.set(key, {
-        year: row.year,
-        title: row.title,
-        dateText: dt && String(dt).includes('-') ? dateTextOf(dt, row.year) : dt,
-        rows: [],
+        date: row.date,
+        dateText: dateTextOf(row.date, ''),
+        title: row.competition_name,
+        cat: LEVEL_CAT[row.medal_level] || 'reg',
+        rows: []
       })
       groups.push(map.get(key))
     }
     map.get(key).rows.push(row)
   }
-  for (const g of groups) {
-    g.rows.sort((a, b) => {
-      const ra = a.rank != null ? Number(a.rank) : Infinity
-      const rb = b.rank != null ? Number(b.rank) : Infinity
-      if (ra === rb) return 0
-      return ra < rb ? -1 : 1
-    })
-  }
   return groups
 })
+const xcpcRows = computed(() => xcpcGroups.value.flatMap((g) => g.rows))
 
 // ==========================================================================
-// 天梯赛式参赛历史表（队名/国赛/省赛/成员奖牌色）：
-// 由 events（届数+日期）与 editions（获奖明细）数据驱动，无需在 competitions.json 重复维护
+// 天梯赛（国赛）：六列表 —— 日期 / 届数 / 队名 / 国赛 / 省赛 / 参赛成员
+// 团队奖来自 awards/gplt-team.json，个人奖来自 awards/gplt-individual.json
+// （个人奖只用于给成员姓名着色）
 // ==========================================================================
-const useTeamTable = ref(false)
-const eventsList = ref([])
-const editionsByYear = ref({})
+const gpltGroups = computed(() => {
+  if (comp.value?.mode !== 'gplt') return []
+  const teams = awardsByFile.value['gplt-team'] || []
+  const individuals = awardsByFile.value['gplt-individual'] || []
 
-watch(
-  comp,
-  async (c) => {
-    useTeamTable.value = false
-    if (!c) return
-    // mode=history：参赛历史由 competitions.json 全量维护（ICPC/CCPC 等），
-    // 不使用天梯赛式单届表（editions 文件仅作年度汇总详情页，供大事记时间轴跳转）
-    if (c.mode === 'history') {
-      console.log('该赛事使用通用参赛历史表（mode=history）:', c.slug)
-      return
-    }
-    // mode=lanqiao：蓝桥杯为个人赛，总名单来自 /data/lanqiao.json（按年份分组）
-    if (c.mode === 'lanqiao') {
-      console.log('该赛事使用蓝桥杯总名单（mode=lanqiao）:', c.slug)
-      try {
-        const res = await fetch('/data/lanqiao.json')
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        lanqiaoData.value = await res.json()
-      } catch (e) {
-        console.error('加载 /data/lanqiao.json 失败:', e)
-        lanqiaoData.value = null
-      }
-      return
-    }
-    // mode=baidu：百度之星为个人赛，我校获奖名单来自 /data/baidu.json（按年份分组）
-    if (c.mode === 'baidu') {
-      console.log('该赛事使用百度之星获奖名单（mode=baidu）:', c.slug)
-      try {
-        const res = await fetch('/data/baidu.json')
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        baiduData.value = await res.json()
-      } catch (e) {
-        console.error('加载 /data/baidu.json 失败:', e)
-        baiduData.value = null
-      }
-      return
-    }
-    try {
-      const evRes = await fetch(`/data/events/${c.slug}.json`)
-      if (!evRes.ok) throw new Error(`HTTP ${evRes.status}`)
-      const evData = await evRes.json()
-      const evs = evData.events || []
-      if (!evs.length) throw new Error('无届次数据')
-      // 探测是否存在单届详情数据（editions/<slug>/<year>.json）
-      const probe = await fetch(`/data/editions/${c.slug}/${evs[0].year}.json`)
-      if (!probe.ok) throw new Error(`HTTP ${probe.status}`)
-      const map = {}
-      await Promise.all(
-        evs.map(async (ev) => {
-          try {
-            const r = await fetch(`/data/editions/${c.slug}/${ev.year}.json`)
-            if (r.ok) map[String(ev.year)] = await r.json()
-          } catch (e) {
-            console.error(`加载 /data/editions/${c.slug}/${ev.year}.json 失败:`, e)
-          }
-        })
-      )
-      eventsList.value = evs
-      editionsByYear.value = map
-      useTeamTable.value = true
-    } catch (e) {
-      console.error('该赛事无单届详情数据，使用通用参赛历史表:', e)
-      useTeamTable.value = false
-    }
-  },
-  { immediate: true }
-)
-
-// 日期 → yyyy.mm.dd（无日期回退为年份）
-function dateTextOf(date, year) {
-  if (!date) return String(year)
-  const [y, m, d] = String(date).split('-')
-  return `${y}.${String(m).padStart(2, '0')}.${String(d).padStart(2, '0')}`
-}
-
-// 队名归一化（去空格，兼容"JXUFE_IM_1 队"与"JXUFE_IM_1队"）
-function normName(name) {
-  return (name || '').replace(/\s+/g, '')
-}
-
-// 奖项 → 等级（"全国团队一等奖"/"分省团队一等奖" → "一等奖"）
-function awardLevel(award) {
-  if (!award) return ''
-  return award.replace(/^(全国|分省)(团队|高校)/, '')
-}
-
-// 奖项 → 排名（用于队伍/成员按奖次排序；未获奖排最后）
-function awardRank(award) {
-  if (!award) return 4
-  if (/一等奖|金奖|冠军/.test(award)) return 1
-  if (/二等奖|银奖|亚军/.test(award)) return 2
-  if (/三等奖|铜奖|季军/.test(award)) return 3
-  return 4
-}
-
-// 届数简称（"第十一届团体程序设计天梯赛" → "第十一届"）
-function editionShort(title, ed) {
-  if (ed?.edition) return ed.edition
-  const m = (title || '').match(/第[一二三四五六七八九十百]+届/)
-  return m ? m[0] : title || ''
-}
-
-// 汇总各届获奖团队（国赛 ∪ 省赛），成员按个人奖标注
-const teamRows = computed(() => {
-  if (!useTeamTable.value) return []
-  const rows = []
-  const evs = [...(eventsList.value || [])].sort((a, b) => Number(b.year) - Number(a.year))
-  for (const ev of evs) {
-    const ed = editionsByYear.value[String(ev.year)]
-    if (!ed) continue
-    const nationalTeams = ed.national?.teams || []
-    const provincialTeams = ed.provincial?.teams || []
-    const personalMap = {}
-    for (const p of ed.national?.personal || []) personalMap[p.name] = p.award
-
-    const byName = new Map()
-    for (const t of nationalTeams) {
-      byName.set(normName(t.name), {
-        name: t.name,
-        national: t.award,
-        provincial: null,
-        members: (t.members || '')
-          .split('、')
-          .filter(Boolean)
-          .map((n) => ({ name: n, award: personalMap[n] || '' }))
-      })
-    }
-    for (const t of provincialTeams) {
-      const k = normName(t.name)
-      if (byName.has(k)) byName.get(k).provincial = t.award
-      else byName.set(k, { name: t.name, national: null, provincial: t.award, members: [] })
-    }
-    let teams = [...byName.values()]
-    if (!teams.length) continue
-    // 队伍按奖次排名：先国赛再省赛，未获奖排后
-    teams.sort(
-      (a, b) =>
-        awardRank(a.national) - awardRank(b.national) ||
-        awardRank(a.provincial) - awardRank(b.provincial)
-    )
-    // 成员按个人奖次排名：一/二/三等奖在前，未获奖在后（同级保持原顺序）
-    for (const t of teams) {
-      t.members.sort((a, b) => awardRank(a.award) - awardRank(b.award))
-    }
-    rows.push({
-      year: ev.year,
-      edition: editionShort(ev.title, ed),
-      dateText: dateTextOf(ev.date, ev.year),
-      teams
-    })
+  const personalMap = new Map()
+  for (const p of individuals) {
+    const n = p.members && p.members[0]
+    if (n && !personalMap.has(n)) personalMap.set(n, p.medal_type)
   }
-  return rows
+
+  const bySession = new Map()
+  for (const t of teams) {
+    if (!bySession.has(t.session)) bySession.set(t.session, [])
+    bySession.get(t.session).push(t)
+  }
+
+  return [...bySession.keys()]
+    .sort((a, b) => b - a)
+    .map((session) => {
+      const list = bySession.get(session)
+      const date = list.map((t) => t.date).filter(Boolean).sort()[0] || null
+      const rows = list
+        .slice()
+        .sort((a, b) => (MEDAL_ORDER[a.medal_type] ?? 9) - (MEDAL_ORDER[b.medal_type] ?? 9))
+        .map((t) => ({
+          team_name: t.team_name,
+          national: t.medal_type,
+          provincial: null,
+          members: (t.members || []).map((name) => ({
+            name,
+            medal: personalMap.get(name) || null
+          }))
+        }))
+      return {
+        session,
+        edition: editionLabel(session),
+        // 数据源无该届日期时留空（不推测年份）
+        dateText: dateTextOf(date, ''),
+        rows
+      }
+    })
 })
 
-// 成员个人奖 → 奖牌色（未获奖为浅灰，与银奖拉开区分度）
-function memberAwardClass(m) {
-  if (!m.award) return 'member-plain'
-  if (/一等奖|金牌/.test(m.award)) return 'medal-gold'
-  if (/二等奖|银牌/.test(m.award)) return 'medal-silver'
-  if (/三等奖|铜牌/.test(m.award)) return 'medal-bronze'
-  return 'member-plain'
+/** 成员个人奖 → 姓名配色（无个人奖用默认色） */
+function memberAwardClass(medal) {
+  return medalClass(medal) || 'member-plain'
 }
 
-// 两字姓名中间插入全角空格，与三字姓名对齐（仅显示，不影响数据）
-function alignName(name) {
-  return /^[\u4e00-\u9fff]{2}$/.test(name || '')
-    ? name[0] + '\u3000' + name[1]
-    : name
+// ==========================================================================
+// 分组名单（蓝桥杯 / 百度之星）
+// 届 → 国赛/省赛 两卡 → （蓝桥杯按 语言×组别 / 百度之星按场次日期）→ 奖等 → 姓名
+// ==========================================================================
+// css 用于沿用原有的环节卡配色钩子（lanqiao: lq-national/lq-provincial，
+// baidu: lq-bd-final/lq-bd-preliminary）
+// 赛事简称（用于届次标题）取自 competitions.json 的 shortName
+const ROSTER_META = {
+  lanqiao: {
+    stages: [
+      { level: 'national', label: '国赛', icon: 'fa-solid fa-trophy', css: 'national' },
+      { level: 'provincial', label: '省赛', icon: 'fa-solid fa-medal', css: 'provincial' }
+    ],
+    awardText: RANK_TEXT,
+    bySubject: true
+  },
+  baidu: {
+    stages: [
+      { level: 'national', label: '决赛', icon: 'fa-solid fa-trophy', css: 'bd-final' },
+      { level: 'provincial', label: '初赛', icon: 'fa-solid fa-medal', css: 'bd-preliminary' }
+    ],
+    awardText: MEDAL_TEXT,
+    bySubject: false
+  }
 }
 
-// 成员字符串 → 姓名数组（去空）
-function splitMembers(members) {
-  return (members || '').split('、').filter(Boolean)
-}
+const rosterYears = computed(() => {
+  const meta = ROSTER_META[comp.value?.slug]
+  if (comp.value?.mode !== 'roster' || !meta) return []
 
-// 奖牌颜色
-function medalClass(desc) {
-  if (!desc) return ''
-  if (/金牌|🥇|一等/.test(desc)) return 'medal-gold'
-  if (/银牌|🥈|二等/.test(desc)) return 'medal-silver'
-  if (/铜牌|🥉|三等/.test(desc)) return 'medal-bronze'
-  if (/铁牌/.test(desc)) return 'medal-iron'
-  return ''
-}
+  const bySession = new Map()
+  for (const r of awards.value) {
+    if (!bySession.has(r.session)) bySession.set(r.session, [])
+    bySession.get(r.session).push(r)
+  }
 
-// 赛事等级
-function entryLevel(entry) {
-  return entry.level || '国家级'
-}
+  return [...bySession.keys()]
+    .sort((a, b) => b - a)
+    .map((session) => {
+      const all = bySession.get(session)
+      const year = yearOf(all.map((r) => r.date).filter(Boolean).sort()[0])
+      const stages = meta.stages.map((st) => {
+        const stageRows = all.filter((r) => r.medal_level === st.level)
+        return {
+          key: st.level,
+          cssKey: st.css,
+          label: st.label,
+          icon: st.icon,
+          total: stageRows.length,
+          date: stageRows.map((r) => r.date).filter(Boolean).sort()[0] || '',
+          groups: meta.bySubject
+            ? subjectGroups(stageRows, meta.awardText)
+            : sessionGroups(stageRows, meta.awardText)
+        }
+      })
+      return {
+        session,
+        edition: editionLabel(session),
+        year,
+        total: all.length,
+        stages
+      }
+    })
+})
 
-// ── 赛事类别（成绩着色）：邀请赛 / 区域赛·全国赛 / 网络赛 / 省赛 ──
-// catOf(title)：按场次标题判定类别（兼办场次如"全国邀请赛（南昌）暨江西省赛"归邀请赛）
-function catOf(title) {
-  const t = title || ''
-  if (t.includes('网络预选赛')) return 'net'
-  if (t.includes('全国邀请赛')) return 'inv'
-  if (t.includes('亚洲区域赛') || t.includes('全国赛')) return 'reg'
-  if (t.includes('省赛') || t.includes('区赛')) return 'prov'
-  return 'reg'
-}
+// ── 参赛历史小节标题 ──
+const sectionTitle = computed(() => {
+  const m = comp.value?.mode
+  if (m === 'roster') return comp.value?.slug === 'baidu' ? '我校百度之星获奖名单' : '我校蓝桥杯获奖总名单'
+  return '我校参赛历史'
+})
 
-// 奖牌 tier（invitational/regional/provincial/final）→ 类别；缺失按场次标题兜底
-function tierClass(tier, title) {
-  if (tier === 'invitational') return 'inv'
-  if (tier === 'provincial') return 'prov'
-  if (tier === 'net' || tier === '网络预选赛') return 'net'
-  if (tier === 'regional' || tier === 'final') return 'reg'
-  return catOf(title)
-}
+const hasTableData = computed(() =>
+  comp.value?.mode === 'xcpc' ? xcpcGroups.value.length > 0 : gpltGroups.value.length > 0
+)
 
-// 类别中文标签（徽章上的小字）：邀请赛 / 区域赛 / 网络赛 / 省赛
-function tierTag(tier, title) {
-  const c = tierClass(tier, title)
-  return { inv: '邀请赛', reg: '区域赛', net: '网络赛', prov: '省赛' }[c] || ''
-}
-
-// 奖牌字符串（金奖/银奖/铜奖）→ 奖牌色徽章类
-function medalChipClass(medal) {
-  if (!medal) return 'chip-none'
-  if (/金奖/.test(medal)) return 'chip-gold'
-  if (/银奖/.test(medal)) return 'chip-silver'
-  if (/铜奖/.test(medal)) return 'chip-bronze'
-  return 'chip-none'
-}
-
-// 卡片左边框色调（新闻页 award-card 样式）：按队伍最高奖项金/银/铜，无奖无 tone
-function cardTone(row) {
-  const medals = row.medals || []
-  if (!medals.length) return ''
-  if (medals.some((m) => /金奖/.test(m.medal))) return 'tone-gold'
-  if (medals.some((m) => /银奖/.test(m.medal))) return 'tone-silver'
-  if (medals.some((m) => /铜奖/.test(m.medal))) return 'tone-bronze'
-  return ''
-}
-
-// ── 参赛历史视图模式：表格 / 卡片 ──
-// 桌面端默认表格、移动端默认卡片；用户切换后记住选择（localStorage）
+// ── 参赛历史视图模式：表格 / 卡片（桌面端默认表格，移动端默认卡片，localStorage 记忆）──
 const viewMode = ref('table')
 const VIEW_KEY = 'jufc-history-view'
 
@@ -404,112 +271,6 @@ watch(viewMode, (v) => {
 function setView(v) {
   viewMode.value = v
 }
-
-// ── 蓝桥杯总名单（mode=lanqiao）：/data/lanqiao.json ──
-const lanqiaoData = ref(null)
-
-// 隐藏优秀奖：总名单不展示优秀奖（数据源保留，仅展示层过滤）
-function hideExcellent(rows) {
-  return (rows || []).filter((r) => !/优秀奖/.test(r.award || ''))
-}
-
-// 每年名单预分组（C/C++·Java·Python × A/B 级 × 奖等），省赛/国赛各一组
-const lanqiaoYears = computed(() => {
-  if (!lanqiaoData.value?.years) return []
-  return lanqiaoData.value.years.map((y) => {
-    const provincial = hideExcellent(y.provincial)
-    const national = hideExcellent(y.national)
-    return {
-      year: y.year,
-      edition: y.edition,
-      dates: y.dates || {},
-      provincial,
-      national,
-      provincialGroups: lanqiaoGroup(provincial),
-      nationalGroups: lanqiaoGroup(national),
-    }
-  })
-})
-
-// 比赛日期格式化：'2025-06-15' → '2025年6月15日'；'2010-05' → '2010年5月'；空 → ''
-function fmtLqDate(d) {
-  if (!d) return ''
-  const m = String(d).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/)
-  if (!m) return d
-  return m[3] ? `${m[1]}年${+m[2]}月${+m[3]}日` : `${m[1]}年${+m[2]}月`
-}
-
-// 蓝桥杯每年分组（国赛在上、省赛在下）
-const lqStages = [
-  ['national', '国赛'],
-  ['provincial', '省赛'],
-]
-
-// ── 百度之星获奖名单（mode=baidu）：/data/baidu.json ──
-const baiduData = ref(null)
-
-// 环节元信息（决赛在上、初赛在下；视觉与蓝桥杯 国赛/省赛 两卡一致）
-const BAIDU_STAGE_META = {
-  final: { label: '决赛', icon: 'fa-trophy' },
-  preliminary: { label: '初赛', icon: 'fa-medal' },
-}
-const BAIDU_AWARD_RANK = { 金奖: 0, 银奖: 1, 铜奖: 2 }
-
-// 行数组 → 奖等行（{ award, persons:[{name, rank, title}] }），按 金→银→铜、奖内按公告序号升序
-function rollRows(rows) {
-  const byAward = new Map()
-  for (const r of rows || []) {
-    const award = r.award || '未标注'
-    if (!byAward.has(award)) byAward.set(award, [])
-    byAward.get(award).push({
-      name: r.name,
-      rank: r.rank != null ? Number(r.rank) : null,
-      title: r.src || '',
-    })
-  }
-  return [...byAward.entries()]
-    .map(([award, persons]) => ({
-      award,
-      persons: persons
-        .slice()
-        .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity)),
-    }))
-    .sort((a, b) => (BAIDU_AWARD_RANK[a.award] ?? 9) - (BAIDU_AWARD_RANK[b.award] ?? 9))
-}
-
-// 每年名单：决赛/初赛两卡（空环节保留，页面提示"暂无名单"）
-const baiduYears = computed(() => {
-  if (!baiduData.value?.years) return []
-  return baiduData.value.years.map((y) => {
-    const stages = (y.stages || []).map((st) => {
-      const meta = BAIDU_STAGE_META[st.key] || { label: st.key, icon: 'fa-trophy' }
-      const groups = (st.groups || []).map((g) => ({
-        label: g.label,
-        date: g.date,
-        awards: rollRows(g.rows),
-      }))
-      const total = groups.reduce(
-        (s, g) => s + g.awards.reduce((s2, a) => s2 + a.persons.length, 0),
-        0
-      )
-      return { key: st.key, label: meta.label, icon: meta.icon, groups, total }
-    })
-    return {
-      year: y.year,
-      edition: y.edition,
-      stages,
-      total: stages.reduce((s, st) => s + st.total, 0),
-    }
-  })
-})
-
-// 竞赛详情页"参赛历史/获奖名单"小节标题
-const sectionTitle = computed(() => {
-  const m = comp.value?.mode
-  if (m === 'lanqiao') return '我校蓝桥杯获奖总名单'
-  if (m === 'baidu') return '我校百度之星获奖名单'
-  return '我校参赛历史'
-})
 </script>
 
 <template>
@@ -591,75 +352,47 @@ const sectionTitle = computed(() => {
           </div>
         </section>
 
-        <!-- 参赛历史 -->
+                <!-- 参赛历史 -->
         <section class="comp-history">
           <div class="history-toolbar">
             <h2 class="section-label"><i class="fas fa-timeline"></i> {{ sectionTitle }}</h2>
-            <div v-if="historyRows.length || teamRows.length" class="view-toggle" role="group" aria-label="切换视图">
+            <div v-if="hasTableData" class="view-toggle" role="group" aria-label="切换视图">
               <button type="button" class="view-btn" :class="{ active: viewMode === 'table' }" @click="setView('table')" title="表格视图"><i class="fa-solid fa-table-list"></i> 表格</button>
               <button type="button" class="view-btn" :class="{ active: viewMode === 'card' }" @click="setView('card')" title="卡片视图"><i class="fa-solid fa-table-cells-large"></i> 卡片</button>
             </div>
           </div>
 
-          <!-- 蓝桥杯总名单（个人赛：按年 → 国/省 两卡 → C/C++·Java·Python × A/B → 奖等 → 姓名表格） -->
-          <template v-if="comp.mode === 'lanqiao'">
-            <p v-if="!lanqiaoData" class="empty">名单加载中…</p>
-            <template v-else>
-              <div class="lq-list">
-                <div v-for="y in lanqiaoYears" :key="y.year" class="lq-year">
-                  <div class="lq-year-head">
-                    <h3>第{{ y.edition }}届蓝桥杯（{{ y.year }}年）</h3>
-                    <span class="lq-count">{{ y.provincial.length + y.national.length }} 人次</span>
+          <!-- 分组名单（蓝桥杯 / 百度之星）：届 → 国赛/省赛两卡 → 分组 → 奖等 → 姓名 -->
+          <template v-if="comp.mode === 'roster'">
+            <p v-if="!rosterYears.length" class="empty">暂无获奖记录</p>
+            <div v-else class="lq-list">
+              <div v-for="y in rosterYears" :key="y.session" class="lq-year">
+                <div class="lq-year-head">
+                  <h3>{{ y.edition }}{{ comp.shortName }}（{{ y.year }}年）</h3>
+                  <span class="lq-count">{{ y.total }} 人次</span>
+                </div>
+                <div v-for="st in y.stages" :key="st.key" class="lq-stage-card" :class="'lq-' + st.cssKey">
+                  <div class="lq-stage-head">
+                    <h4 class="lq-stage-title">
+                      <i :class="st.icon"></i>
+                      {{ st.label }}
+                      <span v-if="st.date" class="lq-stage-date">{{ st.date }}</span>
+                    </h4>
+                    <span class="lq-count">{{ st.total }} 人次</span>
                   </div>
-                  <div v-for="(st, si) in lqStages" :key="si" class="lq-stage-card" :class="'lq-' + st[0]">
-                    <div class="lq-stage-head">
-                      <h4 class="lq-stage-title">
-                        <i :class="st[0] === 'national' ? 'fa-solid fa-trophy' : 'fa-solid fa-medal'"></i>
-                        {{ st[1] }}
-                        <span v-if="y.dates && y.dates[st[0]]" class="lq-stage-date">{{ fmtLqDate(y.dates[st[0]]) }}</span>
-                      </h4>
-                      <span class="lq-count">{{ y[st[0]].length }} 人次</span>
-                    </div>
-                    <RosterGroup v-if="y[st[0]].length" :groups="st[0] === 'national' ? y.nationalGroups : y.provincialGroups" />
-                    <p v-else class="empty">本届无{{ st[1] }}获奖记录</p>
-                  </div>
+                  <RosterGroup v-if="st.groups.length" :groups="st.groups" />
+                  <p v-else class="empty">本届无{{ st.label }}获奖记录</p>
                 </div>
               </div>
-            </template>
+            </div>
           </template>
 
-          <!-- 百度之星获奖名单（个人赛：按年 → 决赛/初赛两卡 → 场次/组别分组 → 奖等 → 姓名表格，样式同蓝桥杯总名单） -->
-          <template v-else-if="comp.mode === 'baidu'">
-            <p v-if="!baiduData" class="empty">名单加载中…</p>
-            <template v-else>
-              <div class="lq-list">
-                <div v-for="y in baiduYears" :key="y.year" class="lq-year">
-                  <div class="lq-year-head">
-                    <h3>第{{ y.edition }}届百度之星（{{ y.year }}年）</h3>
-                    <span class="lq-count">{{ y.total }} 人次</span>
-                  </div>
-                  <div v-for="st in y.stages" :key="st.key" class="lq-stage-card" :class="'lq-bd-' + st.key">
-                    <div class="lq-stage-head">
-                      <h4 class="lq-stage-title">
-                        <i class="fa-solid" :class="st.icon"></i>
-                        {{ st.label }}
-                      </h4>
-                      <span class="lq-count">{{ st.total }} 人次</span>
-                    </div>
-                    <RosterGroup v-if="st.groups.length" :groups="st.groups" />
-                    <p v-else class="empty">本届暂无{{ st.label }}获奖名单</p>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </template>
-
-          <p v-else-if="!historyRows.length && !teamRows.length" class="empty">暂无参赛记录</p>
+          <p v-else-if="!hasTableData" class="empty">暂无参赛记录</p>
           <div v-else class="history-table-wrap" v-reveal="{ variant: 'fade-up', threshold: 0.01, rootMargin: '0px 0px 100px 0px' }">
             <table class="history-table" :class="{ 'view-hidden': viewMode !== 'table' }">
               <thead>
                 <tr>
-                  <template v-if="teamRows.length">
+                  <template v-if="gpltGroups.length">
                     <th>日期</th>
                     <th>届数</th>
                     <th>队名</th>
@@ -677,55 +410,44 @@ const sectionTitle = computed(() => {
                 </tr>
               </thead>
               <tbody>
-                <!-- 天梯赛式：按届分组，合并相同年份/届数的格子 -->
-                <template v-if="teamRows.length">
-                  <template v-for="g in teamRows" :key="g.year">
-                    <tr v-for="(t, ti) in g.teams" :key="t.name">
-                      <td v-if="ti === 0" class="cell-year" :rowspan="g.teams.length">{{ g.dateText }}</td>
-                      <td v-if="ti === 0" class="cell-edition" :rowspan="g.teams.length">{{ g.edition }}</td>
-                      <td class="cell-team">{{ t.name }}</td>
-                      <td class="cell-award" :class="medalClass(t.national)">{{ awardLevel(t.national) || '—' }}</td>
-                      <td class="cell-award" :class="medalClass(t.provincial)">{{ awardLevel(t.provincial) || '—' }}</td>
+                <!-- 天梯赛式（团队奖）：按届分组，合并日期 / 届数格 -->
+                <template v-if="gpltGroups.length">
+                  <template v-for="g in gpltGroups" :key="g.session">
+                    <tr v-for="(t, ti) in g.rows" :key="t.team_name">
+                      <td v-if="ti === 0" class="cell-year" :rowspan="g.rows.length">{{ g.dateText }}</td>
+                      <td v-if="ti === 0" class="cell-edition" :rowspan="g.rows.length">{{ g.edition }}</td>
+                      <td class="cell-team">{{ t.team_name }}</td>
+                      <td class="cell-award" :class="medalClass(t.national)">{{ RANK_TEXT[t.national] || '—' }}</td>
+                      <td class="cell-award" :class="medalClass(t.provincial)">{{ t.provincial ? RANK_TEXT[t.provincial] : '—' }}</td>
                       <td class="cell-members">
                         <template v-if="t.members.length">
                           <span
                             v-for="(m, mi) in t.members"
                             :key="mi"
                             class="member-name"
-                            :class="memberAwardClass(m)"
-                            :title="m.award || '未获个人奖'"
+                            :class="memberAwardClass(m.medal)"
+                            :title="m.medal ? MEDAL_TEXT[m.medal] : '未获个人奖'"
                           >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
                         </template>
-                        <span v-else class="member-name">—</span>
+                        <span v-else class="member-name member-plain">—</span>
                       </td>
                     </tr>
                   </template>
                 </template>
-                <!-- 通用式（天梯赛式排版：按场次分组，rowspan 合并日期/赛事列） -->
+                <!-- xcpc：按场次分组，rowspan 合并日期 / 赛事列 -->
                 <template v-else>
-                  <template v-for="g in groupedHistoryRows" :key="g.year + '|' + g.title">
-                    <tr v-for="(row, ri) in g.rows" :key="g.year + '-' + ri" :class="'row-' + catOf(g.title)">
+                  <template v-for="g in xcpcGroups" :key="g.date + '|' + g.title">
+                    <tr v-for="(row, ri) in g.rows" :key="g.date + '-' + ri" :class="'row-' + g.cat">
                       <td v-if="ri === 0" class="cell-year" :rowspan="g.rows.length">{{ g.dateText }}</td>
                       <td v-if="ri === 0" class="cell-title" :rowspan="g.rows.length">{{ g.title }}</td>
-                      <td class="cell-team">{{ row.name || '—' }}</td>
+                      <td class="cell-team">{{ row.team_name || '—' }}</td>
                       <td class="cell-desc">
-                        <template v-if="row.medals && row.medals.length">
-                          <span
-                            v-for="(md, mi) in row.medals"
-                            :key="mi"
-                            class="award-chip"
-                            :class="medalChipClass(md.medal)"
-                          >{{ md.medal }}<i class="chip-tag">{{ tierTag(md.tier, row.title) }}</i></span>
-                        </template>
-                        <span
-                          v-else
-                          class="award-chip chip-none"
-                        >{{ row.desc }}</span>
+                        <span class="award-chip" :class="'chip-' + row.medal_type">{{ MEDAL_TEXT[row.medal_type] }}<i class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</i></span>
                       </td>
                       <td class="cell-members">
-                        <template v-if="row.members">
+                        <template v-if="row.members && row.members.length">
                           <span
-                            v-for="(m, mi) in splitMembers(row.members)"
+                            v-for="(m, mi) in row.members"
                             :key="mi"
                             class="member-name"
                           ><template v-if="mi > 0">、</template>{{ alignName(m) }}</span>
@@ -739,21 +461,21 @@ const sectionTitle = computed(() => {
             </table>
 
             <!-- 卡片视图（桌面/移动均可用；移动端默认，可切换） -->
-            <div v-if="teamRows.length || groupedHistoryRows.length" class="team-cards-mobile" :class="{ 'view-hidden': viewMode !== 'card' }">
+            <div v-if="hasTableData" class="team-cards-mobile" :class="{ 'view-hidden': viewMode !== 'card' }">
               <!-- 天梯赛式 -->
-              <div v-for="g in teamRows" :key="'m' + g.year" class="m-group">
+              <div v-for="g in gpltGroups" :key="'m' + g.session" class="m-group">
                 <div class="m-group-head">
                   <span class="m-edition">{{ g.edition }}</span>
                   <span class="m-date">{{ g.dateText }}</span>
                 </div>
-                <div v-for="t in g.teams" :key="t.name" class="m-team-card">
-                  <div class="m-team-name">{{ t.name }}</div>
+                <div v-for="t in g.rows" :key="t.team_name" class="m-team-card">
+                  <div class="m-team-name">{{ t.team_name }}</div>
                   <div class="m-awards">
                     <span class="m-award" :class="medalClass(t.national)">
-                      <i class="fa-solid fa-flag"></i> 国赛 {{ awardLevel(t.national) || '—' }}
+                      <i class="fa-solid fa-flag"></i> 国赛 {{ RANK_TEXT[t.national] || '—' }}
                     </span>
                     <span class="m-award" :class="medalClass(t.provincial)">
-                      <i class="fa-solid fa-map-location-dot"></i> 省赛 {{ awardLevel(t.provincial) || '—' }}
+                      <i class="fa-solid fa-map-location-dot"></i> 省赛 {{ t.provincial ? RANK_TEXT[t.provincial] : '—' }}
                     </span>
                   </div>
                   <div class="m-members">
@@ -762,39 +484,30 @@ const sectionTitle = computed(() => {
                         v-for="(m, mi) in t.members"
                         :key="mi"
                         class="member-name"
-                        :class="memberAwardClass(m)"
-                        :title="m.award || '未获个人奖'"
+                        :class="memberAwardClass(m.medal)"
+                        :title="m.medal ? MEDAL_TEXT[m.medal] : '未获个人奖'"
                       >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
                     </template>
                     <span v-else class="member-name member-plain">—</span>
                   </div>
                 </div>
               </div>
-              <!-- 通用式（按场次分组） -->
-              <div v-for="g in groupedHistoryRows" :key="'mg' + g.year + '|' + g.title" class="m-group">
+              <!-- xcpc：按场次分组 -->
+              <div v-for="g in xcpcGroups" :key="'mg' + g.date + '|' + g.title" class="m-group">
                 <div class="m-group-head">
                   <span class="m-edition">{{ g.title }}</span>
                   <span class="m-date">{{ g.dateText }}</span>
                 </div>
-                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card m-team-card--event" :class="cardTone(row)">
-                  <div class="m-team-name">{{ row.name || '—' }}</div>
+                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card m-team-card--event" :class="'tone-' + row.medal_type">
+                  <div class="m-team-name">{{ row.team_name || '—' }}</div>
                   <div class="m-awards">
-                    <template v-if="row.medals && row.medals.length">
-                      <span
-                        v-for="(md, mi) in row.medals"
-                        :key="mi"
-                        class="m-award"
-                        :class="medalChipClass(md.medal)"
-                      ><i class="fa-solid fa-trophy"></i> {{ md.medal }} <span class="chip-tag">{{ tierTag(md.tier, row.title) }}</span></span>
-                    </template>
-                    <span v-else class="m-award chip-none"><i class="fa-solid fa-trophy"></i> {{ row.desc }}</span>
+                    <span class="m-award" :class="'chip-' + row.medal_type"><i class="fa-solid fa-trophy"></i> {{ MEDAL_TEXT[row.medal_type] }} <span class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</span></span>
                   </div>
                   <div class="m-fields">
-                    <p v-if="row.rank" class="m-field"><strong>排名：</strong>{{ row.rank }}/{{ row.teamCount }}</p>
                     <p class="m-field"><strong>参赛成员：</strong>
-                      <template v-if="row.members">
+                      <template v-if="row.members && row.members.length">
                         <span
-                          v-for="(m, mi) in splitMembers(row.members)"
+                          v-for="(m, mi) in row.members"
                           :key="mi"
                           class="member-name"
                         ><template v-if="mi > 0">、</template>{{ alignName(m) }}</span>
@@ -808,7 +521,7 @@ const sectionTitle = computed(() => {
           </div>
         </section>
 
-        <RouterLink to="/contest" class="back-link">
+<RouterLink to="/contest" class="back-link">
           <i class="fa-solid fa-arrow-left"></i> 返回竞赛信息
         </RouterLink>
       </template>

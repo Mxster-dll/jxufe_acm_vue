@@ -1,0 +1,114 @@
+{
+  "cards": [
+    {
+      "kind": "event",
+      "date": "2011-07-14",
+      "category": "lanqiao",
+      "title": "第二届蓝桥杯国赛",
+      "tagline": "京城一役，蓝桥小试锋芒",
+      "link": "2011-7-14-lanqiao-national"
+    },
+    {
+      "kind": "event",
+      "date": "2011",
+      "category": "lanqiao",
+      "title": "第二届蓝桥杯省赛",
+      "tagline": "二次出征，手感渐入佳境",
+      "link": "2011-lanqiao-provincial"
+    }
+  ],
+  "articles": {
+    "2011-7-14-lanqiao-national": {
+      "title": "第二届蓝桥杯国赛",
+      "date": "2011-07-14",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 7 人次获奖、国赛 1 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "国赛获奖情况",
+          "icon": "fa-trophy"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "C++ · 本科",
+              "三等奖",
+              "1 人",
+              "韩涧武"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    },
+    "2011-lanqiao-provincial": {
+      "title": "第二届蓝桥杯省赛",
+      "date": "2011",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 7 人次获奖、国赛 1 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "C++ · 本科",
+              "一等奖",
+              "3 人",
+              "石业晨、陈启明、韩涧武"
+            ],
+            [
+              "C++ · 本科",
+              "二等奖",
+              "3 人",
+              "付志辉、张帅、徐晓枫"
+            ],
+            [
+              "C++ · 本科",
+              "优秀奖",
+              "1 人",
+              "谭寅"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    }
+  }
+}

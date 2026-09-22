@@ -1,0 +1,587 @@
+[
+  {
+    "competition_name": "CCPC全国赛 绵阳站",
+    "medal_level": "regional",
+    "team_name": "你一生的故事",
+    "medal_type": "silver",
+    "members": [
+      "刘力溯",
+      "王安",
+      "黄友民"
+    ],
+    "coach_names": [],
+    "date": "2020-11-01"
+  },
+  {
+    "competition_name": "CCPC女生专场",
+    "medal_level": "provincial",
+    "team_name": "酱菜幼儿园",
+    "medal_type": "bronze",
+    "members": [
+      "宋嘉荟",
+      "李婷",
+      "童若珈"
+    ],
+    "coach_names": [],
+    "date": "2021-10-31"
+  },
+  {
+    "competition_name": "CCPC女生专场",
+    "medal_level": "provincial",
+    "team_name": "会写的一把过",
+    "medal_type": "bronze",
+    "members": [
+      "宋嘉荟",
+      "徐雅",
+      "高莉婷"
+    ],
+    "coach_names": [],
+    "date": "2022-11-27"
+  },
+  {
+    "competition_name": "广东省赛",
+    "medal_level": "provincial",
+    "team_name": "神之一手",
+    "medal_type": "bronze",
+    "members": [
+      "廖凌翔",
+      "王海峰",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2023-05-14"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（湖南）",
+    "medal_level": "invitational",
+    "team_name": "神之一手",
+    "medal_type": "bronze",
+    "members": [
+      "廖凌翔",
+      "王海峰",
+      "胡衍滨"
+    ],
+    "coach_names": [],
+    "date": "2023-05-28"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（湖南）",
+    "medal_level": "invitational",
+    "team_name": "逐梦",
+    "medal_type": "bronze",
+    "members": [
+      "何洋",
+      "王玛琪",
+      "石翰林"
+    ],
+    "coach_names": [],
+    "date": "2023-05-28"
+  },
+  {
+    "competition_name": "CCPC全国赛 深圳站",
+    "medal_level": "regional",
+    "team_name": "三只小猪",
+    "medal_type": "bronze",
+    "members": [
+      "何洋",
+      "王玛琪",
+      "石翰林"
+    ],
+    "coach_names": [],
+    "date": "2023-11-12"
+  },
+  {
+    "competition_name": "河南省赛",
+    "medal_level": "provincial",
+    "team_name": "彩虹海",
+    "medal_type": "bronze",
+    "members": [
+      "喻琰",
+      "肖丛宇",
+      "郭宇航"
+    ],
+    "coach_names": [],
+    "date": "2024-05-12"
+  },
+  {
+    "competition_name": "河南省赛",
+    "medal_level": "provincial",
+    "team_name": "能不能不爆零",
+    "medal_type": "bronze",
+    "members": [
+      "彭俊杰",
+      "徐晓律",
+      "荣应琪"
+    ],
+    "coach_names": [],
+    "date": "2024-05-12"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（长春）暨吉林省赛",
+    "medal_level": "invitational",
+    "team_name": "能不能不爆零",
+    "medal_type": "silver",
+    "members": [
+      "彭俊杰",
+      "徐晓律",
+      "荣应琪"
+    ],
+    "coach_names": [],
+    "date": "2024-05-18"
+  },
+  {
+    "competition_name": "广西区赛",
+    "medal_level": "provincial",
+    "team_name": "AC钙奶",
+    "medal_type": "bronze",
+    "members": [
+      "潘登",
+      "董泓毅",
+      "邓燕翔"
+    ],
+    "coach_names": [],
+    "date": "2024-05-19"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（山东）暨山东省赛",
+    "medal_level": "invitational",
+    "team_name": "Fe^3=Au",
+    "medal_type": "silver",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2024-05-26"
+  },
+  {
+    "competition_name": "CCPC全国赛 郑州站",
+    "medal_level": "regional",
+    "team_name": "她还爱着我对不队",
+    "medal_type": "bronze",
+    "members": [
+      "王玛琪",
+      "石翰林",
+      "黄亦诚"
+    ],
+    "coach_names": [],
+    "date": "2024-11-17"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（东北）暨东北地区赛",
+    "medal_level": "invitational",
+    "team_name": "别开香槟开早了",
+    "medal_type": "silver",
+    "members": [
+      "周政",
+      "孙天成",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2025-05-25"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（东北）暨东北地区赛",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "bronze",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2025-05-25"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "~到了赛场上就要拿出真本事~",
+    "medal_type": "silver",
+    "members": [
+      "吴星乐",
+      "王翔",
+      "肖辅霖"
+    ],
+    "coach_names": [],
+    "date": "2025-05-25"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "彩虹海",
+    "medal_type": "bronze",
+    "members": [
+      "喻琰",
+      "杨源鑫",
+      "肖丛宇"
+    ],
+    "coach_names": [],
+    "date": "2025-05-25"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（长春）",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "bronze",
+    "members": [
+      "衷铭川",
+      "万俊哲",
+      "张云菲"
+    ],
+    "coach_names": [],
+    "date": "2025-05-25"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（郑州）暨河南省赛",
+    "medal_level": "invitational",
+    "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+    "medal_type": "silver",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2025-06-02"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（福建）暨福建省赛",
+    "medal_level": "invitational",
+    "team_name": "彩虹海",
+    "medal_type": "silver",
+    "members": [
+      "周政",
+      "喻琰",
+      "肖丛宇"
+    ],
+    "coach_names": [],
+    "date": "2025-06-21"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "ACM败犬太多了",
+    "medal_type": "bronze",
+    "members": [
+      "喻芷珊",
+      "张瑞杰",
+      "杨源鑫"
+    ],
+    "coach_names": [],
+    "date": "2025-09-13"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "~到了赛场上就要拿出真本事~",
+    "medal_type": "bronze",
+    "members": [
+      "吴星乐",
+      "王翔",
+      "肖辅霖"
+    ],
+    "coach_names": [],
+    "date": "2025-09-13"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+    "medal_type": "silver",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2025-09-13"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "别开香槟开早了",
+    "medal_type": "silver",
+    "members": [
+      "孙天成",
+      "罗文轩",
+      "肖源"
+    ],
+    "coach_names": [],
+    "date": "2025-09-13"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "阳光彩虹不白码",
+    "medal_type": "bronze",
+    "members": [
+      "李承志",
+      "李润卓",
+      "陶金杰"
+    ],
+    "coach_names": [],
+    "date": "2025-09-13"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "别开香槟开早了",
+    "medal_type": "silver",
+    "members": [
+      "孙天成",
+      "杨源鑫",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "provincial",
+    "team_name": "别开香槟开早了",
+    "medal_type": "silver",
+    "members": [
+      "孙天成",
+      "杨源鑫",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "invitational",
+    "team_name": "天空之矛",
+    "medal_type": "bronze",
+    "members": [
+      "张瑞杰",
+      "曹京顺",
+      "李鑫"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（南昌）暨江西省赛",
+    "medal_level": "provincial",
+    "team_name": "天空之矛",
+    "medal_type": "bronze",
+    "members": [
+      "张瑞杰",
+      "曹京顺",
+      "李鑫"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+    "medal_level": "invitational",
+    "team_name": "200g金牌和200g铁牌哪个更重.",
+    "medal_type": "silver",
+    "members": [
+      "杨镇宁",
+      "陈帆",
+      "陈煜仕"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+    "medal_level": "invitational",
+    "team_name": "哔站复活小聪明粉丝团.",
+    "medal_type": "silver",
+    "members": [
+      "彭俊杰",
+      "王翔",
+      "肖俊杰"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "silver",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（秦皇岛）暨河北省赛",
+    "medal_level": "invitational",
+    "team_name": "阳光彩虹不白码.",
+    "medal_type": "silver",
+    "members": [
+      "李承志",
+      "李润卓",
+      "陶金杰"
+    ],
+    "coach_names": [],
+    "date": "2026-05-24"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（福州）暨福建省赛",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉.",
+    "medal_type": "silver",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-05-30"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "200g金牌和200g铁牌哪个更重..",
+    "medal_type": "silver",
+    "members": [
+      "杨镇宁",
+      "陈帆",
+      "陈煜仕"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
+    "medal_type": "gold",
+    "members": [
+      "彭俊杰",
+      "李鑫",
+      "王翔"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "别开香槟开早了",
+    "medal_type": "silver",
+    "members": [
+      "孙天成",
+      "杨源鑫",
+      "罗文轩"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉..",
+    "medal_type": "gold",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "四氧化三铁",
+    "medal_type": "silver",
+    "members": [
+      "周君",
+      "詹宇飞",
+      "钟明皓"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "我发现用大脑思考不用token",
+    "medal_type": "bronze",
+    "members": [
+      "蒋滔",
+      "钟俊",
+      "龚铭浩"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "清纯粉毛小萝莉.",
+    "medal_type": "bronze",
+    "members": [
+      "万涛涛",
+      "严雨睿",
+      "周子诺"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "酱菜一队",
+    "medal_type": "silver",
+    "members": [
+      "吴穹宇",
+      "喻芷珊",
+      "黄志豪"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（桂林）暨广西区赛",
+    "medal_level": "invitational",
+    "team_name": "阳光彩虹不白码..",
+    "medal_type": "silver",
+    "members": [
+      "李承志",
+      "李润卓",
+      "陶金杰"
+    ],
+    "coach_names": [],
+    "date": "2026-05-31"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（贵州）暨贵州省赛",
+    "medal_level": "invitational",
+    "team_name": "三人驭六丸",
+    "medal_type": "bronze",
+    "members": [
+      "周君",
+      "詹宇飞",
+      "钟明皓"
+    ],
+    "coach_names": [],
+    "date": "2026-06-07"
+  },
+  {
+    "competition_name": "CCPC全国邀请赛（贵州）暨贵州省赛",
+    "medal_level": "invitational",
+    "team_name": "喜欢只是错觉",
+    "medal_type": "silver",
+    "members": [
+      "万俊哲",
+      "张云菲",
+      "衷铭川"
+    ],
+    "coach_names": [],
+    "date": "2026-06-07"
+  }
+]

@@ -77,7 +77,7 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
   </section>
 
   <!-- 表格 -->
-  <section v-else-if="block.type === 'table'" class="b-table">
+  <section v-else-if="block.type === 'table'" class="b-table" :class="{ 'table-left': block.left }">
     <div class="table-wrap">
       <table>
         <thead v-if="block.headers">
@@ -132,6 +132,14 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
         <strong>{{ it.name }}</strong>：{{ it.desc }}
       </li>
     </ul>
+  </section>
+
+  <!-- 相关链接（大事记文章 → 竞赛介绍页） -->
+  <section v-else-if="block.type === 'related'" class="b-related">
+    <RouterLink :to="block.to" class="related-link">
+      <span>{{ block.text }}</span>
+      <i class="fas fa-arrow-right"></i>
+    </RouterLink>
   </section>
 
   <!-- FAQ -->
@@ -273,6 +281,9 @@ const cells = (row) => row.map((c) => (typeof c === 'string' ? { text: c } : c))
 .b-list li { margin-bottom: 8px; }
 
 .b-table { margin: var(--space-lg) 0; }
+/* left: true —— 末列是长名单（获奖名单 / 姓名），左对齐并给表格一个下限宽度 */
+.b-table.table-left table { min-width: 640px; }
+.b-table.table-left td:last-child { text-align: left; line-height: 1.9; }
 .table-wrap {
   overflow-x: auto;
   border-radius: var(--radius-lg);
@@ -338,9 +349,27 @@ tr:hover { background: rgba(26,115,232,0.06); }
   gap: 3rem;
   flex-wrap: wrap;
   margin: 16px 0;
-}
-.b-join .qr-row img { max-width: 300px; }
+}.b-join .qr-row img { max-width: 300px; }
 .qr-note { text-align: center; margin-top: 1rem; color: var(--text-muted); }
+
+.b-related { margin: 36px 0 8px; }
+.related-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: 1px solid rgba(26,115,232,0.25);
+  border-radius: var(--radius-lg);
+  background: rgba(26,115,232,0.04);
+  color: var(--primary-dark);
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+.related-link:hover {
+  background: rgba(26,115,232,0.09);
+  border-color: rgba(26,115,232,0.4);
+  transform: translateX(3px);
+}
 
 .b-organizers { margin: 32px 0; }
 .b-organizers h2 {

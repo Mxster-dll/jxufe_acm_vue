@@ -1,0 +1,138 @@
+{
+  "cards": [
+    {
+      "kind": "event",
+      "date": "2014-06-01",
+      "category": "lanqiao",
+      "title": "第五届蓝桥杯国赛",
+      "tagline": "决战京华，代码如剑出鞘",
+      "link": "2014-6-1-lanqiao-national"
+    },
+    {
+      "kind": "event",
+      "date": "2014",
+      "category": "lanqiao",
+      "title": "第五届蓝桥杯省赛",
+      "tagline": "五年沉淀，一题更比一题稳",
+      "link": "2014-lanqiao-provincial"
+    }
+  ],
+  "articles": {
+    "2014-6-1-lanqiao-national": {
+      "title": "第五届蓝桥杯国赛",
+      "date": "2014-06-01",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 10 人次获奖、国赛 4 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "国赛获奖情况",
+          "icon": "fa-trophy"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · B组",
+              "特等奖",
+              "1 人",
+              "陈天楚"
+            ],
+            [
+              "Java · B组",
+              "三等奖",
+              "2 人",
+              "刘玉、徐海官"
+            ],
+            [
+              "C++ · B组",
+              "二等奖",
+              "1 人",
+              "许少岩"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    },
+    "2014-lanqiao-provincial": {
+      "title": "第五届蓝桥杯省赛",
+      "date": "2014",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 10 人次获奖、国赛 4 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · B组",
+              "一等奖",
+              "3 人",
+              "刘玉、徐海官、陈天楚"
+            ],
+            [
+              "Java · B组",
+              "二等奖",
+              "3 人",
+              "刘子扬、周志恒、江峰"
+            ],
+            [
+              "Java · B组",
+              "三等奖",
+              "2 人",
+              "何远生、赖建国"
+            ],
+            [
+              "C++ · B组",
+              "二等奖",
+              "1 人",
+              "许少岩"
+            ],
+            [
+              "C++ · B组",
+              "优秀奖",
+              "1 人",
+              "彭倩"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    }
+  }
+}

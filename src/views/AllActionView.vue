@@ -1,57 +1,41 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useTimeline } from "../composables/useTimeline";
-import { useCompetitionEvents } from "../composables/useCompetitionEvents";
 
-const { topEvents, yearGroups, loading } = useTimeline();
-const { eventsByYear, loading: eventsLoading } = useCompetitionEvents();
+// 数据来自 public/data/events/：年份自动探测，首屏 = top + 最新两个年份，其余年份点侧栏再拉
+// 月份 / 分类计数随年份加载实时派生，没有任何索引文件
+const {
+  years,
+  yearMonthTree,
+  categories,
+  topEvents,
+  yearGroups,
+  loadedYears,
+  loadYear,
+  loadAllYears,
+  pendingYears,
+  loading,
+  error,
+} = useTimeline();
+const ready = computed(() => !loading.value);
 
-const ready = computed(() => !loading.value && !eventsLoading.value);
-
-// ── 搜索 ──
+// ── 筛选：年份 + 月份 + 类型 + 搜索 ──
 const searchQuery = ref("");
-
-// ── 筛选：年份 + 月份 ──
-const selectedYear = ref(null);   // null = 全部
+const selectedYear = ref(null);   // null = 全部（展示已加载的年份）
 const selectedMonth = ref(null);  // null = 该年全部月份
 const selectedCat = ref(null);    // null = 全部类型
 
-// 提取所有 (year, month) 组合（含比赛节点），按年分组
-const yearMonthTree = computed(() => {
-  const map = {};
-  for (const g of yearGroups.value) {
-    for (const item of g.items) {
-      const y = item.date.getFullYear();
-      const m = item.date.getMonth() + 1;
-      if (!map[y]) map[y] = new Set();
-      map[y].add(m);
-    }
-  }
-  for (const g of eventsByYear.value) {
-    for (const item of g.items) {
-      if (!item.date) continue; // 无具体日期的比赛节点（如 2018 届）不参与月份筛选
-      const y = item.date.getFullYear();
-      const m = item.date.getMonth() + 1;
-      if (!map[y]) map[y] = new Set();
-      map[y].add(m);
-    }
-  }
-  return Object.keys(map)
-    .sort((a, b) => b - a)
-    .map((y) => ({
-      year: Number(y),
-      months: [...map[y]].sort((a, b) => b - a),
-    }));
-});
+const isPending = (year) => pendingYears.value.includes(String(year));
 
-function selectYear(y) {
+async function selectYear(y) {
   if (selectedYear.value === y) {
     selectedYear.value = null;
     selectedMonth.value = null;
-  } else {
-    selectedYear.value = y;
-    selectedMonth.value = null;
+    return;
   }
+  selectedYear.value = y;
+  selectedMonth.value = null;
+  await loadYear(y); // 该年尚未加载则懒加载
 }
 
 function selectMonth(m) {
@@ -69,214 +53,84 @@ function resetAll() {
   selectedCat.value = null;
 }
 
-// 某年的新闻条目 / 比赛节点（用于按年渲染）
-function yearNews(year) {
-  const g = filteredYearGroups.value.find((g) => Number(g.year) === year);
-  return g ? g.items : [];
-}
-function yearEvents(year) {
-  const g = filteredEventsByYear.value.find((g) => Number(g.year) === year);
-  return g ? g.items : [];
+// 「全部」：清空筛选，并把尚未加载的年份并发拉下来（逐年出现）
+function showAll() {
+  resetAll();
+  loadAllYears();
 }
 
-// 合并某年的新闻与比赛节点，按日期倒序（无具体日期的比赛节点排在该年最后）
-function yearItems(year) {
-  const items = [
-    ...yearNews(year).map((it) => ({ kind: "news", ...it })),
-    ...yearEvents(year).map((ev) => ({ kind: "event", ...ev })),
-  ];
-  items.sort((a, b) => {
-    if (!a.date) return 1;
-    if (!b.date) return -1;
-    return b.date - a.date;
-  });
-  return items;
-}
-
-// 比赛节点/新闻 → 详情页地址（xcpc 比赛节点进入该场比赛的新闻页；无 cid 的赛事节点进入该届参赛详情页）
-function itemTo(item) {
-  if (item.kind === "event") {
-    return item.cid
-      ? `/contest-news/${item.cid}`
-      : `/competition/${item.slug}/${item.year}`;
-  }
-  return `/action/${item.slug}`;
-}
-
-// 卡片右上角徽标：奖项汇总（🥇🥈🥉），仅获奖场次显示
-// xcpc 走新闻页（cid）；蓝桥等走单届详情页（无 cid，按 slug 识别）
-function itemBadge(item) {
-  if (item.kind !== "event") return "";
-  if (!item.cid && item.slug !== "lanqiao") return "";
-  const s = item.summary || "";
-  return /[🥇🥈🥉]/.test(s) ? s : "";
-}
-
-// 徽标按最高奖项着色：🥇金 > 🥈银 > 🥉铜
-function badgeTone(item) {
-  if (item.kind !== "event") return "";
-  if (!item.cid && item.slug !== "lanqiao") return "";
-  const s = item.summary || "";
-  if (s.includes("🥇")) return "gold";
-  if (s.includes("🥈")) return "silver";
-  if (s.includes("🥉")) return "bronze";
-  return "";
-}
-
-// 卡片正文：有梗文案优先，回退奖项汇总（其他赛事节点无 subtitle 时保持原样）
-function itemTagline(item) {
-  if (item.kind === "event" && item.subtitle) return item.subtitle;
-  return item.summary || "";
-}
-
-// ── 卡片类别（左边框配色）：xcpc邀请赛 / IC区域赛·CC全国赛 / xcpc省赛 / 网络赛 / 天梯赛 / 蓝桥杯 / 传智杯 / 社团活动·讲座·集训 / 校赛 ──
-// 类别 key → CSS 类后缀（tl-card--<key>），颜色在 <style> 中通过 --cat 变量定义
-function itemClass(item) {
-  const t = item.title || "";
-  if (item.kind === "event") {
-    // 按赛事系列判定（非 xcpc 系列直接归类）
-    if (item.slug === "gplt") return "tts";
-    if (item.slug === "lanqiao") return "lanqiao";
-    if (item.slug === "chuanzhi") return "chuanzhi";
-    if (item.slug === "baidu") return "baidu";
-    // xcpc 系列按标题关键词判定（顺序敏感：邀请赛兼办省赛的标题归邀请赛）
-    if (t.includes("网络预选赛")) return "net";
-    if (t.includes("全国邀请赛")) return "inv";
-    if (t.includes("亚洲区域赛") || t.includes("全国赛")) return "reg";
-    if (t.includes("女生专场")) return "inv"; // CCPC女生专场：国家级 xcpc 赛事
-    if (t.includes("总决赛")) return "reg";   // CCPC总决赛：全国性顶级赛事
-    if (t.includes("省赛") || t.includes("区赛")) return "prov";
-    return "other";
-  }
-  // 新闻节点（actions.json）
-  if (t.includes("天梯赛")) return "tts";
-  if (t.includes("蓝桥")) return "lanqiao";
-  if (t.includes("传智")) return "chuanzhi";
-  if (t.includes("百度之星")) return "baidu";
-  if (t.includes("校赛") || t.includes("校内")) return "school";
-  // 其余新闻（培训/讲座/集训/答疑等）归社团活动类
-  return "club";
-}
-
-// ── 事件类型筛选（本质是颜色：--cat 变量与卡片左边框一致）──
+// ── 类型筛选 ──
+// category 直接来自数据；计数由 useTimeline 按「已加载的年份 + 置顶」实时算出。
 // 顺序即侧栏 chips 展示顺序
-const CAT_META = [
-  { key: "inv", label: "邀请赛" },
-  { key: "reg", label: "区域赛·全国赛" },
-  { key: "prov", label: "省赛·区赛" },
-  { key: "net", label: "网络赛" },
-  { key: "tts", label: "天梯赛" },
-  { key: "lanqiao", label: "蓝桥杯" },
-  { key: "chuanzhi", label: "传智杯" },
-  { key: "baidu", label: "百度之星" },
-  { key: "club", label: "社团活动" },
-  { key: "school", label: "校赛" },
-  { key: "other", label: "其他" },
-];
+const CAT_LABEL = {
+  inv: "邀请赛",
+  reg: "区域赛·全国赛",
+  prov: "省赛·区赛",
+  net: "网络赛",
+  tts: "天梯赛",
+  lanqiao: "蓝桥杯",
+  chuanzhi: "传智杯",
+  baidu: "百度之星",
+  school: "校赛",
+  club: "社团活动",
+  other: "其他",
+};
+const CAT_ORDER = Object.keys(CAT_LABEL);
 
-// 当前数据中实际存在的类型（含数量），空类型不展示
 const availableCats = computed(() => {
-  const counts = {};
-  const scan = (items) => {
-    for (const it of items) {
-      const k = itemClass(it);
-      counts[k] = (counts[k] || 0) + 1;
-    }
-  };
-  scan(topEvents.value);
-  for (const g of yearGroups.value) scan(g.items);
-  // 比赛节点原始数据无 kind 字段，按赛事分支归类需补上
-  for (const g of eventsByYear.value) scan(g.items.map((it) => ({ kind: "event", ...it })));
-  return CAT_META.filter((m) => counts[m.key] > 0).map((m) => ({
-    ...m,
-    count: counts[m.key],
-  }));
+  const counts = categories.value || {};
+  return CAT_ORDER.filter((k) => counts[k]).map((k) => ({ key: k, label: CAT_LABEL[k], count: counts[k] }));
 });
 
-// 类别筛选匹配（null = 全部）
 function matchCat(item) {
-  return selectedCat.value === null || itemClass(item) === selectedCat.value;
+  return selectedCat.value === null || item.category === selectedCat.value;
 }
 
-// ── 综合筛选 + 搜索 ──
-const isFiltering = computed(() => selectedYear.value !== null || selectedCat.value !== null || searchQuery.value.trim() !== "");
+// ── 综合筛选 + 搜索（只作用于已加载的年份）──
+const isFiltering = computed(
+  () =>
+    selectedYear.value !== null ||
+    selectedMonth.value !== null ||
+    selectedCat.value !== null ||
+    searchQuery.value.trim() !== ""
+);
 
-const filteredYearGroups = computed(() => {
+const filteredGroups = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase();
   let groups = yearGroups.value;
+  if (selectedYear.value !== null) groups = groups.filter((g) => Number(g.year) === selectedYear.value);
 
-  // 年份筛选
-  if (selectedYear.value !== null) {
-    groups = groups.filter((g) => Number(g.year) === selectedYear.value);
-    if (selectedMonth.value !== null) {
-      groups = groups.map((g) => ({
-        ...g,
-        items: g.items.filter(
-          (it) => it.date.getMonth() + 1 === selectedMonth.value
-        ),
-      }));
-    }
-  }
-
-  // 事件类型筛选（颜色）
-  if (selectedCat.value !== null) {
-    groups = groups
-      .map((g) => ({ ...g, items: g.items.filter(matchCat) }))
-      .filter((g) => g.items.length > 0);
-  }
-
-  // 搜索
-  const q = searchQuery.value.trim().toLowerCase();
-  if (q) {
-    groups = groups
-      .map((g) => ({
-        ...g,
-        items: g.items.filter(
-          (it) =>
-            it.title.toLowerCase().includes(q) ||
-            (it.summary || "").toLowerCase().includes(q)
-        ),
-      }))
-      .filter((g) => g.items.length > 0);
-  }
-
-  return groups;
-});
-
-// 搜索结果也应用于置顶
-const filteredTopEvents = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase();
-  return topEvents.value.filter(
-    (it) =>
-      matchCat(it) &&
-      (!q ||
-        it.title.toLowerCase().includes(q) ||
-        (it.summary || "").toLowerCase().includes(q))
-  );
-});
-
-// ── 比赛节点：按年份/月份/类型/搜索过滤 ──
-const filteredEventsByYear = computed(() => {
-  return eventsByYear.value
-    .filter((g) => selectedYear.value === null || Number(g.year) === selectedYear.value)
+  return groups
     .map((g) => ({
       ...g,
       items: g.items.filter((it) => {
-        if (selectedMonth.value !== null && it.date && it.date.getMonth() + 1 !== selectedMonth.value) return false;
-        if (!matchCat({ kind: "event", ...it })) return false;
-        const q = searchQuery.value.trim().toLowerCase();
-        if (q && !it.name.toLowerCase().includes(q) && !(it.title || "").toLowerCase().includes(q) && !(it.summary || "").toLowerCase().includes(q)) return false;
+        if (selectedMonth.value !== null && (!it.date || it.date.getMonth() + 1 !== selectedMonth.value)) return false;
+        if (!matchCat(it)) return false;
+        if (q && !it.title.toLowerCase().includes(q) && !it.tagline.toLowerCase().includes(q)) return false;
         return true;
       }),
     }))
     .filter((g) => g.items.length > 0);
 });
 
-// 过滤后仍有内容的年份（新闻 + 比赛节点）
-const filteredYears = computed(() => {
-  const years = new Set(filteredYearGroups.value.map((g) => Number(g.year)));
-  for (const g of filteredEventsByYear.value) years.add(Number(g.year));
-  return [...years].sort((a, b) => b - a);
+// 搜索结果同样应用于置顶条目
+const filteredTopEvents = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase();
+  return topEvents.value.filter(
+    (it) => matchCat(it) && (!q || it.title.toLowerCase().includes(q) || it.tagline.toLowerCase().includes(q))
+  );
 });
+
+const filteredYears = computed(() => filteredGroups.value.map((g) => Number(g.year)));
+
+// 某年过滤后的时间轴条目（上游已按日期倒序）
+function yearItems(year) {
+  const g = filteredGroups.value.find((g) => Number(g.year) === year);
+  return g ? g.items : [];
+}
+
+// 还有多少年份未加载（用于提示"点击侧栏年份可加载更多"）
+const unloadedCount = computed(() => years.value.length - loadedYears.value.length);
 </script>
 
 <template>
@@ -325,7 +179,7 @@ const filteredYears = computed(() => {
         </div>
 
         <!-- 事件类型筛选（颜色与卡片左边框一致） -->
-        <div class="sidebar-cats" v-if="!loading">
+        <div class="sidebar-cats" v-if="years.length">
           <p class="sidebar-cats-label">事件类型</p>
           <div class="cat-chips">
             <button
@@ -350,15 +204,16 @@ const filteredYears = computed(() => {
           </div>
         </div>
 
-        <!-- 年份 / 月份导航 -->
-        <nav class="sidebar-nav" v-if="!loading">
+        <!-- 年份 / 月份导航（年份自动探测，点击年份按需加载该年数据，月份随之出现） -->
+        <nav class="sidebar-nav" v-if="years.length">
           <button
             class="sn-item sn-all"
             :class="{ active: selectedYear === null && selectedCat === null && !searchQuery }"
-            @click="resetAll"
+            @click="showAll"
           >
             <span class="sn-bullet"></span>
             <span>全部</span>
+            <span v-if="unloadedCount" class="sn-loading">+{{ unloadedCount }}</span>
           </button>
 
           <div
@@ -368,11 +223,18 @@ const filteredYears = computed(() => {
           >
             <button
               class="sn-item sn-year"
-              :class="{ active: selectedYear === entry.year }"
+              :class="{ active: selectedYear === entry.year, loading: isPending(entry.year) }"
               @click="selectYear(entry.year)"
             >
               <span class="sn-bullet"></span>
               <span class="sn-year-num">{{ entry.year }}</span>
+              <i v-if="isPending(entry.year)" class="fas fa-circle-notch fa-spin sn-pending"></i>
+              <span
+                v-else-if="!loadedYears.includes(String(entry.year))"
+                class="sn-loading"
+                title="点击加载该年"
+                >·</span
+              >
             </button>
 
             <button
@@ -401,6 +263,8 @@ const filteredYears = computed(() => {
           ></div>
         </div>
 
+        <p v-else-if="error" class="hint">加载失败</p>
+
         <template v-else>
           <!-- 置顶事件（不受年月筛选，但受搜索影响） -->
           <section v-if="filteredTopEvents.length" class="pinned-section">
@@ -410,12 +274,12 @@ const filteredYears = computed(() => {
             <div class="pinned-grid">
               <RouterLink
                 v-for="(top, i) in filteredTopEvents"
-                :key="top.slug"
+                :key="top.key"
                 v-reveal="'fade-up'"
                 :style="{ '--reveal-index': i }"
-                :to="`/action/${top.slug}`"
+                :to="`/post/${top.link}`"
                 class="pinned-card"
-                :class="'tl-card--' + itemClass(top)"
+                :class="'tl-card--' + top.category"
               >
                 <span class="pinned-mark"
                   ><i class="fa-solid fa-thumbtack"></i
@@ -426,9 +290,15 @@ const filteredYears = computed(() => {
             </div>
           </section>
 
+          <!-- 懒加载提示：还有年份没拉下来 -->
+          <p v-if="!isFiltering && unloadedCount" class="load-hint">
+            <i class="fas fa-circle-info"></i>
+            已加载最近 {{ loadedYears.length }} 年，点击左侧年份可加载该年，或点「全部」加载所有年份
+          </p>
+
           <!-- 无结果 -->
           <div
-            v-if="isFiltering && !filteredYearGroups.length && !filteredTopEvents.length && !filteredEventsByYear.length"
+            v-if="isFiltering && !filteredGroups.length && !filteredTopEvents.length"
             class="empty-state"
           >
             <i class="fas fa-inbox"></i>
@@ -448,25 +318,24 @@ const filteredYears = computed(() => {
               class="year-heading"
             >
               <span class="year-num">{{ year }}</span>
-              <span class="year-count">{{ yearNews(year).length + yearEvents(year).length }} 件事</span>
+              <span class="year-count">{{ yearItems(year).length }} 件事</span>
             </h2>
 
             <!-- 时间轴（新闻 + 比赛节点，按日期倒序） -->
             <div v-if="yearItems(year).length" class="timeline">
               <RouterLink
                 v-for="(item, idx) in yearItems(year)"
-                :key="item.kind + '-' + (item.slug || item.title) + '-' + idx"
-                :to="itemTo(item)"
+                :key="item.key"
+                :to="`/post/${item.link}`"
                 v-reveal="'fade-up'"
                 :style="{ '--reveal-index': idx }"
                 class="tl-item"
                 :class="{ right: idx % 2 === 1 }"
               >
-                <div class="tl-card" :class="'tl-card--' + itemClass(item)">
-                  <span v-if="itemBadge(item)" class="tl-badge" :class="'tl-badge--' + badgeTone(item)">{{ itemBadge(item) }}</span>
+                <div class="tl-card" :class="'tl-card--' + item.category">
                   <span class="tl-date">{{ item.dateStr }}</span>
                   <h3>{{ item.title }}</h3>
-                  <p>{{ itemTagline(item) }}</p>
+                  <p>{{ item.tagline }}</p>
                 </div>
                 <div class="tl-dot"></div>
               </RouterLink>
@@ -754,10 +623,50 @@ const filteredYears = computed(() => {
   padding-left: 36px;
   font-size: 0.78rem;
 }
+/* 年份懒加载状态：未加载显示淡点，加载中显示转圈 */
+.sn-loading {
+  margin-left: auto;
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+}
+.sn-pending {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--primary);
+  opacity: 0.8;
+}
+.sn-item.loading {
+  color: var(--primary);
+}
 
 /* ── 右侧内容 ── */
 .tl-content {
   min-width: 0;
+}
+
+.load-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-lg);
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(26, 115, 232, 0.05);
+  border: 1px solid rgba(26, 115, 232, 0.12);
+  color: var(--text-light);
+  font-size: var(--font-size-sm);
+}
+.load-hint i {
+  color: var(--primary);
+}
+
+.hint {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-3xl) 0;
+  font-size: var(--font-size-lg);
 }
 
 .skeleton-list {
@@ -957,36 +866,7 @@ const filteredYears = computed(() => {
 .tl-card--club { --cat: #78909c; }
 .tl-card--school { --cat: #d81b60; }
 .tl-card--other { --cat: #b0bec5; }
-/* 奖项汇总徽标（右上角；背景色与最高奖项相同） */
-.tl-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 2px 10px;
-  border-radius: var(--radius-full);
-  border: 1px solid;
-  font-size: 0.78rem;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.tl-badge--gold {
-  background: linear-gradient(135deg, #fff3d6, #ffe3a1);
-  border-color: rgba(212, 167, 44, 0.45);
-  color: #8a6d1a;
-}
-.tl-badge--silver {
-  background: linear-gradient(135deg, #f3f3f4, #dcddde);
-  border-color: rgba(150, 152, 156, 0.5);
-  color: #6d6f73;
-}
-.tl-badge--bronze {
-  background: linear-gradient(135deg, #fbe9dc, #f0cdb0);
-  border-color: rgba(205, 127, 50, 0.45);
-  color: #9c5a1e;
-}
 .tl-card h3 {
-  padding-right: 96px; /* 给右上角徽标留位 */
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--text);

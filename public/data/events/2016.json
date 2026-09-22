@@ -1,0 +1,225 @@
+{
+  "cards": [
+    {
+      "kind": "event",
+      "date": "2016-07-16",
+      "category": "tts",
+      "title": "第一届团体程序设计天梯赛",
+      "tagline": "省赛：冠军",
+      "link": "2016-7-16-gplt"
+    },
+    {
+      "kind": "event",
+      "date": "2016-05-29",
+      "category": "lanqiao",
+      "title": "第七届蓝桥杯国赛",
+      "tagline": "决赛舞台，把校徽带到北京",
+      "link": "2016-5-29-lanqiao-national"
+    },
+    {
+      "kind": "event",
+      "date": "2016",
+      "category": "lanqiao",
+      "title": "第七届蓝桥杯省赛",
+      "tagline": "七年之痒？不存在的，只有 AC 的快乐",
+      "link": "2016-lanqiao-provincial"
+    }
+  ],
+  "articles": {
+    "2016-11-13-icpc-beijing": {
+      "title": "2016 ACM-ICPC 亚洲区北京赛站 （北京大学）",
+      "date": "2016-11-13",
+      "subtitle": "第一次，总是最难忘",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "本次比赛为区域赛，于 2016-11-13 举行。江西财经大学共派出 1 支队伍参赛。",
+            "本次比赛中，我校参赛队伍未能获奖。",
+            "这是我校首次参加 ICPC 亚洲区域赛。"
+          ]
+        },
+        {
+          "type": "awards",
+          "cards": [
+            {
+              "title": "typhoon",
+              "tone": "",
+              "fields": [
+                {
+                  "label": "参赛成员",
+                  "value": "li wanrong、mao ying tang、xin liao"
+                },
+                {
+                  "label": "排名",
+                  "value": "180/198"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "2016-7-16-gplt": {
+      "title": "第一届团体程序设计天梯赛",
+      "date": "2016-07-16",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "来自全国 24 个省级行政区、79 所高校、204 支队伍、2000 多位参赛学生"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "awards",
+          "heading": "高校奖",
+          "cards": [
+            {
+              "title": "江西省分省冠军",
+              "tone": "gold",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「团体程序设计天梯赛」竞赛介绍",
+          "to": "/competition/gplt"
+        }
+      ]
+    },
+    "2016-5-29-lanqiao-national": {
+      "title": "第七届蓝桥杯国赛",
+      "date": "2016-05-29",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 57 人次获奖、国赛 7 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "国赛获奖情况",
+          "icon": "fa-trophy"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · B组",
+              "二等奖",
+              "1 人",
+              "何丰"
+            ],
+            [
+              "Java · B组",
+              "三等奖",
+              "3 人",
+              "周俊、熊诚、陈衍安"
+            ],
+            [
+              "C++ · B组",
+              "优秀奖",
+              "3 人",
+              "周鑫、王可可、罗成峰"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    },
+    "2016-lanqiao-provincial": {
+      "title": "第七届蓝桥杯省赛",
+      "date": "2016",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "省赛 57 人次获奖、国赛 7 人次获奖"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "省赛获奖情况",
+          "icon": "fa-medal"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "组别",
+            "奖项",
+            "人数",
+            "获奖名单"
+          ],
+          "left": true,
+          "rows": [
+            [
+              "Java · B组",
+              "一等奖",
+              "4 人",
+              "何丰、周俊、熊诚、陈衍安"
+            ],
+            [
+              "Java · B组",
+              "二等奖",
+              "6 人",
+              "刘思湉、周启业、徐卓雅、杨蕊、郝爽、陈晓博"
+            ],
+            [
+              "Java · B组",
+              "三等奖",
+              "12 人",
+              "姜本领、曾妍、朱中川、李晓云、王小玲、王耀、胡康桥、贵玉婷、郭寒风、陈汉瑛、韩高杰、黑毅菲"
+            ],
+            [
+              "C++ · B组",
+              "一等奖",
+              "3 人",
+              "周鑫、王可可、罗成峰"
+            ],
+            [
+              "C++ · B组",
+              "二等奖",
+              "10 人",
+              "吴雅男、奉伟琦、姜勇、徐华、方吉、梁超、焦鹏冲、章洁、许毅、钱佳威"
+            ],
+            [
+              "C++ · B组",
+              "三等奖",
+              "20 人",
+              "冯云芳、冯杨、刘国靖、刘畅、刘超、叶丽茶、叶云鹏、宋雨薇、官琳、张丽华、惠霓、曹茜、杨乐川、殷勤、汪志鹏、熊波、罗兴、袁宇超、谈锐、雷佳毅"
+            ],
+            [
+              "C++ · A组",
+              "三等奖",
+              "2 人",
+              "许传炼、马宁"
+            ]
+          ]
+        },
+        {
+          "type": "related",
+          "text": "查看「蓝桥杯」竞赛介绍",
+          "to": "/competition/lanqiao"
+        }
+      ]
+    }
+  }
+}
