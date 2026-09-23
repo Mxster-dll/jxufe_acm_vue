@@ -10,7 +10,7 @@
 
 - **Vue 3 组件化** — `<script setup>` + Composition API，路由级懒加载，首屏极速
 - **内容数据驱动** — 新闻、竞赛、成员、负责人、友链等全部抽离为 JSON，增删改无需改代码
-- **首页头像墙** — hero 区底纹：成员头像铺成一面缓慢漂移的墙，点按钮切换成可悬停交互的成员墙（见「头像墙」一节）
+- **首页头像墙** — hero 区底纹：协会成员的头像铺成一面缓慢漂移的墙，上滚把遮罩拉走就看全（见「维护群成员头像墙」一节）
 - **手写 CSS 体系** — 设计令牌（`tokens.css`）+ 全局基础样式 + 组件 Scoped，无 UI 框架依赖
 - **滚动入场动画** — 基于 IntersectionObserver 的 `v-reveal` 指令，声明式使用
 - **大事记 Block 渲染** — 类型化内容块系统，支持 13 种块类型（文本、图片、奖项、表格、FAQ 等）
@@ -58,24 +58,37 @@ jxufe-acm-vue/
 │   │   │   └── <year>.json        # 该年全部数据：{ cards: [...], articles: { <id>: {...} } }
 │   │   │                           #   每张卡片的 link 恒等于本文件 articles 里的一个 key
 │   │   ├── leaders.json           # 历届协会负责人
-│   │   ├── members.json           # 优秀成员列表
-│   │   ├── hero_wall.json         # ★ 头像墙悬浮卡片的文案（手写；key = 图片文件名 → name/line/tags/message）
-│   │   ├── hero_wall.manifest.json # 头像墙图片清单（由 scripts/gen_hero_wall.mjs 生成）
+│   │   ├── members.json           # 优秀成员列表（手写真源；页面实际读的是下面那份生成物）
+│   │   ├── group_members.json     # ★ 群成员名单，当前 138 人（由仓外 build_site_assets.py 派生）
+│   │   ├── duties.json            # 协会职务胶囊（由仓外 build_duties.py 派生，只显示不进排名）
+│   │   ├── scholarships.json      # ★ 国奖 / 国励（由仓外 build_scholarships.py 派生，见第七节）
+│   │   ├── wall_rules.json        # ★ 头像墙入墙规则：people[] + 两条分数阈值（手写，会长维护）
+│   │   ├── group_wall.manifest.json # 头像墙要铺哪些图（生成物，已 gitignore）
+│   │   ├── group_wall.json        # 头像墙每格的文案（生成物，已 gitignore）
+│   │   ├── excellent_members.json # 优秀成员页名单 = members.json + 自动入册（生成物，已 gitignore）
+│   │   ├── event_badges.json      # 大事记时间轴的奖牌徽章（生成物，已 gitignore）
+│   │   ├── hero_wall.json         # 上游那份 33 人墙的文案（现只剩 message 被首页墙按姓名并入）
+│   │   ├── hero_wall.manifest.json # 上游那份墙的图片清单（现无消费者，也不再自动重写）
 │   │   └── links.json             # 友情链接
 │   └── images/                    # 静态图片
 │       ├── slider/                # 首页轮播图（slider1.jpg ~ slider10.jpg）
 │       ├── contest/               # 竞赛 logo
 │       ├── leader/                # 负责人头像（2021.jpg ~ 2026.jpg）
-│       ├── excellent_member/      # ★ 头像墙图片真源（一个文件一个人）
-│       ├── hero_wall_thumbs/      # 头像墙缩略图 384/ 与 256/ 两档（由 ps1 脚本生成）
+│       ├── excellent_member/      # 优秀成员照片（members.json 的 photo 指这里；不是墙上唯一来源）
+│       ├── group_members/         # 群头像出图：full/ 640 原图 + thumbs/ 160 WebP（仓外脚本产出）
+│       ├── group_wall_thumbs/     # ★ 协会成员墙缩略图 384/ 与 256/ 两档（npm run data:group-thumbs）
+│       ├── hero_wall_thumbs/      # 上游那份墙的缩略图 384/ 与 256/ 两档（现无消费者）
 │       ├── links/                 # 友链 logo + 二维码
 │       └── ...
 ├── knowledge.md                   # ★ 内容维护手册（加内容 / 改字段 / 部署，面向内容维护者）
 ├── scripts/
 │   ├── check_awards.mjs           # 全量数据校验
 │   ├── gen_events_articles.mjs    # 由 scripts/source/ 生成「赛事卡片」的大事记文章
-│   ├── gen_hero_wall.mjs          # 扫头像墙图片目录 → 生成清单 + 补齐文案骨架（挂在 predev/prebuild）
-│   ├── gen_hero_wall_thumbs.ps1   # 生成头像墙缩略图（本地 Windows 专用，不参与服务器构建）
+│   ├── gen_hero_wall.mjs          # 上游那套：扫 excellent_member/ → 重写 hero_wall.manifest.json
+│   ├── gen_hero_wall_thumbs.ps1   # 上游那套缩略图（无消费者；本地 Windows 专用，不参与服务器构建）
+│   ├── gen_group_wall.mjs         # ★ 生成协会成员墙 group_wall.*.json + excellent_members.json
+│   ├── gen_group_wall_thumbs.ps1  # ★ 生成成员墙缩略图 384/256（本地 Windows 专用，不参与服务器构建）
+│   ├── gen_event_badges.mjs       # 由 awards/ + events/ 生成大事记奖牌徽章 event_badges.json
 │   └── source/                    # 生成器专用输入（不参与运行时，不部署）
 │       ├── editions/gplt/<年>.json    # 天梯赛：国赛/省赛 × 高校奖/团队奖/个人奖 + scale
 │       ├── editions/lanqiao/<年>.json # 蓝桥杯：国赛/省赛 × 个人奖（含科目/排名）
@@ -88,12 +101,18 @@ jxufe-acm-vue/
     ├── styles/
     │   ├── tokens.css             # 设计令牌（颜色 / 阴影 / 圆角 / 间距 / 字体）
     │   ├── base.css               # CSS 重置 + 全局样式 + 动画关键帧
+    │   ├── honors.css             # 荣誉胶囊配色（按类型：竞赛 / 去向 / 荣誉 / 联系方式）
+    │   ├── view-toggle.css        # 「表格 / 卡片」「计数 / 图标 / 明细」共用的切换按钮
     │   └── index.css              # 样式入口
     ├── components/
     │   ├── AppHeader.vue          # 导航栏（滚动变色 + 移动端汉堡菜单）
     │   ├── AppFooter.vue          # 页脚（三栏布局 + ICP 备案）
     │   ├── FloatingJoin.vue       # 右下角悬浮"加入我们"按钮
     │   ├── HeroAvatarWall.vue     # ★ 首页 hero 头像墙（环面漂移 + 悬停卡 + 触屏交互 + 开关按钮）
+    │   ├── CompetitionSchedule.vue # ★ 竞赛信息页的全年赛程时间轴（桌面横轴图 + 窄屏竖排表）
+    │   ├── HonorPill.vue          # 荣誉胶囊（按类型分色，配色在 styles/honors.css）
+    │   ├── HonorTags.vue          # ★ 荣誉标签序列：职务 → 战绩（三种模式）→ 手写荣誉（两页共用）
+    │   ├── HonorViewSwitch.vue    # 荣誉显示方式切换器：计数 / 图标 / 明细（优秀成员页与负责人页共用）
     │   ├── action/
     │   │   ├── BlockRenderer.vue  # 大事记块类型渲染器
     │   │   └── OrganizerGrid.vue  # 招新二维码卡片网格
@@ -104,6 +123,11 @@ jxufe-acm-vue/
     │   ├── useNews.js             # 首页最新动态（从 events/ 按年取最近 5 条新闻）
     │   ├── useTimeline.js         # ★ 大事记数据源（按年懒加载 + 归一化 + 分组）
     │   ├── useSkeleton.js         # 骨架屏占位
+    │   ├── useMasonry.js          # ★ 优秀成员页瀑布流（逐张放进最短列；列数/间距走 .grid 上的 CSS 变量）
+    │   ├── useHonorDisplay.js     # ★ 荣誉取数与归一化（职务 / 自动汇总战绩 / 手写荣誉 + 奖学金，两页共用）
+    │   ├── useMaskReveal.js       # ★ 首页遮罩（=除了墙和导航栏的整个页面）的位移与滚轮/触摸两套驱动
+    │   ├── useSectionSnap.js      # ★ 首页滚轮「按部分对齐」吸附（#home / #about / #news 三个分界）
+    │   ├── useHeaderHint.js       # ★ 导航栏「成员墙」入口的横向让位 / 随滚动隐藏 / 切页淡入
     │   ├── useCodeTrail.js        # 代码字符拖尾特效
     │   └── useCursorRipple.js     # 光标涟漪特效
     ├── directives/
@@ -113,6 +137,12 @@ jxufe-acm-vue/
     ├── utils/
     │   ├── inline.js              # 内联标记解析（**加粗**、[链接](url)）
     │   ├── awardGroups.js         # ★ 获奖数据展示工具（两个竞赛页共用）
+    │   ├── honorPills.js          # ★ 比赛战绩胶囊：由 awards/ 自动汇总（不用手写进名单）
+    │   ├── honorRanking.js        # ★ 卡片排序分与入墙阈值的分数口径（改口径只改这个文件）
+    │   ├── honorType.js           # 荣誉分类 / 归一化 / 类型中文名（配色见 styles/honors.css）
+    │   ├── honorCoverage.js       # 剔掉「已被胶囊覆盖」的手写荣誉（显示与计分共用一份口径）
+    │   ├── honorView.js           # 荣誉显示偏好：count / icons / detail（存 localStorage）
+    │   ├── contestTaxonomy.js     # 赛事分类与奖牌枚举（页面与生成器共用一份口径）
     │   └── eventsSource.js        # ★ 大事记数据源读写封装（events/ 目录唯一入口：卡片/置顶/索引/文章）
     └── views/
         ├── HomeView.vue           # 首页 /
@@ -146,13 +176,27 @@ npm run preview
 > ⚠️ `preview` 的地址必须用 **http://localhost:4173** —— 别用 `127.0.0.1`。
 > Vite 只监听了 IPv6 的 `::1`，用 `127.0.0.1` 会得到「连接被拒绝」。
 
-`dev` 与 `build` 都会先自动执行 `scripts/gen_hero_wall.mjs`（`predev` / `prebuild` 钩子），
-重扫头像墙图片目录 —— 所以往 `public/images/excellent_member/` 丢完图，不用手动跑任何命令。
-唯一的例外是**缩略图**，它得单独跑：
+`dev` 与 `build` 都会先自动跑**两个生成器**（`predev` / `prebuild` 钩子，实际执行的就是下面这两条）：
 
 ```bash
-npm run data:hero-wall      # 只重扫清单（dev/build 会自动跑，一般不用手动）
-npm run data:hero-thumbs    # 生成头像墙缩略图 ← 加图后必须跑，不会自动
+node scripts/gen_group_wall.mjs     # ★ 协会成员墙：group_wall.*.json + excellent_members.json
+node scripts/gen_event_badges.mjs   # 大事记时间轴的奖牌徽章 event_badges.json
+```
+
+> 上游那套 `gen_hero_wall.mjs` **已从 predev / prebuild 里摘掉**（2026-09-23）：它的产物
+> `hero_wall.manifest.json` 在 `src/` 下已无消费者 —— 首页那面墙读的是 `group_wall.*` ——
+> 而它每次都重写两个上游跟踪的文件，净产生时间戳噪声。需要它时手动 `npm run data:hero-wall`。
+> `hero_wall.json`（作者的留言）仍是**真源**：我们的生成器只读它，按姓名并入墙上。
+
+> 也就是说**改完数据不用手动跑任何命令**，`npm run dev` 会自己重新生成。
+> 唯一的例外是**缩略图**（它按 mtime 增量跳过，且只能在本地 Windows 上跑），得单独跑：
+
+```bash
+npm run data:group-wall     # 只重新生成成员墙数据（dev/build 会自动跑，一般不用手动）
+npm run data:group-thumbs   # ★ 生成成员墙缩略图 ← 加人 / 换头像后必须跑，不会自动
+npm run data:event-badges   # 只重新生成奖牌徽章（dev/build 会自动跑）
+npm run data:hero-wall      # 上游那套清单（已不在 dev/build 里；首页墙不消费它）
+npm run data:hero-thumbs    # 上游那套缩略图（无消费者，一般不用跑）
 npm run data:check          # 数据校验
 ```
 
@@ -165,9 +209,9 @@ npm run data:check          # 数据校验
 | 步骤 | 做什么 |
 |---|---|
 | 1 | 本地检查：部署密钥、`src/main.js`、`package.json`、`tar` 是否就位 |
-| 2 | 把 `src` `public` `package.json` `package-lock.json` `vite.config.js` `index.html` `scripts/gen_hero_wall.mjs` 打成 tar.gz |
+| 2 | 把 `src` `public` `package.json` `package-lock.json` `vite.config.js` `index.html` 与 `scripts/` 下的**两个生成器**（`gen_group_wall.mjs` `gen_event_badges.mjs`）打成 tar.gz |
 | 3 | 上传到服务器 `/tmp`，解包到 `/var/www/jxufe_acm_vue`（会先删掉远端的旧 `src` 与 `public`） |
-| 4 | 服务器上 `npm install` + `npm run build`（`prebuild` 钩子会自动重扫头像墙清单） |
+| 4 | 服务器上 `npm install` + `npm run build`（`prebuild` 钩子会重新生成头像墙数据与奖牌徽章） |
 | 5 | `nginx -t` → `systemctl reload nginx` → curl 验证站点返回 `HTTP 200` |
 
 最后打印 `Deploy success!` 与 `https://jxufe-acm.cn`。
@@ -181,11 +225,20 @@ npm run data:check          # 数据校验
 > **每次都是全量上传 `src` 与 `public`**（约 36 MB），不做增量比对 —— 用一轮 tar 换掉逐文件
 > 判断，出问题的可能性更低。第一次部署与第十次耗时相同。
 
-> ⚠️ **头像墙的缩略图必须在本地先生成**（`npm run data:hero-thumbs`）——
-> 那个脚本依赖 Windows 的图形库，服务器是 Linux 跑不了。忘了跑不会坏版（会回退加载原图），只是慢。
-> 图片清单则相反，服务器构建时会自动重扫。
+> **`scripts/` 里只有这两个生成器需要上传**，缺一个服务器构建就直接失败：`prebuild` 会依次执行
+> 它们，脚本不在 → `node` 报「找不到文件」→ `npm run build` 以非零退出，整次部署停在第 4 步。
+> 其余脚本（`check_awards.mjs`、`gen_events_articles.mjs`、`gen_hero_wall.mjs`、两个 `.ps1` 缩略图生成器、
+> 以及各种 `*.cjs` 一次性工具）都不参与服务器构建，**不要**加进 `UPLOAD_ITEMS` ——
+> 那是人工维护的清单，多传一份就多一份要跟着改的东西。
 
-详见 `deploy.bat` 内注释，以及 [`knowledge.md` 第 7 节](./knowledge.md)。
+> ⚠️ **成员墙的缩略图必须在本地先生成**（`npm run data:group-thumbs`）——
+> 那个脚本是 Windows PowerShell + GDI+，服务器是 Linux 跑不了。忘了跑不会坏版
+> （组件会回退加载原图，单张最大 1.79 MB），只是又慢又费流量。
+> 而 `group_wall.*.json` 这些**数据**相反：服务器构建时会自动重新生成，
+> 而且它们本来就在 `.gitignore` 里 —— 部署靠的是 tar 打包本地工作树，不是 git。
+
+详见 `deploy.bat` 内注释，以及 [`knowledge.md` 第 7 节](./knowledge.md)
+（⚠️ 那一节表格里的 tar 清单写的是旧版，只有 `gen_hero_wall.mjs` 一个 —— **以 `deploy.bat` 为准**）。
 
 ---
 
@@ -193,8 +246,14 @@ npm run data:check          # 数据校验
 
 > 📖 **只想加内容、不想读代码？直接看 [`knowledge.md`](./knowledge.md)。**
 > 那份文档按「我要做什么」组织（开头就是速查表），逐字段说明大事记 / 获奖记录 /
-> 优秀成员 / 协会负责人 / 首页头像墙怎么改，以及更新部署的全流程。
+> 优秀成员 / 协会负责人怎么改，以及更新部署的全流程。
 > 下面这一节讲的是**数据格式与设计取舍**，偏实现。
+
+> ⚠️ **一处例外**：`knowledge.md` 第 6 节（头像墙）与速查表里的「首页头像墙加/换图」讲的是**上游作者那套
+> `hero_wall.*` 流水线** —— 那面墙已被协会成员墙取代，往 `public/images/excellent_member/` 丢图
+> **不会再让任何人上首页墙**（`hero_wall.manifest.json` 与 `hero_wall_thumbs/` 现在都没有消费者，
+> 只剩 `hero_wall.json` 的留言被按姓名并入）。改这面墙请看本 README 的
+> **《六、维护群成员头像墙》**（在「内容维护指南」一节末尾）。
 
 所有可变内容存放在 `public/data/` 目录下的 JSON 文件中。**修改后刷新页面即可生效，无需重启，无需重新构建。**
 
@@ -297,11 +356,73 @@ events/2026.json
 
 1. 将成员头像放到 `public/images/excellent_member/` 目录
 2. 在 `members.json` 数组末尾添加一条记录
-3. 刷新页面即可看到新成员
+3. 刷新页面即可看到新成员（页面读的是生成物 `excellent_members.json` = `members.json` **原样** + 自动入册的人，
+   所以手写的条目一定在；那份文件由 `predev` / `prebuild` 自动重新生成，不用手动跑）
 
 **photo 字段**支持两种写法：
 - 本地图片：`"/images/excellent_member/xxx.png"`
 - 外部 URL：`"https://example.com/avatar.jpg"`
+
+> **哪些荣誉不该手写在这里**：五个竞赛系列（ICPC / CCPC / 天梯赛 / 百度之星 / 蓝桥杯）
+> 由 `honorPills.js` 自动汇总，**别手写**；协会职务由 `duties.json` 提供，**也别手写**；
+> 国家奖学金 / 国家励志奖学金来自生成物 `scholarships.json`，**同样别手写** —— 这三类
+> 手写都会与自动来源重复显示。详见第七节。
+
+#### 荣誉怎么显示：计数 / 图标 / 明细（三种方式）
+
+同一个人的荣誉在**优秀成员页**与**协会负责人页**有三种看法，偏好两页共用、切一次两页一起变：
+
+| 取值 | 长什么样 | 用途 |
+|---|---|---|
+| `count`（**默认**） | `🥇1🥈2🥉2` | 只关心「拿了几块什么牌」 |
+| `icons` | `🥇🥈🥈🥉🥉` | 想一眼看出长短 |
+| `detail` | `第45届ICPC亚洲区域赛 南京站 铜牌` | 想看赛事全名与具体奖牌 |
+
+- 实现：`src/utils/honorView.js`（`HONOR_VIEWS` 三档 + 共享的 `honorView` 引用）与
+  `src/components/HonorViewSwitch.vue`（只有模板，样式复用既有的 `.view-toggle` / `.view-btn`）。
+- 偏好存在 **localStorage 键 `jxufe:honor-view`**：刷新不丢；读不到或值不认识
+  （隐私模式 / 老浏览器）一律**退回 `count`** —— 那是默认口径，不会把页面显示搞空。
+- `detail` 的文案与首页成员墙**点开的浮窗**同源（都走 `recordsToDetails()`），
+  所以两处的赛事全名说法永远一致；墙上的悬停预览卡仍是 `count` 口径（卡片窄，塞不下长句）。
+
+> 这里改的只是**怎么显示**，不改数据。荣誉胶囊的**数据**不用手写：ICPC / CCPC / 天梯赛 /
+> 百度之星 / 蓝桥杯 由 `src/utils/honorPills.js` 从 `awards/*.json` 自动汇总；
+> 手写只留给胶囊表达不了的名次类条目（**季军 / 首刀**）与没有数据源的赛事
+> （睿抗 / 传智杯 / 数学建模 / CSP）—— 判据写在 `src/utils/honorCoverage.js` 的文件头，
+> 改动前先读那里，否则同一块奖牌会在卡片上出现两遍、在排名里被算两遍。
+> 「全省第一 / 全省第二」原先也在这份手写清单里，2026-09-24 已删除：胶囊自带的省赛名次段
+> （明细版 `🏆第10届天梯赛江西省个人冠军`、`🏆第16届蓝桥杯 C++·B组省赛亚军`）已经表达了它们。
+> **优秀奖是特例：显示可以，计分一律 0** ——「不计优秀奖」是胶囊聚合的既有口径，手写条目里写了
+> 也照此归零（`honorRanking.js` 的 `NON_SCORING_TIERS`）；**别让它退成 `ATTEND_POINTS` 的
+> 「参赛经历」0.6 分** —— 那等于把优秀奖当参赛。
+
+#### 不愿公开真名：用 `displayName`，**不要**改 `name`
+
+一条记录可以多写一个可选的 `displayName`：
+
+```json
+{
+  "name": "张三",
+  "displayName": "匿名学长",
+  "class": "23软件工程2班",
+  "photo": "/images/excellent_member/zhangsan.png",
+  "honors": ["保研至XX大学"]
+}
+```
+
+规则只有一句：**真名写在主键字段里，只有渲染层用 `displayName`。**
+
+- 所有**匹配**都按真名走：自动汇总的战绩胶囊（按 `name`）、卡片排序的分数（按 `name`）、
+  首页成员墙的荣誉关联（按 `realName`）。
+- 只有**显示**用 `displayName || name`：两个页面各有一个取显示名的函数
+  （`shownName(x) = x.displayName || x.name`，卡片标题与图片 `alt` 都走它），以及墙面每一格的文本。
+- 群成员走另一条路：真名与显示名都填在工作区那份 **`07_技术项目/qq-group-avatars/群成员真名对照表.csv`**
+  的「真实姓名 / 显示名」两列，`build_site_assets.py` 会把它们带进 `group_members.json`
+  的 `realName` / `displayName`。
+- ⚠️ **别用旧办法**（把 `name` 直接改成匿称、再靠手写荣誉兜底）：那样自动汇总永远匹配不到这个人，
+  他的奖项会凭空少一大半。
+- 匿名只覆盖**成员卡片与头像墙**。公开 JSON 里仍然是真名，竞赛信息 / 大事记 / 获奖名单页面里的
+  **队伍名单也仍然是实名**（这一条是有意留着的，改它得单独处理）。
 
 ---
 
@@ -366,6 +487,8 @@ events/2026.json
   "medal_level": "invitational",
   "team_name": "天空之矛",
   "medal_type": "bronze",
+  "rank": 89,
+  "rank_official": 86,
   "members": ["张瑞杰", "曹京顺", "李鑫"],
   "coach_names": [],
   "date": "2026-05-24"
@@ -388,6 +511,7 @@ events/2026.json
   "group": "B",
   "medal_level": "provincial",
   "medal_type": "gold",
+  "rank": 12,
   "coach_names": [],
   "date": "2026-04-12"
 }
@@ -399,10 +523,25 @@ events/2026.json
 |---|---|
 | `session` | 届数（int），如 `11` = 第十一届 |
 | `medal_level` | `regional` / `invitational` / `provincial` / `final`（团队赛）；`provincial` / `national`（单人赛） |
-| `medal_type` | `gold` / `silver` / `bronze`（分别渲染为 金/银/铜奖 或 一/二/三等奖） |
+| `medal_type` | `gold` / `silver` / `bronze`（分别渲染为 金/银/铜奖 或 一/二/三等奖）；蓝桥杯另有 `grand`（特等奖，全站仅 2014 年国赛 陈天楚 一条） |
 | `language` | `C++` / `Java` / `Python` / `null`（仅蓝桥杯） |
 | `group` | `A` / `B` / `研究生组` / `null`（仅蓝桥杯） |
 | `date` | `YYYY-MM-DD`；**未知填 `null`**（数组内 `null` 排末尾） |
+| `rank` | 名次（int ≥ 1，**可选**）。语义随赛事不同：xCPC 是**队伍名次**、蓝桥杯 / 百度之星是**选手在本组别内的名次**、天梯赛是**全体获奖者中的推算名次** |
+| `rank_official` | 仅 xCPC：**正式队排名**（源里 `rankOfficial`）。与 `rank`（全体队伍总排名）并存，悬停名次胶囊时两个都显示 |
+| `rank_provincial` | 仅 xCPC：「暨江西省赛」场的**省赛组内名次**，只写在 `medal_level` 为 `provincial` 的那条上（同队当天有邀请赛 + 省赛两条记录，全场总排名两条都成立，组内名次只对省赛有意义） |
+| `rank_to` | **并列区间上界**（仅天梯赛推算）：官方不公布名次，`rank` = 同分并列块起点、`rank_to` = 块尾；`rank_to === rank` 时省略该字段 |
+| `rank_source` | `official`（榜单直接公布的）/ `derived`（按「更高奖项名额之和 + 档内位置」推算的）/ `backfill`（来自补录层：源里 `rank` 是字符串、`medals[].tier` 为 `null`，源自标「待核实」—— xCPC 的西安 2023 / 2024 / 2025 共 3 条，可信度低于其余 74 条）。**默认值 `official` 不写**，只在非默认时出现 |
+
+> 名次是**可选**字段：不是每条获奖记录都有名次（蓝桥杯旧源里第 1 届等 74 条本就没有，
+> 天梯赛 2020 年前的个人奖名单也不存在）。**缺就不显示，不猜、不补 0。**
+> 规范位置一律紧跟 `medal_type`（`npm run data:check` 会按此校验字段顺序）。
+
+> **冠亚季军**：`rank` 为 1 / 2 / 3 时页面不显示 `#1` 而显示 **冠军 / 亚军 / 季军**
+> （判据是 `src/utils/contestTaxonomy.js` 的 `isTrophyRank()`，全站唯一、别处不要另写
+> `rank <= 3`）；大事记卡片右上角的角标把冠亚季军与特等奖**一并计进 🏆**（见
+> `scripts/gen_event_badges.mjs`）。天梯赛的并列区间显示为 `797+`（意为「第 797 名起」），
+> 悬停可看到完整区间与并列人数。
 
 > 新增/修改获奖记录：直接编辑对应文件即可（保持数组按 `date` 升序、`null` 末尾）。
 > 改完执行 `npm run data:check` 校验格式。
@@ -578,28 +717,170 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 
 ---
 
-## 🖼 头像墙（首页 hero 底纹）
+### 六、维护群成员头像墙
 
-组件：`src/components/HeroAvatarWall.vue` ｜ 数据：`public/data/hero_wall*.json` ｜
-图片：`public/images/excellent_member/` ｜ 缩略图：`public/images/hero_wall_thumbs/{384,256}/`
+组件：`src/components/HeroAvatarWall.vue`（**上游那份组件，我们一行没改**，只是换了喂进去的数据）｜
+数据：`public/data/group_wall.json` + `group_wall.manifest.json`（**生成物，别手改**）｜
+缩略图：`public/images/group_wall_thumbs/{384,256}/`（**必须本地生成**，见下）
 
-首页 hero 铺一层成员头像，**两种状态共用同一套几何**（同样的瓷砖、同样的环面），切换只是一次纯淡入淡出，
-不重排、不重启动画：
+> ⚠️ **先记住这一句：首页那面墙读的是 `group_wall.*`，不是 `hero_wall.*`。**
+> `hero_wall.manifest.json` 与 `public/images/hero_wall_thumbs/` 是上游作者那套 33 人墙的产物，
+> 现在**已经没有任何消费者**（`gen_hero_wall.mjs` 也已在 2026-09-23 从 `predev`/`prebuild` 摘掉，
+> 因而不会再被重写；`npm run data:hero-wall` 可手动跑）。
+> 唯一还在用的是 `public/data/hero_wall.json` 里的**留言文案** —— 生成器按姓名并进我们的墙（见下文）。
+> 也就是说：**往 `public/images/excellent_member/` 丢一张图，不会再让任何人出现在首页墙上。**
 
-| | 底纹态（默认） | 激活态（点「成员墙」按钮） |
+首页 hero 铺的是这面「协会成员墙」：里面有群成员、优秀成员、协会负责人，
+以及规则名单补进来的人，**全部由站点已有数据推导**（没有任何人名字是手写进去的）。
+
+#### 数据链：谁派生谁
+
+| 环节 | 谁产出 | 说明 |
 |---|---|---|
-| 不透明度 | `0.18`（`dimOpacity`） | `1` |
-| 速度 | `11 px/s`（`speedBackdrop`） | `22 px/s`（`speed`） |
-| 悬停 | 该格亮起并模糊成一团软斑 | 弹出**预览卡**（姓名 / 班级 / 奖项 / 留言前 10 行） |
+| 群成员 | `07_技术项目/qq-group-avatars/build_site_assets.py` → `public/data/group_members.json` | **仓外依赖**：读 `群成员名单.csv` + 头像归档 `avatars.json` / `avatars/` / `已标注/`，产出 `group_members.json`（当前 138 人：QQ / 群昵称 / 身份 / 真名 / 头像 / 班级）与 `public/images/group_members/{full,thumbs}/` |
+| 协会职务 | `07_技术项目/qq-group-avatars/build_duties.py` → `public/data/duties.json` | **仓外依赖**：由工作区根目录三份《协会干事名单》派生（当前 24 人），在墙上显示为绿色胶囊 |
+| 站点名单（手写） | `public/data/members.json`、`leaders.json` | 优秀成员的 `honors`、负责人的 `achievements`。两份字段名不一样是站点既有数据的现状，**别去统一** |
+| 奖学金（生成） | `07_技术项目/奖学金数据/build_scholarships.py` → `public/data/scholarships.json` | **仓外依赖**：从信息库那份**全校**名单（4379 条 / 九个学年）匹配到协会成员，当前 14 人 / 21 条。国奖、国励**不要再手写进上面两份名单**，见第七节 |
+| 战绩（手写） | `public/data/awards/*.json` | 墙上蓝色「比赛战绩胶囊」由 `src/utils/honorPills.js` 自动汇总，**不要手写进名单** |
+| 入墙规则（手写） | `public/data/wall_rules.json` | 会长维护：`people[]` 无条件入墙 + 两条分数阈值，详见下文 |
+| 留言（手写，只读） | `public/data/hero_wall.json` | 上游那份 37 条文案，**只有 `message` 被并进来** |
+| ↓ 生成 | `npm run data:group-wall`（= `scripts/gen_group_wall.mjs`；`predev` / `prebuild` 也会自动跑） | |
+| 产物 A | `public/data/group_wall.manifest.json` | 墙上铺哪些图：`{ source: '/images/group_members/full/', count, images[] }` |
+| 产物 B | `public/data/group_wall.json` | 每格的文案：`tiles[缩略图文件名] = { name, line, full, tags, sheetTags, message? }` |
+| 产物 C | `public/data/excellent_members.json` | **优秀成员页实际读的名单** = `members.json` 原样 + 自动入册的人，见「两条分数阈值」 |
+| ↓ 缩略图 | `npm run data:group-thumbs`（= `scripts/gen_group_wall_thumbs.ps1`，**本地 Windows 专用**） | 按 `tiles[].full` 出 `public/images/group_wall_thumbs/{384,256}/<基名>.jpg`，**按 mtime 增量跳过**（输出比源新就不重做；`-Force` 强制重建） |
+| ↓ 渲染 | `src/views/HomeView.vue` 里的 `<HeroAvatarWall>` | 除 `v-model:active` 外只传了 6 个 prop：`manifest-url` / `copy-url` / `thumbs-base` / `label="协会成员墙"` / `dim-opacity="1"` / `hover-card="maskOut"`，其余全用组件默认值 |
+
+生成器为什么打乱顺序：名单是按身份排的、优秀成员又是追加在末尾的，不打乱就会在墙上连成一片。
+用的是**固定种子**（`seed = 20260922`）的 LCG 洗牌 —— 输出可复现，也不依赖 `Math.random()`
+（那会让每次 build 都产生不同的文件，diff 全是噪声）。
+
+缩略图生成器为什么要读 `group_wall.json` 的 `tiles` 而不是像作者那套那样扫目录：墙上那一百多张原图
+**分散在三处**（`group_members/full/`、`excellent_member/`、`leader/`），逐条读 `full` 才不会漏。
+
+> ⚠️ **缩略图必须本地生成，而且必须在 `deploy.bat` 之前生成**：它是 Windows PowerShell + GDI+
+> （系统自带、零依赖），服务器是 Linux 跑不了；`prebuild` 也只跑那两个 node 生成器
+> （`gen_group_wall.mjs` + `gen_event_badges.mjs`，见 `package.json` 的 `predev` / `prebuild`）。
+> `deploy.bat` 打包 `public` 时带上去的就是你本地那一份缩略图 —— 本地没生成，
+> 线上就只能回退加载原图（最 1.79 MB 的 PNG），慢但不会错版。
+
+#### 首页上墙的两个状态：遮罩盖着 / 把遮罩拉走
+
+首页这面墙**从不进入组件的「激活态」**（`active` 恒为 `false`，组件自带的那枚开关按钮也在
+`.page-wall :deep(.wall-toggle)` 里被藏掉了）——「露出成员墙」是**把整层遮罩拉下去**这套手势：
+桌面在页首**往上滚一下**即整层收起（会长 2026-09-23 取消了原先「先攒一屏 10%」的阈值），
+触屏则是**手指往下拖、松手判定**（不足一屏的 10% 就回弹）。层序是
+墙（`.page-wall`，固定层 z-index 0）→ 遮罩（`.page-mask`，1）→ 导航栏（在 `App.vue`，天然在外），
+遮罩让开的位置就是墙本身。于是墙上那些参数在首页是**恒定**的：
+
+| | 遮罩盖着（正常浏览） | 把遮罩拉走（露墙） |
+|---|---|---|
+| 漂移速度 | `11 px/s`（`speedBackdrop`，全程不变） | 同左 |
+| 组件侧透明度 | `1`（首页显式传 `:dim-opacity="1"`，**不**用默认的 `0.18`） | 同左 |
+| 悬停 | 该格放大并模糊成一团软斑（`hover-card=false`） | 弹出**预览卡**（姓名 / 班级 / 标签 / 留言前 10 行） |
 | 点击 | 无响应 | 弹出**全文卡**（留言不截断，桌面与触屏同一入口） |
-| 其他 | 文案与轮播正常 | 文案与轮播淡出、顶栏加白纱+阴影 |
+| 文案与轮播 | 正常 | 随遮罩一起让开 |
 
-预览卡与全文卡的分工：`hero_wall.json` 里的 `message` 可以是一整段话。
-悬停卡只做预览 —— 超长时尾部用 `mask` 淡出并挂一行「点击查看全文」（**实测** `scrollHeight` vs
-`clientHeight` 决定要不要挂，短留言不挂）；点开全文卡则是「不滚的头 + 滚的正文 + 不滚的脚」，
-留言再长也只是正文区自己滚，姓名与关闭钮始终可见。两处都只是显示层截断，数据永远存全文。
+底纹的「半透明质感」因此不是组件压暗出来的，而是来自遮罩本身与 hero 那层半透明背景 ——
+这也是为什么首页要显式传 `dim-opacity="1"`：**压暗两次会糊成灰雾**。
 
-### 运动模型：一张环面 + 两条锯齿
+预览卡与全文卡的分工：`message` 可以是一整段话。悬停卡只做预览 —— 超长时尾部用 `mask` 淡出并挂一行
+「点击查看全文」（**实测** `scrollHeight` vs `clientHeight` 决定要不要挂，短留言不挂）；
+点开全文卡则是「不滚的头 + 滚的正文 + 不滚的脚」，留言再长也只是正文区自己滚，
+姓名与关闭钮始终可见。两处都只是显示层截断，数据永远存全文。
+
+#### 卡片与浮窗：`tags` 与 `sheetTags` 两个字段
+
+同一格在**悬停预览卡**和**点开的浮窗**里显示的战绩**故意不一样**：
+
+| 字段 | 用在哪 | 战绩怎么写 | 上限 |
+|---|---|---|---|
+| `tags` | 悬停预览卡 | **计数版**：一个系列一枚（如 `🥇1🥈2`） | 最多 `MAX_TAGS = 12` 枚，超出时末位换成灰色的「…」 |
+| `sheetTags` | 点开的浮窗 | **明细版**：`recordsToDetails()` 逐条列赛事全名与奖牌（如 `🥇第47届 ICPC 亚洲区域赛（南京）金牌`） | **不设上限**（浮窗正文自己滚） |
+
+早先的 `MAX_TAGS` 是 6，后来放宽到 12 —— 四个系列的战绩胶囊一到手就把 6 枚占满，
+手写的奖学金 / 保研 / 个人荣誉一律被「…」顶掉（实测 11 人如此），看起来就像「这面墙只有竞赛」。
+两个字段都**不用手写**，由 `gen_group_wall.mjs` 的 `tagsOf()` / `sheetTagsOf()` 生成，顺序完全一致：
+
+`wall_rules.json` 注入的个人荣誉（绿）→ 会长身份（金，只给本会会长）→ 协会职务（绿，来自 `duties.json`）
+→ 比赛战绩（蓝，来自 `awards/`）→ 手写荣誉（按类型分色）。
+
+手写荣誉会先过掉**已被自动汇总覆盖**的竞赛条目（口径见 `src/utils/honorCoverage.js`）——
+否则同一块奖牌会在卡上出现两遍、把 12 枚的位置全占了，在排名里还会被算两遍。
+
+#### 留言：从上游那份 `hero_wall.json` 按姓名并入
+
+`hero_wall.json` 是上游作者手写的文案字典（37 条，key 是图片文件名）。我们的墙上**不消费**它的
+`name` / `line` / `tags`（那三个我们自己推得出来），只有 `message`（本人留言）没有别的数据源，所以按姓名并进来：
+
+- 匹配键依次是「显示名 → 真名 → 清洗后的群昵称 → 别名」；**对不上就整个字段不写**，
+  组件对空 `message` 一个字符都不渲染（作者自己的口径：墙上绝大多数人没留言，
+  写一句「这位成员还没有留言」只是噪音）。实测当前只有 4 格带留言。
+- 别名表是 `gen_group_wall.mjs` 里的 `HERO_WALL_ALIAS = { 衷铭川: '多喜长安' }` ——
+  上游墙上第 4 位用的网名「多喜长安」，真人就是我们的 2024 学年会长衷铭川。
+  **不要**把「多喜长安」写进 `wall_rules.json` 的 `people[]`：人已经在墙上，再加一次会变成两张卡。
+
+#### 两条分数阈值，与「会长不参与自动入册」
+
+`public/data/wall_rules.json` 是这面墙唯一的**规则**入口（会长维护）。它的 `_note` / `_peopleNote` /
+`_scoreNote` / `_scoreNote2` 四个字段里写着最细的口径 —— **改规则前先读它**，本节只是索引。两块规则：
+
+- `people[]`：**无条件入墙**。人还不在墙上 → 给齐 `name` / `photo` / `className` 就新增一格；
+  人已经在墙上（群成员或站点名单里）→ **只按 `name` 给他补标签**，不会变成两张卡
+  （例：数智技术协会会长凌航本来就在群里，只补了一枚绿标签）。
+  `title`（金色「会长身份」）**只给本会会长**；其他协会的会长身份写 `honors`（绿色「个人荣誉」）。
+- `scoreThreshold`（当前 `20`）：综合分**达到该值的人自动入墙**；
+  `excellentScoreThreshold`（当前 `5`）：综合分达标的人**自动进优秀成员页**。
+
+两条阈值用的是**同一份分数** —— 也就是优秀成员页给卡片**排序**用的那个综合分
+（`src/utils/honorRanking.js`：比赛奖牌分 + 手写战绩分 + 荣誉加项 × 1.5），由本生成器拿同一份数据算出，
+所以**页面上看到的分数就是入册依据**，不存在两套口径。
+
+手写战绩分里有两条硬口径：名次类按冠军 / 亚军 / 季军倍率算；**写了「优秀奖 / 优胜奖」的条目恒计 0 分**
+（`NON_SCORING_TIERS`，2026-09-24 会长裁定 —— 这类条目照常显示，只是不进分数）。
+
+三条容易踩的规则：
+
+1. **`0` = 关闭规则**（不是「分数等于 0」）。`excellentScoreThreshold = 0` 时生成器照旧**无条件重写**
+   `excellent_members.json`，内容就是 `members.json` 原样。这是修过的坑：早先写成「阈值 > 0 才落盘」，
+   把阈值改成 0 后文件根本不更新，页面继续吃上一次的旧名单（阈值已改、名单没变），**静默发陈旧数据**。
+2. **会长不进优秀成员页**（`leaders.json` 那 6 位自动跳过）—— 他们已经在「协会负责人」页有一张卡，
+   两张名单都出现就是同一批人重复曝光。注意这条**只影响自动入册**，`members.json` 里手写的人一个都不动。
+3. **没有可用头像的人上不了墙、也进不了优秀成员页**（缩略图生成器要拿原图出图）。生成器会把这些人打进
+   日志里的「达标但无头像被跳过」清单 —— 看到阈值「没生效」先去日志里找这份清单。
+
+同理，自动入册的人**头像优先取站点名单里的照片，没有就退回他在墙上那一张** ——
+否则「没有头像」会把一批 10 分以上、明明在墙上露着脸的人挡在优秀成员页外（实测阈值 10 分时，7 位达标者全被这一条挡下）。
+
+#### 换头像 / 加人：四个命令，其中两个在**仓库外**
+
+**① 换头像（会长自己更新头像时走这条，一步都不能少）：**
+
+1. 新图放进 `06_共享资源/图片资源/群成员头像/已标注/<班级> <真名>.jpg` —— **文件名保持一致**。
+   `apply_annotated.py` 靠「文件名精确相等、内容哈希却对不上」认出「同一张照片被换掉了」，
+   并顺手删掉站点里已过期的原图与缩略图、逼生成器重建；改了名字就得走哈希重绑那条路。
+2. `python apply_annotated.py` ← **仓外**（`07_技术项目/qq-group-avatars/`）
+3. `python build_site_assets.py` ← **仓外**（同目录；重建 `public/images/group_members/` 与 `group_members.json`）
+4. 回站点仓库：`npm run data:group-wall && npm run data:group-thumbs`
+
+> 只跑到第 3 步就刷新页面，看到的多半还是旧图 —— 墙面读的是**缩略图**，而缩略图按 mtime 增量跳过。
+> 换完头像**两个都得跑**，这是最容易漏的一步。
+
+**② 新人入墙**：先走 ①（进群 → 归档头像 → `build_site_assets.py`）；名字对不上就在
+`07_技术项目/qq-group-avatars/群成员真名对照表.csv` 里补真名（该表**只在不存在时创建，绝不覆盖**你填好的内容）。
+急着上墙又不进群的，直接写 `wall_rules.json` 的 `people[]`。
+
+**③ 改规则 / 改职务**：改 `wall_rules.json`，或重跑 `build_duties.py` 更新 `duties.json`，
+然后 `npm run data:group-wall`（页面代码一行都不用动）。
+
+> ⚠️ **派生文件已进 `.gitignore`**（`group_wall.json` / `group_wall.manifest.json` /
+> `excellent_members.json` / `event_badges.json`）—— **不要手工提交它们**。
+> 入库只带来两种噪声：纯粹的 `generated_at` 时间戳 diff，以及「生成物比生成器活得久」造成的
+> 静默陈旧数据（例：把 `excellentScoreThreshold` 改成 0 之后，页面仍读上一次落盘的名单）。
+> 部署不受影响：`deploy.bat` 用 tar 打包的是**本地工作树**（不是 git 跟踪的文件），
+> 服务器端 `npm run build` 的 `prebuild` 会重新生成它们。
+
+#### 运动模型：一张环面 + 两条锯齿
 
 把整面墙铺成一张**环面** —— 第 `(r, c)` 格取周期块里的 `block[(r % Py) * Px + (c % Px)]`
 （横向周期 `Px` 列、纵向周期 `Py` 行）。环面的周期是轴对齐的，所以要让两个轴**各自**走满一个周期
@@ -616,22 +897,24 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
   实际尺寸由组件按容器盒子扫描决定（三档优先级：周期合格且不超 DOM 预算 → 只保证不超预算 →
   只求贴近目标尺寸）。
 
-### 排布：打乱，且不让同图挨在一起
+#### 排布：优选「分栏周期」，一屏之内不出现同一个人
 
-周期块的内容由 `buildPeriod()` 生成，不是顺序铺：**配平多重集 → 洗牌 → 八邻域冲突修复**。
+周期块的内容**首选**由 `buildSeparatedPeriod()` 生成：周期切成 ≥2 个等宽栏，同一个人的每一份都落在
+**同一列号、不同栏**上 → 任意两份都隔着一整个可见宽度，**一屏之内不可能出现两张同一个人**。
+排不出来（人少 / 屏大 / 格数超预算）才退回 `buildPeriod()` 的**配平多重集 → 洗牌 → 八邻域冲突修复**。
 
-- 老写法 `list[(r*Px + c) % n]` 虽然也不会出现相邻同图，但每张重复的图都落在**同一个偏移**上
-  （第 `i` 张和第 `i+n` 张恰好差固定的「几列几行」），整面墙就是一张有规律的、会动的壁纸 ——
-  一屏内同图的偏移只有一两种。现在会散成二三十种。
-- 修复阶段保证**八邻域（含对角、含环面 wrap）内不出现同一张图**。只有图片数少到
+- 更早的写法 `list[(r*Px + c) % n]`（顺序铺）虽然也不会相邻同图，但每张重复的图都落在**同一个偏移**上
+  （第 `i` 张和第 `i+n` 张恰好差固定的「几列几行」），整面墙就是一张有规律的、会动的壁纸。
+- `buildPeriod()` 的修复阶段保证**八邻域（含对角、含环面 wrap）内不出现同一张图**；只有图片数少到
   `⌈N/n⌉ > ⌈Px/2⌉·⌈Py/2⌉`（数学上排不开，比如整面墙只有一两张图）时才放弃，且一定有界退出。
+  退回它就会重新出现「一屏内撞见两张同一个人」（1440×900 实测稳定 2 对）—— 那是退路，不是常态。
 - 用**带种子的 PRNG**（mulberry32）而不是 `Math.random`：拖窗口会重算几何，用 `Math.random`
   会让整面墙在缩放过程中不停重新洗牌，看着像花屏。种子每次**刷新**换一个。
-- **图不够依然会重复**，这是数学：`n` 张图铺 `m` 格就重复 `⌈m/n⌉` 次（36 张图、一屏 55 格，
-  一屏里必然有约 19 格是"第二次出现"）。能控制的是**让这些重复落在没有规律的位置上**。
-  往图片目录加图不用改代码 —— `n` 变大 → 一屏内的重样自然变少。
+- **图不够依然会重复**，这是数学：`n` 张图铺 `m` 格就重复 `⌈m/n⌉` 次。分栏周期能做的是让这些
+  「第二次出现」**落在屏幕之外**，而不是落在随时可能被看见的位置上。人数变多不用改代码 ——
+  `n` 变大 → 同一个人的份数自然变少。
 
-### 响应式与兼容
+#### 响应式与兼容
 
 - 几何量的是**组件自己的盒子**（= hero 的盒子）而不是视口 → 手机地址栏收放、横竖屏切换、
   `min-height: auto` 全都自动跟随；`100vh` 而非 `dvh`，避免地址栏变化导致几何反复重算。
@@ -640,12 +923,104 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 - 交互按能力检测分两套：`(hover: hover) and (pointer: fine)` → 悬停卡；否则 → 点击弹居中卡。
 - 瓷砖必须 `touch-action: pan-y`，否则墙会吃掉触摸事件、手机上在 hero 区域滑不动页面。
 - 悬停穿透：`.hero-inner` 设 `pointer-events: none`，只给圆点和按钮放行；
-  激活态改用 `visibility: hidden`（保留布局占位、同时退出命中测试与绘制）。
+  组件自带的「激活态」还会改用 `visibility: hidden`（保留布局占位、同时退出命中测试与绘制）——
+  不过首页**不进入激活态**（露墙让开的是遮罩），这条在本页用不到。
 
-### 增删图片
+#### 增删图片
 
-见 [`knowledge.md` 第 6.1 节](./knowledge.md) —— 一句话版本：**图片丢进
-`public/images/excellent_member/`，然后 `npm run data:hero-thumbs`**（清单会在 dev/build 时自动重扫）。
+分两类，别搞混：
+
+- **首页这面墙**：一切从数据来 —— 加人走「换头像 / 加人」那四个命令（`group_members.json` 变了，
+  `npm run data:group-wall && npm run data:group-thumbs` 就跟着变）。**不要**往
+  `public/images/excellent_member/` 丢图来试图改这面墙，它不看那个目录。
+- **优秀成员页自己的照片**：那个照旧是 `public/images/excellent_member/`（`members.json` 的 `photo`
+  指过去），加了图只需重新生成缩略图 —— 但注意用的是 `npm run data:group-thumbs`
+  （优秀成员的照片也在墙的原图三处之一里），**不是**上游那个 `npm run data:hero-thumbs`。
+
+---
+
+### 七、如何添加 / 修改 奖学金（国家奖学金 / 国家励志奖学金）
+
+**文件：** `public/data/scholarships.json`（**生成物，请勿手改**）
+
+国奖、国励**不写进** `members.json` / `leaders.json`，而是单独一份生成物。两个理由：
+它们来自信息库那份**全校**名单（4379 条，2016-2017 ~ 2024-2025 九个学年），每年新增学年
+重跑脚本即可；而且它还要承载**当前没有展示位的人**（见下面「只存不显示」）。
+
+#### 数据从哪来
+
+| 环节 | 位置 |
+|---|---|
+| 全校名单（唯一真源） | `D:\江西财经大学信息库\未处理\jxufe_scholarships.json` |
+| 生成脚本 | `07_技术项目/奖学金数据/build_scholarships.py`（工作区，**仓库外**） |
+| 产物 | `public/data/scholarships.json` —— 当前 **14 人 / 21 条** |
+
+重跑（源名单更新后）：
+
+```powershell
+cd D:\Entrust\程序设计竞赛协会
+python "07_技术项目\奖学金数据\build_scholarships.py"   # 会打印匹配表 + 丢弃清单 + 窗口校准
+cd 07_技术项目\jxufe_acm_vue
+npm run build      # prebuild 会把新数据并进 group_wall.json / excellent_members.json
+```
+
+#### 文字口径与颜色
+
+一律 `<学年>学年<奖项>`：`2024-2025学年国家奖学金`、`2023-2024学年国家励志奖学金`。
+学年取**学校口径**（2023 年公示 = 2022-2023 学年 —— 评审在学年结束后的秋季），依据写在源文件
+meta 的 caveats 里。
+
+每条都显式带 `"type": "honor"`，即**个人荣誉·绿色**。**不靠** `honorType.js` 的关键词兜底
+（那里虽有 `奖学金|国奖|国励` 规则）—— 显式标注后，将来兜底规则重排也不会改色。
+
+#### 身份判据：为什么不能只按姓名匹配
+
+全校名单 3474 个不同姓名、协会 82 个真名 —— 交集里**必然有同名不同人**。实测排掉两个：
+
+| 姓名 | 源里的记录 | 为什么不是本人 |
+|---|---|---|
+| 李志文 | 2018-2019 国励，金融学院 金融学，学号 `0163817` | 学号是 2016 级；本人是 2023 级 |
+| 陈帆 | 2018-2019 国励，软件与物联网工程学院 软件工程，学号 `0164785` | 学号是 2016 级；本人是 2023 级（`0235207`） |
+
+两人在源里都**只有这一条**记录、姓名与站点成员完全同名 —— 只按姓名匹配必然写错。
+
+脚本四道判据，任一不成立即丢弃（完整说明见脚本 docstring）：
+
+1. **学号** —— 江财学号 = `0` + 两位入学年 + 四位序号（`0224588` = 2022 级）→ 入学年必须相符
+2. **源记录入学年月** —— 源里给了 `enroll`（如「2022年09月」）时必须相符
+3. **学年窗口** —— 学年起始年必须落在 `[入学年, 入学年+3]`（本科四年制）
+4. **可比对性** —— 以上都无从比对时**一律丢弃**，留给人复核，不做「大概是他」的猜测
+
+> 判据 3 是兜住 2023-2024 / 2024-2025 两届国励的关键：这两届的 `student_id` 与 `enroll`
+> **全为空**（790 + 869 条），只剩姓名 + 学院 + 专业可用。
+> 脚本每次运行都打印窗口校准分布（当前 `{0:7, 1:8, 2:6}`，全在 0~3 内）——
+> 一旦跑出 0~3 之外，说明学年口径或名单匹配出了问题，别急着用。
+
+#### 只存不显示：没有展示位的人也照存
+
+`scholarships.json` 里有 2 人**当前不在站点任何名单上**（只有协会队员名册里有他们）：
+
+| 姓名 | 记录 | 现状 |
+|---|---|---|
+| 朱子豪 | 2023-2024 + 2024-2025 国励 | 综合分 16.4，但**没有站点头像** → 墙与优秀成员页都跳过 |
+| 官祺舰 | 2024-2025 国励 | 同上 |
+
+会长 2026-09-24 的口径：「没有显示荣誉的地方不代表不能存他们的信息，只是我们显示时，
+会卡一下综合分」。所以 `gen_group_wall.mjs` 把这批人也放进候选池参与综合分 ——
+他们进墙的唯一缺口是头像，补了头像、走一遍头像归档流程就会**自动露出，不用改代码**。
+
+#### 三条显示路径
+
+| 显示端 | 怎么拿到 |
+|---|---|
+| 协会成员墙（首页） | `gen_group_wall.mjs` 把 `scholarships.json` 并进 `siteHonors` 表 → 进 `tags` / `sheetTags`，并按 `text` 与手写条目去重 |
+| 优秀成员页 | `src/composables/useHonorDisplay.js` 的 `cleanHonors(list, name)`，渲染期并入 |
+| 协会负责人页 | 同上（两页共用这个 composable；调用时要传**真名**，匿名机制只换显示名） |
+
+> **手写过的同一条不会显示两遍**（`cleanHonors` 按 `text` 去重）。2026-09-24 已把
+> `members.json` / `leaders.json` 里被本文件取代的 **7 条**手写奖学金删掉 —— 其中 3 条是
+> 没写学年的 `"国家奖学金"`，它们与新条目的文本不同、**去重不会命中**，留着就会重复显示。
+> `"上饶银行奖学金 *2"` 是**另一个奖项**（不在源名单里），保留不动。
 
 ---
 
@@ -663,14 +1038,14 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 
 | 路径 | 页面 | 数据源 |
 |------|------|--------|
-| `/` | 首页 | `events/top.json` + 最新 1~3 个年份文件，直接拼 `/post/<id>`；hero 底纹另有 `hero_wall.manifest.json` + `hero_wall.json` |
+| `/` | 首页 | `events/top.json` + 最新 1~3 个年份文件，直接拼 `/post/<id>`；hero 底纹另有 `group_wall.manifest.json` + `group_wall.json`（`hero_wall.json` 只供留言） |
 | `/all-action` | 大事记 | `events/`（置顶 + 年份文件按需懒加载，年份靠 HEAD 探测，**无索引文件**） |
 | `/post/:id` | 大事记文章（新闻 / 战报 / 赛事，共用一页） | `events/<年>.json` 的 `articles`（**靠 id 前 4 位定位年份文件**） |
 | `/contest` | 竞赛信息 | `competitions.json`（元信息） |
 | `/competition/:slug` | 竞赛详情 | `competitions.json` + `awards/*.json` |
 | `/competition/:slug/:year` | 单届获奖详情 | `competitions.json`（sessions）+ `awards/*.json` |
 | `/leader` | 协会负责人 | `leaders.json` |
-| `/excellent` | 优秀成员 | `members.json` |
+| `/excellent` | 优秀成员 | `excellent_members.json`（= `members.json` + 自动入册的人，生成物） |
 | `/links` | 友链 | `links.json` |
 | `*` | 404 | — |
 
@@ -681,8 +1056,11 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 ```bash
 npm run data:check         # 全量校验（awards + competitions + events + top）
 npm run data:gen           # 由 scripts/source/ 重新生成「赛事卡片」的大事记文章（幂等）
-npm run data:hero-wall     # 重扫头像墙图片目录，刷新清单并补文案骨架（幂等，dev/build 会自动跑）
-npm run data:hero-thumbs   # 生成头像墙缩略图（384/256 两档；增量，本机 Windows 专用）
+npm run data:group-wall    # 重新生成成员墙数据 group_wall.*.json + excellent_members.json（幂等，dev/build 会自动跑）
+npm run data:group-thumbs  # 生成成员墙缩略图（384/256 两档；增量，本机 Windows 专用）
+npm run data:event-badges  # 重新生成大事记时间轴的奖牌徽章 event_badges.json（幂等，dev/build 会自动跑）
+npm run data:hero-wall     # 上游那套清单：重扫 excellent_member/ 并补文案骨架（首页墙不消费它）
+npm run data:hero-thumbs   # 上游那套缩略图（384/256 两档；无消费者，一般不用跑）
 ```
 
 `check_awards.mjs` 校验内容：
@@ -695,6 +1073,12 @@ npm run data:hero-thumbs   # 生成头像墙缩略图（384/256 两档；增量�
 - **每一张卡片的 `link` 必须在 `articles` 里存在对应文章**，`date` 与卡片一致（`kind: news` 还要求 `title` 一致）；无卡片入口的文章允许存在，报告里会列出数量
 
 存在问题时以退出码 1 结束，可挂在提交前或 CI 上。
+
+`scholarships.json` **在 `data:check` 里**（`scripts/check_awards.mjs:489-503`）：逐条校验
+`type` 恒为 `honor`、`text` 必须含「学年」，并打印「N 人 / M 条」。但它查的只是**格式** ——
+**身份匹配的判据**跟着仓外生成脚本走：重跑 `07_技术项目/奖学金数据/build_scholarships.py`
+会打印匹配表、每条的判据、判据不过的丢弃清单，以及学年窗口的校准分布（见第七节）。
+分布跑出 0~3 就说明有问题。
 
 ---
 
