@@ -11,8 +11,11 @@
  *   edition.year          → 有 session 用 competitions.json 的 sessions 反查年份，否则 date 前四位
  *   team.members 顿号串    → members[] 姓名数组
  *   award 中文文本         → medal_type（grand/gold/silver/bronze，已结构化）+ medal_level
- * 行数对账（新层 vs 旧 editions）：icpc 32 = 32；ccpc 45 = 旧 43 + 新层多出的 2 条 2026-05-24
- * 江西省赛 provincial 行；gplt/lanqiao/baidu 见各节注释。差异全部已解释，无静默丢失。
+ * 行数对账（新层 vs 旧 editions，**迁移当时**的快照）：icpc 32 = 32；ccpc 45 = 旧 43 + 新层
+ * 多出的 2 条 2026-05-24 江西省赛 provincial 行；gplt/lanqiao/baidu 见各节注释。
+ * ⚠ 上面那个 ccpc 45 已经不成立了：当前是 **44**（`fa4fcf1 fix(awards): 口径改为「以源为准」
+ * + 删掉重复的长春那条` 删掉了一行重复记录）。行数随数据维护变动，**以 `npm run data:check`
+ * 打印的为准**，别把这里的数字当断言用。
  *
  * 口径（2026-09 与会长逐条裁定，改动前先问）：
  *  - 四个系列：xCPC（ICPC + CCPC 合并）/ 天梯赛 / 百度之星 / 蓝桥杯。
@@ -352,7 +355,9 @@ export function recordsToPillParts(records = [], mode = 'count') {
     return recordsToDetails(records).map((d) => [d.emoji + d.title + d.medalText])
   }
 
-  const counts = { xcpc: {}, gplt: {}, baidu: {}, lanqiao: {} }
+  /* 系列清单只有一份：contestTaxonomy.js 的 FAMILY_ORDER（原先这里手抄了第二份键集，
+     加系列要改两处；2026-09-24 改为派生）。'girls' 不是系列、单独走下面的 girls 桶。 */
+  const counts = Object.fromEntries(FAMILY_ORDER.map((f) => [f, {}]))
   const girls = []
 
   for (const r of records) {
