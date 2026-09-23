@@ -297,11 +297,16 @@ const hasTableData = computed(() =>
 const viewMode = ref('table')
 const VIEW_KEY = 'jufc-history-view'
 
+/* localStorage 在隐私模式 / 禁用站点数据时会直接抛。视图偏好只是可选记忆：
+   读不到就用默认值、写不进就下次再说 —— 但不该让它掀翻整个页面，
+   所以这里是**故意**吞掉异常的（2026-09-24 审查：原先的空 catch 一句话都没解释）。 */
 onMounted(() => {
   let saved = null
   try {
     saved = localStorage.getItem(VIEW_KEY)
-  } catch (e) {}
+  } catch {
+    saved = null
+  }
   viewMode.value =
     saved === 'table' || saved === 'card'
       ? saved
@@ -313,7 +318,9 @@ onMounted(() => {
 watch(viewMode, (v) => {
   try {
     localStorage.setItem(VIEW_KEY, v)
-  } catch (e) {}
+  } catch {
+    /* 隐私模式下写不进：不影响本次会话里的切换 */
+  }
 })
 
 function setView(v) {
