@@ -151,6 +151,17 @@ const measure = () => {
   if (Number.isFinite(v) && v > 0) tileTarget.value = v
   // 视口一变，栅格几何就变了 —— 指针映射那份缓存矩形必须作废（见 onWindowMove 上方注释）
   invalidatePointerRect()
+  /* 几何一变，`tiles` 就重排，**同一个瓷砖节点换人**（见 clipped 的注释）。
+     下面这三处状态是按「节点」或「文件名」记的，不清就会串到别人身上：
+       · pointerTile（存节点）→ is-pointer 高亮留在换人后的那一格上；
+       · lastTile（存节点）+ openTileFile（存文件名）→ 悬停卡内容是 v-if 比对**文件名**渲染的，
+         新几何下没有任何一格与它相等 → 卡片内容整块消失；而 onGridOver 有
+         `if (tile === lastTile) return` 早退，指针不动就再也回不来，
+         要等指针离开整面墙（onWallLeave）或换一格才恢复。
+     与 watch(() => props.hoverCard) 那处的清理同一道理。 */
+  clearPointerTile()
+  lastTile = null
+  openTileFile.value = ''
 }
 
 /* ── 数据：清单（有哪些图）× 文案（写什么） ── */
