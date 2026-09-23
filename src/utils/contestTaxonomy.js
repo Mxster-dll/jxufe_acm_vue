@@ -145,10 +145,12 @@ export const FAMILY_ORDER = ['xcpc', 'gplt', 'baidu', 'lanqiao']
 /**
  * 分段顺序。xCPC 的省赛与区域赛 / 邀请赛**同属一枚胶囊**（会长 2026-09-23 合并，
  * 原先省赛单独成枚）；三段各自是一个折行单位（见 recordsToPillParts）。
+ * 天梯赛的「省赛」段 2026-09-24 新增：承载**省内个人名次**（省内前三才成段，
+ * 见 honorPills.js 的 personalSegments），与「团体/个人」的国家级奖牌不是一回事。
  */
 export const SEGMENT_ORDER = {
   xcpc: ['区域赛', '邀请赛', '省赛'],
-  gplt: ['团体', '个人'],
+  gplt: ['团体', '个人', '省赛'],
   baidu: ['国赛', '省赛'],
   lanqiao: ['国赛', '省赛'],
 }

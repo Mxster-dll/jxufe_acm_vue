@@ -27,7 +27,15 @@
  *    2026-05-24 南昌同队同日**各有两条**（invitational + provincial），两枚都计。
  *  - **省赛段只认江西省赛**（会长 2026-09 裁定）：其他省的省赛 / 区赛（广东、河南、
  *    广西、山东、吉林、东北、湖北、福建、河北、贵州…）不计入省赛段，只计邀请赛。
- *  - 天梯赛：团体（只统计国赛团队奖；分省团队奖在数据里没有成员名单，无法归属到人）/ 个人
+ *  - 天梯赛：团体（只统计国赛团队奖；分省团队奖**不要** —— 会长 2026-09-24 明示「我不需要
+ *    分省团队奖的数据」，且源里 provincial.teams[] 只有队名 + 奖项、没有成员名单）/ 个人
+ *  - 天梯赛的「省赛」段 = **省内个人名次**（2026-09-24 新增，会长要的那个「省冠军」）：
+ *    官方分省名单只有高校奖与团队奖、**没有个人奖**，故省内名次是**推算**的 ——
+ *    awards 的 `province_rank`（全国名单的逐人成绩 + 分省名单反推学校归属，
+ *    推法见工作区 `.tmp/ref/jiangxi-individual-rank.mjs`）。**只在省内前三时才成段**：
+ *    106 条记录里 90 条落在同分并列块里，全列出来只会变成「省赛#37」这种噪声。
+ *    实测全库 3 人 —— 2025 黄亦诚（省内 1，276 分）、2025 石翰林（省内 3~4）、
+ *    2026 钟明皓（省内 1~6，6 人同分 256）；明细显示「🏆第10届天梯赛江西省个人冠军」。
  *  - 百度之星：决赛（medal_level=national）→ 国赛、初赛（provincial）→ 省赛
  *  - 优秀奖不计入任何奖牌数（新 awards 层根本不收优秀奖，天然满足；旧层是数据源保留、
  *    展示层过滤 —— 效果相同，但数据里「有没有」变了，这是有意的）
@@ -126,11 +134,35 @@ export function teamSegments(family, row) {
  * 只在本文件内部用（collectRecords），不对外导出。
  */
 function personalSegments(family, row) {
-  if (family === 'gplt') return ['个人']
+  if (family === 'gplt') {
+    /* 天梯赛个人奖在数据里全是 national，故归「个人」；**省内前三（冠亚季军）另起一段「省赛」**
+       —— 会长 2026-09-24：黄亦诚 2025 第十届是江西省个人第一名（276 分）。
+       省内名次官方不公布，是推算出来的（province_rank，推算方法见工作区
+       `.tmp/ref/jiangxi-individual-rank.mjs`：全国名单的逐人成绩 + 分省名单的学校归属）。
+       只在 ≤3 时单列：106 条记录里 90 条都是同分并列块，全列出来会变成「省赛#37」这种噪声。*/
+    return isTrophyRank(row?.province_rank) ? ['个人', '省赛'] : ['个人']
+  }
   if (family === 'lanqiao' || family === 'baidu') {
     return [row?.medal_level === 'national' ? '国赛' : '省赛']
   }
   return []
+}
+
+/**
+ * 该记录在**本分段**里可比的名次 —— 决定 🏆 桶与「冠军/亚军/季军」文案（recordsToPillParts /
+ * recordsToDetails 都用它）。名次只在同一比较范围内可比，所以按段分开取：
+ *   · 省赛段：天梯赛用省内个人名次 province_rank（推算）；xCPC 用省赛组内名次
+ *     rank_provincial（只在 medal_level === 'provincial' 那条上有值）——
+ *     全场总排名对省赛段没有意义，别拿 row.rank 顶替。
+ *   · 其余段：row.rank（xCPC 是队伍总排名、蓝桥杯/百度之星是组内名次、天梯赛是全国名次）。
+ */
+function segmentRankOf(family, row, segment) {
+  const int = (v) => (Number.isInteger(Number(v)) && Number(v) > 0 ? Number(v) : null)
+  if (segment === '省赛') {
+    if (family === 'gplt') return int(row?.province_rank)
+    if (family === 'xcpc' && row?.medal_level === 'provincial') return int(row?.rank_provincial) ?? int(row?.rank)
+  }
+  return int(row?.rank)
 }
 
 /** 年份：优先 session 反查（届次是这三个系列的权威标识），缺失时退回 date 前四位 */
@@ -218,6 +250,9 @@ function detailTitle(family, row, segment) {
   const edition = row?.session ? `第${row.session}届` : ''
   // 天梯赛 —— 「第6届天梯赛个人国家级三等奖」：团体/个人 + 国家级/省级
   if (family === 'gplt') {
+    // 省赛段承载的是「省内个人名次」这一件事，与国家级奖牌无关，说法单独给：
+    // 明细拼出来是「🏆第10届天梯赛江西省个人冠军」（奖牌那半截由 recordsToDetails 追加）
+    if (segment === '省赛') return `${edition}天梯赛江西省个人`
     const level = row?.medal_level === 'provincial' ? '省级' : '国家级'
     return `${edition}天梯赛${segment}${level}`
   }
@@ -268,6 +303,7 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
       if (!members.length) continue
 
       for (const segment of segments) {
+        const rank = segmentRankOf(family, row, segment)
         for (const name of members) {
           push(name, {
             family,
@@ -278,10 +314,11 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
             award: String(row.competition_name || ''),
             title: detailTitle(family, row, segment),
             medalText: medalTextOf(family, medal),
-            // 名次（awards 的 `rank` 字段）。当前只随记录带出：胶囊计数与综合分都**不看它**
-            // （奖牌档位是另一件事，冠军队照样拿金牌）。留着是为了将来要给冠亚季军加成时
-            // 不必再改取数层 —— 判据统一用 contestTaxonomy 的 isTrophyRank()。
-            rank: Number.isInteger(Number(row.rank)) && Number(row.rank) > 0 ? Number(row.rank) : null,
+            // 名次（awards 的 `rank` / `rank_provincial` / `province_rank`，**按分段取**，
+            // 见 segmentRankOf）。胶囊计数与综合分都**不看它**（奖牌档位是另一件事，
+            // 冠军队照样拿金牌）；它只决定 🏆 桶与「冠军/亚军/季军」文案，
+            // 判据统一用 contestTaxonomy 的 isTrophyRank()。
+            rank,
           })
         }
       }

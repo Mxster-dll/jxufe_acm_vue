@@ -32,9 +32,15 @@
  *   rank_source   'official'（榜单直接给的）| 'derived'（按名额与分数推算的）
  *                 | 'backfill'（来自补录层：源里 rank 是字符串、medals[].tier 为 null，
  *                 源自标「待核实」—— xCPC 的西安 2023/2024/2025 共 3 条）。
- *   规则：出现即须落在规范位置；rank 为 int ≥ 1；rank_to ≥ rank；作用域内
- *   「单一数字名次」不得被两个人共用（带 rank_to 的区间不参与该检查，
- *   因为同分并列块首被多人共用是预期）。
+ *   province_rank  gplt-individual 专有：**省内个人名次**（2026-09-24 会长要的「省冠军」）。
+ *                 天梯赛官方分省名单只有高校奖与团队奖、**没有个人奖**，故这个名次也是推算的
+ *                 （全国名单的逐人成绩 + 分省名单反推学校归属；推法见工作区
+ *                 `.tmp/ref/jiangxi-individual-rank.mjs`），rank_source 沿用 'derived'。
+ *   province_rank_to 省内名次的并列区间上界，仅当 > province_rank 时写。
+ *   规则：出现即须落在规范位置；rank 为 int ≥ 1；rank_to ≥ rank；province_rank_to ≥ province_rank；
+ *   作用域内「单一数字名次」不得被两个人共用（带 rank_to / province_rank_to 的区间不参与该检查，
+ *   因为同分并列块首被多人共用是预期）；省内名次与全国名次**各自一个作用域**，不可混比
+ *   （2025 黄亦诚：全国 110~185、省内 1）。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -81,9 +87,11 @@ const SCHEMA = {
     team: true
   },
   'gplt-individual.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'rank_to', 'rank_source', 'coach_names', 'date'],
-    optionalKeys: ['rank', 'rank_to', 'rank_source'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'rank_to', 'rank_source', 'province_rank', 'province_rank_to', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_to', 'rank_source', 'province_rank', 'province_rank_to'],
     rankScope: (r) => `${r.session}`,
+    // 省内名次与全国名次不可比，各占一个作用域
+    provinceRankScope: (r) => `${r.session}|province`,
     levels: SINGLE_LEVELS,
     team: false
   },
@@ -156,24 +164,34 @@ function validateRecords(file, rows) {
         push(i, `rank_to 非法: ${JSON.stringify(r.rank_to)}（应 ≥ rank）`)
       if ('rank_source' in r && !['official', 'derived', 'backfill'].includes(r.rank_source))
         push(i, `rank_source 非法: ${JSON.stringify(r.rank_source)}`)
+      if ('province_rank' in r && (!Number.isInteger(r.province_rank) || r.province_rank < 1))
+        push(i, `province_rank 非法: ${JSON.stringify(r.province_rank)}`)
+      if ('province_rank_to' in r && (!Number.isInteger(r.province_rank_to) || r.province_rank_to < Number(r.province_rank)))
+        push(i, `province_rank_to 非法: ${JSON.stringify(r.province_rank_to)}（应 ≥ province_rank）`)
     }
   })
 
   /* 名次在**自己的作用域**内不得被两个人共用 —— 作用域的定义与 src/utils/awardGroups.js
      的 byRank() 一致（名次只在同一比较范围内可比）。同一个人在同作用域重复出现是允许的
      （源里确有一例：2024 省赛 C/C++ B 组「刘鑫」一等奖与三等奖两条同 rank 2401），
-     但两个人共用同一个名次说明合并脚本连错了人。 */
-  if (spec.rankScope) {
+     但两个人共用同一个名次说明合并脚本连错了人。
+     全国名次与省内名次各查一遍，规则相同、作用域不同。 */
+  for (const scope of [
+    { label: '名次', fn: spec.rankScope, value: (r) => r.rank, blockEnd: (r) => r.rank_to },
+    { label: '省内名次', fn: spec.provinceRankScope, value: (r) => r.province_rank, blockEnd: (r) => r.province_rank_to },
+  ]) {
+    if (!scope.fn) continue
     const seen = new Map()
     rows.forEach((r, i) => {
-      if (r.rank == null) return
-      /* 带 rank_to 的是**区间**（天梯赛推算：同分并列块只能给区间），块首被多人共用是预期，
-         不参与撞号检查 —— 只有「单一数字名次」才可能撞。 */
-      if (r.rank_to != null) return
+      const v = scope.value(r)
+      if (v == null) return
+      /* 带 rank_to / province_rank_to 的是**区间**（天梯赛推算：同分并列块只能给区间），
+         块首被多人共用是预期，不参与撞号检查 —— 只有「单一数字名次」才可能撞。 */
+      if (scope.blockEnd(r) != null) return
       const who = (r.members || []).join('、')
-      const k = `${spec.rankScope(r)}#${r.rank}`
+      const k = `${scope.fn(r)}#${v}`
       if (seen.has(k) && seen.get(k).who !== who) {
-        problems.push(`[${i}] 名次撞号: 作用域 ${spec.rankScope(r)} 内 rank=${r.rank} 已被 ${seen.get(k).who}（[${seen.get(k).i}]）占用`)
+        problems.push(`[${i}] ${scope.label}撞号: 作用域 ${scope.fn(r)} 内 ${v} 已被 ${seen.get(k).who}（[${seen.get(k).i}]）占用`)
       } else if (!seen.has(k)) {
         seen.set(k, { who, i })
       }
