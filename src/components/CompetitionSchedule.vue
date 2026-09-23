@@ -272,6 +272,22 @@ const rows = computed(() => {
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
+/* 入场动画：只把**速度**加快（会长 2026-09-23：「然后只是把速度加快」）。
+   形态与之前完全一致 —— 仍是 fade-up（整行平移 40px）+ 淡入，缓动仍是 ease，
+   级联延迟仍是 0.1s × idx，只有时长从全局 [data-reveal] 的 0.7s 缩到 0.4s
+   （全站卡片实测就是这一档：transform 0.4s）。
+   ⚠ 必须写成**长写**属性、不能用 `transition` 简写：简写会把 transition-delay 一并重置为 0s，
+   而 scoped 选择器带 [data-v-*]、特异性 (0,2,0) 与全局那条
+   [data-reveal][style*="--reveal-index"] 打平、又在 base.css 之后注入 →
+   一旦用简写，5 行的先后顺序就没了（这个坑踩过一次）。
+   长写不动 delay，所以全局提供的级联延迟照旧生效。 */
+.schedule__row,
+.schedule__mvhead,
+.schedule__mvbar {
+  transition-property: opacity, transform;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
 .schedule__row {
   display: flex;
   align-items: flex-start;
