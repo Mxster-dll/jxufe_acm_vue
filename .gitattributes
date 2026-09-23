@@ -1,0 +1,15 @@
+# 行尾策略（2026-09-24 加）
+#
+# 仓库里所有文本都是 LF 存储（`git ls-files --eol` 可见全是 i/lf）；Windows 工作树里的
+# CRLF 来自 `core.autocrlf=true` —— 那是**每台机器各配各的**：克隆到 Linux/macOS，或者
+# 经手一个会重写行尾的编辑器，同一份文件的工作树就变成 LF。下面这类文件必须有 CRLF 才
+# 不出事，所以在这里钉死（属性跟仓库走，不跟机器走）：
+#
+#   *.bat / *.ps1 —— cmd.exe 从标签继续读时按 CRLF 算字节偏移，批处理被检成 LF 时
+#   行为可能错位；deploy.bat 正是靠 `goto :fail` 组织整个部署流程的。
+#
+# 其余文件**故意不写** `* text=auto`：那会让下一次 add 触发几百个文件的重规范化，
+# 白造一个巨大的 diff，收益只是让标记整齐一点。二进制（675 个图片）本就自动识别为
+# -text，也不需要声明。
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
