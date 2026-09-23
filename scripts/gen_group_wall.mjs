@@ -346,12 +346,28 @@ if (SCORE_THRESHOLD > 0) {
    members.json 一个字都不动：它是会长手写的真源，也是本生成器的输入。 */
 const EXCELLENT_THRESHOLD = Number(rules.excellentScoreThreshold) || 0
 const memberKeys = new Set(membersJson.map((m) => String(m?.name || '').trim()))
+/* 会长不进优秀成员页（会长 2026-09-23：「自动入册不应该包含会长」）——
+   他们已经在「协会负责人」页上有一张卡，两张名单都出现就是同一批人重复曝光。
+   判据用 leaders.json 的名单（那 6 位即历任会长），与「会长身份」金色胶囊同源。
+   注意：只影响**自动入册**；members.json 里手写的人一个都不动。 */
+const leaderKeys = new Set(leadersJson.map((l) => String(l?.name || '').trim()).filter(Boolean))
 const excellentAdded = []
 const excellentSkipped = []
+const excellentSkippedLeaders = []
 if (EXCELLENT_THRESHOLD > 0) {
   for (const [name, row] of scoreByName) {
     if (row.total < EXCELLENT_THRESHOLD || memberKeys.has(name)) continue
-    const photo = String(sitePhoto.get(name) || '').trim()
+    if (leaderKeys.has(name)) {
+      excellentSkippedLeaders.push(`${name} ${row.total.toFixed(1)} 分`)
+      continue
+    }
+    const wallRow = members.find((m) => String(m.realName || m.name || '').trim() === name)
+    /* 头像优先用站点名单（members/leaders）里的照片；没有就退回**他在墙上那一张** ——
+       墙上的人本来就有图（缩略图生成器按同一份数据出图），
+       否则「没有头像」会把一批 10 分以上、明明在墙上露着脸的人挡在优秀成员页外
+       （实测阈值 10 分时，7 位达标者全是被这一条挡下的）。 */
+    const wallImg = wallRow ? imageOf(wallRow).full : ''
+    const photo = String(sitePhoto.get(name) || wallImg || '').trim()
     // 没有可用头像的人进不了这一页（卡片左边就是头像位），跳过并记一笔
     if (!photo || !existsInPublic(photo)) {
       excellentSkipped.push(`${name} ${row.total.toFixed(1)} 分`)
@@ -444,6 +460,9 @@ console.log(
     (excellentAdded.length
       ? `自动入册 ${excellentAdded.length} 人 → ${excellentAdded.map((m) => `${m.name} ${m.score}`).join('、')}`
       : '无新增（达标者都已在名单里）') +
+    (excellentSkippedLeaders.length
+      ? `；${excellentSkippedLeaders.length} 位会长达标但按规则跳过（${excellentSkippedLeaders.join('、')}）`
+      : '') +
     (excellentSkipped.length ? `；${excellentSkipped.length} 人达标但无头像被跳过（${excellentSkipped.join('、')}）` : '')
 )
 

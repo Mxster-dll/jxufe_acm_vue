@@ -33,6 +33,10 @@
  *      各一条（同队同名同天），卡片 category 为 inv（标题含「全国邀请赛」），
  *      不过滤就会把省赛奖也算进这枚角标。天梯赛卡片若标题写「省赛」，直接不产生
  *      角标 —— 分省团队奖在源数据里就没有成员名单，本会也没有可用的省级获奖数据。
+ *   5. **天梯赛（category = tts）整类不生成角标**（会长 2026-09-23：「大事记中，
+ *      天梯赛不显示获奖胶囊，因为正文有」）：天梯赛卡片的 tagline 本身就是奖牌账
+ *      （「国赛：团体🥇1🥈1🥉1、个人🥇1🥈13🥉18 / 省赛：团体🥇2🥈1」），
+ *      右上角再挂一枚当场计数属于同一件事说两遍，且那枚只统计国家级、与正文数字对不上。
  *
  * 输出：`public/data/event_badges.json`
  *   { _note, generated_at, count, badges: { "<card.link>": "🥇1🥈2" } }
@@ -157,7 +161,7 @@ function main() {
     .sort()
 
   const badges = {}
-  const stats = { cards: 0, contest: 0, badges: 0, skipped: 0 }
+  const stats = { cards: 0, contest: 0, badges: 0, skipped: 0, gpltSkipped: 0 }
   const misses = []
 
   for (const file of yearFiles) {
@@ -167,6 +171,14 @@ function main() {
       stats.cards += 1
       const family = CAT_FAMILY[card.category]
       if (!family || !card.link) continue
+      /* 天梯赛卡片不生成角标（会长 2026-09-23：「大事记中，天梯赛不显示获奖胶囊，因为正文有」）。
+         天梯赛卡片的 tagline 本身就是一份奖牌账（例：「国赛：团体🥇1🥈1🥉1、个人🥇1🥈13🥉18
+         省赛：团体🥇2🥈1」）—— 右上角再挂一枚当场计数，是同一件事说两遍，
+         而且角标只统计国家级、数字还对不上正文那份（正文含省赛）。 */
+      if (card.category === 'tts') {
+        stats.gpltSkipped += 1
+        continue
+      }
       stats.contest += 1
       const levels = levelsOf(card)
       if (!levels) {

@@ -1,8 +1,8 @@
 {
   "_note": "生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + 综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。",
-  "generated_at": "2026-09-23T09:16:29.191Z",
-  "threshold": 15,
-  "count": 36,
+  "generated_at": "2026-09-23T09:28:09.909Z",
+  "threshold": 10,
+  "count": 40,
   "members": [
     {
       "name": "王海峰",
@@ -357,63 +357,65 @@
       ]
     },
     {
-      "name": "黄亦诚",
-      "class": "22计算机科学与技术1班",
-      "photo": "/images/leader/2023.jpg",
-      "honors": [
-        {
-          "text": "天梯赛团体一等奖、个人一等奖（全省第一）",
-          "type": "contest"
-        },
-        {
-          "text": "蓝桥杯国一（全省第二）",
-          "type": "contest"
-        },
-        {
-          "text": "国家奖学金",
-          "type": "honor"
-        },
-        {
-          "text": "上饶银行奖学金 *2",
-          "type": "honor"
-        },
-        {
-          "text": "...",
-          "type": "more"
-        }
-      ],
+      "name": "王翔",
+      "class": "",
+      "photo": "/images/group_members/full/2367559181.jpg",
+      "honors": [],
       "auto": true,
-      "score": 37.02
+      "score": 15.46
     },
     {
-      "name": "王玛琪",
-      "class": "21数据科学与大数据技术1班",
-      "photo": "/images/leader/2022.jpg",
+      "name": "钟明皓",
+      "class": "",
+      "photo": "/images/group_members/full/3485497030.jpg",
       "honors": [
         {
-          "text": "...",
-          "type": "more"
+          "text": "2019 CSP-J 一等奖",
+          "type": "contest"
         }
       ],
       "auto": true,
-      "score": 22.43
+      "score": 13.39
     },
     {
-      "name": "衷铭川",
-      "class": "23数据科学与大数据技术1班",
-      "photo": "/images/leader/2024.jpg",
-      "honors": [
-        {
-          "text": "上饶银行奖学金 *2",
-          "type": "honor"
-        },
-        {
-          "text": "...",
-          "type": "more"
-        }
-      ],
+      "name": "孙天成",
+      "class": "",
+      "photo": "/images/group_members/full/2360334262.jpg",
+      "honors": [],
       "auto": true,
-      "score": 16.72
+      "score": 13.38
+    },
+    {
+      "name": "罗文轩",
+      "class": "",
+      "photo": "/images/group_members/full/1536366460.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 12.54
+    },
+    {
+      "name": "周君",
+      "class": "",
+      "photo": "/images/group_members/full/2810740334.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 11.91
+    },
+    {
+      "name": "李承志",
+      "class": "",
+      "photo": "/images/group_members/full/3525811526.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 11.9
+    },
+    {
+      "name": "曹京顺",
+      "class": "",
+      "photo": "/images/group_members/full/167161261.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 11.55
     }
   ]
 }
