@@ -27,8 +27,13 @@ const MASK_REVEAL_RATIO = 0.1; // 只给触摸用（桌面已取消阈值）
 const MASK_MAX_RATIO = 1.05;
 // 触摸拖动的阻尼：免得手指挪一点点就把遮罩拉到底
 const MASK_DRAG_DAMP = 0.5;
-// 回程动画时长，与 CSS 里 .page-mask.is-returning 的 transition 保持一致
-const MASK_RETURN_MS = 520;
+// 遮罩位移的时长：**露墙（下移）与请回（上移）共用同一个值** —— 会长 2026-09-23：
+// 「遮罩下移露出墙的速度，要和遮罩上移、显示其他页的速度一致」。
+// 520ms 同时对上两件事：① 请回来的回程本来就是 520ms；② 翻页吸附走浏览器的平滑滚动，
+// 实测 802px 约 430ms（量到终值 1px 内），与这条 520ms + cubic-bezier(.22,1,.36,1) 是同一档
+// （同一条曲线的尾巴很快，实测 520ms 声明值会量到约 420ms），三者实测差 ≤ 16ms。
+// 必须同值的三处：这个常量、CSS 里 .page-mask.is-out 与 .is-returning、以及 --mask-ms。
+const MASK_MOVE_MS = 520;
 const maskShift = ref(0);
 const maskOut = ref(false);
 const maskReturning = ref(false);
@@ -51,7 +56,7 @@ const startMaskReturn = () => {
   window.clearTimeout(maskReturnTimer);
   maskReturnTimer = window.setTimeout(() => {
     maskReturning.value = false;
-  }, MASK_RETURN_MS);
+  }, MASK_MOVE_MS);
 };
 
 /** 累积拖动位移（dy < 0 = 往下拉、露出上面的墙）。返回是否吃掉了这次滚动。
@@ -80,7 +85,7 @@ const dragMask = (dy) => {
 /** 已经收起：只认「往下滚」 —— 先把遮罩请回来，这一次滚动不落到页面上 */
 const recallMask = (dy) => {
   if (dy <= 0) return false;
-  // 收起是 640ms 缓动，直接归零会「啪」地跳回一屏，所以回程也走一段缓动
+  // 收起与请回同为 MASK_MOVE_MS 缓动，直接归零会「啪」地跳回一屏，所以回程也走一段缓动
   startMaskReturn();
   maskOut.value = false;
   maskShift.value = 0;
@@ -287,7 +292,7 @@ const onWallTouchEnd = () => {
   if (sheetOpen()) return; // 浮窗开着时松手不判定，免得顺手把遮罩也带走
   if (maskOut.value || maskShift.value <= 0) return;
   if (maskShift.value >= maskLimit) {
-    maskOut.value = true; // 拉过一屏的 10%：触发（.is-out 自带 640ms 缓动）
+    maskOut.value = true; // 拉过一屏的 10%：触发（.is-out 自带 MASK_MOVE_MS 缓动）
   } else {
     startMaskReturn(); // 不足 10%：回弹
     maskShift.value = 0;
@@ -336,7 +341,7 @@ watchEffect(() => {
   // 用变量传过去，AppHeader 那边就不用把 transition 清单抄成三份。
   root.style.setProperty(
     "--mask-ms",
-    maskOut.value ? "640ms" : maskReturning.value ? "520ms" : "0ms"
+    maskOut.value || maskReturning.value ? `${MASK_MOVE_MS}ms` : "0ms"
   );
   root.classList.toggle("is-mask-out", maskOut.value);
   root.classList.toggle("is-mask-returning", maskReturning.value);
@@ -657,15 +662,9 @@ const { newsList, loading, error } = useNews();
        所以组件一行没改，只多传几个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成，
        人数：QQ 群 110 + 优秀成员 33 + 负责人 6，按真名去重后 138 人。 -->
   <div class="page-wall">
-    <!-- speed / speedBackdrop 都写 8 px/s：会长 2026-09-23「把露墙那下减慢，8px/s」。
-         组件里 speed 给 active 态、speedBackdrop 给底纹态，而首页从不置 active
-         （露墙走的是本页自己的遮罩机制），所以真正生效的是 speedBackdrop（原默认 11）；
-         两个都写成同一个值，免得以后谁动了 active 就冒出一个更快的档。 -->
     <HeroAvatarWall
       v-model:active="wallOn"
       :hover-card="maskOut"
-      :speed="8"
-      :speed-backdrop="8"
       manifest-url="/data/group_wall.manifest.json"
       copy-url="/data/group_wall.json"
       thumbs-base="/images/group_wall_thumbs"
@@ -1271,10 +1270,12 @@ const { newsList, loading, error } = useNews();
 /* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来 */
 .page-mask.is-out {
   transform: translate3d(0, 105vh, 0);
-  transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* 与下面 .is-returning 同一个时长：露墙与请回速度一致（会长 2026-09-23），
+     也对齐翻页吸附那一档（实测 ≈430ms）。改这里必须同步改 JS 的 MASK_MOVE_MS。 */
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* 请回来的回程：滑出是 640ms 缓动，回程若直接归零就会「啪」地跳回一屏。
-   时长与 JS 里的 MASK_RETURN_MS 一致；用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
+/* 请回来的回程：与露墙同一个时长（原先 640/520 两档不一致，露墙偏慢）。
+   时长与 JS 里的 MASK_MOVE_MS 一致；用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
 .page-mask.is-returning {
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
