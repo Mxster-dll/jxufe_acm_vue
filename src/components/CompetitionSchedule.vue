@@ -133,7 +133,7 @@ const rows = computed(() => {
         <div
           v-for="(row, idx) in rows"
           :key="row.slug"
-          v-reveal="'fade-up'"
+          v-reveal="'scale-in'"
           class="schedule__row"
           :style="{ '--row-color': row.color, '--lanes': row.lanes, '--reveal-index': idx }"
         >
@@ -175,7 +175,7 @@ const rows = computed(() => {
       <p
         v-for="(row, ci) in rows"
         :key="row.slug"
-        v-reveal="'fade-up'"
+        v-reveal="'scale-in'"
         class="schedule__mvhead"
         :style="{ gridRow: 1, gridColumn: ci + 2, '--reveal-index': ci, '--row-color': row.color }"
       >
@@ -200,7 +200,7 @@ const rows = computed(() => {
         <span
           v-for="(bar, i) in row.bars"
           :key="i"
-          v-reveal="'fade-up'"
+          v-reveal="'scale-in'"
           class="schedule__mvbar"
           :style="{
             '--reveal-index': ci,
@@ -284,7 +284,11 @@ const rows = computed(() => {
    ⚠ 下面必须显式写回 `transition-delay`（会长 2026-09-23：「我还是希望动画有先后，而不是一起出现」）：
    `transition` 简写会把 delay 一并重置为 0s，而 scoped 编译出的选择器带 `[data-v-*]`、特异性
    (0,2,0) 与全局那条 `[data-reveal][style*="--reveal-index"]` **打平**，scoped 样式又在 base.css
-   之后注入 → 全局的级联延迟被压掉，5 行会同时冒出来。这里按同一条公式显式写回。 */
+   之后注入 → 全局的级联延迟被压掉，5 行会同时冒出来。这里按同一条公式显式写回。
+
+   变体也从 'fade-up' 换成了 'scale-in'（会长 2026-09-23：「我希望不是只有一点点运动距离，
+   我希望是像其他卡片一样」）—— 全站卡片都是 `scale(0.92)` 的 8% 缩放，而整行平移 40px
+   在 1140px 宽的行上几乎看不出动。 */
 .schedule__row,
 .schedule__mvhead,
 .schedule__mvbar {
