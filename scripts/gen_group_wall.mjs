@@ -56,7 +56,12 @@ import { AWARD_FILES } from '../src/utils/contestTaxonomy.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = path.join(ROOT, 'public/data')
-const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
+/* 读数据策略统一收在 scripts/lib/data-io.mjs（口径见该文件头）。
+   下面每一处 readJson(...) 都是「必需数据」：缺一份就停下并说清缺哪份、谁要的 ——
+   静默少一份数据，页面上就是「某个系列凭空消失」，那种错没人会发现。 */
+import { readJsonRequired, readJsonOptional } from './lib/data-io.mjs'
+
+const readJson = (file) => readJsonRequired(file, 'scripts/gen_group_wall.mjs')
 const writeJson = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2) + '\n', 'utf8')
 
 /** 卡片最多放几枚标签；超出补「…」。
@@ -102,14 +107,12 @@ const members = group.members || []
    按 tiles 的 `full` 出（它按 mtime 跳过已存在的）。
    ⚠ 作者墙上第 4 位「多喜长安」**不要写进 rules**：他就是我们的 2024学年会长衷铭川，
      人已经在墙上，再加一次会变成两张卡；他的留言走 HERO_WALL_ALIAS 挂到真名上。 */
-const rules = (() => {
-  try {
-    return readJson(path.join(DATA, 'wall_rules.json'))
-  } catch {
-    console.warn('[group-wall] 读不到 public/data/wall_rules.json —— 按「只有群成员」生成')
-    return {}
-  }
-})()
+// 入墙规则是**可选**数据：读不到就按「只有群成员」生成（但会留一行 warn）
+const rules = readJsonOptional(
+  path.join(DATA, 'wall_rules.json'),
+  {},
+  'scripts/gen_group_wall.mjs 的入墙规则（读不到按「只有群成员」生成）'
+)
 const SCORE_THRESHOLD = Number(rules.scoreThreshold) || 0
 const rulePeople = (Array.isArray(rules.people) ? rules.people : []).filter((p) => p && p.name)
 

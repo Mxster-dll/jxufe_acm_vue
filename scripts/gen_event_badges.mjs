@@ -53,13 +53,13 @@ import { fileURLToPath } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = path.join(ROOT, 'public/data')
 
-const readJson = (file, fallback) => {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'))
-  } catch {
-    return fallback
-  }
-}
+/* 读数据策略统一收在 scripts/lib/data-io.mjs（口径见该文件头）。
+   本脚本读的三份（competitions.json / awards/*.json / events/<年份>.json）
+   都是随仓库提交的必需数据 —— 原先逐文件 .catch(() => 回落) 会让缺数据时的
+   表现变成「那个系列在时间轴角标里无声消失」，零信号；现在改为让构建停下。 */
+import { readJsonRequired } from './lib/data-io.mjs'
+
+const readJson = (file) => readJsonRequired(file, 'scripts/gen_event_badges.mjs')
 
 import { MEDAL_EMOJI, MEDAL_ORDER, isTrophyRank } from '../src/utils/contestTaxonomy.js'
 
@@ -139,7 +139,7 @@ function buildSessionIndex(competitions) {
 const yearOf = (date) => String(date || '').slice(0, 4)
 
 function main() {
-  const competitions = readJson(path.join(DATA, 'competitions.json'), [])
+  const competitions = readJson(path.join(DATA, 'competitions.json'))
   const sessionIndex = buildSessionIndex(competitions)
 
   // 一次读齐所有 awards 文件，记录带上是哪个文件来的（便于报错定位）
@@ -147,8 +147,10 @@ function main() {
   for (const [family, files] of Object.entries(FAMILY_FILES)) {
     const rows = []
     for (const name of files) {
-      const list = readJson(path.join(DATA, 'awards', `${name}.json`), [])
-      if (!Array.isArray(list)) continue
+      const list = readJson(path.join(DATA, 'awards', `${name}.json`))
+      if (!Array.isArray(list)) {
+        throw new Error(`[data] awards/${name}.json 顶层不是数组 —— 该系列的角标会整批消失`)
+      }
       for (const row of list) rows.push({ ...row, _file: name })
     }
     rowsByFamily[family] = rows
@@ -170,7 +172,7 @@ function main() {
 
   for (const file of yearFiles) {
     const year = file.replace('.json', '')
-    const data = readJson(path.join(eventsDir, file), {})
+    const data = readJson(path.join(eventsDir, file))
     for (const card of data.cards || []) {
       stats.cards += 1
       const family = CAT_FAMILY[card.category]
