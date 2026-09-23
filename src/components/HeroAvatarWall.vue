@@ -149,6 +149,8 @@ const measure = () => {
   boxH.value = el.clientHeight
   const v = parseFloat(getComputedStyle(el).getPropertyValue('--wall-tile'))
   if (Number.isFinite(v) && v > 0) tileTarget.value = v
+  // 视口一变，栅格几何就变了 —— 指针映射那份缓存矩形必须作废（见 onWindowMove 上方注释）
+  invalidatePointerRect()
 }
 
 /* ── 数据：清单（有哪些图）× 文案（写什么） ── */
@@ -708,19 +710,39 @@ const markClipped = (tile) => {
   if (msgEl.scrollHeight - msgEl.clientHeight > 1) clipped.add(item.file)
 }
 
+/** 当前正在展示悬停卡的那一格（存 file，作为 v-for 的稳定键）。
+    ⚠ 卡内内容（姓名 / 班级 / 胶囊 / 留言）**只在这一格渲染** —— 这是这次性能优化的核心：
+    429 张完整的悬停卡占了整面墙 DOM 的约七成（4684 个元素里 ~3300 个在卡里）。
+    实测 1440×900 DPR=2 + CPU 4× 节流（.tmp/shots/wall-ab.mjs）：
+      429 张卡全渲染  35~46fps，Layout 0.32~0.60s / 2.6s
+      只留一张        57fps， Layout 0.011s / 2.6s
+    卡元素本身**保留**（只有它才能让 CSS 的淡入 + 放大过渡在悬停时跑起来，
+    新插入的元素不会播放过渡），去掉的只是卡里的内容。 */
+const openTileFile = ref('')
+
 /** 只在「换了一格」时才算，避免 pointerover 在子元素间反复触发时反复量布局。
-    底纹态不需要（那时不弹卡），直接跳过 —— 省掉每次悬停的一次布局读取。 */
+    底纹态不需要（那时不弹卡），直接跳过 —— 省掉每次悬停的一次布局读取。
+    ⚠ 量宽高（clampCard 读 offsetWidth、markClipped 读 scrollHeight）必须等这次重渲染落地：
+    openTileFile 刚改，卡内内容还没挂上去，立刻量到的是「只有头像」的空卡。 */
 const onGridOver = (e) => {
   if (!canHover.value || !props.hoverCard) return
   const tile = e.target.closest?.('.wall__tile') || null
   if (tile === lastTile) return
   lastTile = tile
+  openTileFile.value = tile ? tiles.value[Number(tile.dataset.i)]?.file || '' : ''
   if (!tile) return
-  markClipped(tile)
-  clampCard(tile)
-  /* markClipped 可能刚把「点击查看全文」那一行加上去，卡片会高一点点 ——
-     等这次重渲染落地再夹一次，免得卡片底部压到 hero 边界外面。 */
-  nextTick(() => clampCard(tile))
+  nextTick(() => {
+    markClipped(tile)
+    clampCard(tile)
+    /* markClipped 可能刚把「点击查看全文」那一行加上去，卡片会高一点点 ——
+       再夹一次，免得卡片底部压到 hero 边界外面。 */
+    nextTick(() => clampCard(tile))
+  })
+}
+/** 指针离开整面墙：把内容收回去（同一面墙内换格子由 onGridOver 负责）。 */
+const onWallLeave = () => {
+  lastTile = null
+  openTileFile.value = ''
 }
 
 /* ── 底纹态（有遮罩）下的悬停：指针到不了瓷砖，按坐标算 ──
@@ -738,16 +760,51 @@ const setPointerTile = (tile) => {
   // 供宿主页面做联动（首页目前不消费；遮罩透明度必须保持静态）
   emit('tile-hover', !!tile)
 }
-const onWindowMove = (e) => {
+
+/* ── 指针 → 瓷砖的映射必须节流（性能，2026-09-23 实测）──
+   原实现**每一次 pointermove** 都读一次 grid.getBoundingClientRect()。那是强制布局读，
+   实测（.tmp/shots/wall-perf.mjs，1440×900，429 格）：
+     60 次移动 → 主线程 0.554s（≈9.2ms/次）、强制布局 104 次
+   鼠标一路移动时这就吃掉一半以上的主线程，页面自然卡。
+   而墙的漂移只有 speedBackdrop ≈ 11px/s —— **一张 150ms 前量的矩形最多偏 1.7px**，
+   远小于一格 136px。于是：
+     ① 每帧最多算一次（rAF 合并，鼠标事件可能一帧来好几个）；
+     ② 矩形按 POINTER_RECT_TTL 复用，过期才重读；
+     ③ 网格尺寸/位置一变（resize、重新 loadData）立即失效，绝不吃过期几何。 */
+const POINTER_RECT_TTL = 150
+let moveRaf = 0
+let lastPt = null
+let rectCache = { r: null, at: 0 }
+const invalidatePointerRect = () => {
+  rectCache = { r: null, at: 0 }
+}
+const pointerRect = (grid) => {
+  const now = performance.now()
+  if (!rectCache.r || now - rectCache.at > POINTER_RECT_TTL) {
+    rectCache = { r: grid.getBoundingClientRect(), at: now }
+  }
+  return rectCache.r
+}
+const applyPointer = (pt) => {
   if (!canHover.value || props.hoverCard) return setPointerTile(null)
   const grid = rootEl.value?.querySelector('.wall__grid')
   const n = geom.value
   if (!grid || !n.s) return setPointerTile(null)
-  const r = grid.getBoundingClientRect()
-  const col = Math.floor((e.clientX - r.left) / n.s)
-  const row = Math.floor((e.clientY - r.top) / n.s)
+  const r = pointerRect(grid)
+  // 先用**缓存**矩形做一次廉价的范围判断，指针不在墙上就直接结束（不再触碰 DOM）
+  if (pt.x < r.left || pt.x >= r.right || pt.y < r.top || pt.y >= r.bottom) return setPointerTile(null)
+  const col = Math.floor((pt.x - r.left) / n.s)
+  const row = Math.floor((pt.y - r.top) / n.s)
   if (col < 0 || col >= n.cols || row < 0) return setPointerTile(null)
   setPointerTile(grid.children[row * n.cols + col] || null)
+}
+const onWindowMove = (e) => {
+  lastPt = { x: e.clientX, y: e.clientY }
+  if (moveRaf) return
+  moveRaf = requestAnimationFrame(() => {
+    moveRaf = 0
+    if (lastPt) applyPointer(lastPt)
+  })
 }
 const clearPointerTile = () => setPointerTile(null)
 
@@ -828,6 +885,7 @@ onMounted(async () => {
   document.addEventListener('pointerleave', clearPointerTile)
 
   await loadData()
+  invalidatePointerRect() // 数据一换，网格尺寸/周期可能也变了，缓存矩形作废
 })
 
 onBeforeUnmount(() => {
@@ -839,6 +897,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVis)
   window.removeEventListener('pointermove', onWindowMove)
   document.removeEventListener('pointerleave', clearPointerTile)
+  if (moveRaf) cancelAnimationFrame(moveRaf)
   lockPage(false) // 组件卸载（比如离开首页）时别把页面留在锁死状态
   if (typeof document !== 'undefined') document.body.classList.remove('hero-wall-present', 'hero-wall-on')
 })
@@ -862,8 +921,14 @@ watch(openItem, (v) => {
   lockPage(!!v)
 })
 
-// 露墙（弹卡态）时把「隔着遮罩」的那格清掉：否则遮罩收回去时会带着 is-peek 一起回来
-watch(() => props.hoverCard, () => clearPointerTile())
+// 弹卡态切换（露墙 / 收回遮罩）时把上一格的状态清干净：
+// 底纹态那格（is-pointer）与卡内内容（openTileFile）都不该跨状态残留 ——
+// 否则遮罩收回去时，上次停留的那格会带着内容一起回来。
+watch(() => props.hoverCard, () => {
+  clearPointerTile()
+  lastTile = null
+  openTileFile.value = ''
+})
 </script>
 
 <template>
@@ -880,6 +945,7 @@ watch(() => props.hoverCard, () => clearPointerTile())
       aria-hidden="true"
       :style="wallStyle"
       @pointerover="onGridOver"
+      @pointerleave="onWallLeave"
       @pointerdown="onGridDown"
       @click="onGridClick"
     >
@@ -907,7 +973,9 @@ watch(() => props.hoverCard, () => clearPointerTile())
                 <div class="wall__avatar">
                   <img :src="thumbOf(m.file)" alt="" loading="lazy" decoding="async" @error="onImgError($event, m)" />
                 </div>
-                <div class="wall__info">
+                <!-- 卡内内容只在指针所在那一格渲染（性能，见 openTileFile 的注释）。
+                     头像留在外面：它要能从格子「飞」到卡里，而新插入的元素不会播放过渡。 -->
+                <div v-if="openTileFile === m.file" class="wall__info">
                   <p class="wall__name">{{ m.name || ' ' }}</p>
                   <p v-if="m.line" class="wall__line">{{ m.line }}</p>
                   <div v-if="m.tags.length" class="wall__tags">
@@ -1205,6 +1273,15 @@ watch(() => props.hoverCard, () => clearPointerTile())
   left: 50%;
   top: 50%;
   z-index: 6;
+  /* 性能：429 张卡里绝大多数在视口外（网格 4488×1768 ≈ 6~7 屏），它们没必要参与布局与绘制。
+     content-visibility: auto 让浏览器跳过「与用户无关」的子树（进入视口附近才算相关，
+     与瓦片一样会跟着动画层一起判定）。卡片是绝对定位、出流元素，跳过它不会挤动任何兄弟；
+     尺寸由内容决定，所以给一个接近实测中位数的 contain-intrinsic-size 兜底占位
+     （衷铭川那张 10 枚标签的卡是 420×288，普通卡 420×145）。
+     ⚠ clampCard() 读的是 offsetWidth，必须等卡片已被渲染才准 —— 它只在指针下的格子被调用，
+     那时卡片一定在视口里（已渲染），所以量到的仍是真实宽度。 */
+  content-visibility: auto;
+  contain-intrinsic-size: 420px 145px;
   display: flex;
   align-items: center;
   gap: 10px;
