@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + 综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。",
-  "generated_at": "2026-09-23T09:57:23.299Z",
+  "generated_at": "2026-09-23T14:18:05.144Z",
   "threshold": 5,
   "count": 44,
   "members": [
@@ -149,6 +149,7 @@
         "蓝桥杯国一",
         "睿抗国一",
         "2024-2025学年国家奖学金",
+        "2023级数据科学与大数据技术专业第一",
         "保研至浙江大学"
       ]
     },
@@ -162,6 +163,7 @@
         "2025ICPC南昌省银",
         "蓝桥杯国三",
         "2024-2025学年国家奖学金",
+        "2023级计算机科学与技术专业第一",
         "保研至华东师范大学"
       ]
     },
@@ -205,6 +207,7 @@
         "天梯赛团体国家级一等奖",
         "传智杯国家级二等奖",
         "蓝桥杯国家级三等奖",
+        "2023级网络空间安全专业第一",
         "保研至华东师范大学"
       ]
     },

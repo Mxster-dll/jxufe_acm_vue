@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
-  "generated_at": "2026-09-23T09:57:23.299Z",
+  "generated_at": "2026-09-23T14:18:05.144Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -508,6 +508,10 @@
           "type": "contest"
         },
         {
+          "text": "2023级数据科学与大数据技术专业第二",
+          "type": "honor"
+        },
+        {
           "text": "上饶银行奖学金 *2",
           "type": "honor"
         },
@@ -670,8 +674,8 @@
           "type": "honor"
         },
         {
-          "text": "保研至华东师范大学",
-          "type": "destination"
+          "text": "…",
+          "type": "more"
         }
       ],
       "sheetTags": [
@@ -741,6 +745,10 @@
         },
         {
           "text": "2024-2025学年国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "2023级计算机科学与技术专业第一",
           "type": "honor"
         },
         {
@@ -2044,8 +2052,8 @@
           "type": "contest"
         },
         {
-          "text": "保研至华东师范大学",
-          "type": "destination"
+          "text": "…",
+          "type": "more"
         }
       ],
       "sheetTags": [
@@ -2104,6 +2112,10 @@
         {
           "text": "传智杯国家级二等奖",
           "type": "contest"
+        },
+        {
+          "text": "2023级网络空间安全专业第一",
+          "type": "honor"
         },
         {
           "text": "保研至华东师范大学",
@@ -2835,6 +2847,10 @@
         },
         {
           "text": "2024-2025学年国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "2023级数据科学与大数据技术专业第一",
           "type": "honor"
         },
         {
