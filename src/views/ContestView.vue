@@ -45,8 +45,11 @@ const cards = computed(() => {
       <!-- Error -->
       <p v-else-if="error" class="hint">加载失败</p>
 
-      <!-- 竞赛卡片 + 全年赛程时间轴（同一份数据，故共用加载态） -->
+      <!-- 全年赛程 + 竞赛卡片（同一份数据，故共用加载态）
+           会长 2026-09-23：日程放到各竞赛卡片**上方** —— 它是「什么时候比」，
+           比「有哪些比赛」更该先看到 -->
       <template v-else>
+      <CompetitionSchedule :competitions="competitions || []" />
       <div class="grid">
         <RouterLink
           v-for="(c, i) in cards"
@@ -83,9 +86,6 @@ const cards = computed(() => {
           </template>
         </RouterLink>
       </div>
-
-      <!-- 全年赛程：各赛事的阶段区间（赛程数据在 competitions.json 的 schedule 字段） -->
-      <CompetitionSchedule :competitions="competitions || []" />
       </template>
     </div>
   </main>

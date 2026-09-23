@@ -104,7 +104,7 @@
       "蓝桥杯国家级二等奖",
       "ICPC江西省赛银牌",
       "ICPC昆明邀请赛铜牌",
-      "sls亲传弟子(头像不是本人)"
+      { "text": "sls亲传弟子(头像不是本人)", "type": "honor" }
     ]
   },
   {
@@ -222,7 +222,10 @@
     "name": "谢智屹",
     "class": "23网络空间安全1班",
     "photo": "/images/excellent_member/0235234.png",
-    "honors": ["江财网安神", "程设守门员，又菜又爱玩"]
+    "honors": [
+      { "text": "江财网安神", "type": "honor" },
+      { "text": "程设守门员，又菜又爱玩", "type": "honor" }
+    ]
   },
   {
     "name": "王柯迪",

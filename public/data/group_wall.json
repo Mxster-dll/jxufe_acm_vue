@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。",
-  "generated_at": "2026-09-23T05:41:20.491Z",
+  "generated_at": "2026-09-23T08:14:05.820Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -723,7 +723,7 @@
         },
         {
           "text": "sls亲传弟子(头像不是本人)",
-          "type": "contest"
+          "type": "honor"
         }
       ]
     },
@@ -862,6 +862,10 @@
       "full": "/images/group_members/full/2085466830.jpg",
       "tags": [
         {
+          "text": "2026学年数智技术协会会长",
+          "type": "honor"
+        },
+        {
           "text": "2026学年协会干事",
           "type": "honor"
         },
@@ -996,11 +1000,11 @@
       "tags": [
         {
           "text": "江财网安神",
-          "type": "contest"
+          "type": "honor"
         },
         {
           "text": "程设守门员，又菜又爱玩",
-          "type": "contest"
+          "type": "honor"
         }
       ]
     },
@@ -1795,6 +1799,10 @@
       "line": "25网络空间安全（低空）1班",
       "full": "/images/group_members/full/1425619793.jpg",
       "tags": [
+        {
+          "text": "2026学年网络安全协会会长",
+          "type": "honor"
+        },
         {
           "text": "xCPC 邀请赛🥉1",
           "type": "contest"

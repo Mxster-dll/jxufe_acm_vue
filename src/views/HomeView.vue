@@ -118,6 +118,10 @@ const hintLeft = ref(null); // null → CSS 回落到 50%
 // 它是「请上去看墙」的邀请，人已经往反方向（往下）走了，就不该再占着导航栏。
 // 回到页首自动回来；阈值就是 0，没有任何缓冲量。
 const hintHidden = ref(false);
+// 会长 2026-09-23：从别的页面切回首页时，这枚「成员墙」入口会「啪」地一下冒出来 ——
+// 因为它是本页的节点（Teleport 进导航栏），其他页面根本没有它，一切页就是凭空出现。
+// 现在先挂 opacity: 0，等**实测出位置**再挂 is-ready 淡入；位置从第一帧就是对的（不再从 50% 滑过来）。
+const hintReady = ref(false);
 let hintRo = null;
 
 const onWallHintScroll = () => {
@@ -226,6 +230,14 @@ onMounted(() => {
     }
     // 字体加载完文字宽度会变，补测一次
     if (document.fonts?.ready) document.fonts.ready.then(measureHint).catch(() => {});
+    /* 淡入要等两件事落定：① 位置已实测（上面那次 measureHint）；② 路由把滚动位置恢复完
+       （切页时 scrollY 会在挂载之后才被改，早判一次会先亮再收）。双 rAF 是等这两步的最省事写法。 */
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        onWallHintScroll();
+        hintReady.value = true;
+      })
+    );
   });
 });
 
@@ -582,7 +594,7 @@ const { newsList, loading, error } = useNews();
       ref="hintEl"
       type="button"
       class="wall-hint"
-      :class="{ 'is-hidden': hintHidden }"
+      :class="{ 'is-hidden': hintHidden, 'is-ready': hintReady }"
       :style="{ '--hint-left': hintLeft }"
       aria-label="露出成员墙"
       @click="revealWall"
@@ -1206,10 +1218,15 @@ const { newsList, loading, error } = useNews();
   background: none;
   cursor: pointer;
   pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
+  /* 挂上 is-ready（位置已实测 + 路由滚动已落定）之前一直透明，切页回首页就不会「凭空冒出来」 */
+  opacity: 0;
   transition:
     left 200ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wall-hint.is-ready {
+  opacity: 1;
 }
 /* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面 */
 .wall-hint.is-hidden {

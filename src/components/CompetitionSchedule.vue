@@ -22,6 +22,13 @@ const props = defineProps({
 
 const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
+/** 当前月份（1-12）—— 用来高亮「现在处在一年中的哪一段」。
+    坐标轴 12 格等宽（区间条的 left/width 都是按 12 个月算的百分比），所以当下这一列的
+    位置就是 (月份-1)/12，宽度 1/12。跨年不影响：赛程表本身就是「一年之内」的视角。 */
+const nowMonth = new Date().getMonth() + 1
+const nowLeft = `${((nowMonth - 1) / 12) * 100}%`
+const nowWidth = `${100 / 12}%`
+
 /** 每行一种颜色；取站点既有的调色板（主色 / 强调色 / 荣誉绿 / 会长金 / 紫 / 特等红），不新造色 */
 const PALETTE = ['#1a73e8', '#ff9800', '#2e7d32', '#a16207', '#7c3aed', '#c62828']
 
@@ -73,7 +80,7 @@ const rows = computed(() =>
     <!-- 宽屏：月份坐标轴 + 每赛事一行区间条 -->
     <div class="schedule__chart">
       <div class="schedule__axis" aria-hidden="true">
-        <span v-for="m in MONTHS" :key="m">{{ m }}</span>
+        <span v-for="(m, i) in MONTHS" :key="m" :class="{ 'is-now': i + 1 === nowMonth }">{{ m }}</span>
       </div>
       <div
         v-for="row in rows"
@@ -83,6 +90,8 @@ const rows = computed(() =>
       >
         <div class="schedule__name">{{ row.name }}</div>
         <div class="schedule__track">
+          <!-- 当前月份列：一条贯穿本行泳道的淡蓝底（各行对齐 ⇒ 视觉上是一整列） -->
+          <span class="schedule__now" :style="{ left: nowLeft, width: nowWidth }" aria-hidden="true"></span>
           <span
             v-for="(bar, i) in row.bars"
             :key="i"
@@ -281,5 +290,22 @@ const rows = computed(() =>
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: var(--radius-xl);
   }
+}
+/* ── 当前月份列（会长 2026-09-23：「把当前月份列高亮」）──
+   每行的泳道里各放一条贯穿上下的淡蓝底，各行位置一致 ⇒ 看起来是一整列。
+   区间条在 DOM 里排在它后面、又是定位元素，天然画在它上面（不用 z-index 打架）。 */
+.schedule__now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  border-radius: 6px;
+  background: rgba(26, 115, 232, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(26, 115, 232, 0.16);
+  pointer-events: none;
+}
+.schedule__axis span.is-now {
+  color: var(--primary);
+  font-weight: 700;
 }
 </style>

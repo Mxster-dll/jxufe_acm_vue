@@ -101,7 +101,25 @@ const rules = (() => {
 const SCORE_THRESHOLD = Number(rules.scoreThreshold) || 0
 const rulePeople = (Array.isArray(rules.people) ? rules.people : []).filter((p) => p && p.name)
 
-/** 规则名单里的人：按真名与墙上现有的人去重，已经在墙上的只留原记录（不新增第二张卡） */
+/** 规则注入的「个人荣誉」标签（会长 2026-09-23：其他协会的会长身份按**绿色个人荣誉**显示，
+    不是本会会长那枚金色标签）。既作用于规则里新加的人，也作用于**已经在墙上的人** ——
+    例如数智技术协会会长凌航本来就在群里，只给他补一枚绿标签，不新增第二张卡。 */
+const ruleHonors = new Map()
+for (const p of rulePeople) {
+  const key = String(p.name).trim()
+  const list = Array.isArray(p.honors) ? p.honors.filter(Boolean) : []
+  if (!key || !list.length) continue
+  ruleHonors.set(
+    key,
+    list.map((x) => ({
+      text: String(typeof x === 'object' ? x.text : x),
+      type: String((typeof x === 'object' && x.type) || 'honor'), // 省略 type 即 honor（绿色）
+    }))
+  )
+}
+
+/** 规则名单里的人：按真名与墙上现有的人去重，已经在墙上的只留原记录（不新增第二张卡，
+    标签由上面的 ruleHonors 补） */
 const wallKeys = new Set(members.map((m) => String(m.realName || m.name || '').trim()))
 for (const p of rulePeople) {
   const key = String(p.name).trim()
@@ -169,6 +187,10 @@ const manualHonorsOf = (m) =>
 // ---------- 逐人组标签 ----------
 const tagsOf = (m) => {
   const tags = []
+
+  // 0. 规则注入的个人荣誉（wall_rules.json 的 people[].honors）：其他协会的会长身份，绿色
+  const injected = ruleHonors.get(String(m.realName || m.name || '').trim())
+  if (injected) tags.push(...injected.map((t) => ({ ...t })))
 
   // 1. 会长身份（金色）：只由 leaders 那 6 人生成，与「协会职务」是两回事
   if (m.title) tags.push({ text: String(m.title), type: 'leader' })

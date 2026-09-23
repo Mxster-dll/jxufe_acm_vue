@@ -8,7 +8,6 @@ import { stripCoveredHonors } from '../utils/honorCoverage'
 import { loadHonorRecords, pillPartsForName, recordsToDetails } from '../utils/honorPills'
 import { honorView } from '../utils/honorView'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
-import { mergeDutyMembers } from '../utils/roster'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
 import HonorPill from '../components/HonorPill.vue'
 
@@ -40,21 +39,13 @@ const detailOf = (m) => recordsToDetails(records.value.get(m.name) || [])
 const { data: duties } = useJson('/data/duties.json', { initial: {} })
 const dutyOf = (m) => (m.name && duties.value?.people?.[m.name]) || []
 
-/** 优秀成员名单 = members.json ∪ **所有任职过协会干事的人**（会长 2026-09-23：
-    「所有任职过协会干事的都要入优秀成员名单，这一步我希望自动实现，而不是硬编码」）。
-    规则在 src/utils/roster.js —— 里面不写任何人名，读的是会长维护的两份干事名单派生出的
-    /data/duties.json；头像与班级取自已生成的 /data/group_wall.json（那份把失效路径与
-    占位图都修过）。明年换干事、补录往年干事 → 重跑生成器，这一页自动跟着变。 */
-const { data: wallData } = useJson('/data/group_wall.json', { initial: {} })
-const roster = computed(() =>
-  mergeDutyMembers(members.value || [], duties.value || {}, wallData.value?.tiles || {})
-)
-
 /** 手写荣誉：先过掉已被自动汇总覆盖的，再归一化出类型。
     **显示与排名必须用同一份** —— 否则同一块奖牌会在卡片上显示两遍、在分值里算两遍
-    （上游名单里还手写着 105 条胶囊已覆盖的竞赛条目，口径与判定见 utils/honorCoverage.js）。 */
+    （上游名单里还手写着 105 条胶囊已覆盖的竞赛条目，口径与判定见 utils/honorCoverage.js）。
+    ⚠ 这一页就是 members.json 那 33 人，**不并入干事** —— 会长 2026-09-23 第二轮裁定：
+    「我们还是不要让协会干事必定入『优秀成员』吧」（此前那版自动并入已撤掉）。 */
 const cleanedMembers = computed(() =>
-  roster.value.map((m) => ({
+  (members.value || []).map((m) => ({
     ...m,
     honors: normalizeHonors(stripCoveredHonors(m.honors)),
   }))
