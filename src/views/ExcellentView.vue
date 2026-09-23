@@ -13,15 +13,22 @@ import HonorTags from '../components/HonorTags.vue'
     入册判据与墙上「分数达标自动入墙」、与本页「卡片显示顺序」是同一份分数（honorRanking.js），
     所以卡片上看到的分数就是入册依据；生成物见 scripts/gen_group_wall.mjs，
     阈值在 public/data/wall_rules.json 的 excellentScoreThreshold（会长可调）。
-    读不到生成物就退回 members.json —— 任何情况下这一页都不该空着。 */
-const { data: excellent, loading, error } = useJson('/data/excellent_members.json', { initial: [] })
-const { data: baseMembers } = useJson('/data/members.json', { initial: [] })
+    读不到生成物就退回 members.json —— 任何情况下这一页都不该空着。
+    ⚠ 所以**两份请求都要盯**：只盯生成物那一份的话，生成物 404 时页面会去显示「加载失败」，
+    而手里明明有 members.json 那 33 人 —— 上面那句承诺就永远走不到（2026-09-24 审查点出的 bug）。 */
+const { data: excellent, loading: genLoading } = useJson('/data/excellent_members.json', { initial: [] })
+const { data: baseMembers, loading: baseLoading } = useJson('/data/members.json', { initial: [] })
 const members = computed(() => {
   // ⚠ 生成物是个对象（{ _note, threshold, count, members[] }），members.json 才是裸数组 ——
   // 别写成 excellent.value.length 判断：对象没有 length，会静默回退到 members.json 那 33 人
   const list = excellent.value?.members
   return Array.isArray(list) && list.length ? list : baseMembers.value
 })
+
+/** 两份都读完还是一个人都没有，才是「加载失败」唯一该出现的时机：
+    生成物挂了但有 members.json 兜底 → members.length > 0 → 照常渲染；反过来同理。 */
+const failed = computed(() => !members.value.length && !genLoading.value && !baseLoading.value)
+
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
 
@@ -93,12 +100,12 @@ const { containerRef } = useMasonry()
       </div>
 
       <!-- Loading（成员数据与排名都就绪再渲染网格，避免卡片先排好又跳位） -->
-      <div v-if="loading || (members.length && !byName)" class="grid">
+      <div v-if="genLoading || baseLoading || (members.length && !byName)" class="grid">
         <div v-for="n in skeletons" :key="n" class="skeleton" style="height:420px;border-radius:var(--radius-xl);"></div>
       </div>
 
-      <!-- Error -->
-      <p v-else-if="error" class="hint">加载失败</p>
+      <!-- Error：两份数据都拿不出人才显示 —— 手里有兜底名单（或生成物）就必须照常渲染 -->
+      <p v-else-if="failed" class="hint">加载失败</p>
 
       <!-- 成员网格 -->
       <div v-else ref="containerRef" class="grid">
