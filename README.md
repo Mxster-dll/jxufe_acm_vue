@@ -197,7 +197,9 @@ npm run data:group-thumbs   # ★ 生成成员墙缩略图 ← 加人 / 换头�
 npm run data:event-badges   # 只重新生成奖牌徽章（dev/build 会自动跑）
 npm run data:hero-wall      # 上游那套清单（已不在 dev/build 里；首页墙不消费它）
 npm run data:hero-thumbs    # 上游那套缩略图（无消费者，一般不用跑）
-npm run data:check          # 数据校验
+npm run data:check          # 数据校验（格式 + 交叉引用）
+npm test                    # 计分口径回归集（node --test，零依赖、不构建、不联网）
+npm run verify              # = data:check + test ← 改动代码或数据后跑这个
 ```
 
 ## 📦 部署
@@ -209,9 +211,9 @@ npm run data:check          # 数据校验
 | 步骤 | 做什么 |
 |---|---|
 | 1 | 本地检查：部署密钥、`src/main.js`、`package.json`、`tar` 是否就位 |
-| 2 | 把 `src` `public` `package.json` `package-lock.json` `vite.config.js` `index.html` 与 `scripts/` 下的**两个生成器**（`gen_group_wall.mjs` `gen_event_badges.mjs`）打成 tar.gz |
-| 3 | 上传到服务器 `/tmp`，解包到 `/var/www/jxufe_acm_vue`（会先删掉远端的旧 `src` 与 `public`） |
-| 4 | 服务器上 `npm install` + `npm run build`（`prebuild` 钩子会重新生成头像墙数据与奖牌徽章） |
+| 2 | **先检查工作区**（见下），再把 `src` `public` `package.json` `package-lock.json` `vite.config.js` `index.html`、`scripts/` 下的**两个生成器**（`gen_group_wall.mjs` `gen_event_badges.mjs`）以及它们共用的 `scripts/lib/` 打成 tar.gz |
+| 3 | 上传到服务器 `/tmp`，解包到 `/var/www/jxufe_acm_vue`（会先删掉远端的旧 `src` 与 `public`；Nginx 根目录是 `dist/`，所以这一步不会影响线上） |
+| 4 | 服务器上 `npm install` + **构建到 `dist.new`**（`npm run build -- --outDir dist.new`，`prebuild` 钩子会重新生成头像墙数据与奖牌徽章）；确认 `dist.new/index.html` 真的存在后，才把它换出成 `dist`，上一版留作 `dist.old` |
 | 5 | `nginx -t` → `systemctl reload nginx` → curl 验证站点返回 `HTTP 200` |
 
 最后打印 `Deploy success!` 与 `https://jxufe-acm.cn`。
@@ -224,6 +226,16 @@ npm run data:check          # 数据校验
 
 > **每次都是全量上传 `src` 与 `public`**（约 36 MB），不做增量比对 —— 用一轮 tar 换掉逐文件
 > 判断，出问题的可能性更低。第一次部署与第十次耗时相同。
+>
+> **第 2 步会拒绝「工作区不干净」**（2026-09-24 加）：tar 打的是**本地工作树**，不是 git 里的内容，
+> 于是上面那些路径里**任何未提交的改动都会静默上线** —— 而且在作者本机永远看不出来，只有别人克隆仓库、
+> 或 CI 构建时才会表现成「站点和别人不一样」。现在这些路径只要与 HEAD 不一致就停下并逐条列出文件；
+> 真有紧急热修要走，先 `set DEPLOY_ALLOW_DIRTY=1` 再跑（会打印 `[WARN]` 说明这次是明知故犯）。
+> 不带 `.git` 的副本会明确警告「门禁是关的」，不会假装检查过。
+>
+> **构建失败不再影响线上**：构建产物先落在 `dist.new`，`dist` 全程不动，所以第 4 步失败时线上仍是
+> 上一次成功的版本（脚本会这样告诉你）。换出失败时 `dist.old` 就是上一版，手工回滚：
+> `ssh root@47.99.92.213 "cd /var/www/jxufe_acm_vue && rm -rf dist && mv dist.old dist"`。
 
 > **`scripts/` 里只有这两个生成器需要上传**，缺一个服务器构建就直接失败：`prebuild` 会依次执行
 > 它们，脚本不在 → `node` 报「找不到文件」→ `npm run build` 以非零退出，整次部署停在第 4 步。
@@ -1079,6 +1091,33 @@ npm run data:hero-thumbs   # 上游那套缩略图（384/256 两档；无消费�
 **身份匹配的判据**跟着仓外生成脚本走：重跑 `07_技术项目/奖学金数据/build_scholarships.py`
 会打印匹配表、每条的判据、判据不过的丢弃清单，以及学年窗口的校准分布（见第七节）。
 分布跑出 0~3 就说明有问题。
+
+### 计分口径回归集（`npm test`）
+
+`test/` 下是 `node --test` 写的零依赖回归集（不构建、不联网），钉住**显示排名那套口径**：
+优秀奖 / 优胜奖计 0、复合条目里的省一等奖照计（5.00）、手工胶囊按分段计分（3.5）而整串入参保持
+旧口径（6.05）、`gplt|省赛` = `lanqiao|省赛` = 0.12、13 位成员的分值快照、≥5 分池的前 10 顺序、
+墙上被胶囊覆盖吃掉 85 条手写条目、胶囊人名数 1795，以及「战绩数据取不到时必须留下缺失清单」。
+
+**改 `src/utils/honorRanking.js` 顶部那几张表或 `src/utils/honorCoverage.js` 的放行判据之前，先跑
+`npm test`** —— 这套口径是表驱动的，动一个系数会静默改变全站名次，这些快照就是那个报警器。
+（它也是被教训出来的：2026-09-24 的审查里，靠手工核验算法得出过三个错结论。）
+
+### 生成器读数据的策略（`scripts/lib/data-io.mjs`）
+
+`predev` / `prebuild` 链上的生成器统一走这一个模块，只有两种态度：
+
+- **必需数据**（`readJsonRequired`）：`public/data` 下随仓库提交的站点数据 —— 缺了就**让构建停下**，
+  报错里写清「哪份文件、谁要的、怎么补」。静默少一份数据，页面上表现为「某个系列凭空消失」，
+  没人会发现；而构建停一次，五秒钟就能看懂。
+- **可选数据**（`readJsonOptional`）：会长手写、缺了不影响页面结构的（`wall_rules.json` 的入墙规则、
+  `hero_wall.json` 的留言）—— 读不到就用回落值继续，但**必须打一行 warn**：降级可以有，无声降级不行。
+
+前端同一原则：`honorPills.js` 的 `loadHonorRecords()` 在某个战绩文件取不到时仍然降级（页面不该因此
+报错），但会把缺的文件攒进 `missingHonorSources` 并统一 warn 一条，说清缺的是哪几个系列。
+
+> 服务器构建也依赖 `scripts/lib/`：两个生成器都 import 它，所以它必须在 `deploy.bat` 的
+> `UPLOAD_ITEMS` 里（上传的是整个 `scripts\lib` 目录，以后加共用模块不用再改清单）。
 
 ---
 
