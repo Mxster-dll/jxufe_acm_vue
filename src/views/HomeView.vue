@@ -657,9 +657,15 @@ const { newsList, loading, error } = useNews();
        所以组件一行没改，只多传几个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成，
        人数：QQ 群 110 + 优秀成员 33 + 负责人 6，按真名去重后 138 人。 -->
   <div class="page-wall">
+    <!-- speed / speedBackdrop 都写 8 px/s：会长 2026-09-23「把露墙那下减慢，8px/s」。
+         组件里 speed 给 active 态、speedBackdrop 给底纹态，而首页从不置 active
+         （露墙走的是本页自己的遮罩机制），所以真正生效的是 speedBackdrop（原默认 11）；
+         两个都写成同一个值，免得以后谁动了 active 就冒出一个更快的档。 -->
     <HeroAvatarWall
       v-model:active="wallOn"
       :hover-card="maskOut"
+      :speed="8"
+      :speed-backdrop="8"
       manifest-url="/data/group_wall.manifest.json"
       copy-url="/data/group_wall.json"
       thumbs-base="/images/group_wall_thumbs"
