@@ -626,7 +626,11 @@ const wallStyle = computed(() => ({
 const paused = computed(() => !inView.value || pageHidden.value || !!openItem.value)
 
 /* ── 悬停：卡片夹紧（免得贴边格子的卡被 hero 的 overflow: clip 裁掉） ── */
-/** 兜底尺寸：量不到真实卡片时用（正常情况下都能量到） */
+/** 兜底尺寸：**只在量不到真实卡片时**用（正常情况下都能量到 —— clampCard 读 offsetWidth）。
+    CARD_W 与 CSS 里那一层的 `--card-w: 360px` 必须同值：CSS 先给「还没量到」的卡定宽，
+    JS 量到实测宽度后再把 --card-w 回写；`.has-message` 变体在 CSS 是 440px，同理只影响
+    量到之前的那一帧。CARD_H **没有**对应的 CSS 变量（卡片高度完全由内容决定），
+    它只是 clampCard 的占位高度 —— 别拿它去和 contain-intrinsic-size 的 145px 凑同一个数。 */
 const CARD_W = 360
 const CARD_H = 132
 let lastTile = null
@@ -1164,7 +1168,7 @@ watch(() => props.hoverCard, () => {
   animation: wall-in 520ms ease both;
   /* 悬停卡的头像「起飞点」要按卡宽算（见 .wall__card 的 --from-x），
      而卡宽现在随内容自适应 —— clampCard 会在每次悬停时把实测宽度写回这一层，
-     这里的 360px 只是没量到之前的兜底值。 */
+     这里的 360px 只是没量到之前的兜底值，与 JS 的 `CARD_W`（本文件 setup 里）同值。 */
   --card-w: 360px;
 }
 @keyframes wall-in {
@@ -1289,6 +1293,8 @@ watch(() => props.hoverCard, () => {
      与瓦片一样会跟着动画层一起判定）。卡片是绝对定位、出流元素，跳过它不会挤动任何兄弟；
      尺寸由内容决定，所以给一个接近实测中位数的 contain-intrinsic-size 兜底占位
      （衷铭川那张 10 枚标签的卡是 420×288，普通卡 420×145）。
+     ⚠ 这里的 420×145 与 `--card-w`(360/440) **不是同一个数、也不是同一个概念**：
+     它要的是「占位盒尽量接近实测尺寸」，让滚动条不跳；别为了「统一魔法数」去改它。
      ⚠ clampCard() 读的是 offsetWidth，必须等卡片已被渲染才准 —— 它只在指针下的格子被调用，
      那时卡片一定在视口里（已渲染），所以量到的仍是真实宽度。 */
   content-visibility: auto;
@@ -1467,7 +1473,8 @@ watch(() => props.hoverCard, () => {
 
 /* 有留言时卡片放宽一档：留言要在头像右边的窄栏里换行，360px 的卡读起来太憋屈。
    只覆盖 --card-w —— --from-x（头像起飞点）是用 var(--card-w) 算的，
-   这里改了它会跟着重算，头像是从新的卡片中心飞回原格的，动画不受影响。 */
+   这里改了它会跟着重算，头像是从新的卡片中心飞回原格的，动画不受影响。
+   （JS 的兜底常量 CARD_W 仍是 360：它只在量不到元素时生效，量到就以实测为准。） */
 .wall__card.has-message {
   --card-w: 440px;
 }

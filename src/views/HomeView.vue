@@ -851,9 +851,11 @@ const { newsList, loading, error } = useNews();
   transition: none;
   will-change: transform;
 }
-/* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来 */
+/* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来。
+   位移量 = tokens.css 的 --mask-travel（105vh），与 AppHeader 里导航栏那一份同值；
+   JS 侧同值的量是 useMaskReveal.js 的 MASK_MAX_RATIO = 1.05（触摸拖动上限）。 */
 .page-mask.is-out {
-  transform: translate3d(0, 105vh, 0);
+  transform: translate3d(0, var(--mask-travel), 0);
   /* 与下面 .is-returning 同一个时长：露墙与请回速度一致（会长 2026-09-23），
      也对齐翻页吸附那一档（实测 ≈430ms）。
      时长不再写字面量，改用 JS 发布到 <html> 的 --mask-ms —— 早先 CSS(640/520) 与

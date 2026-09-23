@@ -295,9 +295,11 @@ header.menu-open .hamburger-icon {
     border-color var(--transition-smooth),
     backdrop-filter var(--transition-smooth);
 }
-/* 拉过一屏的 10%：遮罩整层滑出，导航栏同步滑出（位移量与 .page-mask.is-out 一致） */
+/* 拉过一屏的 10%：遮罩整层滑出，导航栏同步滑出。
+   位移量取 tokens.css 的 --mask-travel（= 105vh），与 HomeView 的 `.page-mask.is-out`
+   是同一个值 —— 原先这里各写一遍字面量，改一处忘另一处导航栏就会与遮罩错开一截。 */
 html.is-mask-out #app > header {
-  transform: translate3d(0, 105vh, 0);
+  transform: translate3d(0, var(--mask-travel), 0);
 }
 /* 首页那枚「成员墙」入口收起后必须**真的**不接收指针。
    光靠 HomeView 里 scoped 的 `.wall-hint.is-hidden` 不够：它是 (0,3,0)，

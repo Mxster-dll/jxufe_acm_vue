@@ -2,7 +2,8 @@ import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 
 /** 触摸触发所需的位移：一屏的 10%（只给移动端用，桌面已取消阈值）。 */
 export const MASK_REVEAL_RATIO = 0.1
-/** 触摸能拉多远：一直到遮罩整层移出视口（与 CSS `.page-mask.is-out` 的 105vh 一致）。
+/** 触摸能拉多远：一直到遮罩整层移出视口 —— 与 `tokens.css` 的 `--mask-travel: 105vh` 同值
+    （1.05 = 105vh / 100vh，两处一起改才不会在「手指拉到头」与 CSS 落点之间露出缝）。
     10% 只决定「松手后触不触发」，**不限制手指能拉多远**。 */
 export const MASK_MAX_RATIO = 1.05
 /** 拖动的阻尼：免得手指/滑轮挪一点点就把遮罩拉到底。 */
