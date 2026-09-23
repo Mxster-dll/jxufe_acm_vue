@@ -109,7 +109,18 @@ const xcpcGroups = computed(() => {
       })
       groups.push(map.get(key))
     }
-    map.get(key).rows.push(row)
+    const group = map.get(key)
+    // 同一支队伍可能同时拿到邀请赛与省赛（「CCPC 全国邀请赛（南昌）暨江西省赛」在
+    // 2026-05-24 就是同队同名同天两条：一条 invitational、一条 provincial），
+    // 数据里是两行 —— 这里按队伍合并成一行，获奖栏渲染两枚胶囊。
+    // 组合键带上成员，避免队名为空时不同的队伍被并到一起。
+    const teamKey = `${row.team_name || ''}|${(row.members || []).join('、')}`
+    let team = group.rows.find((t) => t.key === teamKey)
+    if (!team) {
+      team = { key: teamKey, team_name: row.team_name, members: row.members || [], awards: [] }
+      group.rows.push(team)
+    }
+    team.awards.push({ medal: row.medal_type, level: row.medal_level })
   }
   return groups
 })
@@ -167,6 +178,15 @@ const gpltGroups = computed(() => {
 /** 成员个人奖 → 姓名配色（无个人奖用默认色） */
 function memberAwardClass(medal) {
   return medalClass(medal) || 'member-plain'
+}
+
+/** 合并后的一行里最好的那枚奖牌（卡片配色取它） */
+function bestMedal(row) {
+  return (
+    (row.awards || [])
+      .slice()
+      .sort((a, b) => (MEDAL_ORDER[a.medal] ?? 9) - (MEDAL_ORDER[b.medal] ?? 9))[0]?.medal || ''
+  )
 }
 
 // ==========================================================================
@@ -437,12 +457,12 @@ function setView(v) {
                 <!-- xcpc：按场次分组，rowspan 合并日期 / 赛事列 -->
                 <template v-else>
                   <template v-for="g in xcpcGroups" :key="g.date + '|' + g.title">
-                    <tr v-for="(row, ri) in g.rows" :key="g.date + '-' + ri" :class="'row-' + g.cat">
+                    <tr v-for="(row, ri) in g.rows" :key="row.key" :class="'row-' + g.cat">
                       <td v-if="ri === 0" class="cell-year" :rowspan="g.rows.length">{{ g.dateText }}</td>
                       <td v-if="ri === 0" class="cell-title" :rowspan="g.rows.length">{{ g.title }}</td>
                       <td class="cell-team">{{ row.team_name || '—' }}</td>
                       <td class="cell-desc">
-                        <span class="award-chip" :class="'chip-' + row.medal_type">{{ MEDAL_TEXT[row.medal_type] }}<i class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</i></span>
+                        <span v-for="(a, ai) in row.awards" :key="ai" class="award-chip" :class="'chip-' + a.medal">{{ MEDAL_TEXT[a.medal] }}<i class="chip-tag">{{ LEVEL_TAG[a.level] || '' }}</i></span>
                       </td>
                       <td class="cell-members">
                         <template v-if="row.members && row.members.length">
@@ -498,10 +518,10 @@ function setView(v) {
                   <span class="m-edition">{{ g.title }}</span>
                   <span class="m-date">{{ g.dateText }}</span>
                 </div>
-                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card m-team-card--event" :class="'tone-' + row.medal_type">
+                <div v-for="row in g.rows" :key="'mr' + row.key" class="m-team-card m-team-card--event" :class="'tone-' + bestMedal(row)">
                   <div class="m-team-name">{{ row.team_name || '—' }}</div>
                   <div class="m-awards">
-                    <span class="m-award" :class="'chip-' + row.medal_type"><i class="fa-solid fa-trophy"></i> {{ MEDAL_TEXT[row.medal_type] }} <span class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</span></span>
+                    <span v-for="(a, ai) in row.awards" :key="ai" class="m-award" :class="'chip-' + a.medal"><i class="fa-solid fa-trophy"></i> {{ MEDAL_TEXT[a.medal] }} <span class="chip-tag">{{ LEVEL_TAG[a.level] || '' }}</span></span>
                   </div>
                   <div class="m-fields">
                     <p class="m-field"><strong>参赛成员：</strong>
