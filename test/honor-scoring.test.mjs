@@ -16,6 +16,7 @@ import { AWARD_FILES, XCPC_MODE, mergeXcpc } from '../src/utils/contestTaxonomy.
 import { collectRecords, MANUAL_PILLS, buildHonorPills } from '../src/utils/honorPills.js'
 import {
   rankMembers,
+  rankWithTimeout,
   scoreManualContest,
   scoreManualPill,
   scorePerson,
@@ -224,4 +225,48 @@ test('xCPC 合并：判据、子项、奖项文件都由 competitions.json 决�
   assert.equal(mergeXcpc([]), null)
   assert.equal(mergeXcpc([{ slug: 'x', mode: 'roster' }]), null)
   assert.equal(mergeXcpc(comps.filter((c) => c.mode !== XCPC_MODE)), null)
+})
+
+/* ── 10. 排名加载的超时策略：超时只是「先按原序渲染」，迟到的排名照样生效 ──
+   2026-09-24 修掉的 bug：超时先到时把 byName 置成空 Map 并用它挡住重跑 → 3 秒后才回来的
+   排名被永久丢弃。下面三条钉住新契约（迟到的生效 / 及时的只应用一次 / 失败不抛给回调）。 */
+test('排名超时：先按原序渲染一次，迟到的那份再覆盖上去', async () => {
+  const applied = []
+  const load = () =>
+    new Promise((resolve) => setTimeout(() => resolve({ byName: new Map([['a', { rank: 1 }]]) }), 5))
+  await rankWithTimeout([{ name: 'a' }], { timeoutMs: 1, load, onApply: (m) => applied.push(m) })
+  assert.equal(applied.length, 2, '一次给原序、一次给真实排名')
+  assert.equal(applied[0], null)
+  assert.ok(applied[1] instanceof Map)
+  assert.equal(applied[1].get('a').rank, 1)
+})
+
+test('排名及时：只应用一次，不会先闪一下 JSON 原序', async () => {
+  const applied = []
+  await rankWithTimeout([{ name: 'a' }], {
+    timeoutMs: 1000,
+    load: async () => ({ byName: new Map([['a', { rank: 3 }]]) }),
+    onApply: (m) => applied.push(m),
+  })
+  assert.equal(applied.length, 1)
+  assert.equal(applied[0].get('a').rank, 3)
+})
+
+test('排名加载抛错：退回原序，且不留下未处理的 rejection', async () => {
+  const applied = []
+  const orphans = []
+  const onUnhandled = (err) => orphans.push(err)
+  process.on('unhandledRejection', onUnhandled)
+  const out = await rankWithTimeout([{ name: 'a' }], {
+    timeoutMs: 1000,
+    load: async () => {
+      throw new Error('boom')
+    },
+    onApply: (m) => applied.push(m),
+  })
+  await new Promise((r) => setTimeout(r, 5)) // 给 unhandledRejection 一个冒头的机会
+  process.off('unhandledRejection', onUnhandled)
+  assert.deepEqual(applied, [null])
+  assert.equal(out, null)
+  assert.deepEqual(orphans, [])
 })

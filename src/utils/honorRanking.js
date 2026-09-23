@@ -494,4 +494,51 @@ export async function loadMemberRanking(members = []) {
   return rankMembers({ members, recordsByName, manualPills: MANUAL_PILLS })
 }
 
+/**
+ * 排名加载的**超时策略**：3 秒没回来就先按 JSON 原顺序渲染，**迟到的那份仍然生效**。
+ *
+ * 为什么不是「超时即放弃」：优秀成员页原先在超时后把 byName 置成空 Map、又用 `byName.value`
+ * 挡住重跑，于是一份 3.1 秒才到的排名被**永久丢弃**（页面从此停在 JSON 原序，直到刷新）。
+ * 「退化成原序」本身是文档化契约（sortByRanking 给未登记的人 Number.MAX_SAFE_INTEGER、
+ * 再按原下标稳定排序，出来就是原顺序），但「迟到即永久降级」不是 —— 网络慢一次就再没有排名。
+ *
+ * @param {{name:string}[]} members
+ * @param {object} [opts]
+ * @param {number} [opts.timeoutMs=3000] 先按原序渲染的等待上限
+ * @param {(members:object[]) => Promise<{byName:Map}|null>} [opts.load] 只为可测而注入，默认走站点数据
+ * @param {(byName:Map|null) => void} [opts.onApply] null = 先按原顺序；真实排名回来后再调一次
+ * @returns {Promise<{byName:Map}|null>} 最终生效的那次结果（加载失败 / 始终没回来 = null）
+ */
+export async function rankWithTimeout(
+  members = [],
+  { timeoutMs = 3000, load = loadMemberRanking, onApply } = {}
+) {
+  /* 失败一律折算成 null：这一层不该把 rejection 抛给 watch 回调（那会变成未处理的 rejection ——
+     页面上什么都没发生，控制台里一条红字）。真实原因由 loadHonorRecords 的降级信号报出来。 */
+  const ranking = Promise.resolve()
+    .then(() => load(members))
+    .catch((err) => {
+      console.warn('[honorRanking] 排名加载失败，先按 JSON 原顺序渲染：', err)
+      return null
+    })
+
+  let timer = null
+  const first = await Promise.race([
+    ranking,
+    new Promise((resolve) => {
+      timer = setTimeout(() => resolve(null), timeoutMs)
+    }),
+  ])
+  if (timer) clearTimeout(timer)
+
+  if (first) {
+    onApply?.(first.byName)
+    return first
+  }
+  onApply?.(null) // 先按原顺序渲染，别把网格卡在骨架屏上
+  const late = await ranking // 等的是同一个 promise：迟到的排名仍然生效
+  if (late) onApply?.(late.byName)
+  return late
+}
+
 export { collectRecords }

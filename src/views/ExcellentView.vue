@@ -5,7 +5,7 @@ import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
 import { useHonorDisplay } from '../composables/useHonorDisplay'
 import { honorView } from '../utils/honorView'
-import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
+import { rankWithTimeout, sortByRanking } from '../utils/honorRanking'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
 import HonorTags from '../components/HonorTags.vue'
 
@@ -51,19 +51,21 @@ const cleanedMembers = computed(() =>
 )
 
 /** 显示排名：比赛奖牌 + 手写战绩 + 荣誉加项折算成分值，决定卡片的显示顺序。
-    权重表、口径与排序键见 utils/honorRanking.js；数据加载与上面的胶囊共用同一份缓存。 */
+    权重表、口径与排序键见 utils/honorRanking.js；数据加载与上面的胶囊共用同一份缓存。
+    ⚠ 3 秒超时只是「先按原顺序渲染」，**不是**放弃排名 —— 迟到的那份仍然会覆盖上去
+    （策略、超时值与理由见 honorRanking.js 的 rankWithTimeout）。
+    2026-09-24 修：原先是 `byName.value = result ? result.byName : new Map()`，超时先到时置成
+    空 Map、又被下面那句 `byName.value` 挡住重跑 → 3 秒后才回来的排名被**永久丢弃**。 */
 const byName = ref(null)
-const RANKING_TIMEOUT_MS = 3000
 watch(
   cleanedMembers,
   async (val) => {
     if (!val?.length || byName.value) return
-    // 网络异常时不能把网格卡在骨架屏上：超时就按数据原始顺序渲染
-    const result = await Promise.race([
-      loadMemberRanking(val),
-      new Promise((resolve) => setTimeout(() => resolve(null), RANKING_TIMEOUT_MS)),
-    ])
-    byName.value = result ? result.byName : new Map()
+    await rankWithTimeout(val, {
+      onApply: (map) => {
+        byName.value = map
+      },
+    })
   },
   { immediate: true }
 )
