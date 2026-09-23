@@ -311,7 +311,7 @@ events/2026.json
 
 ```json
 {
-  "session": "2027届会长",
+  "session": "2027学年会长",
   "name": "李四",
   "class": "26计算机科学与技术2班",
   "avatar": "/images/leader/2027.jpg",

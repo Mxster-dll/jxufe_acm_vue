@@ -371,7 +371,7 @@ npm run data:check
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| `session` | string | 届次，如 `"2026届会长"`。显示在卡片左上角的绶带上 |
+| `session` | string | 学年，如 `"2026学年会长"`。显示在卡片左上角的绶带上（口径见下方：会长是**学年制**，不是「届」） |
 | `name` | string | 姓名 |
 | `class` | string | 班级 |
 | `avatar` | string | 头像路径，如 `"/images/leader/2026.jpg"` |
@@ -380,7 +380,7 @@ npm run data:check
 
 ```jsonc
 {
-  "session": "2026届会长",
+  "session": "2026学年会长",
   "name": "陈煜仕",
   "class": "25计算机科学与技术2班",
   "avatar": "/images/leader/2026.jpg",

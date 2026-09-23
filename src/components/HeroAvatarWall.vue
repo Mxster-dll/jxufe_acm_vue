@@ -716,8 +716,9 @@ watch(() => props.hoverCard, () => clearPointerTile())
   /* 旧版头像墙（integration 的 AvatarMosaic）悬停卡的内边距是 12px、卡内间距 12px。
      卡片视觉整体按旧版还原（会长 2026-09-23：无遮罩时的悬停要「之前我做的样式」）：
      圆角 8px、边框 rgba(0,0,0,.058)、双层阴影、200ms cubic-bezier(.1,.9,.2,1)。
-     见 .tmp/ref/old-hover-card.md 里抄出的旧 CSS 原文。 */
-  --pad: 12px;
+     见 .tmp/ref/old-hover-card.md 里抄出的旧 CSS 原文。
+     会长随后要求「再贴近边缘」：内边距与卡内间距从旧版的 12px 收到 10px。 */
+  --pad: 10px;
   /* 头像的起飞点：卡片正好以格子中心为锚 → 卡片中心 == 原格子中心。
      头像自然位置在卡片左侧，其中心距卡片中心 = 卡片半宽 − 内边距 − 头像半宽；
      于是「右移这么多 + 放大到格子尺寸」正好盖回原格子上，归零即飞到位。
@@ -732,7 +733,7 @@ watch(() => props.hoverCard, () => clearPointerTile())
   z-index: 6;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   /* 卡宽**按内容自适应**（会长 2026-09-23：「卡片没有适应宽度，有些内容会超」）：
      内容短就窄、长就宽，上限 420px / 视口 −32px；再长就由标签换行消化，
      所以卡里没有任何一层会越界。原来写死 360px，长班级与长标签只能被裁或顶出去。
@@ -799,8 +800,9 @@ watch(() => props.hoverCard, () => clearPointerTile())
 .wall__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 3px;
+  /* 正文（姓名 / 班级）与胶囊之间只留 4px —— 旧版是 8px，会长 2026-09-23「胶囊与正文的距离太大」 */
+  margin-top: 4px;
 }
 .wall__tag {
   font-size: 0.75rem;
