@@ -29,6 +29,13 @@ const nowMonth = new Date().getMonth() + 1
 const nowLeft = `${((nowMonth - 1) / 12) * 100}%`
 const nowWidth = `${100 / 12}%`
 
+/* 宽屏那条贯穿整列的高亮：放在「所有行的容器」里，左边让出名称列（--name-col）后 12 等分。
+   早先是每行泳道里各放一条、靠 ±11px 溢出互相接上 —— 行首改成「图标在上、名字在下」后，
+   行高由名称列（约 55px）决定、远高于 30px 的泳道，固定溢出量接不上（实测裂出 29px 缝）。
+   放成一条就天然连续，且与行高无关。 */
+const nowColLeft = `calc(var(--name-col) + (100% - var(--name-col)) * ${(nowMonth - 1) / 12})`
+const nowColWidth = `calc((100% - var(--name-col)) / 12)`
+
 /** 每行一种颜色；取站点既有的调色板（主色 / 强调色 / 荣誉绿 / 会长金 / 紫 / 特等红），不新造色 */
 const PALETTE = ['#1a73e8', '#ff9800', '#2e7d32', '#a16207', '#7c3aed', '#c62828']
 
@@ -83,6 +90,9 @@ const rows = computed(() => {
       stage: s.stage,
       note: s.srcs.length > 1 ? s.srcs.join(' / ') : '',
       range: s.from === s.to ? `${s.from}月` : `${s.from}-${s.to}月`,
+      // from/to 也带上：窄屏的竖置时间线要按它算 top / height（宽屏用的是 left / width）
+      from: s.from,
+      to: s.to,
       left: ((s.from - 1) / 12) * 100,
       width: ((s.to - s.from + 1) / 12) * 100,
       lane: 0,
@@ -112,41 +122,52 @@ const rows = computed(() => {
       <div class="schedule__axis" aria-hidden="true">
         <span v-for="(m, i) in MONTHS" :key="m" :class="{ 'is-now': i + 1 === nowMonth }">{{ m }}</span>
       </div>
-      <div
-        v-for="row in rows"
-        :key="row.slug"
-        class="schedule__row"
-        :style="{ '--row-color': row.color, '--lanes': row.lanes }"
-      >
-        <div class="schedule__name">
-          <img
-            v-for="(lg, i) in row.logos"
-            :key="i"
-            :src="lg"
-            :alt="row.name"
-            class="schedule__logo"
-          />
-          <span class="schedule__name-text">{{ row.name }}</span>
-        </div>
-        <div class="schedule__track">
-          <!-- 当前月份列：一条贯穿本行泳道的淡蓝底（各行对齐 ⇒ 视觉上是一整列） -->
-          <span class="schedule__now" :style="{ left: nowLeft, width: nowWidth }" aria-hidden="true"></span>
-          <span
-            v-for="(bar, i) in row.bars"
-            :key="i"
-            class="schedule__bar"
-            :style="{ left: `${bar.left}%`, width: `${bar.width}%`, top: `calc(${bar.lane} * 30px)` }"
-            :title="`${row.name} · ${bar.stage}（${bar.range}）${bar.note ? ' —— ' + bar.note : ''}`"
-            >{{ bar.stage }}</span
-          >
+      <div class="schedule__body">
+        <!-- 当前月份列：一条贯穿全部行的淡蓝底（只此一条 ⇒ 天然连续，与行高无关） -->
+        <span class="schedule__now" :style="{ left: nowColLeft, width: nowColWidth }" aria-hidden="true"></span>
+        <div
+          v-for="row in rows"
+          :key="row.slug"
+          class="schedule__row"
+          :style="{ '--row-color': row.color, '--lanes': row.lanes }"
+        >
+          <div class="schedule__name">
+            <img
+              v-for="(lg, i) in row.logos"
+              :key="i"
+              :src="lg"
+              :alt="row.name"
+              class="schedule__logo"
+            />
+            <span class="schedule__name-text">{{ row.name }}</span>
+          </div>
+          <div class="schedule__track">
+            <span
+              v-for="(bar, i) in row.bars"
+              :key="i"
+              class="schedule__bar"
+              :style="{ left: `${bar.left}%`, width: `${bar.width}%`, top: `calc(${bar.lane} * 30px)` }"
+              :title="`${row.name} · ${bar.stage}（${bar.range}）${bar.note ? ' —— ' + bar.note : ''}`"
+              >{{ bar.stage }}</span
+            >
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 窄屏：同一份数据换成「赛事 → 阶段 + 月份」清单（月份刻度在这个宽度下不可读） -->
-    <ul class="schedule__list">
-      <li v-for="row in rows" :key="row.slug" :style="{ '--row-color': row.color }">
-        <p class="schedule__list-name">
+    <!-- 窄屏：时间线竖置 —— 月份刻度自上而下，一个赛事一列，阶段是竖向时间条、文字在条的旁边
+         （会长 2026-09-23；取代早先的「阶段 + 月份」胶囊清单） -->
+    <div class="schedule__vchart">
+      <div class="schedule__vaxis" aria-hidden="true">
+        <span v-for="(m, i) in MONTHS" :key="m" :class="{ 'is-now': i + 1 === nowMonth }">{{ m }}</span>
+      </div>
+      <div
+        v-for="row in rows"
+        :key="row.slug"
+        class="schedule__vcol"
+        :style="{ '--row-color': row.color }"
+      >
+        <p class="schedule__vname">
           <img
             v-for="(lg, i) in row.logos"
             :key="i"
@@ -156,13 +177,21 @@ const rows = computed(() => {
           />
           <span>{{ row.name }}</span>
         </p>
-        <p class="schedule__chips">
-          <span v-for="(bar, i) in row.bars" :key="i" class="schedule__chip"
-            >{{ bar.stage }}<b>{{ bar.range }}</b></span
+        <div class="schedule__vtrack">
+          <!-- 当前月份那一段（横贯本列的一格底色；区间条在其上） -->
+          <span class="schedule__vnow" :style="{ top: nowLeft, height: nowWidth }" aria-hidden="true"></span>
+          <span
+            v-for="(bar, i) in row.bars"
+            :key="i"
+            class="schedule__vbar"
+            :style="{ top: `${((bar.from - 1) / 12) * 100}%`, height: `${((bar.to - bar.from + 1) / 12) * 100}%` }"
+            :title="`${row.name} · ${bar.stage}（${bar.range}）${bar.note ? ' —— ' + bar.note : ''}`"
           >
-        </p>
-      </li>
-    </ul>
+            <span class="schedule__vlabel">{{ bar.stage }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -172,6 +201,8 @@ const rows = computed(() => {
    ========================================================================== */
 .schedule {
   margin-top: 56px;
+  /* 与下方竞赛卡片拉开距离（会长 2026-09-23：原来挨得太近） */
+  margin-bottom: 56px;
   /* 左侧「图标 + 赛事名」那一列的宽度：坐标轴的 margin-left 与每行的 flex-basis 共用它。
      会长 2026-09-23 定稿的排版是「图标在上、名字在下」，所以这一列不需要很宽 */
   --name-col: 132px;
@@ -210,7 +241,8 @@ const rows = computed(() => {
   grid-template-columns: repeat(12, 1fr);
   margin-left: var(--name-col);
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  /* 会长 2026-09-23：时间表只要**竖向**框线（月份的竖网格），不要横向框线 ——
+     坐标轴的下框线与每行的行分隔线都已去掉，行与行只靠留白区分。 */
 }
 .schedule__axis span {
   font-size: 0.72rem;
@@ -223,10 +255,6 @@ const rows = computed(() => {
   align-items: flex-start;
   gap: 0;
   padding: 10px 0;
-  border-bottom: 1px dashed rgba(15, 23, 42, 0.06);
-}
-.schedule__row:last-child {
-  border-bottom: 0;
 }
 .schedule__name {
   /* 图标在上、名字在下（会长 2026-09-23：格子够大，logo 放大、文字下移）。
@@ -299,83 +327,123 @@ const rows = computed(() => {
   z-index: 2;
 }
 
-/* ── 窄屏清单 ── */
-.schedule__list {
+/* ── 窄屏：竖置时间线（会长 2026-09-23）──
+   月份刻度自上而下排在左边，一个赛事一列，阶段画成**竖向**时间条、文字贴在条的右侧。
+   竖网格只保留列与列之间的 1px 竖线（与宽屏同一条口径：只竖向、不横向），
+   行与行（月份）之间不画任何线，靠坐标轴的刻度读月份。 */
+.schedule__vchart {
   display: none;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  --vmonth: 22px; /* 每个月在竖直方向占的高度 */
+  align-items: stretch;
 }
-.schedule__list li {
-  padding: 12px 0;
-  border-bottom: 1px dashed rgba(15, 23, 42, 0.08);
+.schedule__vaxis {
+  flex: 0 0 26px;
+  padding-top: 46px; /* 与每列顶部的「图标 + 赛事名」对齐 */
+  border-right: 1px solid rgba(15, 23, 42, 0.06);
 }
-.schedule__list li:last-child {
-  border-bottom: 0;
-}
-.schedule__list-name {
+.schedule__vaxis span {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  justify-content: center;
+  height: var(--vmonth);
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.schedule__vaxis span.is-now {
+  color: var(--primary);
+  font-weight: 700;
+}
+.schedule__vcol {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(15, 23, 42, 0.05);
+}
+.schedule__vname {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  height: 46px;
+  padding-bottom: 4px;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 8px;
+  text-align: center;
+  word-break: break-all;
 }
-.schedule__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.schedule__vname .schedule__logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
 }
-.schedule__chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 3px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--row-color);
-  background: color-mix(in srgb, var(--row-color) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--row-color) 32%, transparent);
+.schedule__vtrack {
+  position: relative;
+  height: calc(var(--vmonth) * 12);
+}
+.schedule__vnow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  background: rgba(26, 115, 232, 0.09);
+  pointer-events: none;
+}
+.schedule__vbar {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 10px;
+  background: var(--row-color);
   border-radius: var(--radius-full);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.18);
 }
-.schedule__chip b {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.75;
+/* 阶段名贴在时间条右侧（条只有 10px 宽，列内剩下的 ~30px 留给文字，2~3 字一行） */
+.schedule__vlabel {
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  width: 30px;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--row-color);
 }
 
 @media (max-width: 768px) {
   .schedule {
     margin-top: 40px;
+    margin-bottom: 40px;
   }
   .schedule__chart {
     display: none;
   }
-  .schedule__list {
-    display: block;
-    padding: 4px 16px;
+  .schedule__vchart {
+    display: flex;
+    padding: 16px 12px;
     background: #fff;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.06);
   }
 }
 /* ── 当前月份列（会长 2026-09-23：「把当前月份列高亮」）──
-   每行的泳道里各放一条淡蓝底，向上/下各多出 11px —— 行的上下内边距是 10px、行间还有 1px
-   虚线，多出 11px 正好让相邻两条**相接（还重叠 1px）**，看起来就是一整条连续的竖列，
-   而不是一个个格子。第一行的上沿刚好顶到坐标轴的下边框。
-   区间条在 DOM 里排在它后面、又是定位元素，天然画在它上面（不用 z-index 打架）。 */
+   只此一条、放在所有行的容器里 ⇒ 天然是一整列，与行高无关；上下各多出 10px 吃掉首/末行的
+   内边距。区间条是定位元素，天然画在它上面（不用 z-index 打架）。 */
+.schedule__body {
+  position: relative;
+}
 .schedule__now {
   position: absolute;
-  top: -11px;
-  bottom: -11px;
+  top: -10px;
+  bottom: -10px;
   z-index: 0;
   background: rgba(26, 115, 232, 0.09);
   pointer-events: none;
-}
-/* 第一行的高亮再往上够到坐标轴顶端 —— 整列从「9月」那一格一路连到最底部 */
-.schedule__row:first-child .schedule__now {
-  top: -36px;
 }
 .schedule__axis span.is-now {
   color: var(--primary);
