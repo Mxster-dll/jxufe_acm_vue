@@ -51,6 +51,7 @@
     "medal_type": "bronze",
     "rank": 244,
     "rank_official": 238,
+    "rank_source": "backfill",
     "members": [
       "何洋",
       "王玛琪",
@@ -96,6 +97,7 @@
     "medal_type": "bronze",
     "rank": 243,
     "rank_official": 232,
+    "rank_source": "backfill",
     "members": [
       "彭俊杰",
       "林俊坤",
@@ -201,6 +203,7 @@
     "medal_type": "gold",
     "rank": 24,
     "rank_official": 24,
+    "rank_source": "backfill",
     "members": [
       "王玛琪",
       "石翰林",

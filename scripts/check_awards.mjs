@@ -29,7 +29,9 @@
  *                 邀请赛 + 省赛两条记录，全场总排名两条都成立，组内名次只对省赛有意义。
  *   rank_to       并列区间上界（天梯赛推算专用）。天梯赛官方不公布名次，
  *                 rank = 同分并列块的起点、rank_to = 块尾，两者相同则省略 rank_to。
- *   rank_source   'official'（榜单直接给的）| 'derived'（按名额与分数推算的）。
+ *   rank_source   'official'（榜单直接给的）| 'derived'（按名额与分数推算的）
+ *                 | 'backfill'（来自补录层：源里 rank 是字符串、medals[].tier 为 null，
+ *                 源自标「待核实」—— xCPC 的西安 2023/2024/2025 共 3 条）。
  *   规则：出现即须落在规范位置；rank 为 int ≥ 1；rank_to ≥ rank；作用域内
  *   「单一数字名次」不得被两个人共用（带 rank_to 的区间不参与该检查，
  *   因为同分并列块首被多人共用是预期）。
@@ -59,15 +61,15 @@ const GROUPS = ['A', 'B', '研究生组']
 
 const SCHEMA = {
   'icpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'members', 'coach_names', 'date'],
-    optionalKeys: ['rank', 'rank_official', 'rank_provincial'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'rank_source', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial', 'rank_source'],
     rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
   },
   'ccpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'members', 'coach_names', 'date'],
-    optionalKeys: ['rank', 'rank_official', 'rank_provincial'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'rank_source', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial', 'rank_source'],
     rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
@@ -152,7 +154,7 @@ function validateRecords(file, rows) {
         push(i, `rank_provincial 非法: ${JSON.stringify(r.rank_provincial)}`)
       if ('rank_to' in r && (!Number.isInteger(r.rank_to) || r.rank_to < Number(r.rank)))
         push(i, `rank_to 非法: ${JSON.stringify(r.rank_to)}（应 ≥ rank）`)
-      if ('rank_source' in r && !['official', 'derived'].includes(r.rank_source))
+      if ('rank_source' in r && !['official', 'derived', 'backfill'].includes(r.rank_source))
         push(i, `rank_source 非法: ${JSON.stringify(r.rank_source)}`)
     }
   })
