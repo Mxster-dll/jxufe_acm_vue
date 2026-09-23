@@ -77,6 +77,25 @@ function shuffle(list, seed = 20260922) {
 // ---------- 读数据 ----------
 const group = readJson(path.join(DATA, 'group_members.json'))
 const members = group.members || []
+
+/* ── 名单之外的成员（会长 2026-09-23 裁定「补」）──
+   来源：主仓库 hero_wall.json —— 作者自己加在他墙上的新人（两个 261 班、一个 231 班）。
+   他们不在 QQ 群归档里，所以**不进 group_members.json**（那份由工作区的
+   qq-group-avatars/build_site_assets.py 从群名单派生，手改会被下次重新生成刷掉）——
+   在这里与群名单合并即可：本生成器每次 predev/prebuild 都跑，加的人不会被刷掉。
+   头像直接引用作者放进 public/images/excellent_member/ 的那几张（不重复存一份）；
+   缩略图由 scripts/gen_group_wall_thumbs.ps1 按 tiles 的 `full` 出（它跳过已存在的）。
+   留言不用写在这里 —— messageOf() 会按姓名从 hero_wall.json 自动取。
+   ⚠ 作者墙上第 4 位「多喜长安」**不在这个列表**：他就是我们的 2024学年会长衷铭川
+     （作者标的「2024届会长 / 大数据231班」与 leaders.json 的
+       23数据科学与大数据技术1班 对得上），人已经在墙上，再加一次会变成两张卡；
+     他的留言走 HERO_WALL_ALIAS 挂到真名上。 */
+const EXTRA_MEMBERS = [
+  { name: '陈菁雅', className: '信管261班', photo: '/images/excellent_member/0266046.jpeg' },
+  { name: '黄简鑫', className: '大数据261班', photo: '/images/excellent_member/0266251.png' },
+  { name: 'Thea', className: '大数据261班', photo: '/images/excellent_member/0266268.jpeg' },
+].map((m) => ({ ...m, role: '成员', roleKey: 'member', thumb: m.photo, fromHeroWall: true }))
+members.push(...EXTRA_MEMBERS)
 const duties = readJson(path.join(DATA, 'duties.json'))
 const membersJson = readJson(path.join(DATA, 'members.json'))
 const leadersJson = readJson(path.join(DATA, 'leaders.json'))
@@ -188,11 +207,19 @@ try {
 } catch {
   // hero_wall.json 不存在也不影响：留言留空即可，其它字段照旧
 }
-const messageOf = (m) =>
-  heroMessages.get(shownNameOf(m)) ||
-  (m.realName ? heroMessages.get(String(m.realName).trim()) : '') ||
-  heroMessages.get(cleanNick(m.name)) ||
-  ''
+/** hero_wall 里用网名、而我们的主键是真名的人（目前只有一个，见 EXTRA_MEMBERS 注释） */
+const HERO_WALL_ALIAS = { 衷铭川: '多喜长安' }
+
+/** 按「显示名 → 真名 → 清洗后的群昵称 → 别名」依次找留言；找不到返回空串 */
+const messageOf = (m) => {
+  const real = String(m.realName || '').trim()
+  const keys = [shownNameOf(m), real, cleanNick(m.name), HERO_WALL_ALIAS[real], HERO_WALL_ALIAS[shownNameOf(m)]]
+  for (const k of keys) {
+    const hit = k ? heroMessages.get(k) : ''
+    if (hit) return hit
+  }
+  return ''
+}
 
 const items = shuffle(members).map((m) => {
   const img = imageOf(m)
