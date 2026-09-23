@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
-  "generated_at": "2026-09-23T14:45:42.299Z",
+  "generated_at": "2026-09-23T14:59:15.617Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -406,8 +406,20 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "蓝桥杯 国赛🥈1🥉1 省赛🥇3🥈1",
+          "type": "contest"
+        },
+        {
+          "text": "2023级数据科学与大数据技术专业第二",
+          "type": "honor"
+        },
+        {
+          "text": "上饶银行奖学金 *2",
+          "type": "honor"
+        },
+        {
+          "text": "保研至厦门大学",
+          "type": "destination"
         }
       ],
       "sheetTags": [
@@ -518,10 +530,6 @@
         {
           "text": "保研至厦门大学",
           "type": "destination"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ],
       "message": "其实连按部就班也比想象中难"
@@ -674,8 +682,12 @@
           "type": "honor"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "2023级计算机科学与技术专业第一",
+          "type": "honor"
+        },
+        {
+          "text": "保研至华东师范大学",
+          "type": "destination"
         }
       ],
       "sheetTags": [
@@ -1121,8 +1133,12 @@
           "type": "destination"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "第六届传智杯冠军",
+          "type": "contest"
+        },
+        {
+          "text": "csp满分",
+          "type": "contest"
         }
       ],
       "sheetTags": [
@@ -1749,10 +1765,6 @@
         {
           "text": "蓝桥杯 国赛🥇1 省赛🥇1",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ],
       "sheetTags": [
@@ -1795,10 +1807,6 @@
         {
           "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ]
     },
@@ -1942,8 +1950,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "睿抗国家三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "交换友链woodfish.site喵",
+          "type": "contact"
         }
       ],
       "sheetTags": [
@@ -2052,8 +2064,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "2023级网络空间安全专业第一",
+          "type": "honor"
+        },
+        {
+          "text": "保研至华东师范大学",
+          "type": "destination"
         }
       ],
       "sheetTags": [
@@ -2604,8 +2620,8 @@
           "type": "destination"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "美国大学生数学建模竞赛M奖",
+          "type": "contest"
         }
       ],
       "sheetTags": [
@@ -2656,10 +2672,6 @@
         {
           "text": "美国大学生数学建模竞赛M奖",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ]
     },
@@ -2768,8 +2780,16 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "2024-2025学年国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "2023级数据科学与大数据技术专业第一",
+          "type": "honor"
+        },
+        {
+          "text": "保研至浙江大学",
+          "type": "destination"
         }
       ],
       "sheetTags": [
@@ -3142,8 +3162,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "保研至北京邮电大学",
+          "type": "destination"
+        },
+        {
+          "text": "🛰️：wanghaifeng684568",
+          "type": "contact"
         }
       ],
       "sheetTags": [
@@ -3262,8 +3286,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "睿抗国三",
+          "type": "contest"
+        },
+        {
+          "text": "关注小羊谢谢喵",
+          "type": "contact"
         }
       ],
       "sheetTags": [
@@ -3980,10 +4008,6 @@
         {
           "text": "蓝桥杯 国赛🥇2🥈1 省赛🥇4",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ],
       "sheetTags": [
@@ -4106,10 +4130,6 @@
         {
           "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ]
     },
@@ -4147,8 +4167,24 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "天梯赛团体一等奖、个人一等奖（全省第一）",
+          "type": "contest"
+        },
+        {
+          "text": "蓝桥杯国一（全省第二）",
+          "type": "contest"
+        },
+        {
+          "text": "国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "上饶银行奖学金 *2",
+          "type": "honor"
+        },
+        {
+          "text": "保研至电子科技大学",
+          "type": "destination"
         }
       ],
       "sheetTags": [
@@ -4271,10 +4307,6 @@
         {
           "text": "保研至电子科技大学",
           "type": "destination"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ]
     },
@@ -4421,8 +4453,12 @@
           "type": "contest"
         },
         {
-          "text": "…",
-          "type": "more"
+          "text": "蓝桥杯 国赛🥈1🥉1 省赛🥇2",
+          "type": "contest"
+        },
+        {
+          "text": "2019 CSP-J 一等奖",
+          "type": "contest"
         }
       ],
       "sheetTags": [
@@ -4566,10 +4602,6 @@
         {
           "text": "蓝桥杯 省赛🥇2",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ],
       "sheetTags": [
@@ -4608,10 +4640,6 @@
         {
           "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
-        },
-        {
-          "text": "...",
-          "type": "more"
         }
       ]
     },
