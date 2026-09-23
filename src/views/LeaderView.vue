@@ -1,13 +1,11 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
-import { HONOR_TYPE_LABELS, normalizeHonors } from "../utils/honorType";
-import { stripCoveredHonors } from "../utils/honorCoverage";
-import { loadHonorRecords, pillPartsForName, recordsToDetails } from "../utils/honorPills";
+import { useHonorDisplay } from "../composables/useHonorDisplay";
 import { honorView } from "../utils/honorView";
 import HonorViewSwitch from "../components/HonorViewSwitch.vue";
-import HonorPill from "../components/HonorPill.vue";
+import HonorTags from "../components/HonorTags.vue";
 
 const {
   data: leaders,
@@ -17,34 +15,23 @@ const {
 /* 6 位负责人 —— 原先写 5，骨架屏条数与实际列表不等 */
 const { skeletons } = useSkeleton(6);
 
-/** 每条荣誉：先过掉已被自动汇总覆盖的（口径见 utils/honorCoverage.js），
-    再归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js） */
+/** 荣誉显示的三份公共数据与归一化 —— 与优秀成员页共用同一套取数
+    （composables/useHonorDisplay.js），渲染在 <HonorTags>。 */
+const { records, shownName, cleanHonors } = useHonorDisplay();
+
+/** 每条荣誉：手写条目 + 奖学金，先过掉已被自动汇总覆盖的（口径见 utils/honorCoverage.js），
+    再归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js）。
+    第二个参数传**真名** —— 奖学金按真名查。 */
 const list = computed(() =>
   (leaders.value || []).map((l) => ({
     ...l,
-    achievements: normalizeHonors(stripCoveredHonors(l.achievements)),
+    achievements: cleanHonors(l.achievements, l.name),
   }))
 );
 
-/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
-    真名仍写在 `name` 里 —— 自动奖牌汇总 `pills.get(l.name)` 按真名匹配，只是不显示出来。 */
-const shownName = (l) => l.displayName || l.name;
-
-/** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
-    手写的比赛条目已改为由它呈现——口径与生成逻辑见 utils/honorPills.js。
-    数据异步加载，失败时不影响其它内容；与优秀成员页共用同一份缓存。
-
-    注意本页**不按显示排名重排**：显示排名只决定优秀成员页的卡片顺序
-    （见 utils/honorRanking.js），负责人页保持 leaders.json 的原顺序（届次从新到旧）。 */
-const records = ref(new Map());
-onMounted(async () => {
-  records.value = await loadHonorRecords();
-});
-
-/** 比赛战绩的三种显示模式共用这份原始记录（模式定义见 utils/honorView.js）：
-    count/icons → 汇总胶囊，detail → 逐条赛事全名。与优秀成员页共用缓存。 */
-const pillPartsOf = (l) => pillPartsForName(records.value, l.name, honorView.value);
-const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
+/* 比赛战绩的取数已收进 useHonorDisplay（record 是 Map<真名, 记录[]>，两页共用缓存），
+   渲染在 <HonorTags> 里；本页**不按显示排名重排**：显示排名只决定优秀成员页的卡片顺序
+   （见 utils/honorRanking.js），负责人页保持 leaders.json 的原顺序（届次从新到旧）。 */
 </script>
 
 <template>
@@ -136,43 +123,15 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 
-            <!-- 成就标签：比赛战绩（三种显示模式，会长 2026-09-23）在前，手写荣誉在后；均按类型分色 -->
+            <!-- 成就标签：比赛战绩（三种显示模式，会长 2026-09-23）在前，手写荣誉在后；
+                 均按类型分色。顺序与模式都在 <HonorTags> 里 —— 与优秀成员页共用。 -->
             <div class="achievement-tags">
-              <template v-if="honorView === 'detail'">
-                <HonorPill
-                  v-for="(d, i) in detailOf(l)"
-                  :key="`detail-${i}`"
-                  :title="`${d.title}${d.medalText}`"
-                >
-                  <span class="honor-tag__seg"
-                    ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
-                    >{{ d.title }}</span
-                  >
-                  <span class="honor-tag__seg">{{ d.medalText }}</span>
-                </HonorPill>
-              </template>
-              <template v-else>
-                <HonorPill
-                  v-for="(parts, i) in pillPartsOf(l)"
-                  :key="`pill-${i}`"
-                  title="比赛战绩，由站点竞赛数据自动汇总"
-                >
-                  <span
-                    v-for="(seg, j) in parts"
-                    :key="`seg-${j}`"
-                    class="honor-tag__seg"
-                    >{{ seg }}</span
-                  >
-                </HonorPill>
-              </template>
-              <span
-                v-for="a in l.achievements"
-                :key="a.text"
-                class="honor-tag"
-                :class="`honor-tag--${a.type}`"
-                :title="HONOR_TYPE_LABELS[a.type]"
-                >{{ a.text }}</span
-              >
+              <HonorTags
+                :person="l"
+                :records="records"
+                :honors="l.achievements"
+                :view="honorView"
+              />
             </div>
           </div>
         </article>
@@ -251,18 +210,9 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
   color: var(--text-muted);
 }
 
-/* ── 页面命令区：荣誉显示方式（view-toggle 样式在 styles/view-toggle.css）──
-   只剩控件本身、不带说明文字（会长 2026-09-23）。 */
-.page-toolbar {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-}
-
-/* 明细模式每条前面的奖牌 emoji；奖牌文字本身不再着色（理由见 ExcellentView 同名规则）。 */
-.medal-emoji {
-  margin-right: var(--space-xs);
-}
+/* ── 页面命令区与明细模式的奖牌 emoji ──
+   `.page-toolbar` 与 `.medal-emoji` 已移到 styles/honors.css：后者标的是
+   <HonorTags> 渲染的节点，写在本文件的 scoped 块里匹配不到（只会静默失效）。 */
 
 .hint {
   text-align: center;
@@ -344,12 +294,9 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
   );
   opacity: 0;
   transition: opacity var(--transition-slow);
-  animation: ring-spin 4s linear infinite;
-}
-@keyframes ring-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  /* 与优秀成员页 .photo-ring 同一个 @keyframes（在 styles/base.css）；
+     时长原先这里是 4s、那边 5s —— 审查发现的无意漂移，现统一 5s。 */
+  animation: ring-spin 5s linear infinite;
 }
 .leader-card:hover .avatar-ring {
   opacity: 0.3;
@@ -403,19 +350,16 @@ const detailOf = (l) => recordsToDetails(records.value.get(l.name) || []);
 }
 
 /* ── 成就标签 ──
-   标签本身的几何与配色在 styles/honors.css（与优秀成员页共用）；这里只管排布，
-   以及卡片 hover 时按各自类型的颜色加深。所以**不要**在这个文件里再写 .honor-tag
-   的颜色：scoped 选择器的优先级高于 .honor-tag--xxx，写了会把六种颜色压成一种。 */
+   标签本身的几何与配色、以及卡片 hover 时加深，都在 styles/honors.css
+   （与优秀成员页共用同一条 hover 规则）；这里只管排布。
+   **不要**在这个文件里再写 .honor-tag 的颜色或 hover：标签由 <HonorTags> 渲染，
+   scoped 选择器带 [data-v-*]、匹配不到子组件的元素。 */
 .achievement-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   /* 紧跟寄语（.leader-message 自带 margin-bottom: var(--space-md)），不顶到卡片底部
      —— 原因同优秀成员页 .honor-tags。 */
-}
-.leader-card:hover .honor-tag {
-  background: var(--tag-bg-hover);
-  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */

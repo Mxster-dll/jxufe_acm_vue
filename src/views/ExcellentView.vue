@@ -1,15 +1,13 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
 import { useMasonry } from '../composables/useMasonry'
-import { HONOR_TYPE_LABELS, normalizeHonors } from '../utils/honorType'
-import { stripCoveredHonors } from '../utils/honorCoverage'
-import { loadHonorRecords, pillPartsForName, recordsToDetails } from '../utils/honorPills'
+import { useHonorDisplay } from '../composables/useHonorDisplay'
 import { honorView } from '../utils/honorView'
 import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
-import HonorPill from '../components/HonorPill.vue'
+import HonorTags from '../components/HonorTags.vue'
 
 /** 名单 = members.json **原样** + 综合分 ≥ 阈值自动入册的人。
     入册判据与墙上「分数达标自动入墙」、与本页「卡片显示顺序」是同一份分数（honorRanking.js），
@@ -27,39 +25,21 @@ const members = computed(() => {
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
 
-/** 比赛战绩胶囊：从站点竞赛数据自动汇总（ICPC/CCPC/天梯赛/百度之星/蓝桥杯），
-    手写的比赛条目已改为由它呈现 —— 口径与生成逻辑见 utils/honorPills.js。
-    数据异步加载，失败时不影响其它内容；两个页面共用同一份缓存。 */
-const records = ref(new Map())
-onMounted(async () => {
-  records.value = await loadHonorRecords()
-})
-
-/** 比赛战绩的**三种显示模式**共用这一份原始记录，切换模式不重新取数
-    （汇总口径见 utils/honorPills.js，三种模式的定义见 utils/honorView.js）：
-      count / icons → 汇总成胶囊（🥇1🥈2 / 🥇🥈🥈）
-      detail        → 逐条列出赛事全名，标题与奖牌分开渲染，奖牌按档位着色 */
-const pillPartsOf = (m) => pillPartsForName(records.value, m.name, honorView.value)
-const detailOf = (m) => recordsToDetails(records.value.get(m.name) || [])
-
-/** 协会职务胶囊：来自两份会长维护的干事名单生成的 /data/duties.json
-    （生成器在 07_技术项目/qq-group-avatars/build_duties.py，改名单重跑即可）。
-    文字口径「<年份>学年<职务>」，部门负责人一律带「协会」前缀；同一年既有带职务行又有裸名行时
-    只取带职务那条。**只用于显示，不进排名分值** —— 手写职务则会按「学生职务」算 1.5 分，
-    所以名单里的人不要再在 honors 里手写职务（口径见 AGENTS.md）。
-    显示顺序：职务在最前，然后是自动汇总的比赛战绩，最后是手写荣誉。 */
-const { data: duties } = useJson('/data/duties.json', { initial: {} })
-const dutyOf = (m) => (m.name && duties.value?.people?.[m.name]) || []
+/** 荣誉显示的三份公共数据与归一化（职务 / 自动汇总记录 / 手写荣誉）——
+    与协会负责人页共用同一套取数（composables/useHonorDisplay.js），
+    渲染在 <HonorTags>，本页只管卡片与网格。 */
+const { records, dutyOf, shownName, cleanHonors } = useHonorDisplay()
 
 /** 手写荣誉：先过掉已被自动汇总覆盖的，再归一化出类型。
     **显示与排名必须用同一份** —— 否则同一块奖牌会在卡片上显示两遍、在分值里算两遍
     （上游名单里还手写着 105 条胶囊已覆盖的竞赛条目，口径与判定见 utils/honorCoverage.js）。
-    ⚠ 这一页就是 members.json 那 33 人，**不并入干事** —— 会长 2026-09-23 第二轮裁定：
+    ⚠ 这一页就是 members.json 那 33 人 + 自动入册者，**不并入干事** —— 会长 2026-09-23 第二轮裁定：
     「我们还是不要让协会干事必定入『优秀成员』吧」（此前那版自动并入已撤掉）。 */
 const cleanedMembers = computed(() =>
   (members.value || []).map((m) => ({
     ...m,
-    honors: normalizeHonors(stripCoveredHonors(m.honors)),
+    // 第二个参数是**真名**：奖学金按真名查（匿名机制只换显示名，m.name 仍是真名）
+    honors: cleanHonors(m.honors, m.name),
   }))
 )
 
@@ -86,11 +66,6 @@ const list = computed(() => {
   const arr = cleanedMembers.value
   return byName.value ? sortByRanking(arr, byName.value) : arr
 })
-
-/** 卡片上显示的名字：**不愿透露姓名的同学**在数据里另设了 `displayName`（对外显示文本）。
-    他的真名仍然写在 `name` 里 —— 自动奖牌汇总（pills.get(m.name)）与显示排名都按真名匹配，
-    只是不显示出来；没有 displayName 的人两者相同，行为不变。 */
-const shownName = (m) => m.displayName || m.name
 
 /** 瀑布流：卡片高度按内容自适应（荣誉条数差别很大），位置由 useMasonry 逐张放进
     当前最短的列并保持源顺序。列数/间距是 .grid 上的两个 CSS 变量，见样式区。 */
@@ -148,50 +123,16 @@ const { containerRef } = useMasonry()
             <p v-if="m.class" class="member-class">{{ m.class }}</p>
 
             <!-- 荣誉标签：职务胶囊（duties.json）在前，比赛战绩胶囊（自动汇总）居中，
-                 手写荣誉在后；均按类型分色 -->
+                 手写荣誉在后；均按类型分色。顺序与三种显示模式都在 <HonorTags> 里
+                 —— 与协会负责人页共用同一份实现（会长 2026-09-23 审查后去重）。 -->
             <div class="honor-tags">
-              <span
-                v-for="(d, i) in dutyOf(m)"
-                :key="`duty-${i}`"
-                class="honor-tag honor-tag--honor"
-                :title="HONOR_TYPE_LABELS.honor"
-                >{{ d.text }}</span
-              >
-              <template v-if="honorView === 'detail'">
-                <HonorPill
-                  v-for="(d, i) in detailOf(m)"
-                  :key="`detail-${i}`"
-                  :title="`${d.title}${d.medalText}`"
-                >
-                  <span class="honor-tag__seg"
-                    ><span class="medal-emoji" aria-hidden="true">{{ d.emoji }}</span
-                    >{{ d.title }}</span
-                  >
-                  <span class="honor-tag__seg">{{ d.medalText }}</span>
-                </HonorPill>
-              </template>
-              <template v-else>
-                <HonorPill
-                  v-for="(parts, i) in pillPartsOf(m)"
-                  :key="`pill-${i}`"
-                  title="比赛战绩，由站点竞赛数据自动汇总"
-                >
-                  <span
-                    v-for="(seg, j) in parts"
-                    :key="`seg-${j}`"
-                    class="honor-tag__seg"
-                    >{{ seg }}</span
-                  >
-                </HonorPill>
-              </template>
-              <span
-                v-for="h in m.honors"
-                :key="h.text"
-                class="honor-tag"
-                :class="`honor-tag--${h.type}`"
-                :title="HONOR_TYPE_LABELS[h.type]"
-                >{{ h.text }}</span
-              >
+              <HonorTags
+                :person="m"
+                :records="records"
+                :honors="m.honors"
+                :duties="dutyOf(m)"
+                :view="honorView"
+              />
             </div>
           </div>
         </article>
@@ -262,20 +203,9 @@ const { containerRef } = useMasonry()
   color: var(--text-muted);
 }
 
-/* ── 页面命令区：荣誉显示方式（view-toggle 样式在 styles/view-toggle.css）──
-   只剩控件本身、不带说明文字（会长 2026-09-23）；与下方网格之间留一段呼吸。 */
-.page-toolbar {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-lg);
-}
-
-/* 明细模式每条前面的奖牌 emoji：只负责「一眼看出这块牌子是什么档位」。
-   奖牌文字本身**不再着色**（会长 2026-09-23）—— 整条胶囊保持它自己的蓝色，
-   档位信息由 emoji 承担，段内再换颜色会把一条胶囊拆成两截色。 */
-.medal-emoji {
-  margin-right: var(--space-xs);
-}
+/* ── 页面命令区与明细模式的奖牌 emoji ──
+   `.page-toolbar` 与 `.medal-emoji` 已移到 styles/honors.css：后者标的是
+   <HonorTags> 渲染的节点，写在本文件的 scoped 块里匹配不到（只会静默失效）。 */
 
 .hint {
   text-align: center;
@@ -362,10 +292,7 @@ const { containerRef } = useMasonry()
   background: conic-gradient(var(--primary), var(--primary-light), var(--accent), var(--primary));
   opacity: 0;
   transition: opacity var(--transition-slow);
-  animation: ring-spin 5s linear infinite;
-}
-@keyframes ring-spin {
-  to { transform: rotate(360deg); }
+  animation: ring-spin 5s linear infinite; /* @keyframes 在 styles/base.css（两页共用） */
 }
 .member-card:hover .photo-ring {
   opacity: 0.25;
@@ -419,9 +346,10 @@ const { containerRef } = useMasonry()
 }
 
 /* ── 荣誉标签 ──
-   标签的几何与分色全在 styles/honors.css（那边的修饰类只换 --tag-* 五个私有变量），
-   这里只管容器排布与 hover 加深 —— 所以**不要**在这个文件里再写 .honor-tag 的颜色：
-   scoped 选择器的优先级高于 .honor-tag--xxx，写了就会把六种颜色压成一种。
+   标签的几何与分色、以及卡片 hover 时加深，全在 styles/honors.css
+   （那边的修饰类只换 --tag-* 五个私有变量）；这里只管容器排布。
+   **不要**在这个文件里再写 .honor-tag 的颜色或 hover：标签由 <HonorTags> 渲染，
+   scoped 选择器带 [data-v-*]、匹配不到子组件的元素（以前能生效，是因为模板在本页编译）。
 
    胶囊紧跟正文（2026-09-22 会长裁定）：原先用 margin-top: auto 顶到卡片底部，
    矮卡最多空出 175px；现在空白留在卡片底部。 */
@@ -430,10 +358,6 @@ const { containerRef } = useMasonry()
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
-}
-.member-card:hover .honor-tag {
-  background: var(--tag-bg-hover);
-  border-color: var(--tag-border-hover);
 }
 
 /* ── 响应式 ── */

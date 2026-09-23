@@ -4,9 +4,10 @@
    类型判定见 utils/honorType.js，配色见 tokens.css 的 --honor-*。
 
    用法：<span class="honor-tag honor-tag--{type}">
-   这里只管标签本身的几何与颜色；容器排布（居中 / 靠左、间距）
-   与卡片 hover 时加深，留在各页面 scoped 样式里——它们通过
-   --tag-bg-hover / --tag-border-hover 两个变量取值，故分色不会失效。
+   这里只管标签本身的几何与颜色；容器排布（居中 / 靠左、间距）留在各页面 scoped 样式里。
+   卡片 hover 时加深**在本文件末尾**（不各页一份）：标签由 components/HonorTags.vue 渲染，
+   页面 scoped 选择器带 [data-v-*]、匹配不到子组件的元素 —— 各写一份会静默失效。
+   加深通过 --tag-bg-hover / --tag-border-hover 取值，故分色不会失效。
    ========================================================================== */
 .honor-tag {
   /* 兜底＝比赛色：类型没认出来时与改造前观感一致，不会突然变突兀 */
@@ -103,4 +104,37 @@
    min-width: 0 让超长的一段（如带「暨河北省赛」的全名）能在段内兜底折行，不撑破卡片。 */
 .honor-tag__seg {
   min-width: 0;
+}
+
+/* ==========================================================================
+   荣誉显示区的两条跨页规则（会长 2026-09-23 审查后从两页的 scoped 块搬来）
+
+   它们以前写在 ExcellentView.vue / LeaderView.vue 各自的 <style scoped> 里，能生效是
+   因为它们标的是**页面自己编译**的节点（明细模式的 emoji 是 HonorPill 的 slot 内容，
+   带所在页的 data-v）。现在这些节点由 components/HonorTags.vue 渲染，页面 scoped
+   选择器（编译成 `.medal-emoji[data-v-页]`）永远匹配不到，各写一份等于静默失效 ——
+   所以收进全局，两页同源。
+   ========================================================================== */
+
+/* 页面命令区：荣誉显示方式（控件样式在 view-toggle.css）。
+   位于标题区与卡片网格之间 —— 它管的是下面整片网格里每张卡片的画法，属页面级。 */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* 明细模式每条前面的奖牌 emoji：只负责「一眼看出这块牌子是什么档位」。
+   奖牌文字本身**不再着色**（会长 2026-09-23）—— 整条胶囊保持自己的颜色，
+   档位信息由 emoji 承担，段内再换颜色会把一条胶囊拆成两截色。 */
+.medal-emoji {
+  margin-right: var(--space-xs);
+}
+
+/* 卡片 hover 时胶囊按各自类型加深（--tag-*-hover 由 .honor-tag--xxx 提供）。
+   两页的卡片类名不同，故两条选择器并列 —— 这是唯一会随页面新增而变化的地方。 */
+.member-card:hover .honor-tag,
+.leader-card:hover .honor-tag {
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
 }
