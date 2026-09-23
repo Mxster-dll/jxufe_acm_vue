@@ -272,6 +272,20 @@ const rows = computed(() => {
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
+/* 入场过渡：与全站卡片同一套。
+   会长 2026-09-23：「赛程卡片的速度有点慢，要与其他组件统一」。
+   实测各页入场元素的计算样式 —— .card / article / .leader-card / .tl-card / .news-card 全是
+   `transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease`：
+   它们自己的 transition 简写把全局 [data-reveal] 的 `opacity .7s, transform .7s` 盖掉了，
+   所以全站卡片的 opacity 是瞬时到位、只有位移在回弹（级联延迟仍由全局那条优先级更高的
+   `[data-reveal][style*="--reveal-index"]` 规则给）。
+   赛程行是本组件自己的元素、没有这层卡片样式 → **只有它真吃到了 0.7s**，比全站慢近一倍。
+   这里补上同一条声明，桌面行与移动端两块（赛事表头、阶段色块）一起对齐。 */
+.schedule__row,
+.schedule__mvhead,
+.schedule__mvbar {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
 .schedule__row {
   display: flex;
   align-items: flex-start;
