@@ -16,8 +16,11 @@ const {
 const { skeletons } = useSkeleton(6);
 
 /** 荣誉显示的三份公共数据与归一化 —— 与优秀成员页共用同一套取数
-    （composables/useHonorDisplay.js），渲染在 <HonorTags>。 */
-const { records, shownName, cleanHonors } = useHonorDisplay();
+    （composables/useHonorDisplay.js），渲染在 <HonorTags>。
+    dutyOf 与优秀成员页同源：**职务胶囊在这两页都要传**（2026-09-24 修）—— 原先只有
+    优秀成员页传 :duties，于是「2025学年协会干事」这类职务在本页永不显示，哪怕人就站在
+    这一页上（实测 6 位负责人里衷铭川有职务，其余 5 位没有）。 */
+const { records, dutyOf, shownName, cleanHonors } = useHonorDisplay();
 
 /** 每条荣誉：手写条目 + 奖学金，先过掉已被自动汇总覆盖的（口径见 utils/honorCoverage.js），
     再归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js）。
@@ -130,6 +133,7 @@ const list = computed(() =>
                 :person="l"
                 :records="records"
                 :honors="l.achievements"
+                :duties="dutyOf(l)"
                 :view="honorView"
               />
             </div>

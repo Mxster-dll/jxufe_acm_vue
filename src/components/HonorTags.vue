@@ -31,7 +31,8 @@ const props = defineProps({
   records: { type: Object, default: () => new Map() },
   /** 已归一化的手写荣誉 [{ text, type }]。两页的字段名不同（honors / achievements），由各页传入 */
   honors: { type: Array, default: () => [] },
-  /** 协会职务胶囊 [{ year, role, text }]，来自 /data/duties.json；只有优秀成员页会传 */
+  /** 协会职务胶囊 [{ year, role, text }]，来自 /data/duties.json。
+      两个页面都传（2026-09-24 起）—— 负责人页原先漏传，职务胶囊在那页永不显示。 */
   duties: { type: Array, default: () => [] },
   /** 显示模式：count / icons / detail（定义见 utils/honorView.js） */
   view: { type: String, default: 'count' },
