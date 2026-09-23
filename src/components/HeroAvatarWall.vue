@@ -326,8 +326,8 @@ const onGridOver = (e) => {
 /* ── 底纹态（有遮罩）下的悬停：指针到不了瓷砖，按坐标算 ──
    首页的遮罩（.page-mask）整层盖在墙上面，指针事件全被它接走 —— 瓷砖的 :hover 永远
    不会发生，于是「透过遮罩看悬浮效果」根本无从触发。这里在 window 上听 pointermove，
-   按栅格几何算出指针落在哪一格，给它挂 .is-pointer（CSS 与 :hover 共用同一套声明），
-   并 emit 出去让页面把遮罩压薄（否则 0.86 的白底把墙压到只剩 12% 可见，等于没效果）。
+   按栅格几何算出指针落在哪一格，给它挂 .is-pointer（CSS 与 :hover 共用同一套声明）。
+   效果只作用在墙自己这一层：**不动遮罩的透明度**（会长 2026-09-23 明确要求）。
    只在**未开启弹卡**时工作：露墙后指针能直接摸到瓷砖，走 :hover / pointerover 那条路。 */
 let pointerTile = null
 const setPointerTile = (tile) => {
@@ -335,6 +335,7 @@ const setPointerTile = (tile) => {
   pointerTile?.classList.remove('is-pointer')
   pointerTile = tile
   pointerTile?.classList.add('is-pointer')
+  // 供宿主页面做联动（首页目前不消费；遮罩透明度必须保持静态）
   emit('tile-hover', !!tile)
 }
 const onWindowMove = (e) => {
