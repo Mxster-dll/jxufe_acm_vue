@@ -157,9 +157,16 @@ const measureHint = () => {
   if (next !== hintLeft.value) hintLeft.value = next;
 };
 
+/** 成员浮窗开着时，滚轮 / 触摸都归浮窗自己（它的正文本就可滚），不许再动遮罩
+    —— 会长 2026-09-23：「点击显示成员浮窗后，鼠标滚轮不应该再移动遮罩」。
+    HeroAvatarWall 开浮窗时会给 body 挂 `hero-wall-sheet`（同时把 body 的 overflow 锁掉），
+    这里只读那个类名即可，不必让组件再往上传一份状态。 */
+const sheetOpen = () => document.body.classList.contains("hero-wall-sheet");
+
 /** 滚轮 = 桌面。会长 2026-09-23：取消 10% 阈值 —— 在页首轻轻往上一动就整层收起。
     （以前要先累积到一屏的 10%，现在第一下就算数。） */
 const onWallWheel = (e) => {
+  if (sheetOpen()) return; // 浮窗里的滚轮只滚它自己的正文
   const dy = e.deltaY * MASK_DRAG_DAMP;
   if (maskOut.value) {
     if (recallMask(dy)) e.preventDefault();
@@ -181,6 +188,7 @@ const onWallTouchStart = (e) => {
   touchRecall = false;
 };
 const onWallTouchMove = (e) => {
+  if (sheetOpen()) return; // 同上：浮窗里的触摸交给浮窗自己滚
   const y = e.touches[0]?.clientY ?? 0;
   // 手指往下拖（y 增大）→ 遮罩下移，故取 touchY - y，与滚轮同一个符号约定
   const dy = (touchY - y) * MASK_DRAG_DAMP;
@@ -200,6 +208,7 @@ const onWallTouchMove = (e) => {
   if (dragMask(dy) && e.cancelable) e.preventDefault();
 };
 const onWallTouchEnd = () => {
+  if (sheetOpen()) return; // 浮窗开着时松手不判定，免得顺手把遮罩也带走
   if (maskOut.value || maskShift.value <= 0) return;
   if (maskShift.value >= maskLimit) {
     maskOut.value = true; // 拉过一屏的 10%：触发（.is-out 自带 640ms 缓动）
