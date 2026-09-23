@@ -64,6 +64,11 @@ export const LEVEL_WEIGHT = {
   // 天梯赛：全国 595 校 18062 人（2026 届 scale），个人一等奖为全国前约 4%（名额 791）
   'gplt|团体': 0.55,
   'gplt|个人': 0.55,
+  // 天梯赛「省赛」段 = 省内个人名次（黄亦诚 2025 省内第 1 等，推算法见 honorPills.js 注释）。
+  // **与「蓝桥杯省赛」同系数**（2026-09-24 会长裁定：「天梯省赛就按蓝桥省赛同等数据算」）——
+  // 两者都是「省级范围内的名次」，量级可比；不要拿它跟 gplt|个人(0.55) 比，那是国家级档位。
+  // 不登记它会落进 LEVEL_FALLBACK(0.1)。
+  'gplt|省赛': 0.12,
   // 蓝桥杯：国赛选手须先进入省内前约 10%；省赛参赛基数大、门槛低
   'lanqiao|国赛': 0.5,
   'lanqiao|省赛': 0.12,
@@ -109,6 +114,15 @@ export const RANK_MULTIPLIER = { champion: 1.6, runnerup: 1.3, third: 1.2 }
 
 /** 手写「参赛经历」分值：条目只写了赛事名、没有任何档位/名次词时的保守取值 */
 export const ATTEND_POINTS = 0.6
+
+/**
+ * 「认得出档位但不计分」的档位词：优秀奖 / 优胜奖，计 0 分。
+ * 胶囊聚合口径本就不把优秀奖算作奖牌（见 `src/utils/honorPills.js` 文件头「不计优秀奖」），
+ * 手写条目照同一口径。**关键：不能让它落进 ATTEND_POINTS 的「参赛经历」分支** ——
+ * 那条的前提是「只写了赛事名、没有任何档位/名次词」，而写「优秀奖」的条目是写了档位的，
+ * 给它 0.6 分等于把「优秀奖」当「参赛」。2026-09-24 会长裁定计 0。
+ */
+export const NON_SCORING_TIERS = /优秀奖|优胜奖/
 
 /** 毕业去向 */
 export const DESTINATION_RULES = [
@@ -282,6 +296,10 @@ export function scoreManualContest(text) {
     const [medal] = tier
     unit = MEDAL_BASE[medal] * level.weight
     label = `${level.label} ${({ gold: '一等', silver: '二等', bronze: '三等' })[medal]}`
+  } else if (NON_SCORING_TIERS.test(raw)) {
+    // 优秀奖 / 优胜奖：写明了档位，只是这个档位不计分（口径见 NON_SCORING_TIERS）
+    unit = 0
+    label = `${level.label} 优秀奖（不计分）`
   } else {
     // 只写了赛事名（如「ICPC区域赛 *4」），按参赛经历保守计分
     unit = ATTEND_POINTS
@@ -328,22 +346,48 @@ export function scoreHonorEntry(entry) {
 /**
  * 解析「xCPC 邀请赛🥉1」式胶囊（MANUAL_PILLS 里手工折算的比赛战绩，
  * 与页面展示的是同一份数据，避免两处口径分叉）。
+ *
+ * ⚠ 入参是**分段数组**（MANUAL_PILLS 的形状，也是运行时真正传进来的形状：
+ * `rankMembers({ manualPills: MANUAL_PILLS })` → `scorePerson` 的 for 循环里
+ * `pill` = 一枚胶囊 = 若干档位分段，如 `['xCPC 邀请赛🥉1', '省赛🥇1']`，
+ * **系列名只写在第一段上**）。整串文本（string）仍然接受，向后兼容。
+ * 所以判据是：**系列从整枚认、档位逐段认**。
+ * 先前这里对整枚做 `String(pill)` —— 数组会被**逗号**粘连成一整串，再取
+ * 「第一个命中的档位」给全串 emoji 计分：vesper 那枚的 🥉1 与 🥇1 都按 0.5 的邀请赛
+ * 系数算，得 6.05 分；而按表应是 🥉1×3×0.5 + 🥇1×10×0.2 = **3.5**。
  */
 export function scoreManualPill(pill) {
-  const text = String(pill || '')
+  const segments = (Array.isArray(pill) ? pill : [pill])
+    .map((s) => String(s ?? ''))
+    .filter((s) => s.trim())
+  const text = segments.join(' ')
   const family = /xCPC/i.test(text) ? 'xcpc' : /天梯/.test(text) ? 'gplt' : /蓝桥/.test(text) ? 'lanqiao' : /百度/.test(text) ? 'baidu' : null
-  const segment = /区域赛/.test(text) ? '区域赛' : /邀请赛/.test(text) ? '邀请赛' : /省赛/.test(text) ? '省赛' : null
-  if (!family || !segment) return { points: 0, label: text, raw: text }
+  if (!family) return { points: 0, label: text, raw: text }
+  const levelOf = (s) =>
+    /区域赛/.test(s) ? '区域赛' : /邀请赛/.test(s) ? '邀请赛' : /省赛/.test(s) ? '省赛' : null
+  /* 某一段自己没写档位时，退回「整枚里第一个出现的档位」（= 旧算法对全串的判法）——
+     保证新算法不会漏计旧算法算过的任何一枚奖牌。 */
+  const fallbackLevel = segments.map(levelOf).find(Boolean) || null
   let total = 0
   let count = 0
-  for (const [emoji, medal] of Object.entries(MEDAL_EMOJI_REVERSE)) {
-    const m = text.match(new RegExp(`${emoji}\\s*(\\d+)`))
-    if (!m) continue
-    const times = Number(m[1])
-    const unit = MEDAL_BASE[medal] * (LEVEL_WEIGHT[`${family}|${segment}`] ?? LEVEL_FALLBACK)
-    for (let k = 0; k < times; k++) {
-      total += unit * repeatFactor(count)
-      count += 1
+  for (const seg of segments) {
+    const segment = levelOf(seg) || fallbackLevel
+    if (!segment) continue
+    /* 段内计数器：跨 emoji 连续递减（= 旧算法对整串的判法，如「🥈2🥉1」里 🥉 吃 0.7²），
+       只在**段与段之间**归零 —— 「邀请赛🥉1」与「省赛🥇1」是两场不同的比赛，
+       不是同一战绩重复获奖（REPEAT_DECAY 是给「同一战绩 ×N」准备的）。
+       单段入参（含整串文本那条兼容路径）因此与旧算法逐位相同。 */
+    let k = 0
+    for (const [emoji, medal] of Object.entries(MEDAL_EMOJI_REVERSE)) {
+      const m = seg.match(new RegExp(`${emoji}\\s*(\\d+)`))
+      if (!m) continue
+      const times = Number(m[1])
+      const unit = MEDAL_BASE[medal] * (LEVEL_WEIGHT[`${family}|${segment}`] ?? LEVEL_FALLBACK)
+      for (let t = 0; t < times; t++) {
+        total += unit * repeatFactor(k)
+        k += 1
+        count += 1
+      }
     }
   }
   return { points: total, label: text, raw: text, count }
@@ -352,7 +396,7 @@ export function scoreManualPill(pill) {
 /* ───────────────────────── 汇总：一个人的分 ───────────────────────── */
 
 /**
- * @param {{ name:string, honors?:{text:string,type:string}[], records?:object[], manualPills?:string[] }} person
+ * @param {{ name:string, honors?:{text:string,type:string}[], records?:object[], manualPills?:string[][]|string[] }} person
  * @returns {{ total:number, contest:number, manual:number, honor:number, medalCount:number, best:number, items:object[] }}
  */
 export function scorePerson({ name, honors = [], records = [], manualPills = [] } = {}) {

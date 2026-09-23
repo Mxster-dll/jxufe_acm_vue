@@ -33,6 +33,31 @@ const MANUAL_ONLY = /睿抗|RAICOM|传智杯|数学建模|CSP/i
 /** 名次类词：奖牌档位表达不了，必须手写 */
 const RANK_WORDS = /冠军|亚军|季军|第一名|第二名|第三名|第\s*\d+\s*名|首刀|全省第|全国第/
 
+/**
+ * 胶囊表达不了的**档位词**：自动层只会聚合出金/银/铜/特等（一/二/三等奖），
+ * 优秀奖这一档不在其中 —— honorPills.js 的口径是「优秀奖不计入任何奖牌数」，
+ * 新 awards 层更是**根本不收**优秀奖，所以没有任何胶囊能表达它。
+ *
+ * 因此手写的优秀奖条目**不能算「已被胶囊覆盖」**：被覆盖 = 展示与计分双双跳过，
+ * 而这里没有胶囊来接手 → 整条荣誉彻底消失。
+ * 实测（2026-09 审查）：邓一帆「第十五届蓝桥杯国家级优秀奖」、
+ * 陶金杰「第十六届蓝桥杯国家级优秀奖、省一等奖」两条正是这样丢的 ——
+ * 上游 `upstream/master:src/views/ExcellentView.vue` 是裸渲染 `v-for="h in m.honors"`，
+ * 两条都显示得出来，是这条覆盖判定引入的**显示回归**。
+ *
+ * 放行整条**不会重复计分**：这两条都没有 `type` 字段，scoreHonorEntry 走 HONOR_RULES
+ * 认不出任何规则（`unmatched: true`）→ 本来就 0 分。实测放行前后分值增量 +0.000、名次不变。
+ * 与 :21「认不出赛事的一律保留」同一原则：胶囊表达不了的，宁可多显示一条，
+ * 也不要吃掉作者写下的东西。
+ */
+const NON_PILL_LEVELS = /优秀奖|优胜奖/
+
+/**
+ * 胶囊**能**表达的档位词（与 honorRanking.js 的 TIER_RULES 同口径）。
+ * 只用来判断「一条手写条目里有没有胶囊已经接手的战绩主张」，见 isCoveredByPills。
+ */
+const PILL_TIERS = /特等|一等|二等|三等|冠军|亚军|季军|金奖|银奖|铜奖|金牌|银牌|铜牌|国一|国二|国三|省一|省二|省三|第\s*[123]\s*名/
+
 /** 胶囊有数据源的五个系列（含只写层级的 xCPC 写法：区域赛 / 邀请赛 / 省赛） */
 const COVERED_SERIES = /ICPC|CCPC|xCPC|天梯|蓝桥|百度之星|区域赛|邀请赛|省赛/i
 
@@ -42,6 +67,13 @@ export function isCoveredByPills(text) {
   if (!raw) return false
   if (MANUAL_ONLY.test(raw)) return false
   if (RANK_WORDS.test(raw)) return false
+  /* 优秀奖这类「胶囊表达不了的档位」：**只有整条里没有胶囊能表达的档位词时才放行**。
+     否则放行会把条目里的奖牌主张也一并放出来 —— 那正是本文件要防的「同一块奖牌算两遍」。
+     实测（2026-09）：陶金杰「第十六届蓝桥杯国家级优秀奖、省一等奖」整条放行会白拿 5.00 分
+     （省一等奖已由胶囊计分、胶囊里就有「蓝桥杯 省赛🥇2」）；邓一帆
+     「第十五届蓝桥杯国家级优秀奖」里没有任何胶囊能表达的档位，放行才是对的。
+     该复合条目现已由会长从 leaders.json 删除；这条判据是防止它被重新写回来。 */
+  if (NON_PILL_LEVELS.test(raw) && !PILL_TIERS.test(raw)) return false
   return COVERED_SERIES.test(raw)
 }
 
