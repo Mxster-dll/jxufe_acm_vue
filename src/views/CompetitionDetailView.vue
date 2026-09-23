@@ -8,7 +8,7 @@ import {
   RANK_TEXT,
   LEVEL_CAT,
   LEVEL_TAG,
-  MEDAL_ORDER,
+  MEDAL_RANK,
   medalClass,
   dateTextOf,
   yearOf,
@@ -155,7 +155,7 @@ const gpltGroups = computed(() => {
       const date = list.map((t) => t.date).filter(Boolean).sort()[0] || null
       const rows = list
         .slice()
-        .sort((a, b) => (MEDAL_ORDER[a.medal_type] ?? 9) - (MEDAL_ORDER[b.medal_type] ?? 9))
+        .sort((a, b) => (MEDAL_RANK[a.medal_type] ?? 9) - (MEDAL_RANK[b.medal_type] ?? 9))
         .map((t) => ({
           team_name: t.team_name,
           national: t.medal_type,
@@ -185,7 +185,7 @@ function bestMedal(row) {
   return (
     (row.awards || [])
       .slice()
-      .sort((a, b) => (MEDAL_ORDER[a.medal] ?? 9) - (MEDAL_ORDER[b.medal] ?? 9))[0]?.medal || ''
+      .sort((a, b) => (MEDAL_RANK[a.medal] ?? 9) - (MEDAL_RANK[b.medal] ?? 9))[0]?.medal || ''
   )
 }
 

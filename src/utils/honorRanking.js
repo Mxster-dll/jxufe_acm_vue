@@ -39,6 +39,7 @@
  */
 
 import { collectRecords, MANUAL_PILLS, loadHonorRecords } from './honorPills.js'
+import { MEDAL_EMOJI_REVERSE } from './contestTaxonomy.js'
 
 /* ───────────────────────── 表 1：档位基准分 ───────────────────────── */
 
@@ -320,8 +321,9 @@ export function scoreHonorEntry(entry) {
 
 /* ───────────────────────── 手工战绩胶囊（MANUAL_PILLS） ───────────────────────── */
 
-/** 🏆 在最前：与 honorPills.js 的 MEDAL_ORDER 同序，且决定 repeatFactor 的递减次序 */
-const PILL_MEDAL = { '🏆': 'grand', '🥇': 'gold', '🥈': 'silver', '🥉': 'bronze' }
+/** emoji → 档位。表由 contestTaxonomy.js 的 MEDAL_EMOJI 派生（不再手写第二份，
+    两处不同步时手写胶囊的「🥉1」会解析不出奖牌、那条战绩静默变 0 分）。
+    遍历顺序 = MEDAL_ORDER（🏆 在最前），决定 repeatFactor 的递减次序。 */
 
 /**
  * 解析「xCPC 邀请赛🥉1」式胶囊（MANUAL_PILLS 里手工折算的比赛战绩，
@@ -334,7 +336,7 @@ export function scoreManualPill(pill) {
   if (!family || !segment) return { points: 0, label: text, raw: text }
   let total = 0
   let count = 0
-  for (const [emoji, medal] of Object.entries(PILL_MEDAL)) {
+  for (const [emoji, medal] of Object.entries(MEDAL_EMOJI_REVERSE)) {
     const m = text.match(new RegExp(`${emoji}\\s*(\\d+)`))
     if (!m) continue
     const times = Number(m[1])

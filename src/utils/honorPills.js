@@ -18,7 +18,8 @@
  *  - 四个系列：xCPC（ICPC + CCPC 合并）/ 天梯赛 / 百度之星 / 蓝桥杯。
  *    **chuanzhi.json 有意不汇总**：该文件当前为空，且传智杯的荣誉一直是手写条目；
  *    若将来它有了数据，加进 AWARD_FILES 之前先确认手写条目的去留，否则会重复显示。
- *  - xCPC 的「区域赛 / 邀请赛」与「省赛」分成两枚胶囊，省赛单独一枚
+ *  - xCPC 的「区域赛 / 邀请赛 / 省赛」**同属一枚胶囊**（2026-09-23 会长裁定：原先省赛
+ *    单独成枚，现合并；三段各自是一个折行单位，见 recordsToPillParts）
  *  - 「暨X省赛」的邀请赛（如 ICPC全国邀请赛（南昌）暨江西省赛）：邀请赛与省赛【各计一次】
  *  - **省赛段只认江西省赛**（会长 2026-09 裁定）：其他省的省赛 / 区赛（广东、河南、
  *    广西、山东、吉林、东北、湖北、福建、河北、贵州…）不计入省赛段，只计邀请赛。
@@ -35,60 +36,28 @@
  *  - 零奖牌的档位不显示（如「区域赛🥈2🥉1」里没有 🥇）
  */
 
+import {
+  AWARD_FILES,
+  COMPETITION_OF_FILE,
+  FAMILY_LABELS,
+  FAMILY_OF_FILE,
+  FAMILY_ORDER,
+  GIRLS_RE,
+  JIANGXI_RE,
+  MEDAL_EMOJI,
+  MEDAL_ORDER,
+  PERSONAL_FILES,
+  SEGMENT_ORDER,
+} from './contestTaxonomy.js'
+
+export { FAMILY_LABELS }
+
 const DATA_ROOT = '/data'
 
-/**
- * 参与汇总的 awards 文件。文件本身就区分了团队赛与个人赛
- * （gplt-team / gplt-individual 是同一届的两个文件），不用再靠 level 猜。
- */
-const AWARD_FILES = ['icpc', 'ccpc', 'gplt-team', 'gplt-individual', 'lanqiao', 'baidu']
-
-/** awards 文件 → 胶囊里的系列键 */
-const FAMILY_OF_FILE = {
-  icpc: 'xcpc',
-  ccpc: 'xcpc',
-  'gplt-team': 'gplt',
-  'gplt-individual': 'gplt',
-  lanqiao: 'lanqiao',
-  baidu: 'baidu',
-}
-
-/** awards 文件 → competitions.json 里的 slug（年份靠它的 sessions 映射反查） */
-const COMPETITION_OF_FILE = {
-  icpc: 'icpc',
-  ccpc: 'ccpc',
-  'gplt-team': 'gplt',
-  'gplt-individual': 'gplt',
-  lanqiao: 'lanqiao',
-  baidu: 'baidu',
-}
-
-/** 个人赛文件（一行一个人/一队人，但分段按个人赛算） */
-const PERSONAL_FILES = new Set(['gplt-individual', 'lanqiao', 'baidu'])
-
-/** 系列键 → 胶囊开头的名字 */
-export const FAMILY_LABELS = {
-  xcpc: 'xCPC',
-  gplt: '天梯赛',
-  baidu: '百度之星',
-  lanqiao: '蓝桥杯',
-}
-
-const FAMILY_ORDER = ['xcpc', 'gplt', 'baidu', 'lanqiao']
-/** 奖牌档位顺序：特等奖在最前（会长 2026-09 裁定，独立一档不并入金牌） */
-const MEDAL_ORDER = ['grand', 'gold', 'silver', 'bronze']
-const MEDAL_EMOJI = { grand: '🏆', gold: '🥇', silver: '🥈', bronze: '🥉' }
+/* 档位 / 系列 / awards 文件这几张表都在 contestTaxonomy.js（单一真源，别在本文件再抄一份）。
+   这里只留**措辞**：xcpc 与百度之星用「金/银/铜牌」，蓝桥杯与天梯赛用官方「一/二/三等奖」
+   —— 按赛事分家是会长 2026-09 的裁定（见下 medalTextOf 与 MEDAL_TEXT_RANK）。 */
 const MEDAL_TEXT = { grand: '特等奖', gold: '金牌', silver: '银牌', bronze: '铜牌' }
-
-/** 分段顺序（xCPC 的省赛单独成胶囊，故不在此列） */
-const SEGMENT_ORDER = {
-  // 省赛与区域赛/邀请赛同属一枚胶囊（会长 2026-09-23 合并，原先省赛单独成枚）。
-  // 三段各自是一个折行单位（见 recordsToPillParts），故合并后不会互相挤在一起。
-  xcpc: ['区域赛', '邀请赛', '省赛'],
-  gplt: ['团体', '个人'],
-  baidu: ['国赛', '省赛'],
-  lanqiao: ['国赛', '省赛'],
-}
 
 /**
  * 手工兜底：站点数据里查不到的人（昵称），由人工折算。
@@ -105,16 +74,8 @@ export const MANUAL_PILLS = {
   vesper: [['xCPC 邀请赛🥉1', '省赛🥇1']],
 }
 
-/** CCPC 女生专场：单列，不并进计数分段 */
-const GIRLS_RE = /女生|专场/
-/**
- * 省赛段只认江西省赛（会长 2026-09 裁定：其他省的省赛不计）。
- * 新数据层里江西省赛以「XX全国邀请赛（南昌）暨江西省赛」的 competition_name 出现，
- * 故按「江西」判定；顺带也覆盖将来可能出现的独立「江西省赛」行。
- */
-const JIANGXI_RE = /江西/
-
-const zeroCounts = () => ({ grand: 0, gold: 0, silver: 0, bronze: 0 })
+/** CCPC 女生专场与「只认江西省赛」两条判据见 contestTaxonomy.js 的 GIRLS_RE / JIANGXI_RE */
+const zeroCounts = () => Object.fromEntries(MEDAL_ORDER.map((m) => [m, 0]))
 
 /** 队内成员串（「万俊哲、张云菲、衷铭川」）→ 姓名数组；新数据层已是数组，这里只兜底 */
 const splitMembers = (text) =>

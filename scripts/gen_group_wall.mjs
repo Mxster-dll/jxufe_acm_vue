@@ -51,13 +51,12 @@ import { buildHonorPills, collectRecords, recordsToDetails, MANUAL_PILLS } from 
 import { rankMembers } from '../src/utils/honorRanking.js'
 import { normalizeHonors } from '../src/utils/honorType.js'
 import { stripCoveredHonors } from '../src/utils/honorCoverage.js'
+import { AWARD_FILES } from '../src/utils/contestTaxonomy.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = path.join(ROOT, 'public/data')
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
 const writeJson = (p, obj) => fs.writeFileSync(p, JSON.stringify(obj, null, 2) + '\n', 'utf8')
-
-const AWARD_FILES = ['icpc', 'ccpc', 'gplt-team', 'gplt-individual', 'lanqiao', 'baidu']
 
 /** 卡片最多放几枚标签；超出补「…」。
     6 → 12（2026-09-23）：战绩胶囊一个系列一枚、最多占 4 枚，6 枚会把后面的手写荣誉全顶掉，

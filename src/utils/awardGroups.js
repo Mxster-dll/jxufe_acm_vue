@@ -10,6 +10,8 @@
  * grand 是独立一档（排在金之前、单独计数），只存在于蓝桥杯早期届次。
  */
 
+import { MEDAL_ORDER, MEDAL_RANK } from './contestTaxonomy.js'
+
 // 奖牌 → 文案：xcpc / 百度之星 / 天梯赛团队奖用「金/银/铜奖」措辞
 // grand（特等奖）是蓝桥杯早期届次才有的最高档，两种措辞体系下都写作「特等奖」
 export const MEDAL_TEXT = { grand: '特等奖', gold: '金奖', silver: '银奖', bronze: '铜奖' }
@@ -20,9 +22,10 @@ export const LEVEL_CAT = { invitational: 'inv', regional: 'reg', final: 'reg', p
 // medal_level → 徽章小字
 export const LEVEL_TAG = { invitational: '邀请赛', regional: '区域赛', final: '区域赛', provincial: '省赛' }
 
-// 顺序即展示顺序：特等奖 → 金 → 银 → 铜
-export const MEDAL_KEYS = ['grand', 'gold', 'silver', 'bronze']
-export const MEDAL_ORDER = { grand: 0, gold: 1, silver: 2, bronze: 3 }
+// 顺序与档位表都在 contestTaxonomy.js（单一真源）；这里只做别名，别在本文件再抄一份。
+// MEDAL_KEYS 是「顺序即展示顺序」的数组；MEDAL_RANK 是同序的查表版（排序用）。
+export const MEDAL_KEYS = MEDAL_ORDER
+export { MEDAL_RANK }
 
 /** 奖牌 → 奖牌色类（供 medal-gold / chip-gold 等样式复用） */
 export function medalClass(medal) {

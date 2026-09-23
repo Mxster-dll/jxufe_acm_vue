@@ -58,9 +58,7 @@ const readJson = (file, fallback) => {
   }
 }
 
-// 角标里的奖牌顺序与图标：特等奖（蓝桥杯早期）在金之前，与全站口径一致
-const MEDALS = ['grand', 'gold', 'silver', 'bronze']
-const MEDAL_EMOJI = { grand: '🏆', gold: '🥇', silver: '🥈', bronze: '🥉' }
+import { MEDAL_EMOJI, MEDAL_ORDER } from '../src/utils/contestTaxonomy.js'
 
 /** category → 系列（与 src/views/AllActionView.vue 的 CAT_LABEL 同源） */
 const CAT_FAMILY = {
@@ -207,10 +205,10 @@ function main() {
       const hits = pool.filter((row) => !row.medal_level || levels.includes(row.medal_level))
       const counts = {}
       for (const row of hits) counts[row.medal_type] = (counts[row.medal_type] || 0) + 1
-      const text = MEDALS.filter((m) => counts[m]).map((m) => MEDAL_EMOJI[m] + counts[m]).join('')
+      const text = MEDAL_ORDER.filter((m) => counts[m]).map((m) => MEDAL_EMOJI[m] + counts[m]).join('')
       if (text) {
         badges[card.link] = text
-        tiers[card.link] = MEDALS.find((m) => counts[m]) // MEDALS 已按高→低排好
+        tiers[card.link] = MEDAL_ORDER.find((m) => counts[m]) // 已按高→低排好
         stats.badges += 1
       } else {
         misses.push(`${year} ${card.date} [${card.category}] ${card.title}`)
