@@ -5,9 +5,9 @@
   "description": "江西财经大学程序设计竞赛协会官网 - Vue 迁移版",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/gen_hero_wall.mjs && node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
+    "predev": "node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/gen_hero_wall.mjs && node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
+    "prebuild": "node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "data:check": "node scripts/check_awards.mjs",

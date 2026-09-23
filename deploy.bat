@@ -26,18 +26,22 @@ set REMOTE_PATH=/var/www/jxufe_acm_vue
 set SITE_URL=https://jxufe-acm.cn
 
 :: ---- Local config (leave as is) ----
-:: scripts/gen_hero_wall.mjs MUST be uploaded: the "prebuild" hook in
-:: package.json runs it on the server during "npm run build", rescanning
-:: public/images/excellent_member/ to regenerate the avatar-wall manifest.
-:: scripts/gen_group_wall.mjs likewise - prebuild runs it too: it builds the
-:: club member wall (group_wall.manifest.json + group_wall.json) from
-:: group_members.json, duties.json and awards/.
-:: scripts/gen_event_badges.mjs likewise - prebuild runs it too: it builds the
-:: timeline medal badges (event_badges.json) from awards/ + events/.
-:: ALL THREE must be uploaded - miss one and the server build fails outright.
-:: (Nothing else in scripts/ is needed on the server - upload just those three.
-::  The thumbnail generators are PowerShell scripts and run locally only.)
-set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs scripts\gen_group_wall.mjs scripts\gen_event_badges.mjs
+:: The "prebuild" hook in package.json runs these TWO generators on the server
+:: during "npm run build":
+::   scripts/gen_group_wall.mjs    club member wall (group_wall.*.json + excellent_members.json)
+::                                 from group_members.json, duties.json, scholarships.json,
+::                                 wall_rules.json, awards/ and the two site rosters.
+::   scripts/gen_event_badges.mjs  timeline medal badges (event_badges.json) from awards/ + events/.
+:: BOTH must be uploaded - miss one and the server build fails outright
+:: (node cannot find the file -> "npm run build" exits non-zero -> deploy stops at step 4).
+:: NOT uploaded on purpose:
+::   scripts/gen_hero_wall.mjs     the upstream author's 33-avatar wall pipeline. Its product
+::                                 (hero_wall.manifest.json) has no consumer left in src/ -
+::                                 the home wall reads group_wall.* instead - so it was taken
+::                                 out of predev/prebuild as well. Run it by hand if ever needed:
+::                                 "npm run data:hero-wall".
+::   scripts/*.ps1                 thumbnail generators (PowerShell, Windows only, local only).
+set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_group_wall.mjs scripts\gen_event_badges.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519
 set TAR_FILE=%TEMP%\jxufe_acm_deploy.tar.gz
 set REMOTE_TAR=/tmp/jxufe_acm_deploy.tar.gz
