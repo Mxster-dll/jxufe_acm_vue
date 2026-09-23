@@ -24,29 +24,51 @@
  *
  * ## 环面周期 (Px, Py) 怎么取
  *   · 装得下所有图（Px × Py ≥ n）—— 周期是取图的唯一范围；
- *   · 周期不小于视口（Px ≥ 完整可见列数、Py ≥ 行数）—— 于是视口里看不到重复图案。
- * 在满足这两条的前提下取网格总格数最小的一组。网格 = 视口 + 一个周期（两轴都要多铺
- * 一整个周期，这是这套设计避不开的代价）。
+ *   · **每个方向都比视口大一截**（Px > 可见列数、Py > 行数）。
+ * 第二条是会被忽略但很要命的一条：周期等于视口时，一屏正好是一个完整周期，
+ * 屏幕上下两端就是同一张脸，而且是**周期性**地重复（竖着滚一个周期就回到原样）。
+ * 所以周期在预算内尽量放大到视口的 1.2~1.5 倍；实在放不下（超大屏 / 图片极多）
+ * 才退回「周期 = 视口」的老取法。网格 = 视口 + 一个周期（两轴都要多铺一整个周期，
+ * 这是这套设计避不开的代价）。
  *
- * ## 图不够会重复 —— 那是故意的
- * n 张图铺 m 格就重复 ⌈m/n⌉ 次。33 张图、桌面一屏 40 格时：26 张出现 1 次、
- * 7 张出现 2 次，且两次出现被环面映射甩到对角方向。**往图片文件夹里加图不用改任何代码**，
- * n 变大 → 周期变大 → 重复自然减少（加到 60 张时一屏全是不同的人）。
+ * ## 排布是打乱的，而且不让同图挨着
+ * 老写法是 `list[(r*Px + c) % n]` —— 顺序铺。它不会出现相邻同图，但每张重复的图
+ * 都落在**同一个偏移**上（第 i 张和第 i+n 张恰好差固定的「几列几行」），
+ * 于是整面墙是一张有规律的、会动的壁纸，一屏内同图的偏移只有一两种。
+ * 现在改成「配平多重集 → 洗牌 → 八邻域冲突修复」，见 buildPeriod()：
+ * 同一屏里同图的偏移会散成二三十种，看着就是杂乱的。
+ *
+ * ## 图不够会重复 —— 那是故意的，但别让它显得有规律
+ * n 张图铺 m 格就重复 ⌈m/n⌉ 次，这在数学上躲不掉（36 张图、一屏 55 格，
+ * 一屏里必然有约 19 格是"第二次出现"）。能做的是：让这些重复**落在没有规律的位置上**，
+ * 并且不挨在一起。**往图片文件夹里加图不用改任何代码**，n 变大 → 一屏内的重样自然变少。
  *
  * ## 响应式
  * 瓷砖边长不写死在 JS 里，而是由 CSS 变量 `--wall-tile` 给目标值、媒体查询调档，
- * 组件读出来后再在 4px 网格上扫描（40→260），取「离目标最近且 DOM 不超预算」的那组。
+ * 组件读出来后再在 4px 网格上扫描（40→260），取「离目标最近、且排得出合格周期、
+ * 且 DOM 不超预算」的那组。
  * 几何量的是**本组件的盒子**（= hero 的盒子）而不是视口，于是白拿三件事：
  * 手机地址栏收放、≤768px 的 `min-height: auto`、横竖屏切换，全都自动跟随。
  *
- * ## 交互（桌面悬停 / 触屏点击，两套）
+ * ## 交互（悬停=预览，点击=读全文）
  * 用 `matchMedia('(hover: hover) and (pointer: fine)')` 做能力检测，不看 UA：
- *   · 桌面：悬停弹出卡片（锚在格子上，头像从砖里飞进圆框）；卡片位置 JS 夹紧，
+ *   · 桌面：悬停弹出**预览卡**（锚在格子上，头像从砖里飞进圆框）；卡片位置 JS 夹紧，
  *           免得贴边格子的卡被 hero 的 overflow: clip 裁掉。
- *   · 触屏：点一下弹居中的卡（360px 的卡挂在 96px 的格子上根本锚不住），点空白关闭。
+ *   · 点任意一格 → 弹**全文卡**（.wall-sheet）：桌面与触屏**同一个入口、同一个组件**。
+ *     桌面上悬停卡只是预览，留言超长时尾部淡出并提示「点击查看全文」。
  * ⚠ 瓷砖必须 `touch-action: pan-y`，否则墙会吃掉触摸事件、**手机上在 hero 区域滑不动页面**。
+ *
+ * ## 卡片内容（hero_wall.json 的四个字段）
+ * name 姓名 · line 一句话（一般是班级）· tags 奖项胶囊 · message 留言。
+ * 前三个都是短文本（nowrap + 省略号）；message 可以是一整段话，于是分两级呈现：
+ *   · 预览卡（.wall__card）：clamp 到 10 行。被截断时底部用 mask 淡出 + 挂一行
+ *     「点击查看全文」—— 截没截断是**实测**出来的（scrollHeight vs clientHeight），
+ *     短留言的卡片上不会多这一行废话。
+ *   · 全文卡（.wall-sheet）：一个字不截。结构是「不滚的头 + 滚的正文 + 不滚的脚」，
+ *     留言再长也只是正文区自己滚，姓名和关闭方式始终在。
+ * 数据层不做任何截断，两个视图读的是同一份完整文本。
  */
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps({
   /** 由父组件 v-model:active 控制（HomeView 里就是那个按钮的开关） */
@@ -122,6 +144,9 @@ async function loadData() {
       name: typeof c.name === 'string' ? c.name : '',
       line: typeof c.line === 'string' ? c.line : '',
       tags: Array.isArray(c.tags) ? c.tags.filter((t) => typeof t === 'string' && t.trim()) : [],
+      /* 留言：可以是一整段话（「给未来留一行」那种）。**不截断数据**，只由 CSS 限制行数 ——
+         同一份文本在悬停卡里显示 5 行、在触屏居中卡里显示全文。 */
+      message: typeof c.message === 'string' ? c.message.trim() : '',
     }
   })
 }
@@ -143,8 +168,40 @@ const onImgError = (e, item) => {
   el.src = originalOf(item.file)
 }
 
-/* ── 环面周期：装得下所有人 且 不小于视口，在此前提下格数最少 ── */
-const periodFor = (n, cols0, rows0) => {
+/* ── 环面周期 (px, py) 取多大 ──
+   两条硬约束：
+     · 装得下所有图（px × py ≥ n）—— 周期是「取图」的唯一范围；
+     · 每个方向都不小于视口 —— 否则一屏之内同一格会出现两次。
+   在这之上，周期**越大越好**（只要格数还塞得进预算）：
+   周期正好等于视口时，一屏就是一个完整周期，屏幕上下两端是同一张脸；
+   更糟的是每张重复的图都落在**同一个偏移**上（老写法里第 i 张和第 i+n 张
+   恰好差固定的「几列几行」），于是整面墙是一张有规律的、会动的壁纸。
+   把周期放大到视口的 1.2~1.5 倍之后，一屏只是周期里的一块随机窗口 ——
+   重样依然在（照片数 < 屏幕格数，数学上躲不掉），但位置不再有规律。 */
+
+/** 周期最多放大到视口的多少倍。再大只是徒增 DOM，排布的随机感已经不缺了 */
+const PERIOD_MAX_SCALE = 1.5
+
+const periodFor = (n, cols0, rows0, budget) => {
+  const fit = (k) => {
+    const px = Math.max(cols0 + 1, Math.round(cols0 * k))
+    const py = Math.max(rows0 + 1, Math.round(rows0 * k), Math.ceil(n / px))
+    return { px, py }
+  }
+  // 从大到小试，取第一个「格数塞得进预算」的缩放系数
+  for (let k = PERIOD_MAX_SCALE; k >= 1; k -= 0.05) {
+    const c = fit(k)
+    if ((cols0 + c.px) * (rows0 + c.py) <= budget) return c
+  }
+  /* 这个瓦片尺寸下排不出「比视口大一圈」的周期 —— 返回 null 让 geom 换个尺寸再试。
+     周期退化成和视口一样大时，一屏正好是一个完整周期、上下两端就是同一张脸，
+     那正是要修的东西；宁可把瓦片放大一点。 */
+  return null
+}
+
+/** 兜底周期：等价于加周期放大之前的老写法（周期 = 视口）。
+    只有所有瓦片尺寸都排不出合格周期时（超大屏 / 图片极多）才会用到。 */
+const fallbackPeriod = (n, cols0, rows0) => {
   let best = null
   for (let px = cols0; px <= Math.max(n, cols0); px++) {
     const py = Math.max(rows0, Math.ceil(n / px))
@@ -154,7 +211,7 @@ const periodFor = (n, cols0, rows0) => {
   return best || { px: cols0, py: rows0, cells: (cols0 + 1) * (rows0 + 1) }
 }
 
-/* ── 一格的大小：4px 网格上取离目标最近的那个；格数超预算就往上放大 ── */
+/* ── 一格的大小：4px 网格上取离目标最近的那个，且要排得出合格周期、格数不超预算 ── */
 const geom = computed(() => {
   const n = items.value.length || 1
   const base = Math.max(40, Math.round(tileTarget.value / 4) * 4)
@@ -162,20 +219,27 @@ const geom = computed(() => {
   const H = boxH.value
   if (!W || !H) return { s: base, px: 1, py: 1, cols: 1, rows: 1 }
 
+  /* 三档挑选，从好到差：
+       ① best     —— 周期比视口大（不会再「上下重复」）**且**格数在预算内；
+       ② budgetOk —— 格数在预算内，但周期只能退化成视口大小；
+       ③ lax      —— 预算全超了，只求瓦片最贴近 CSS 目标（宁可多几个节点，也别算不出几何）。
+     每一档都取「离 CSS 给的目标瓦片最近」的那个尺寸。 */
   let best = null
+  let budgetOk = null
   let lax = null
   for (let s = 40; s <= 260; s += 4) {
     const cols0 = Math.ceil(W / s)
     const rows0 = Math.ceil(H / s)
-    const p = periodFor(n, cols0, rows0)
-    const cand = { s, px: p.px, py: p.py, cols: cols0 + p.px, rows: rows0 + p.py }
+    const p = periodFor(n, cols0, rows0, props.blockBudget)
+    const pp = p || fallbackPeriod(n, cols0, rows0)
+    const cand = { s, px: pp.px, py: pp.py, cols: cols0 + pp.px, rows: rows0 + pp.py }
     cand.cells = cand.cols * cand.rows
-    if (!lax || Math.abs(s - base) < Math.abs(lax.s - base)) lax = cand
-    if (cand.cells > props.blockBudget) continue
-    if (!best || Math.abs(s - base) < Math.abs(best.s - base)) best = cand
+    const closer = (b) => !b || Math.abs(s - base) < Math.abs(b.s - base)
+    if (closer(lax)) lax = cand
+    if (cand.cells <= props.blockBudget && closer(budgetOk)) budgetOk = cand
+    if (p && closer(best)) best = cand
   }
-  // 都超预算就退到最接近目标的那组（宁可多几个节点，也不要算不出几何）
-  return best || lax || { s: base, px: 1, py: 1, cols: 2, rows: 2 }
+  return best || budgetOk || lax || { s: base, px: 1, py: 1, cols: 2, rows: 2 }
 })
 
 /* ── 漂移：方向每次加载随机，两轴各走自己的一整个周期 ── */
@@ -202,18 +266,146 @@ const drift = computed(() => {
 const gridX = computed(() => -Math.max(0, drift.value.dx))
 const gridY = computed(() => -Math.max(0, drift.value.dy))
 
-/* ── 平铺序列：在环面上取图，一个周期内正好覆盖全部图片 ── */
+/* ── 排布：周期块在环面上取图，一个周期里每张图都排得到 ── */
+/* ==========================================================================
+   周期块的内容：把 n 张图排进 px×py 的环面
+   --------------------------------------------------------------------------
+   两个目标：
+     ① 每张图至少出现一次 —— 不然有人永远上不了墙；
+     ② 八邻域内不出现同一张图（环面上，含跨行列的 wrap）——
+        这就是「一样的照片不要连在一起」。对角也算，肉眼一样明显。
+   做法：配平多重集 → 洗牌 → 局部修复。
+   N = px×py 通常只有 n 的两三倍，重复的图本来就不多，冲突几步就能修干净。
+   ⚠ 为什么用带种子的 PRNG 而不是 Math.random：几何一变（拖窗口）就要重排，
+     用 Math.random 的话缩放过程中整面墙会不停重新洗牌，看着像花屏。
+     种子每次**刷新**换一个 —— 刷新一次换一批排布，同一次加载里稳定。
+   ========================================================================== */
+const layoutSeed = (Math.random() * 0xffffffff) >>> 0
+
+/** mulberry32：32 位种子的小 PRNG */
+const makeRng = (seed) => () => {
+  seed = (seed + 0x6d2b79f5) | 0
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+}
+
+/** 八邻域（含对角） */
+const NEIGH8 = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+]
+
+/** 环面格 (r, c) 的八邻域里有几张和自己一样（>0 即冲突） */
+const clashesAt = (grid, r, c, px, py) => {
+  const v = grid[r * px + c]
+  let hits = 0
+  for (let k = 0; k < NEIGH8.length; k++) {
+    const rr = (r + NEIGH8[k][0] + py) % py
+    const cc = (c + NEIGH8[k][1] + px) % px
+    if (grid[rr * px + cc] === v) hits++
+  }
+  return hits
+}
+
+/** 排出一个 px×py 的周期块，返回长度 px*py 的图片下标数组 */
+const buildPeriod = (n, px, py, rng) => {
+  const N = px * py
+  /* ① 配平多重集：每张图 ⌊N/n⌋ 或 ⌈N/n⌉ 份，加起来正好 N */
+  const base = Math.floor(N / n)
+  const extra = N - base * n
+  const grid = new Array(N)
+  let w = 0
+  for (let i = 0; i < n; i++) {
+    for (let t = 0; t < base + (i < extra ? 1 : 0); t++) grid[w++] = i
+  }
+  /* ② Fisher–Yates 洗牌 */
+  for (let i = N - 1; i > 0; i--) {
+    const j = (rng() * (i + 1)) | 0
+    const t = grid[i]
+    grid[i] = grid[j]
+    grid[j] = t
+  }
+
+  /* ③ 局部修复：反复挑一个还有冲突的格子，跟随机另一格对调，
+        直到「对调之后两边都干净」。 */
+  const swap = (a, b) => {
+    const t = grid[a]
+    grid[a] = grid[b]
+    grid[b] = t
+  }
+  const clash = (i) => clashesAt(grid, (i / px) | 0, i % px, px, py)
+
+  for (let pass = 0; pass < 120; pass++) {
+    let bad = -1
+    for (let i = 0; i < N; i++) {
+      if (clash(i)) {
+        bad = i
+        break
+      }
+    }
+    if (bad < 0) break // 全干净了
+
+    let done = false
+    for (let t = 0; t < 120 && !done; t++) {
+      const j = (rng() * N) | 0
+      if (j === bad || grid[j] === grid[bad]) continue
+      swap(bad, j)
+      if (!clash(bad) && !clash(j)) done = true
+      else swap(bad, j)
+    }
+    if (done) continue
+
+    /* 找不到「两边都干净」的位置，就退而求其次挑一个让冲突总数降得最多的。
+       只有图片数少到八邻域根本排不开时才会走到这里；实在降不下去就收手，绝不空转。 */
+    let pick = -1
+    let gain = 0
+    for (let t = 0; t < 200; t++) {
+      const j = (rng() * N) | 0
+      if (j === bad || grid[j] === grid[bad]) continue
+      const before = clash(bad) + clash(j)
+      swap(bad, j)
+      const after = clash(bad) + clash(j)
+      swap(bad, j)
+      if (before - after > gain) {
+        gain = before - after
+        pick = j
+      }
+    }
+    if (pick < 0) break
+    swap(bad, pick)
+  }
+  return grid
+}
+
+/** 当前几何下的周期块。几何没变就是同一份，所以窗口缩放时不会重新洗牌 */
+const periodGrid = computed(() => {
+  const n = items.value.length
+  const { px, py } = geom.value
+  if (!n || px < 1 || py < 1) return []
+  const seed = (layoutSeed ^ Math.imul(n, 0x9e3779b1) ^ Math.imul(px, 0x85ebca6b) ^ Math.imul(py, 0xc2b2ae35)) >>> 0
+  return buildPeriod(n, px, py, makeRng(seed))
+})
+
+/* ── 平铺序列：把周期块按 (r % py, c % px) 铺满整张网格 ── */
 const tiles = computed(() => {
   const list = items.value
   const n = list.length
   const { px, py, cols, rows } = geom.value
+  const block = periodGrid.value
   const out = []
-  if (!n || !cols || !rows) return out
+  if (!n || !cols || !rows || !block.length) return out
   const total = cols * rows
   for (let i = 0; i < total; i++) {
     const r = Math.floor(i / cols)
     const c = i - r * cols
-    out.push(list[((r % py) * px + (c % px)) % n])
+    out.push(list[block[(r % py) * px + (c % px)]])
   }
   return out
 })
@@ -238,6 +430,7 @@ const wallStyle = computed(() => ({
 const paused = computed(() => !inView.value || pageHidden.value || !!openItem.value)
 
 /* ── 悬停：卡片夹紧（免得贴边格子的卡被 hero 的 overflow: clip 裁掉） ── */
+/** 兜底尺寸：量不到真实卡片时用（正常情况下都能量到） */
 const CARD_W = 360
 const CARD_H = 132
 let lastTile = null
@@ -254,9 +447,15 @@ const clampCard = (tile) => {
   const r = tile.getBoundingClientRect()
   const c = root.getBoundingClientRect()
   if (!c.width || !c.height) return
-  const cardW = Math.min(CARD_W, c.width - 32)
+  /* 卡片尺寸**实测**，不用常量：卡片宽度随内容变（有留言时更宽），高度更是完全由
+     留言行数决定 —— 拿写死的 360×132 去夹紧，留言一多卡片就会从 hero 底部探出去。
+     ⚠ 用 offsetWidth/offsetHeight 而不是 getBoundingClientRect()：卡片隐藏时带着
+       scale(0.88)、头像还飞在外面，getBoundingClientRect 会把那些 transform 算进去。 */
+  const cardEl = tile.querySelector('.wall__card')
+  const cardW = Math.min(cardEl?.offsetWidth || CARD_W, c.width - 32)
+  const cardH = cardEl?.offsetHeight || CARD_H
   const halfW = cardW / 2 + 10
-  const halfH = CARD_H / 2 + 10
+  const halfH = cardH / 2 + 10
   const cx = r.left + r.width / 2 - c.left
   const cy = r.top + r.height / 2 - c.top
   // 上边界用「顶栏下沿」而不是容器上沿：顶栏的 pointer-events 已放开（横屏下墙要在
@@ -275,6 +474,23 @@ const clampCard = (tile) => {
   tile.style.setProperty('--sy', sy.toFixed(1) + 'px')
 }
 
+/** 悬停卡里**留言被 line-clamp 截掉了**的图片名集合（只增不减）。
+ *  用来决定要不要在卡片上挂「点击查看全文」和底部淡出 —— 短留言不该多一行废话。
+ *  测量必须在**卡片已经渲染**之后做（悬停时它就在 DOM 里，只是 opacity: 0），
+ *  而 opacity 不影响布局，clientHeight / scrollHeight 照样是准的。
+ *  ⚠ 存文件名而不是给 DOM 挂 class：瓷砖是按下标复用的，几何一变同一个节点就换人了，
+ *    DOM 上的标记会串到别人身上。 */
+const clipped = reactive(new Set())
+
+/** 量一格里的留言有没有被截断 —— line-clamp 的标准判据：内容高 > 可见高 */
+const markClipped = (tile) => {
+  const msgEl = tile.querySelector('.wall__msg')
+  if (!msgEl) return
+  const item = tiles.value[Number(tile.dataset.i)]
+  if (!item?.message || !item.file || clipped.has(item.file)) return
+  if (msgEl.scrollHeight - msgEl.clientHeight > 1) clipped.add(item.file)
+}
+
 /** 只在「换了一格」时才算，避免 pointerover 在子元素间反复触发时反复量布局。
     底纹态不需要（那时不弹卡），直接跳过 —— 省掉每次悬停的一次布局读取。 */
 const onGridOver = (e) => {
@@ -282,17 +498,23 @@ const onGridOver = (e) => {
   const tile = e.target.closest?.('.wall__tile') || null
   if (tile === lastTile) return
   lastTile = tile
-  if (tile) clampCard(tile)
+  if (!tile) return
+  markClipped(tile)
+  clampCard(tile)
+  /* markClipped 可能刚把「点击查看全文」那一行加上去，卡片会高一点点 ——
+     等这次重渲染落地再夹一次，免得卡片底部压到 hero 边界外面。 */
+  nextTick(() => clampCard(tile))
 }
 
-/* ── 点击：只有激活态才弹卡（底纹态点一下什么都不做，滑动手势也交给浏览器） ── */
+/* ── 点击：弹「全文卡」 ──
+   桌面也走这条路：悬停卡只给预览（留言截断），想看全文得点一下。
+   ⚠ 触屏端本来就是靠点击（没有 hover），所以这里是两端的统一入口。 */
 let downPt = null
 const onGridDown = (e) => {
   downPt = { x: e.clientX, y: e.clientY }
 }
 const onGridClick = (e) => {
   if (!props.active) return // 底纹态：不响应点击
-  if (canHover.value) return // 桌面端靠 :hover，点击不用管
   // 顶栏那一条的 pointer-events 已放开（横屏下墙要在那里也能悬停），
   // 但那是导航栏的地盘 —— 点在它的空白处不该弹出成员卡。
   if (e.clientY <= headerBottom()) return
@@ -366,12 +588,27 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', measure)
   window.removeEventListener('keydown', onKeydown)
   document.removeEventListener('visibilitychange', onVis)
+  lockPage(false) // 组件卸载（比如离开首页）时别把页面留在锁死状态
   if (typeof document !== 'undefined') document.body.classList.remove('hero-wall-present', 'hero-wall-on')
 })
 
-// 关掉卡片时把上一格的 hover 位移清掉，免得下次悬停用到旧值
+/* ── 成员卡打开 / 关闭时的全局副作用 ──
+   ① 锁滚动：本项目的滚动容器是 **html**（base.css 里 `html { overflow-y: auto }`），
+      所以锁的是 documentElement，不是 body。手机上不加这个，手指在卡片上滑动时
+      底下的 hero 会跟着滚，卡片像"浮在滚动的纸上"。
+   ② 给 body 挂类，把「加入我们」那个 fixed 悬浮球藏掉 —— 它和卡片是两个不相干的
+      层，不管的话它会盖在抽屉上面（它在 App.vue 里，只能从外部按类命中）。
+      规则写在下面的非 scoped <style> 里，随组件一起删除。 */
+const lockPage = (on) => {
+  if (typeof document === 'undefined') return
+  document.documentElement.style.overflow = on ? 'hidden' : ''
+  document.body.style.overflow = on ? 'hidden' : ''
+  document.body.classList.toggle('hero-wall-sheet', on)
+}
+
 watch(openItem, (v) => {
-  if (!v) lastTile = null
+  if (!v) lastTile = null // 关掉卡片时把上一格的 hover 位移清掉，免得下次悬停用到旧值
+  lockPage(!!v)
 })
 </script>
 
@@ -411,8 +648,8 @@ watch(openItem, (v) => {
                 @error="onImgError($event, m)"
               />
 
-              <!-- 悬停卡（仅 hover 设备）：左圆框头像 + 右侧姓名 / 班级 / 奖项 -->
-              <div class="wall__card">
+              <!-- 悬停卡（仅 hover 设备）：左圆框头像 + 右侧姓名 / 班级 / 奖项 / 留言 -->
+              <div class="wall__card" :class="{ 'has-message': !!m.message }">
                 <div class="wall__avatar">
                   <img :src="thumbOf(m.file)" alt="" loading="lazy" decoding="async" @error="onImgError($event, m)" />
                 </div>
@@ -422,6 +659,16 @@ watch(openItem, (v) => {
                   <div v-if="m.tags.length" class="wall__tags">
                     <span v-for="(t, j) in m.tags" :key="j" class="wall__tag">{{ t }}</span>
                   </div>
+                  <!-- 留言：悬停卡只是个**预览**（最多 10 行，见 .wall__msg 的 line-clamp）。
+                       被截断时底部会淡出并挂一行「点击查看全文」，全文在 .wall-sheet 里。 -->
+                  <div
+                    v-if="m.message"
+                    class="wall__msg-block"
+                    :class="{ 'is-clipped': clipped.has(m.file) }"
+                  >
+                    <p class="wall__msg">{{ m.message }}</p>
+                    <p v-if="clipped.has(m.file)" class="wall__msg-more">点击查看全文</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -430,26 +677,59 @@ watch(openItem, (v) => {
       </div>
     </div>
 
-    <!-- 触屏端的居中卡：不能放进网格里 —— 网格的祖先带 transform，
-         position: fixed 会相对那个祖先定位，而不是视口。 -->
+    <!-- 全文卡（点任意一格弹出，桌面与触屏共用）。
+         不能放进网格里 —— 网格的祖先带 transform，position: fixed 会相对那个祖先定位。
+         结构固定三件套：不滚的头（是谁）+ 滚的正文（留言全文）+ 不滚的脚（怎么关）。
+         头和脚不参与滚动，长留言滚到底也能看见姓名与关闭方式。 -->
     <div v-if="active && openItem" class="wall-sheet" @click.self="closeCard">
-      <div class="wall-sheet__card">
-        <div class="wall-sheet__avatar">
-          <img :src="thumbOf(openItem.file)" alt="" decoding="async" @error="onImgError($event, openItem)" />
+      <div class="wall-sheet__card" role="dialog" aria-modal="true">
+        <button class="wall-sheet__close" type="button" aria-label="关闭" @click="closeCard">
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path
+              d="M5 5l10 10M15 5L5 15"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+        <div class="wall-sheet__head">
+          <div class="wall-sheet__avatar">
+            <img :src="thumbOf(openItem.file)" alt="" decoding="async" @error="onImgError($event, openItem)" />
+          </div>
+          <div class="wall-sheet__ident">
+            <p class="wall-sheet__name">{{ openItem.name || ' ' }}</p>
+            <p v-if="openItem.line" class="wall-sheet__line">{{ openItem.line }}</p>
+            <div v-if="openItem.tags.length" class="wall-sheet__tags">
+              <span v-for="(t, j) in openItem.tags" :key="j" class="wall__tag">{{ t }}</span>
+            </div>
+          </div>
         </div>
-        <p class="wall-sheet__name">{{ openItem.name || ' ' }}</p>
-        <p v-if="openItem.line" class="wall-sheet__line">{{ openItem.line }}</p>
-        <div v-if="openItem.tags.length" class="wall-sheet__tags">
-          <span v-for="(t, j) in openItem.tags" :key="j" class="wall__tag">{{ t }}</span>
+
+        <!-- 留言是**全文**，一个字都不截：这里没有悬停卡那种高度焦虑（正文自己滚）。
+             没有留言的人（墙上绝大多数）就只显示头像 / 姓名 / 班级 / 奖项 ——
+             刻意**不写**「这位成员还没有留下留言」这类占位：墙上没留言的是绝大多数，
+             那句话不提供任何信息，只是噪音。
+             ⚠ v-if 挂在这一层（而不是里面的 <p>）也是刻意的：这一块带 padding，
+               空着留在这儿会在「奖项」和底部提示之间拉出一条几十像素的空白带。 -->
+        <div v-if="openItem.message" class="wall-sheet__body">
+          <p class="wall-sheet__msg">{{ openItem.message }}</p>
         </div>
-        <p class="wall-sheet__hint">点空白处关闭</p>
+
+        <div class="wall-sheet__foot">
+          <span class="wall-sheet__hint">点空白处或按 Esc 关闭</span>
+        </div>
       </div>
     </div>
 
     <!-- 开关：必须在 .hero-inner 之外，否则会跟着文案一起退场就回不来了。
-         文案由 label / labelActive 两个 prop 给，改词不用碰组件。 -->
+         文案由 label / labelActive 两个 prop 给，改词不用碰组件。
+         成员卡打开时整个藏掉 —— 那一刻屏幕上是「一个人的卡」，底下再压一个
+         「返回/收起」按钮既抢注意力，也容易被误触。 -->
     <button
-      v-if="items.length"
+      v-if="items.length && !openItem"
       class="wall-toggle"
       :class="{ 'is-on': active }"
       type="button"
@@ -703,6 +983,52 @@ watch(openItem, (v) => {
   white-space: nowrap;
 }
 
+/* 留言（「给未来留一行」那种一整段话）。
+   长段落 clamp 到 10 行 —— 悬停卡只是**预览**，不该随留言长度无限变高
+   （hero 是 overflow: clip，卡片长过头会被切掉半张）。
+   clamp 只是**视觉截断，数据一个字都没丢**：点一下弹出来的 .wall-sheet 里是全文。
+   ⚠ 截断的前提是卡片宽度够读：所以 .wall__card.has-message 把卡放宽到 440px。 */
+.wall__msg-block {
+  margin-top: 8px;
+}
+.wall__msg {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 10;
+  line-clamp: 10;
+  overflow: hidden;
+  padding: 7px 10px;
+  border-left: 3px solid rgba(26, 115, 232, 0.35);
+  border-radius: 0 8px 8px 0;
+  background: rgba(26, 115, 232, 0.05);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #475569;
+  /* 作者自己敲的换行留着；一长串英文 / URL 也必须能断，否则会把卡片撑破 */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* 被截断时把最后一行淡掉 —— 一眼看出「后面还有」，不用先读提示文字。
+   用 mask 而不是盖一层渐变：mask 不占布局、不用去猜卡片底色，
+   也不会和 line-clamp 依赖的 overflow: hidden 打架。 */
+.wall__msg-block.is-clipped .wall__msg {
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+.wall__msg-more {
+  margin-top: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1a73e8;
+}
+
+/* 有留言时卡片放宽一档：留言要在头像右边的窄栏里换行，360px 的卡读起来太憋屈。
+   只覆盖 --card-w —— --from-x（头像起飞点）是用 var(--card-w) 算的，
+   这里改了它会跟着重算，头像是从新的卡片中心飞回原格的，动画不受影响。 */
+.wall__card.has-message {
+  --card-w: 440px;
+}
+
 /* 悬停卡只在**激活态**出现 —— 底纹态悬停是上面那块模糊亮斑，不弹卡。
    用能力检测包住，触屏上不启用（iOS 会把第一次 tap 当 hover）。 */
 @media (hover: hover) and (pointer: fine) {
@@ -719,10 +1045,15 @@ watch(openItem, (v) => {
 }
 
 /* ==========================================================================
-   触屏端的居中卡
-   ========================================================================== */
-/* 触屏端的居中卡。
-   ⚠ 必须 position: fixed（相对**视口**居中），不能用 absolute 相对 hero——
+   全文卡：点任意一格弹出（桌面与触屏共用）
+   --------------------------------------------------------------------------
+   结构是固定的三件套，缺一不可：
+     .wall-sheet__head   不滚 —— 「这是谁」始终看得见
+     .wall-sheet__body   滚   —— 留言全文；再长也只是它自己在滚
+     .wall-sheet__foot   不滚 —— 「怎么关」始终看得见
+   为什么不整张卡一起滚（以前就是那样）：留言一长，滚下去头像和姓名就没了，
+   读到一半不知道在读谁的；「点空白处关闭」也被推到看不见的地方。
+   ⚠ 必须 position: fixed（相对**视口**定位），不能用 absolute 相对 hero——
      hero 在横屏下能高到 900px+ 而视口只有 390px，相对 hero 居中的卡片会整张弹到屏幕外。
    这里能用 fixed 是因为它**不在网格里**：网格的祖先带 transform，
     那条链上的 fixed 会退化成相对祖先定位（组件头部注释里提过）。 */
@@ -735,21 +1066,75 @@ watch(openItem, (v) => {
   justify-content: center;
   padding: 20px;
   background: rgba(15, 23, 42, 0.34);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   pointer-events: auto;
+  /* 遮罩层不接受触摸滑动：手指落在卡片外面时不应该滚动底下的 hero。
+     卡片正文自己声明了 pan-y，留言照样能滚。 */
+  touch-action: none;
   animation: wall-in 200ms ease both;
 }
 .wall-sheet__card {
-  width: min(340px, 100%);
-  padding: 24px 20px 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  /* ⚠ 上限写两行：认识 dvh 的浏览器用 dvh（手机地址栏收放时跟得上），
+     不认识的忽略第二行、落到 vh。顺序不能反。 */
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
-  text-align: center;
+  overflow: hidden; /* 圆角要能裁住里面的滚动区 */
+  animation: wall-sheet-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes wall-sheet-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 显式关闭钮 —— 「点空白处 / 按 Esc」都是要用户先知道的约定，手机上尤其不明显 */
+.wall-sheet__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.05);
+  color: #64748b;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+.wall-sheet__close svg {
+  width: 16px;
+  height: 16px;
+}
+.wall-sheet__close:hover {
+  background: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+/* 头：不滚 —— 读到一半也永远知道这是谁 */
+.wall-sheet__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 56px 14px 20px; /* 右边给关闭钮让位 */
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  text-align: left;
 }
 .wall-sheet__avatar {
-  width: 104px;
-  height: 104px;
-  margin: 0 auto 12px;
+  flex: none;
+  width: 64px;
+  height: 64px;
   padding: 3px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1a73e8, #4fc3f7);
@@ -763,27 +1148,128 @@ watch(openItem, (v) => {
   border: 3px solid #fff;
   background: #e2e8f0;
 }
+.wall-sheet__ident {
+  min-width: 0;
+}
 .wall-sheet__name {
   font-size: 1.125rem;
   font-weight: 600;
   color: #0f172a;
 }
 .wall-sheet__line {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 0.8125rem;
   color: #64748b;
 }
 .wall-sheet__tags {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 5px;
-  margin-top: 12px;
+  margin-top: 8px;
+}
+
+/* 正文：滚 —— 留言再长也只是这里在滚，头和脚钉住不动 */
+.wall-sheet__body {
+  /* ⚠ flex-grow 必须是 0（老写法是 1 1 auto）。
+     卡片是 max-height 限高、高度由内容决定的 flex 列；grow=1 时这一块会去
+     「吃掉」所有剩余空间 —— 留言短的时候它就被撑成一大片空白。
+     0 1 auto：内容多就缩（配合 min-height: 0 自己滚起来），内容少就贴着自己那点高度。 */
+  flex: 0 1 auto;
+  /* ⚠ min-height: 0 不能省。flex 子项默认 min-height: auto —— 内容比容器高时
+     它会被内容撑开、把卡片顶破，而不是自己滚起来。 */
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* 滚到底别把整页也带着滚 */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y; /* 只有这里还允许纵向滑动（遮罩那层是 none） */
+  padding: 18px 20px;
+  text-align: left;
+}
+/* 正文排版是给「读一段话」的，不是给「扫一眼」的：15px / 1.9 行距。
+   悬停卡那套 13px / 1.6 是短句用的，拿来读 200 字很累。 */
+.wall-sheet__msg {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+  color: #334155;
+  white-space: pre-wrap; /* 作者自己敲的换行留着 */
+  overflow-wrap: anywhere;
+}
+
+
+/* 脚：不滚 —— 「怎么关」不会随着正文滚走 */
+.wall-sheet__foot {
+  flex: none;
+  padding: 10px 20px;
+  /* 全面屏底部的横条别压住提示 */
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  text-align: center;
 }
 .wall-sheet__hint {
-  margin-top: 16px;
   font-size: 0.75rem;
   color: #94a3b8;
+}
+
+/* ── 手机（<600px）：从底部升起的抽屉 ──
+   居中弹窗在窄屏上，上下留白纯属浪费；贴底抽屉一屏能多读三四行。 */
+@media (max-width: 599px) {
+  .wall-sheet {
+    padding: 0;
+    align-items: flex-end; /* 贴着底边 */
+  }
+  .wall-sheet__card {
+    width: 100%;
+    max-height: 88vh;
+    max-height: 88dvh;
+    border-radius: 20px 20px 0 0;
+  }
+  .wall-sheet__head {
+    padding: 16px 56px 12px 16px;
+  }
+  .wall-sheet__avatar {
+    width: 56px;
+    height: 56px;
+  }
+  .wall-sheet__body {
+    padding: 16px;
+  }
+  .wall-sheet__foot {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ── 矮屏（横屏手机 / 拉扁的桌面窗口）：把上下留白全压掉，正文多显示几行 ──
+   限定 min-width 是**故意**的：又窄又矮的窗口（≈390×480）仍该走上面那个贴底抽屉，
+   这里只处理「宽但矮」的横屏形态。 */
+@media (max-height: 520px) and (min-width: 600px) {
+  .wall-sheet {
+    padding: 10px;
+  }
+  .wall-sheet__card {
+    width: min(640px, 100%);
+    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
+    border-radius: 14px;
+  }
+  .wall-sheet__head {
+    padding: 12px 52px 10px 14px;
+  }
+  .wall-sheet__avatar {
+    width: 48px;
+    height: 48px;
+  }
+  .wall-sheet__body {
+    padding: 12px 14px;
+  }
+  .wall-sheet__msg {
+    font-size: 0.875rem;
+    line-height: 1.75;
+  }
+  .wall-sheet__foot {
+    padding: 8px 14px;
+  }
 }
 
 /* ==========================================================================
@@ -858,6 +1344,12 @@ watch(openItem, (v) => {
     left: 16px; /* 取消居中：靠左下，避开 slider 居中的圆点与右下角的「加入我们」 */
     right: auto;
     bottom: 16px;
+    /* 手机浏览器底部那条地址栏会盖住视口：hero 用的是 100vh（= 大视口，地址栏收起时的
+       高度），真正看得见的只有 100svh。把按钮再往上顶「地址栏高度」那么多，它才落在
+       首屏内 —— 否则真机上要往下滑才看得见这个按钮（实测 390×844 模拟器里它在 784px，
+       真机地址栏一盖就出屏）。
+       不支持 svh 的浏览器会丢掉这条 calc，自动退回上面那行 16px。 */
+    bottom: calc(16px + 100vh - 100svh);
     transform: none;
     width: 44px;
     height: 44px;
@@ -950,6 +1442,15 @@ body.hero-wall-present #app > header button {
   pointer-events: auto;
 }
 
+/* 成员卡打开时，把「加入我们」那个 fixed 悬浮球藏掉。
+   它在 App.vue 里，和成员卡是两个互不知情的层 —— 不处理的话它会直接盖在卡上。
+   （成员墙自己的开关按钮是在组件里用 v-if 藏掉的，不需要这条。） */
+body.hero-wall-sheet .floating-join-button {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
 /* ── 让 hero 在手机上至少占满一屏 ──
    ≤768px 时 .hero 是 min-height: auto（高度由内容撑）。实测：
      390×844 → hero 683px，底部露出 168px 的 About 区
@@ -964,6 +1465,13 @@ body.hero-wall-present #app > header button {
 @media (max-width: 768px) {
   body.hero-wall-present .hero {
     min-height: 100vh;
+    /* 内容**顶部对齐**，不要居中。
+       hero 被撑到一屏高之后，.hero 原本的 align-items: center 会把内容在上下各留出
+       ~80px 空白：实测「写码码」被推到离顶 207px，于是下方的轮播圆点（706px）和
+       成员墙按钮（784px）都掉到首屏之外，手机上得往下滑才看得见。
+       顶部对齐后标题回到 126px（= 被撑高之前的位置），多出来的空间全留在下方 ——
+       那一片是墙的空白区，没有内容需要露出来。 */
+    align-items: flex-start;
   }
 }
 </style>

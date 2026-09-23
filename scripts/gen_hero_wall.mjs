@@ -104,6 +104,8 @@ async function main() {
       name: m.name,
       line: typeof m.class === 'string' ? m.class : '',
       tags: honors.slice(0, 3),
+      // members.json 里没有留言这个概念，预填一律留空
+      message: '',
     })
   }
 
@@ -112,8 +114,8 @@ async function main() {
     if (tiles[file]) continue // 已有条目：一个字都不动
     const seed = seedByFile.get(file)
     tiles[file] = seed
-      ? { name: seed.name, line: seed.line, tags: seed.tags }
-      : { name: '', line: '', tags: [] }
+      ? { name: seed.name, line: seed.line, tags: seed.tags, message: seed.message }
+      : { name: '', line: '', tags: [], message: '' }
     added.push(file)
   }
 
@@ -129,8 +131,9 @@ async function main() {
   const out = {
     _note:
       '手写文件：key 是图片文件名，value 是悬浮卡片的内容。' +
-      'line 是一句话（可留空），tags 是奖项胶囊（可留空）。' +
-      '两个都留空就只显示头像——不编造内容。' +
+      'name 是姓名，line 是一句话（通常是班级，可留空），tags 是奖项胶囊（可留空），' +
+      'message 是本人的留言（可留空，长段落会自动截断成几行）。' +
+      '全部留空就只显示头像——不编造内容。' +
       'gen_hero_wall.mjs 只会在新图片出现时补一条空条目，永远不会覆盖这里已有的内容。',
     tiles,
   }

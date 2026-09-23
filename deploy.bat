@@ -1,6 +1,5 @@
 @echo off
 setlocal enabledelayedexpansion
-chcp 65001 >nul
 
 :: ============================================================
 ::  jxufe ACM website - one click deploy (Windows)
@@ -12,6 +11,11 @@ chcp 65001 >nul
 ::           If the server is ever rebuilt, re-install the key with:
 ::             type .deploy\id_ed25519.pub | ssh root@47.99.92.213
 ::               "mkdir -p /root/.ssh && cat >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
+::
+::  NOTE: keep this file PURE ASCII. Chinese (or any non-ASCII) text in a
+::        .bat combined with the "chcp" command makes cmd.exe resume reading
+::        the file at a wrong byte offset and execute a fragment of a comment
+::        as a command. Non-ASCII here = flaky script.
 :: ============================================================
 
 :: ---- Server config ----
@@ -22,9 +26,10 @@ set REMOTE_PATH=/var/www/jxufe_acm_vue
 set SITE_URL=https://jxufe-acm.cn
 
 :: ---- Local config (leave as is) ----
-:: scripts\gen_hero_wall.mjs 必须上传：package.json 的 prebuild 钩子在服务器上 npm run build
-:: 时会跑它，重扫 public/images/excellent_member/ 生成头像墙清单。
-:: （scripts 里的其它文件服务器上用不到，只传这一个。）
+:: scripts/gen_hero_wall.mjs MUST be uploaded: the "prebuild" hook in
+:: package.json runs it on the server during "npm run build", rescanning
+:: public/images/excellent_member/ to regenerate the avatar-wall manifest.
+:: (Nothing else in scripts/ is needed on the server - upload just that file.)
 set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519
 set TAR_FILE=%TEMP%\jxufe_acm_deploy.tar.gz
@@ -63,6 +68,14 @@ if errorlevel 1 (
     goto :fail
 )
 
+:: Tighten the private key ACL. OpenSSH refuses a key that other accounts can
+:: read ("UNPROTECTED PRIVATE KEY FILE") and then the whole deploy fails with
+:: "Permission denied (publickey)" - which is what happens when the project is
+:: copied to a folder that inherits broad permissions (e.g. another drive).
+:: Harmless when the key is already fine.
+icacls "%KEY_FILE%" /inheritance:r >nul 2>nul
+icacls "%KEY_FILE%" /grant:r "%USERNAME%:R" >nul 2>nul
+
 :: ---- 2. Pack project files locally ----
 echo [2/5] Packing project files...
 if exist "%TAR_FILE%" del /q "%TAR_FILE%"
@@ -77,7 +90,8 @@ echo [3/5] Uploading to server...
 ssh %SSH_OPTS% %TARGET% "mkdir -p %REMOTE_PATH%"
 if errorlevel 1 (
     echo [ERROR] Cannot connect to %TARGET% via SSH.
-    echo         Check the network, or re-install the deploy key ^(see header^).
+    echo         Check the network. If it says "UNPROTECTED PRIVATE KEY FILE",
+    echo         run: icacls ".deploy\id_ed25519" /inheritance:r /grant:r "%%USERNAME%%:R"
     goto :fail
 )
 scp %SCP_OPTS% "%TAR_FILE%" %TARGET%:%REMOTE_TAR%
