@@ -39,19 +39,16 @@ const nowColWidth = `calc((100% - var(--name-col)) / 12)`
 /** 每行一种颜色；取站点既有的调色板（主色 / 强调色 / 荣誉绿 / 会长金 / 紫 / 特等红），不新造色 */
 const PALETTE = ['#1a73e8', '#ff9800', '#2e7d32', '#a16207', '#7c3aed', '#c62828']
 
-/** 把同一行里重叠的区间分配到不同泳道：贪心，放得下就复用已有泳道 */
+/** 同一赛事的每个阶段**各占一行**（会长 2026-09-23：「我希望仍在不同行，只是取消横线」）。
+    早先是「月份重叠才下沉」的贪心泳道，而实际数据里一场赛事的各阶段月份并不重叠
+    （邀请赛 4-7 月 / 网络预选赛 9 月 / 区域赛 10-12 月），于是三条都落在同一行。
+    现在按 from 升序一条一行 —— 行数 = 阶段数；将来真出现月份重叠也天然分成两行。 */
 function packLanes(bars) {
-  const lanes = []
-  for (const bar of [...bars].sort((a, b) => a.from - b.from)) {
-    let lane = lanes.findIndex((last) => last < bar.from)
-    if (lane === -1) {
-      lane = lanes.length
-      lanes.push(0)
-    }
-    lanes[lane] = bar.to
-    bar.lane = lane
-  }
-  return lanes.length
+  const sorted = [...bars].sort((a, b) => a.from - b.from)
+  sorted.forEach((bar, i) => {
+    bar.lane = i
+  })
+  return sorted.length
 }
 
 const rows = computed(() => {
@@ -125,6 +122,8 @@ const rows = computed(() => {
       <div class="schedule__body">
         <!-- 当前月份列：一条贯穿全部行的淡蓝底（只此一条 ⇒ 天然连续，与行高无关） -->
         <span class="schedule__now" :style="{ left: nowColLeft, width: nowColWidth }" aria-hidden="true"></span>
+        <!-- 月份竖线：一条贯穿全部行（连行与行之间的留白一起），所以也放在行容器里 -->
+        <span class="schedule__vlines" aria-hidden="true"></span>
         <div
           v-for="row in rows"
           :key="row.slug"
@@ -296,8 +295,20 @@ const rows = computed(() => {
   position: relative;
   flex: 1 1 auto;
   min-width: 0;
-  /* 12 个月等宽网格：区间条按 left/width 百分比落格 */
+  /* 12 个月等宽：区间条按 left/width 百分比落格。
+     月份竖线**不在这里**画 —— 每行各画一份会被行间留白切断，改用贯穿全部行的
+     .schedule__vlines（见下）。 */
   height: calc(var(--lanes) * 30px);
+}
+/* 月份竖线：一整条贯穿所有行（连行间留白一起），与「当前月份高亮」同属一列的视觉 */
+.schedule__vlines {
+  position: absolute;
+  left: var(--name-col);
+  right: 0;
+  top: -30px; /* 向上够到月份刻度那一行：月份数字正好落在竖线顶端 */
+  bottom: -10px;
+  z-index: 0;
+  pointer-events: none;
   background-image: repeating-linear-gradient(
     to right,
     rgba(15, 23, 42, 0.06) 0 1px,
