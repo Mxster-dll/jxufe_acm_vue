@@ -35,7 +35,7 @@ set SITE_URL=https://jxufe-acm.cn
 :: BOTH must be uploaded - miss one and the server build fails outright.
 :: (Nothing else in scripts/ is needed on the server - upload just those two.
 ::  The thumbnail generators are PowerShell scripts and run locally only.)
-set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs scripts\gen_group_wall.mjs
+set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs scripts\gen_group_wall.mjs scripts\gen_event_badges.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519
 set TAR_FILE=%TEMP%\jxufe_acm_deploy.tar.gz
 set REMOTE_TAR=/tmp/jxufe_acm_deploy.tar.gz
