@@ -31,17 +31,22 @@
  * 才退回「周期 = 视口」的老取法。网格 = 视口 + 一个周期（两轴都要多铺一整个周期，
  * 这是这套设计避不开的代价）。
  *
- * ## 排布是打乱的，而且不让同图挨着
+ * ## 排布：先打乱，再让「同一个人的两张」隔开一整屏
  * 老写法是 `list[(r*Px + c) % n]` —— 顺序铺。它不会出现相邻同图，但每张重复的图
  * 都落在**同一个偏移**上（第 i 张和第 i+n 张恰好差固定的「几列几行」），
  * 于是整面墙是一张有规律的、会动的壁纸，一屏内同图的偏移只有一两种。
- * 现在改成「配平多重集 → 洗牌 → 八邻域冲突修复」，见 buildPeriod()：
- * 同一屏里同图的偏移会散成二三十种，看着就是杂乱的。
+ * 之后改成「配平多重集 → 洗牌 → 八邻域冲突修复」（buildPeriod()），偏移散开了，
+ * 但**一屏之内仍会撞见两张同一个人**（实测 1440×900 稳定 2 对，会长 2026-09-23 提出要治）。
+ * 现在首选「分栏周期」（buildSeparatedPeriod()）：周期切成 ≥2 个等宽栏，同一个人的
+ * 每一份都落在**同一列号、不同栏**上 → 任意两份都隔着一整个可见宽度，
+ * **一屏之内不可能出现两张同一个人**。排不出来（人少 / 屏大 / 格数超预算）才退回
+ * buildPeriod() 的多重集洗牌 —— 那种情况下屏里能放的格子比人数还多，重复躲不掉。
  *
- * ## 图不够会重复 —— 那是故意的，但别让它显得有规律
+ * ## 图不够会重复 —— 躲不掉，但可以让它落在屏幕外
  * n 张图铺 m 格就重复 ⌈m/n⌉ 次，这在数学上躲不掉（36 张图、一屏 55 格，
- * 一屏里必然有约 19 格是"第二次出现"）。能做的是：让这些重复**落在没有规律的位置上**，
- * 并且不挨在一起。**往图片文件夹里加图不用改任何代码**，n 变大 → 一屏内的重样自然变少。
+ * 一屏里必然有约 19 格是"第二次出现"）。分栏周期做的就是：让这些"第二次出现"
+ * **永远落在屏幕之外**（相隔一整屏宽），而不是落在随机的、随时可能被看见的位置上。
+ * **往图片文件夹里加图不用改任何代码**，n 变大 → 同一个人的份数自然变少。
  *
  * ## 响应式
  * 瓷砖边长不写死在 JS 里，而是由 CSS 变量 `--wall-tile` 给目标值、媒体查询调档，
@@ -222,10 +227,34 @@ const periodFor = (n, cols0, rows0, budget) => {
     const py = Math.max(rows0 + 1, Math.round(rows0 * k), Math.ceil(n / px))
     return { px, py }
   }
-  // 从大到小试，取第一个「格数塞得进预算」的缩放系数
+  const cells = (px, py) => (cols0 + px) * (rows0 + py)
+
+  /* ① 首选「分栏周期」：同一个人的每一份都隔着一整个可见宽度，于是**任何一屏都不可能
+        同时出现两张同一个人的头像**（构造与证明见 buildSeparatedPeriod）。两个方向各试一次，
+        谁的格数装得进预算就用谁。附带条件 `px*py ≤ bands*n`：一个栏装不下同一个人的全部
+        副本时排不出来，宁可退回老写法也别排出坏周期。 */
+  const bands = 2
+  if (n) {
+    const opts = []
+    {
+      const px = bands * cols0
+      const py = Math.max(rows0 + 1, Math.ceil(n / px))
+      opts.push({ px, py, sep: 'x' })
+    }
+    {
+      const py = bands * rows0
+      const px = Math.max(cols0 + 1, Math.ceil(n / py))
+      opts.push({ px, py, sep: 'y' })
+    }
+    for (const c of opts) {
+      if (c.px * c.py <= bands * n && cells(c.px, c.py) <= budget) return c
+    }
+  }
+
+  // ② 退回老写法：周期比视口大一圈、重复格尽量分散 —— 但同屏仍可能出现两张同一个人
   for (let k = PERIOD_MAX_SCALE; k >= 1; k -= 0.05) {
     const c = fit(k)
-    if ((cols0 + c.px) * (rows0 + c.py) <= budget) return c
+    if (cells(c.px, c.py) <= budget) return { px: c.px, py: c.py, sep: '' }
   }
   /* 这个瓦片尺寸下排不出「比视口大一圈」的周期 —— 返回 null 让 geom 换个尺寸再试。
      周期退化成和视口一样大时，一屏正好是一个完整周期、上下两端就是同一张脸，
@@ -259,6 +288,7 @@ const geom = computed(() => {
        ③ lax      —— 预算全超了，只求瓦片最贴近 CSS 目标（宁可多几个节点，也别算不出几何）。
      每一档都取「离 CSS 给的目标瓦片最近」的那个尺寸。 */
   let best = null
+  let sepBest = null
   let budgetOk = null
   let lax = null
   for (let s = 40; s <= 260; s += 4) {
@@ -266,14 +296,28 @@ const geom = computed(() => {
     const rows0 = Math.ceil(H / s)
     const p = periodFor(n, cols0, rows0, props.blockBudget)
     const pp = p || fallbackPeriod(n, cols0, rows0)
-    const cand = { s, px: pp.px, py: pp.py, cols: cols0 + pp.px, rows: rows0 + pp.py }
+    const cand = {
+      s,
+      px: pp.px,
+      py: pp.py,
+      cols: cols0 + pp.px,
+      rows: rows0 + pp.py,
+      c0: cols0,
+      r0: rows0,
+      sep: (p && p.sep) || '',
+    }
     cand.cells = cand.cols * cand.rows
     const closer = (b) => !b || Math.abs(s - base) < Math.abs(b.s - base)
     if (closer(lax)) lax = cand
     if (cand.cells <= props.blockBudget && closer(budgetOk)) budgetOk = cand
+    /* 分栏周期（sep）优先：它是唯一能保证「一屏不出现两张同一个人」的排布，
+       代价只是周期格数多些 —— 只要装得进预算就用它，装不下才退回老排布。 */
+    if (cand.sep && cand.cells <= props.blockBudget && closer(sepBest)) sepBest = cand
     if (p && closer(best)) best = cand
   }
-  return best || budgetOk || lax || { s: base, px: 1, py: 1, cols: 2, rows: 2 }
+  return (
+    sepBest || best || budgetOk || lax || { s: base, px: 1, py: 1, cols: 2, rows: 2, c0: 1, r0: 1, sep: '' }
+  )
 })
 
 /* ── 漂移：方向每次加载随机，两轴各走自己的一整个周期 ── */
@@ -348,9 +392,97 @@ const clashesAt = (grid, r, c, px, py) => {
   return hits
 }
 
+/* ── 分栏周期：让「同一个人的两张头像」永远隔着一整个可见宽度 ──
+   会长 2026-09-23：「成员墙上尽量不要同时出现两张代表同一个人的头像」。
+
+   做法：把周期块横向切成 bands(≥2) 个等宽栏，每栏正好 cols0 列（= 一屏最多能看到的列数）。
+   同一个人的每一份都落在**同一列号、不同栏**里，于是任意两份的横向距离 = 整数倍 × cols0
+   —— 而一屏最多只跨 cols0 列，**装不下相距 cols0 的两份**，同屏重复从「大概率」变成「不可能」。
+   栏内行序随机洗牌、人的顺序也洗过，观感与老写法没有区别（同栏同列不会撞人）。
+
+   代价：周期格数要 ≥ 2×人数（每人至多两份），所以只在预算内才用；
+   排不出来（人少、屏大、预算紧）就退回 buildPeriod 的多重集洗牌，那时候重复不可避免
+   —— 一屏能放下的格子数比人数还多，怎么排都得有人出现两次。 */
+const buildSeparatedPeriod = (n, cols0, rows0, px, py, rng, axis = 'x') => {
+  /* y 轴分栏：行列互换用同一套构造，再转置回来 —— 保证的是「隔着一整屏高」 */
+  if (axis === 'y') {
+    const g = buildSeparatedPeriod(n, rows0, cols0, py, px, rng, 'x')
+    if (!g) return null
+    const out = new Array(px * py)
+    for (let r = 0; r < py; r++) {
+      for (let c = 0; c < px; c++) out[r * px + c] = g[c * py + r]
+    }
+    return out
+  }
+
+  const cols = cols0
+  const bands = Math.floor(px / cols)
+  if (bands < 2 || !n || cols < 1 || py < 1) return null
+  const N = bands * cols * py
+  if (N < n) return null
+  const q = Math.floor(N / n) // 每人至少几份
+  const extra = N - q * n // 其中多少人要多占一份
+  if (q < 1 || q + (extra > 0 ? 1 : 0) > bands) return null
+
+  const mix = (arr) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = (rng() * (i + 1)) | 0
+      const t = arr[i]
+      arr[i] = arr[j]
+      arr[j] = t
+    }
+    return arr
+  }
+
+  // ① 把人随机分到各列，列内人数尽量平均
+  const ids = []
+  for (let i = 0; i < n; i++) ids.push(i)
+  mix(ids)
+  const sizes = new Array(cols).fill(Math.floor(n / cols))
+  for (let c = 0; c < n % cols; c++) sizes[c]++
+
+  const grid = new Array(N).fill(-1)
+  const stride = bands * cols
+  let at = 0
+  for (let c = 0; c < cols; c++) {
+    const m = sizes[c]
+    const multi = bands * py - q * m // 这一列里要「多占一份」的人数
+    if (multi < 0 || multi > m) return null
+    const people = []
+    for (let i = 0; i < m; i++) {
+      people.push({ id: ids[at + i], k: q + (i < multi ? 1 : 0), used: new Array(bands).fill(false) })
+    }
+    at += m
+    /* ② 给每个人挑 k 个**不同的栏**，并且每栏正好落 py 个（多份的人先挑空位最多的栏） */
+    const cap = new Array(bands).fill(py)
+    const slot = []
+    for (let b = 0; b < bands; b++) slot.push([])
+    const order = people.map((_, i) => i).sort((a, b) => people[b].k - people[a].k)
+    for (const i of order) {
+      for (let t = 0; t < people[i].k; t++) {
+        let pick = -1
+        for (let b = 0; b < bands; b++) {
+          if (people[i].used[b] || cap[b] <= 0) continue
+          if (pick < 0 || cap[b] > cap[pick]) pick = b
+        }
+        if (pick < 0) return null
+        people[i].used[pick] = true
+        cap[pick]--
+        slot[pick].push(people[i].id)
+      }
+    }
+    // ③ 每栏那 py 个位置随机排进本栏的各行
+    for (let b = 0; b < bands; b++) {
+      if (slot[b].length !== py) return null
+      mix(slot[b])
+      for (let r = 0; r < py; r++) grid[r * stride + b * cols + c] = slot[b][r]
+    }
+  }
+  return grid.every((v) => v >= 0) ? grid : null
+}
+
 /** 排出一个 px×py 的周期块，返回长度 px*py 的图片下标数组 */
-const buildPeriod = (n, px, py, rng) => {
-  const N = px * py
+const buildPeriod = (n, px, py, rng) => {  const N = px * py
   /* ① 配平多重集：每张图 ⌊N/n⌋ 或 ⌈N/n⌉ 份，加起来正好 N */
   const base = Math.floor(N / n)
   const extra = N - base * n
@@ -421,10 +553,16 @@ const buildPeriod = (n, px, py, rng) => {
 /** 当前几何下的周期块。几何没变就是同一份，所以窗口缩放时不会重新洗牌 */
 const periodGrid = computed(() => {
   const n = items.value.length
-  const { px, py } = geom.value
+  const { px, py, c0, r0, sep } = geom.value
   if (!n || px < 1 || py < 1) return []
   const seed = (layoutSeed ^ Math.imul(n, 0x9e3779b1) ^ Math.imul(px, 0x85ebca6b) ^ Math.imul(py, 0xc2b2ae35)) >>> 0
-  return buildPeriod(n, px, py, makeRng(seed))
+  const rng = makeRng(seed)
+  /* 分栏周期排不出来（人数太少 / 屏太大）就退回多重集洗牌 —— 那种情况下周期怎么排都得有人重复 */
+  if (sep) {
+    const g = buildSeparatedPeriod(n, c0, r0, px, py, rng, sep)
+    if (g) return g
+  }
+  return buildPeriod(n, px, py, rng)
 })
 
 /* ── 平铺序列：把周期块按 (r % py, c % px) 铺满整张网格 ── */
@@ -1065,10 +1203,13 @@ watch(() => props.hoverCard, () => clearPointerTile())
   text-align: left;
   opacity: 0;
   pointer-events: none;
-  transform: translate(calc(-50% + var(--shift-x)), calc(-50% + var(--shift-y))) scale(0.88);
+  /* 起点压得更小 + 260ms 带一点回弹的曲线 —— 会长 2026-09-23：「整个卡片要有一个放大的
+     动画」。原来的 0.88 配 200ms 只有 12% 的幅度，肉眼几乎看不出来（实测补间只有两帧
+     落在中间值上），所以把起点收到 0.78 并把时长放到 260ms。 */
+  transform: translate(calc(-50% + var(--shift-x)), calc(-50% + var(--shift-y))) scale(0.78);
   transition:
-    opacity 200ms cubic-bezier(0.1, 0.9, 0.2, 1),
-    transform 200ms cubic-bezier(0.1, 0.9, 0.2, 1);
+    opacity 160ms ease-out,
+    transform 260ms cubic-bezier(0.22, 1.32, 0.36, 1);
 }
 .wall__avatar {
   flex: none;
@@ -1254,10 +1395,11 @@ watch(() => props.hoverCard, () => clearPointerTile())
   border-radius: 18px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
   overflow: hidden; /* 圆角要能裁住里面的滚动区 */
-  animation: wall-sheet-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: wall-sheet-in 260ms cubic-bezier(0.22, 1.32, 0.36, 1) both;
 }
 @keyframes wall-sheet-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  /* 与悬停卡同一套「放大进场」：起点 0.92（原来 0.97 基本看不出在放大） */
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
   to { opacity: 1; transform: none; }
 }
 
