@@ -469,22 +469,10 @@ const expandMedalCounts = (text) =>
   )
 
 /**
- * 页面用：某人的胶囊文本。自动汇总为主，一条记录都没有才退回 MANUAL_PILLS
- * —— 与 pillsFromRecords 同口径，只是支持按显示模式切换（会长 2026-09-23）。
+ * 页面用：某人的**分段**胶囊（两个页面都用这份）。
+ * 自动汇总为主，一条记录都没有才退回 MANUAL_PILLS 的分段；支持按显示模式切换
+ * （会长 2026-09-23）。要整串文本的地方（头像墙标签、核验脚本）用 recordsToPills()。
  * @param {Map<string, object[]>} records loadHonorRecords() 的返回值
- */
-export function pillsForName(records, name, mode = 'count') {
-  const texts = recordsToPills(records?.get?.(name) || [], mode)
-  if (texts.length) return texts
-  return (MANUAL_PILLS[name] || []).map((parts) => {
-    const text = parts.join(' ')
-    return mode === 'icons' ? expandMedalCounts(text) : text
-  })
-}
-
-/**
- * 与 pillsForName 同源的**分段**版本（两个页面用这份）。
- * 手工兜底那几条的分段写在 MANUAL_PILLS 里，与自动汇总同形。
  * @returns {string[][]}
  */
 export function pillPartsForName(records, name, mode = 'count') {
@@ -523,7 +511,6 @@ async function fetchJson(url) {
 }
 
 let recordsCache = null
-let pillsCache = null
 
 /**
  * 加载并缓存「姓名 → 获奖记录」原始索引。
@@ -548,21 +535,4 @@ export function loadHonorRecords() {
       })
   }
   return recordsCache
-}
-
-/**
- * 加载并缓存「姓名 → 胶囊」索引（两个页面共用同一份缓存）。
- * 由上面的原始记录派生，保证胶囊与排名永远同一口径。
- */
-export function loadHonorPills() {
-  if (!pillsCache) {
-    pillsCache = loadHonorRecords().then((records) => pillsFromRecords(records))
-  }
-  return pillsCache
-}
-
-/** 供核验脚本/调试用：清掉缓存后重新加载 */
-export function resetHonorPills() {
-  recordsCache = null
-  pillsCache = null
 }

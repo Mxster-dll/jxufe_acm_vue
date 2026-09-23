@@ -38,7 +38,7 @@
  *  四段全同才可能并列，保证同一份数据永远得到同一个顺序（构建/渲染可复现）。
  */
 
-import { collectRecords, MANUAL_PILLS, loadHonorRecords, resetHonorPills } from './honorPills.js'
+import { collectRecords, MANUAL_PILLS, loadHonorRecords } from './honorPills.js'
 
 /* ───────────────────────── 表 1：档位基准分 ───────────────────────── */
 
@@ -437,12 +437,6 @@ export function sortByRanking(list = [], byName = new Map()) {
 export async function loadMemberRanking(members = []) {
   const recordsByName = await loadHonorRecords()
   return rankMembers({ members, recordsByName, manualPills: MANUAL_PILLS })
-}
-
-/** 供核验脚本使用：清缓存后重算 */
-export async function resetMemberRanking(members = []) {
-  resetHonorPills()
-  return loadMemberRanking(members)
 }
 
 export { collectRecords }

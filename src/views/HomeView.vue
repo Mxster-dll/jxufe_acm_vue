@@ -1062,7 +1062,6 @@ const { newsList, loading, error } = useNews();
     );
   background-size: 100% 100%;
   cursor: default;
-  transition: --hero-veil 220ms ease;
 }
 
 /* ── 横滚代码背景 ── */
