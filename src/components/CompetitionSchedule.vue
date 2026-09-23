@@ -131,10 +131,11 @@ const rows = computed(() => {
         <!-- 月份竖线：一条贯穿全部行（连行与行之间的留白一起），所以也放在行容器里 -->
         <span class="schedule__vlines" aria-hidden="true"></span>
         <div
-          v-for="row in rows"
+          v-for="(row, idx) in rows"
           :key="row.slug"
+          v-reveal="'fade-up'"
           class="schedule__row"
-          :style="{ '--row-color': row.color, '--lanes': row.lanes }"
+          :style="{ '--row-color': row.color, '--lanes': row.lanes, '--reveal-index': idx }"
         >
           <div class="schedule__name">
             <img
@@ -160,55 +161,57 @@ const rows = computed(() => {
       </div>
     </div>
 
-    <!-- 窄屏：与宽屏**同一套 12 个月坐标轴**的表格式布局（会长 2026-09-23 第三次要求：
-         「统一的时间轴/表」）。前三版都是一场赛事一块、各自竖排（每块自带时间条），
-         会长要的是月份轴只有一份、所有赛事共用它。故这里用「组标题 + 每阶段一行」：
-         组标题（图标 + 赛事名）占满整行，阶段行 = 左侧阶段名（84px，12px 字）
-         + 右侧轨道（区间用一块无文字的彩色胶囊表示，位置与宽屏逐像素一致）。
-         320px 宽的余量：页面左右各 10%、卡片内边距 14px ⇒ 可用约 288px
-         = 阶段名列 84px + 12 格 × 17px，故不横向滚动、字号也不必压到 10px 以下。 -->
-    <div class="schedule__mtable" :style="{ '--now-index': nowMonth - 1 }">
-      <div class="schedule__mtop">
-        <span class="schedule__munit">月份</span>
-        <!-- 刻度只写数字：390px 宽的手机上每格 17.8px，「10月」三个字符放不下会折成两行
-             （实测行高 38px）；「1」~「12」配上左边这枚「月份」角标一样读得懂。 -->
-        <div class="schedule__maxis" aria-hidden="true">
-          <span v-for="(m, i) in MONTHS" :key="m" :class="{ 'is-now': i + 1 === nowMonth }">{{ i + 1 }}</span>
-        </div>
-      </div>
-      <div class="schedule__mbody">
-        <!-- 当前月份列：与表头那格同色同宽、上下贴合（与宽屏同一条口径） -->
-        <span class="schedule__mnow" aria-hidden="true"></span>
-        <span class="schedule__mvlines" aria-hidden="true"></span>
-        <template v-for="row in rows" :key="row.slug">
-          <p class="schedule__mgroup" :style="{ '--row-color': row.color }">
-            <img
-              v-for="(lg, i) in row.logos"
-              :key="i"
-              :src="lg"
-              :alt="row.name"
-              class="schedule__logo"
-            />
-            <span class="schedule__mgroup-name">{{ row.name }}</span>
-            <span class="schedule__mgroup-span">{{ row.spanText }}</span>
-          </p>
-          <p
-            v-for="(bar, i) in row.bars"
-            :key="i"
-            class="schedule__mrow"
-            :style="{ '--row-color': row.color }"
-          >
-            <span class="schedule__mstage-name">{{ bar.stage }}</span>
-            <span class="schedule__mtrack">
-              <span
-                class="schedule__mbar"
-                :style="{ left: `${bar.left}%`, width: `${bar.width}%` }"
-                :title="`${row.name} · ${bar.stage}（${bar.range}）${bar.note ? ' —— ' + bar.note : ''}`"
-              ></span>
-            </span>
-          </p>
-        </template>
-      </div>
+    <!-- 窄屏：**竖排**月份轴（会长 2026-09-23 第四次要求：「移动端的竞赛时间卡片改成竖向的」）。
+         横轴那版把 12 个月挤进 204px —— 每格 17px，「10月」都得砍成「10」；
+         竖过来之后月份占 12 行（每行 26px），宽度让给「每个赛事一列」：
+         阶段的区间就成了该列里一条纵向色块，一眼看出「谁在几月忙」。
+         数据、配色与宽屏完全同源（都来自 rows 的 bars），只是行与列对调。 -->
+    <div
+      class="schedule__mv"
+      :style="{ gridTemplateColumns: `40px repeat(${rows.length}, minmax(0, 1fr))` }"
+    >
+      <span class="schedule__mvcorner">月份</span>
+
+      <p
+        v-for="(row, ci) in rows"
+        :key="row.slug"
+        v-reveal="'fade-up'"
+        class="schedule__mvhead"
+        :style="{ gridRow: 1, gridColumn: ci + 2, '--reveal-index': ci, '--row-color': row.color }"
+      >
+        <img v-for="(lg, i) in row.logos" :key="i" :src="lg" :alt="row.name" class="schedule__logo" />
+        <span class="schedule__mvhead-name">{{ row.name }}</span>
+      </p>
+
+      <!-- 当前月份那一行：横贯整行、与左边那格同色 —— 与宽屏那条「当前月份列」是一个意思 -->
+      <span class="schedule__mvnow" :style="{ gridRow: nowMonth + 1 }" aria-hidden="true"></span>
+
+      <span
+        v-for="(m, i) in MONTHS"
+        :key="m"
+        class="schedule__mvmonth"
+        :class="{ 'is-now': i + 1 === nowMonth }"
+        :style="{ gridRow: i + 2 }"
+        >{{ m }}</span
+      >
+
+      <!-- 每个阶段 = 一列里的一段纵向色块，跨 from..to 行（与宽屏那条横向区间条一一对应） -->
+      <template v-for="(row, ci) in rows" :key="row.slug + '-bars'">
+        <span
+          v-for="(bar, i) in row.bars"
+          :key="i"
+          v-reveal="'fade-up'"
+          class="schedule__mvbar"
+          :style="{
+            '--reveal-index': ci,
+            '--row-color': row.color,
+            gridRow: `${bar.from + 1} / span ${bar.to - bar.from + 1}`,
+            gridColumn: ci + 2,
+          }"
+          :title="`${row.name} · ${bar.stage}（${bar.range}）${bar.note ? ' —— ' + bar.note : ''}`"
+          >{{ bar.stage }}</span
+        >
+      </template>
     </div>
   </section>
 </template>
@@ -358,140 +361,91 @@ const rows = computed(() => {
   z-index: 2;
 }
 
-/* ── 窄屏：与宽屏同一套 12 个月坐标轴的表格式布局（会长 2026-09-23 第三次要求）──
-   月份轴只有一份、所有赛事共用；每赛事一个组标题行，每个阶段一行
-   （左侧阶段名 12px + 右侧轨道里一块无文字的彩色胶囊，位置与宽屏的区间条同源：
-    都是 left/width 百分比，故两版画出来是同一条区间）。
-   前两版（6 列窄柱状图、一场一竖条的时间线）都被否掉：前者字号被压到 9.6px，
-   后者各块自带时间轴、不是「统一」的一条。 */
-.schedule__mtable {
+/* ── 窄屏：**竖排**月份轴（会长 2026-09-23 第四次要求：「移动端的竞赛时间卡片改成竖向的」）──
+   横轴版本把 12 个月压进 204px：每格 17px，「10月」都得砍成「10」，故事实上读不出月份。
+   竖过来以后月份占 12 行（每行至少 26px，够写「10月」），宽度全留给「每个赛事一列」——
+   阶段的区间就是该列里一段纵向色块，跨 from..to 行，与宽屏那条横向区间条一一对应。
+   前四版（6 列窄柱状图 → 一场一竖条的时间线 → 横轴统一表）都在跟「手机没有宽度」较劲，
+   这一版把稀缺的那个维度换成了行高。 */
+.schedule__mv {
   display: none;
-  /* 阶段名列固定 84px：320px 宽的手机上（页面左右各 10% + 卡片内边距 14px ≈ 288px）
-     余下 204px 分给 12 格，每格 17px —— 「10月」用 10px 字刚好放得下，不必横向滚动 */
-  --m-name-col: 84px;
-  padding: 14px 14px 16px;
+  /* 第一行是赛事表头，下面 12 行是月份；minmax(26px, auto) 让跨月的色块内容多时能撑开 */
+  grid-template-rows: auto repeat(12, minmax(26px, auto));
+  column-gap: 4px;
+  padding: 12px 12px 14px;
   background: #fff;
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: var(--radius-xl);
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.06);
 }
-.schedule__mtop {
-  display: flex;
-  align-items: stretch;
-}
-/* 角标占住阶段名那一列，月份刻度才与下面的轨道严格对齐（不用 margin 对齐，避免 1px 偏差） */
-.schedule__munit {
-  flex: 0 0 var(--m-name-col);
+/* 角标占住月份那一列，表头才与下面的色块严格对齐（不用 margin 对齐，避免 1px 偏差） */
+.schedule__mvcorner {
+  grid-row: 1;
+  grid-column: 1;
   display: flex;
   align-items: center;
   font-size: 0.625rem;
   color: var(--text-muted);
 }
-.schedule__maxis {
-  flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  font-size: 0.625rem; /* 10px —— 每格 17.8px，只放数字（放「10月」会折行） */
-  color: var(--text-muted);
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-.schedule__maxis span {
-  padding: 3px 0;
-}
-/* 表头也点亮：与下面那条列高亮同色同宽、只倒上面两角 ⇒ 拼成一整列（与宽屏一致） */
-.schedule__maxis span.is-now {
-  color: var(--primary);
-  font-weight: 700;
-  background: rgba(26, 115, 232, 0.09);
-  border-radius: 4px 4px 0 0;
-}
-.schedule__mbody {
-  position: relative;
-  padding-top: 6px;
-}
-/* 当前月份列：一条贯穿全部组与阶段行（放成一条才天然连续，与行高无关） */
-.schedule__mnow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--m-name-col) + (100% - var(--m-name-col)) * var(--now-index, 0) / 12);
-  width: calc((100% - var(--m-name-col)) / 12);
-  z-index: 0;
-  background: rgba(26, 115, 232, 0.09);
-  pointer-events: none;
-}
-/* 月份竖线：同样一条贯穿到底，并且向上覆盖到月份轴那一行（top 为负） */
-.schedule__mvlines {
-  position: absolute;
-  left: var(--m-name-col);
-  right: 0;
-  top: -22px;
-  bottom: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    to right,
-    rgba(15, 23, 42, 0.06) 0 1px,
-    transparent 1px calc(100% / 12)
-  );
-}
-.schedule__mgroup {
-  position: relative;
-  z-index: 1;
+.schedule__mvhead {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin: 10px 0 2px;
+  justify-content: flex-end;
+  gap: 2px;
+  margin: 0 0 6px;
+  text-align: center;
 }
-.schedule__mgroup:first-child {
-  margin-top: 0;
-}
-.schedule__mgroup .schedule__logo {
+.schedule__mvhead .schedule__logo {
   width: 18px;
   height: 18px;
   border-radius: 4px;
 }
-.schedule__mgroup-name {
-  font-size: 0.8125rem; /* 13px */
+.schedule__mvhead-name {
+  font-size: 0.625rem; /* 10px —— 列宽约 46px，「百度之星」四个字刚好一行 */
   font-weight: 600;
   color: var(--text);
+  white-space: nowrap;
 }
-.schedule__mgroup-span {
-  margin-left: auto;
-  font-size: 0.6875rem; /* 11px */
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
+/* 当前月份那一行：横贯整行（含月份格），与宽屏那条列高亮同色、同一个意思 */
+.schedule__mvnow {
+  grid-column: 1 / -1;
+  z-index: 0;
+  background: rgba(26, 115, 232, 0.09);
+  pointer-events: none;
 }
-.schedule__mrow {
+.schedule__mvmonth {
+  /* 月份格要压在色带之上（静态元素的背景/文字会被定位元素盖住） */
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  height: 22px;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  border-top: 1px solid rgba(15, 23, 42, 0.05);
 }
-.schedule__mstage-name {
-  flex: 0 0 var(--m-name-col);
-  padding-right: 6px;
-  font-size: 0.75rem; /* 12px —— 会长要求的下限 */
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.schedule__mvmonth.is-now {
+  color: var(--primary);
+  font-weight: 700;
 }
-.schedule__mtrack {
+/* 区间色块：列里的一段，底色是该赛事的行色（与宽屏区间条同色） */
+.schedule__mvbar {
   position: relative;
-  flex: 1 1 auto;
-  height: 22px;
-}
-/* 区间胶囊：不放文字（最长一个月只有 17px 宽），阶段名在行首已经写了 */
-.schedule__mbar {
-  position: absolute;
-  top: 5px;
-  height: 12px;
-  min-width: 6px;
-  border-radius: var(--radius-full);
+  z-index: 1;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+  border-radius: 6px;
   background: var(--row-color);
+  color: #fff;
+  font-size: 0.625rem; /* 10px：列宽约 46px，「校内选拔赛」折两行正好装下 */
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -502,8 +456,8 @@ const rows = computed(() => {
   .schedule__chart {
     display: none;
   }
-  .schedule__mtable {
-    display: block;
+  .schedule__mv {
+    display: grid;
   }
 }
 /* ── 当前月份列（会长 2026-09-23：「把当前月份列高亮」＋「表头的高亮应与此列的高亮是一体的」）──

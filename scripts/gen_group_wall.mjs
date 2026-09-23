@@ -13,6 +13,11 @@
  * 输出（都是生成物，请勿手改）：
  *   group_wall.manifest.json   { source, count, images[] }        —— 墙上铺哪些图
  *   group_wall.json            { tiles: { 文件名: 文案 } }         —— 每格的姓名/副题/标签
+ *   excellent_members.json     { members[] }                      —— 优秀成员页的名单
+ *
+ * 为什么优秀成员页的名单也在这里生成：它的入册判据是「综合分 ≥ 阈值」，而**综合分只有
+ *   本脚本算得出来**（要用同一份洗过的手写荣誉 + 同一份 awards 记录）。放到别处算，
+ *   迟早会与页面上显示的名次对不上。
  *
  * 为什么不复用首页那份 hero_wall.json：
  *   那份是**手写**的 33 人（优秀成员），而这里是 138 人、且内容全部可推导
@@ -37,7 +42,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { buildHonorPills, collectRecords, MANUAL_PILLS } from '../src/utils/honorPills.js'
+import { buildHonorPills, collectRecords, recordsToDetails, MANUAL_PILLS } from '../src/utils/honorPills.js'
 import { rankMembers } from '../src/utils/honorRanking.js'
 import { normalizeHonors } from '../src/utils/honorType.js'
 import { stripCoveredHonors } from '../src/utils/honorCoverage.js'
@@ -147,6 +152,8 @@ for (const f of AWARD_FILES) awards[f] = readJson(path.join(DATA, `awards/${f}.j
 const competitions = readJson(path.join(DATA, 'competitions.json'))
 
 const pillsByName = buildHonorPills({ awards, competitions })
+/** 逐条记录：卡片用汇总胶囊（pillsByName），浮窗与排名用这份 */
+const records = collectRecords({ awards, competitions })
 
 /** 站点两份名单的荣誉：按真名索引（与墙上的 realName 对齐） */
 const siteHonors = new Map()
@@ -215,6 +222,38 @@ const tagsOf = (m) => {
   return [...tags.slice(0, MAX_TAGS - 1), { text: '…', type: 'more' }]
 }
 
+/* 浮窗（.wall-sheet）那一版标签：顺序与卡片完全一致，**唯独把战绩胶囊换成逐条明细**。
+   会长 2026-09-23：「点出成员个人浮窗时，荣誉不再以『计数』显示，而是用『详细条目』」。
+   卡片只有 360×132 宽，塞不下「🥇第47届 ICPC 亚洲区域赛（南京）金牌」这种长句 ——
+   所以卡片继续用计数版（🥇1🥈2），浮窗用明细版（浮窗正文自己滚，不设枚数上限）。
+   明细文案与优秀成员页「详细条目」模式同源（recordsToDetails，含 emoji 与奖牌说法）。 */
+const sheetTagsOf = (m) => {
+  const tags = []
+
+  const injected = ruleHonors.get(String(m.realName || m.name || '').trim())
+  if (injected) tags.push(...injected.map((t) => ({ ...t })))
+
+  if (m.title) tags.push({ text: String(m.title), type: 'leader' })
+
+  const duty = m.realName ? duties.people?.[m.realName] : null
+  if (Array.isArray(duty)) for (const d of duty) if (d?.text) tags.push({ text: String(d.text), type: 'honor' })
+
+  const details = m.realName ? recordsToDetails(records.get(m.realName) || []) : []
+  for (const d of details) {
+    const text = `${d.emoji || ''}${d.title || ''}${d.medalText || ''}`
+    if (text) tags.push({ text, type: 'contest' })
+  }
+
+  const seen = new Set(tags.map((t) => t.text))
+  for (const entry of manualHonorsOf(m)) {
+    if (!entry.text || seen.has(entry.text)) continue
+    seen.add(entry.text)
+    tags.push(entry)
+  }
+
+  return tags
+}
+
 // ---------- 组装 ----------
 /** public/ 下这个站内绝对路径存在吗（生成时判一次，免得墙上出现碎图） */
 const existsInPublic = (url) => {
@@ -262,7 +301,7 @@ for (const p of [...membersJson, ...leadersJson]) {
 }
 const { byName: scoreByName } = rankMembers({
   members: [...scorePool.values()],
-  recordsByName: collectRecords({ awards, competitions }),
+  recordsByName: records,
   manualPills: MANUAL_PILLS,
 })
 
@@ -294,6 +333,45 @@ if (SCORE_THRESHOLD > 0) {
       fromScore: Number(row.total.toFixed(2)),
     })
     addedByScore.push(`${name} ${row.total.toFixed(1)} 分`)
+  }
+}
+
+/* ── 优秀成员页的自动入册（会长 2026-09-23）─────────────────────────
+   原话：「我希望你设定一个标度，当综合分（也就是优秀成员页用于排名的分数）超过
+   一定阈值时，自动加入优秀成员页」。
+   判据与墙上的 scoreThreshold **是同一份分数**（honorRanking.js 的总分：比赛奖牌分 +
+   手写战绩分 + 荣誉加项 ×1.5），所以页面上看到的分数就是入册依据，不存在两套口径。
+   阈值写在 wall_rules.json 的 excellentScoreThreshold（会长可调，0 = 关闭这条规则）。
+   产出 public/data/excellent_members.json = members.json **原样** + 自动入册的人（auto: true）。
+   members.json 一个字都不动：它是会长手写的真源，也是本生成器的输入。 */
+const EXCELLENT_THRESHOLD = Number(rules.excellentScoreThreshold) || 0
+const memberKeys = new Set(membersJson.map((m) => String(m?.name || '').trim()))
+const excellentAdded = []
+const excellentSkipped = []
+if (EXCELLENT_THRESHOLD > 0) {
+  for (const [name, row] of scoreByName) {
+    if (row.total < EXCELLENT_THRESHOLD || memberKeys.has(name)) continue
+    const photo = String(sitePhoto.get(name) || '').trim()
+    // 没有可用头像的人进不了这一页（卡片左边就是头像位），跳过并记一笔
+    if (!photo || !existsInPublic(photo)) {
+      excellentSkipped.push(`${name} ${row.total.toFixed(1)} 分`)
+      continue
+    }
+    const site = [...membersJson, ...leadersJson].find((p) => String(p?.name || '') === name)
+    const wall = members.find((m) => String(m.realName || m.name || '').trim() === name)
+    excellentAdded.push({
+      name,
+      class: siteClass.get(name) || '',
+      photo,
+      // 手写荣誉与墙上那份同源（已经过剥覆盖 + 归一化），战绩胶囊由页面按姓名自动汇总
+      honors: manualHonorsOf(wall || { name, realName: name }),
+      // 匿名同学对外仍走 displayName，别把真名写进页面
+      ...(site?.displayName || wall?.displayName
+        ? { displayName: String(site?.displayName || wall?.displayName) }
+        : {}),
+      auto: true,
+      score: Number(row.total.toFixed(2)),
+    })
   }
 }
 
@@ -341,6 +419,8 @@ const items = shuffle(members).map((m) => {
       line: String(m.className || '').trim() || (m.realName ? siteClass.get(m.realName) || '' : ''),
       full: img.full,
       tags: tagsOf(m),
+      // 浮窗用明细版（不设上限、不补「…」）；见 sheetTagsOf 的注释
+      sheetTags: sheetTagsOf(m),
       // 只有主仓库写过的留言才落这个字段；没有就整个字段不写，不在 JSON 里堆空串
       ...(message ? { message } : {}),
     },
@@ -359,6 +439,13 @@ console.log(
     (addedByScore.length ? `新增 ${addedByScore.length} 人 → ${addedByScore.join('、')}` : '无新增（墙上的人已覆盖全部达标者）') +
     (skippedByScore.length ? `；${skippedByScore.length} 人达标但无头像被跳过（${skippedByScore.join('、')}）` : '')
 )
+console.log(
+  `[group-wall] 优秀成员页阈值 ${EXCELLENT_THRESHOLD} 分：` +
+    (excellentAdded.length
+      ? `自动入册 ${excellentAdded.length} 人 → ${excellentAdded.map((m) => `${m.name} ${m.score}`).join('、')}`
+      : '无新增（达标者都已在名单里）') +
+    (excellentSkipped.length ? `；${excellentSkipped.length} 人达标但无头像被跳过（${excellentSkipped.join('、')}）` : '')
+)
 
 const now = new Date().toISOString()
 writeJson(path.join(DATA, 'group_wall.manifest.json'), {
@@ -373,10 +460,24 @@ writeJson(path.join(DATA, 'group_wall.json'), {
     '生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。' +
     '由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、' +
     '荣誉来自 group_members.json + members.json + leaders.json、' +
-    '留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。',
+    '留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。' +
+    'tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。',
   generated_at: now,
   tiles: Object.fromEntries(items.map((x) => [x.file, x.tile])),
 })
+
+if (EXCELLENT_THRESHOLD > 0) {
+  writeJson(path.join(DATA, 'excellent_members.json'), {
+    _note:
+      '生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + ' +
+      '综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。' +
+      '分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。',
+    generated_at: now,
+    threshold: EXCELLENT_THRESHOLD,
+    count: membersJson.length + excellentAdded.length,
+    members: [...membersJson, ...excellentAdded],
+  })
+}
 
 const tagTally = items.reduce((s, x) => s + x.tile.tags.length, 0)
 const typeTally = {}

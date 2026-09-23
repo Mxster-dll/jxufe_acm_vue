@@ -126,6 +126,11 @@ const sourceBase = ref('/images/excellent_member/')
     瓷砖序号（0..cols×rows-1）和图片下标（0..n-1）不是一个东西，
     而且几何重排后同一序号会换成另一张脸。 */
 const openItem = ref(null)
+/* 浮窗里的标签分两类（会长 2026-09-23：「点出成员个人浮窗时，荣誉不再以『计数』显示，
+   而是用『详细条目』」）：短标签留在头部，战绩明细落到可滚的正文里。
+   卡片只有 360×132，明细长句必须换行显示，头部放不下 —— 正文本来就能滚。 */
+const openShortTags = computed(() => (openItem.value?.sheetTags || []).filter((t) => t.type !== 'contest'))
+const openDetailTags = computed(() => (openItem.value?.sheetTags || []).filter((t) => t.type === 'contest'))
 
 /* ── 环境能力 ── */
 const canHover = ref(true)
@@ -173,13 +178,19 @@ async function loadData() {
   const dict = copy && typeof copy.tiles === 'object' && copy.tiles ? copy.tiles : {}
   items.value = files.map((file) => {
     const c = dict[file] || {}
+    const tags = normalizeTags(c.tags)
+    /* 浮窗那一版标签：同一套顺序，但**战绩是逐条明细**而不是计数（🥇1🥈2 → 「🥇第47届 ICPC
+       亚洲区域赛（南京）金牌」）。只有我们的生成器会给这个字段（gen_group_wall.mjs 的
+       sheetTagsOf），作者的数据没有 → 没有就退回 tags，形状一致。 */
+    const sheet = normalizeTags(c.sheetTags)
     return {
       file,
       // 原图（缩略图失败时的兜底）。留空则退回 manifest 的 source 前缀。
       full: typeof c.full === 'string' ? c.full : '',
       name: typeof c.name === 'string' ? c.name : '',
       line: typeof c.line === 'string' ? c.line : '',
-      tags: normalizeTags(c.tags),
+      tags,
+      sheetTags: sheet.length ? sheet : tags,
       /* 留言：可以是一整段话（「给未来留一行」那种）。**不截断数据**，只由 CSS 限制行数 ——
          同一份文本在悬停卡里显示 5 行、在触屏居中卡里显示全文。 */
       message: typeof c.message === 'string' ? c.message.trim() : '',
@@ -914,7 +925,7 @@ watch(() => props.hoverCard, () => clearPointerTile())
                     class="wall__msg-block"
                     :class="{ 'is-clipped': clipped.has(m.file) }"
                   >
-                    <p class="wall__msg">{{ m.message }}</p>
+                    <p class="wall__msg"><span class="wall__quote" aria-hidden="true">“</span>{{ m.message }}<span class="wall__quote wall__quote--close" aria-hidden="true">”</span></p>
                     <p v-if="clipped.has(m.file)" class="wall__msg-more">点击查看全文</p>
                   </div>
                 </div>
@@ -952,10 +963,11 @@ watch(() => props.hoverCard, () => clearPointerTile())
           <div class="wall-sheet__ident">
             <p class="wall-sheet__name">{{ openItem.name || ' ' }}</p>
             <p v-if="openItem.line" class="wall-sheet__line">{{ openItem.line }}</p>
-            <div v-if="openItem.tags.length" class="wall-sheet__tags">
-              <!-- 与悬停卡同一套：带 type 的走全站分色胶囊，纯字符串走中性蓝 -->
+            <div v-if="openShortTags.length" class="wall-sheet__tags">
+              <!-- 与悬停卡同一套：带 type 的走全站分色胶囊，纯字符串走中性蓝。
+                   这里只有**短标签**（会长身份 / 协会职务 / 手写荣誉）—— 战绩明细在下面的正文里。 -->
               <span
-                v-for="(t, j) in openItem.tags"
+                v-for="(t, j) in openShortTags"
                 :key="j"
                 :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
                 >{{ t.text }}</span
@@ -970,8 +982,23 @@ watch(() => props.hoverCard, () => clearPointerTile())
              那句话不提供任何信息，只是噪音。
              ⚠ v-if 挂在这一层（而不是里面的 <p>）也是刻意的：这一块带 padding，
                空着留在这儿会在「奖项」和底部提示之间拉出一条几十像素的空白带。 -->
-        <div v-if="openItem.message" class="wall-sheet__body">
-          <p class="wall-sheet__msg">{{ openItem.message }}</p>
+        <div v-if="openItem.message || openDetailTags.length" class="wall-sheet__body">
+          <!-- 留言：无色底，两端用一对很大的引号括住（会长 2026-09-23 裁定）。
+               引号是 aria-hidden 的装饰，读屏听到的还是原句。 -->
+          <p v-if="openItem.message" class="wall-sheet__msg">
+            <span class="wall-sheet__quote" aria-hidden="true">“</span>{{ openItem.message
+            }}<span class="wall-sheet__quote wall-sheet__quote--close" aria-hidden="true">”</span>
+          </p>
+
+          <!-- 荣誉：逐条明细（与优秀成员页「详细条目」模式同一口径），长句允许换行 -->
+          <div v-if="openDetailTags.length" class="wall-sheet__honors">
+            <span
+              v-for="(t, j) in openDetailTags"
+              :key="j"
+              class="honor-tag honor-tag--contest wall__tag--typed wall-sheet__detail"
+              >{{ t.text }}</span
+            >
+          </div>
         </div>
 
         <div class="wall-sheet__foot">
@@ -1305,16 +1332,36 @@ watch(() => props.hoverCard, () => clearPointerTile())
   -webkit-line-clamp: 10;
   line-clamp: 10;
   overflow: hidden;
-  padding: 7px 10px;
-  border-left: 3px solid rgba(26, 115, 232, 0.35);
-  border-radius: 0 8px 8px 0;
-  background: rgba(26, 115, 232, 0.05);
+  /* 无色底（会长 2026-09-23）：「留言不要以现有的蓝色底显示，而是无色底，
+     然后用一对引号把留的言括起来」。原先这里是 3px 蓝色左边线 + 5% 蓝底 + 圆角。 */
+  margin: 0;
+  padding: 0;
   font-size: 0.8125rem;
   line-height: 1.6;
   color: #475569;
   /* 作者自己敲的换行留着；一长串英文 / URL 也必须能断，否则会把卡片撑破 */
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+/* 留言两端那对引号（悬停卡与浮窗共用）。
+   ⚠ 别写 line-height: 0 —— 它确实能让大引号「不撑高行盒」，但悬停卡那段是 line-clamp 的
+     `overflow: hidden`：实测引号盒 41px 高、段落首行只有 21px，引号被**齐根裁掉**，
+     页面上只剩一道发丝（截图里几乎看不见，量 box 才发现）。
+     改成 line-height: 1 让首行跟着长高（首行约 29px），多出的几像素换引号完整可见。
+   vertical-align 的位移按**引号自身**字号算，所以给得很小（2.2em × 0.18em ≈ 0.4em）。 */
+.wall__quote,
+.wall-sheet__quote {
+  font-family: Georgia, 'Times New Roman', 'Songti SC', 'SimSun', serif;
+  font-size: 2.2em;
+  line-height: 1;
+  vertical-align: -0.18em;
+  margin: 0 0.04em;
+  color: rgba(26, 115, 232, 0.45);
+}
+/* 悬停卡里留言被 clamp 到 10 行时，收尾的引号根本看不到 —— 留一个孤零零的开引号
+   反而像排版事故，所以只在「整段看得见」的时候才给收尾引号。 */
+.wall__msg-block.is-clipped .wall__quote--close {
+  display: none;
 }
 /* 被截断时把最后一行淡掉 —— 一眼看出「后面还有」，不用先读提示文字。
    用 mask 而不是盖一层渐变：mask 不占布局、不用去猜卡片底色，
@@ -1503,6 +1550,25 @@ watch(() => props.hoverCard, () => clearPointerTile())
   color: #334155;
   white-space: pre-wrap; /* 作者自己敲的换行留着 */
   overflow-wrap: anywhere;
+}
+/* 浮窗里的荣誉明细：逐条一行行排（长句「🥇第47届 ICPC 亚洲区域赛（南京）金牌」约 25 字，
+   两枚并排就挤了），完全复用全站比赛蓝胶囊，只把几何改成可换行的统计样式。
+   默认 margin-top 让它在留言下面留出间隔；没有留言的人（墙上大多数）它就是第一块。 */
+.wall-sheet__honors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 14px;
+}
+.wall-sheet__msg + .wall-sheet__honors {
+  margin-top: 12px;
+}
+.wall-sheet__detail {
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
 }
 
 

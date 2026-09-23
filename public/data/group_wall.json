@@ -1,6 +1,6 @@
 {
-  "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。",
-  "generated_at": "2026-09-23T08:14:05.820Z",
+  "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
+  "generated_at": "2026-09-23T09:16:29.191Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -23,6 +23,44 @@
           "text": "2023-2024学年国家奖学金",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第16届蓝桥杯 Python·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 Java·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至华东师范大学",
+          "type": "destination"
+        },
+        {
+          "text": "2023-2024学年国家奖学金",
+          "type": "honor"
+        }
       ]
     },
     "2395727680.webp": {
@@ -32,6 +70,16 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈2",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 Python·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -51,6 +99,112 @@
         },
         {
           "text": "蓝桥杯 国赛🥇2🥈1 省赛🥇3",
+          "type": "contest"
+        },
+        {
+          "text": "省赛季军+首刀",
+          "type": "contest"
+        },
+        {
+          "text": "关注B站红烧猪猪头谢谢喵、复活小聪明谢谢喵",
+          "type": "contact"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（深圳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·研究生组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（郑州）暨河南省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·研究生组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（上海）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·A组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届 CCPC 全国邀请赛（长春）暨吉林省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·A组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         },
         {
@@ -84,6 +238,56 @@
           "text": "蓝桥杯 国赛🥇1🥉1 省赛🥇2",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第22届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "ex-lxb.webp": {
@@ -111,6 +315,40 @@
           "text": "传智杯国家级二等奖",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯国家级二等奖",
+          "type": "contest"
+        }
       ]
     },
     "2026545812.webp": {
@@ -124,6 +362,20 @@
         },
         {
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         }
       ]
@@ -158,13 +410,120 @@
           "type": "more"
         }
       ],
+      "sheetTags": [
+        {
+          "text": "2024学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "2025学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（贵州）暨贵州省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 Python·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（福州）暨福建省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（西安）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（香港）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（东北）暨东北地区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（长春）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "上饶银行奖学金 *2",
+          "type": "honor"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
+      ],
       "message": "其实连按部就班也比想象中难"
     },
     "1453890615.webp": {
       "name": "覆舟苍生泪",
       "line": "",
       "full": "/images/group_members/full/1453890615.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-lmh.webp": {
       "name": "李梦豪",
@@ -187,13 +546,68 @@
           "text": "保研至中国科学技术大学",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第7届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第7届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第46届 ICPC 亚洲区域赛（南京）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第12届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第6届天梯赛个人国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第6届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第12届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第5届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至中国科学技术大学",
+          "type": "destination"
+        }
       ]
     },
     "2175998120.webp": {
       "name": "电子休眠",
       "line": "",
       "full": "/images/group_members/full/2175998120.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "485548214.webp": {
       "name": "吴海鸣",
@@ -204,19 +618,27 @@
           "text": "2026学年协会外联部负责人",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会外联部负责人",
+          "type": "honor"
+        }
       ]
     },
     "2110477962.webp": {
       "name": "Charlotte",
       "line": "",
       "full": "/images/group_members/full/2110477962.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3483076171.webp": {
       "name": "㣍琦YUSQ",
       "line": "",
       "full": "/images/group_members/full/3483076171.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-zyf.webp": {
       "name": "张云菲",
@@ -237,6 +659,76 @@
         },
         {
           "text": "蓝桥杯 国赛🥈1🥉1 省赛🥇2🥈1",
+          "type": "contest"
+        },
+        {
+          "text": "2024-2025学年国家奖学金",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（贵州）暨贵州省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 Python·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（福州）暨福建省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（西安）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（香港）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（东北）暨东北地区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（长春）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         },
         {
@@ -266,25 +758,86 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第22届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2026-05-24）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2026-05-24）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（武汉）暨湖北省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（武汉）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2025-09-13）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2025-09-13）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（东北）暨东北地区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "1582895840.webp": {
       "name": "0x13265EC",
       "line": "",
       "full": "/images/group_members/full/1582895840.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "928409730.webp": {
       "name": "云暮",
       "line": "",
       "full": "/images/group_members/full/928409730.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2745301634.webp": {
       "name": "周行不殆",
       "line": "",
       "full": "/images/group_members/full/2745301634.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "167161261.webp": {
       "name": "曹京顺",
@@ -307,6 +860,44 @@
           "text": "蓝桥杯 国赛🥇1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第22届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "1712235910.webp": {
@@ -316,6 +907,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥉1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
           "type": "contest"
         }
       ]
@@ -337,13 +934,44 @@
           "text": "保研至厦门大学",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第16届蓝桥杯 Python·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第14届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至厦门大学",
+          "type": "destination"
+        }
       ]
     },
     "1522187277.webp": {
       "name": "计算机253林俊林",
       "line": "",
       "full": "/images/group_members/full/1522187277.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-wqh.webp": {
       "name": "吴清辉",
@@ -352,6 +980,24 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈2",
+          "type": "contest"
+        },
+        {
+          "text": "保研至苏州大学",
+          "type": "destination"
+        },
+        {
+          "text": "2022 - 2025三年国励奖学金",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         },
         {
@@ -377,13 +1023,24 @@
           "text": "蓝桥杯 省赛🥉1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会财务部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        }
       ]
     },
     "3163564041.webp": {
       "name": "xjx🐻",
       "line": "",
       "full": "/images/group_members/full/3163564041.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3366819199.webp": {
       "name": "钱震宇",
@@ -392,6 +1049,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -425,13 +1088,156 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第16届蓝桥杯 C++·A组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第49届 ICPC 全国邀请赛（西安）金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛个人国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·A组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国赛（郑州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（杭州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第20届百度之星国赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第20届百度之星省赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·A组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届 CCPC 全国邀请赛（山东）暨山东省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（武汉）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·A组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第19届百度之星国赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届 CCPC 全国赛（深圳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 亚洲区域赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第19届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第19届百度之星省赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届 CCPC 全国邀请赛（湖南）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第47届 ICPC 亚洲区域赛（南京）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第13届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第7届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至电子科技大学",
+          "type": "destination"
+        },
+        {
+          "text": "第六届传智杯冠军",
+          "type": "contest"
+        },
+        {
+          "text": "csp满分",
+          "type": "contest"
+        }
       ]
     },
     "3910529383.webp": {
       "name": "BZzzz",
       "line": "",
       "full": "/images/group_members/full/3910529383.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-nzy.webp": {
       "name": "牛志义",
@@ -454,25 +1260,66 @@
           "text": "传智杯国一*1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第11届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 Python·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗国一*1",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯国一*1",
+          "type": "contest"
+        }
       ]
     },
     "2535858380.webp": {
       "name": "刚",
       "line": "",
       "full": "/images/group_members/full/2535858380.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2417735139.webp": {
       "name": "不羁不及",
       "line": "",
       "full": "/images/group_members/full/2417735139.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3385719229.webp": {
       "name": "咬紧后槽牙",
       "line": "",
       "full": "/images/group_members/full/3385719229.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-lwh.webp": {
       "name": "罗文浩",
@@ -495,19 +1342,75 @@
           "text": "小米科技",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第13届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第46届 ICPC 亚洲区域赛（南京）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第12届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第6届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第6届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第12届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第5届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "小米科技",
+          "type": "destination"
+        }
       ]
     },
     "202649862.webp": {
       "name": "蛙蛙",
       "line": "",
       "full": "/images/group_members/full/202649862.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2914942526.webp": {
       "name": "ᵂᵃⁿᵈᵉʳˡᵘˢᵗ՞",
       "line": "",
       "full": "/images/group_members/full/2914942526.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-zhl.webp": {
       "name": "张昊林",
@@ -516,6 +1419,28 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥇2",
+          "type": "contest"
+        },
+        {
+          "text": "保研至东北大学",
+          "type": "destination"
+        },
+        {
+          "text": "中共党员",
+          "type": "honor"
+        },
+        {
+          "text": "江西财经大学优秀学生干部",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         },
         {
@@ -549,13 +1474,32 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "3084157669.webp": {
       "name": "Dream.",
       "line": "",
       "full": "/images/group_members/full/3084157669.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1367193699.webp": {
       "name": "周子诺",
@@ -582,13 +1526,36 @@
           "text": "传智杯国优",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会组织部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯省一",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯国优",
+          "type": "contest"
+        }
       ]
     },
     "2483545078.webp": {
       "name": "和一.",
       "line": "",
       "full": "/images/group_members/full/2483545078.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "692164483.webp": {
       "name": "柳道明",
@@ -603,13 +1570,24 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会机动部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "2750970341.webp": {
       "name": "欧几里得",
       "line": "",
       "full": "/images/group_members/full/2750970341.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3305365501.webp": {
       "name": "万涛涛",
@@ -624,37 +1602,60 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1🥉1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        }
       ]
     },
     "2788492515.webp": {
       "name": "Charon",
       "line": "",
       "full": "/images/group_members/full/2788492515.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2658147377.webp": {
       "name": "过程",
       "line": "",
       "full": "/images/group_members/full/2658147377.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2350146195.webp": {
       "name": "Euc",
       "line": "",
       "full": "/images/group_members/full/2350146195.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1420891819.webp": {
       "name": "听风",
       "line": "",
       "full": "/images/group_members/full/1420891819.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2893816531.webp": {
       "name": "大数据241蒋滔",
       "line": "",
       "full": "/images/group_members/full/2893816531.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2839393017.webp": {
       "name": "李志文",
@@ -665,13 +1666,28 @@
           "text": "蓝桥杯 省赛🥇1🥈1🥉1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        }
       ]
     },
     "3520782153.webp": {
       "name": "大虾酱",
       "line": "",
       "full": "/images/group_members/full/3520782153.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "blank.png": {
       "name": "陈煜仕",
@@ -702,6 +1718,52 @@
           "text": "...",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "🥈第22届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
       ]
     },
     "ex-ljk.webp": {
@@ -725,6 +1787,52 @@
           "text": "sls亲传弟子(头像不是本人)",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第14届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "sls亲传弟子(头像不是本人)",
+          "type": "honor"
+        }
       ]
     },
     "ex-csk.webp": {
@@ -738,6 +1846,32 @@
         },
         {
           "text": "蓝桥杯 国赛🥈1 省赛🥇1🥈1",
+          "type": "contest"
+        },
+        {
+          "text": "考研至中国科学技术大学软件工程",
+          "type": "destination"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         },
         {
@@ -775,6 +1909,44 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会支书",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗国家三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "交换友链woodfish.site喵",
+          "type": "contact"
+        }
       ]
     },
     "536936535.webp": {
@@ -784,6 +1956,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -797,13 +1975,20 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 Python·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "2643833048.webp": {
       "name": "佑",
       "line": "",
       "full": "/images/group_members/full/2643833048.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2818806759.webp": {
       "name": "陈帆",
@@ -830,31 +2015,93 @@
           "text": "传智杯国家级二等奖",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯国家级二等奖",
+          "type": "contest"
+        }
       ]
     },
     "3979700965.webp": {
       "name": "已睡勿扰",
       "line": "",
       "full": "/images/group_members/full/3979700965.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2665993832.webp": {
       "name": "Sylvia",
       "line": "",
       "full": "/images/group_members/full/2665993832.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2771908143.webp": {
       "name": "他山之石",
       "line": "",
       "full": "/images/group_members/full/2771908143.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2361435568.webp": {
       "name": "暮凝Juncnc",
       "line": "",
       "full": "/images/group_members/full/2361435568.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2085466830.webp": {
       "name": "凌航",
@@ -873,6 +2120,24 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年数智技术协会会长",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "2760332583.webp": {
@@ -882,6 +2147,16 @@
       "tags": [
         {
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         }
       ]
@@ -911,6 +2186,104 @@
           "text": "睿抗：国一*1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（深圳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（成都）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（郑州）暨河南省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 Java·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗：国一*1",
+          "type": "contest"
+        }
       ]
     },
     "3052946160.webp": {
@@ -922,13 +2295,24 @@
           "text": "蓝桥杯 国赛🥉1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "2537341347.webp": {
       "name": "24级计算机邓建",
       "line": "",
       "full": "/images/group_members/full/2537341347.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-zrj.webp": {
       "name": "张瑞杰",
@@ -947,6 +2331,60 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2026-05-24）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2026-05-24）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（成都）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2025-09-13）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2025-09-13）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（昆明）铜牌",
+          "type": "contest"
+        }
       ]
     },
     "2159230534.webp": {
@@ -958,13 +2396,20 @@
           "text": "蓝桥杯 省赛🥉1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        }
       ]
     },
     "3585957631.webp": {
       "name": "落星屿.",
       "line": "",
       "full": "/images/group_members/full/3585957631.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2117410945.webp": {
       "name": "蒋滔",
@@ -979,25 +2424,55 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇1🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "2947665256.webp": {
       "name": "Simon Shiki",
       "line": "",
       "full": "/images/group_members/full/2947665256.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3538006256.webp": {
       "name": "Realfrog",
       "line": "",
       "full": "/images/group_members/full/3538006256.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-xzy.webp": {
       "name": "谢智屹",
       "line": "23网络空间安全1班",
       "full": "/images/excellent_member/0235234.png",
       "tags": [
+        {
+          "text": "江财网安神",
+          "type": "honor"
+        },
+        {
+          "text": "程设守门员，又菜又爱玩",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
         {
           "text": "江财网安神",
           "type": "honor"
@@ -1017,19 +2492,27 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "3365034252.webp": {
       "name": "人工智能251 钟",
       "line": "",
       "full": "/images/group_members/full/3365034252.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2969453681.webp": {
       "name": "梁致远",
       "line": "25计算机科学与技术3班",
       "full": "/images/group_members/full/2969453681.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ld-2021.webp": {
       "name": "倪超骏",
@@ -1060,6 +2543,60 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2021学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第13届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第7届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第46届 ICPC 亚洲区域赛（南京）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第6届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第6届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第12届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "北京大学硕士研究生",
+          "type": "destination"
+        },
+        {
+          "text": "美国大学生数学建模竞赛M奖",
+          "type": "contest"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
       ]
     },
     "ex-wsy.webp": {
@@ -1069,6 +2606,24 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥇1",
+          "type": "contest"
+        },
+        {
+          "text": "保研至西安电子科技大学计算机科学与技术专业",
+          "type": "destination"
+        },
+        {
+          "text": "22级信息学院课程加权年级第一",
+          "type": "honor"
+        },
+        {
+          "text": "国家奖学金",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         },
         {
@@ -1094,25 +2649,34 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "3632359754.webp": {
       "name": "要快乐",
       "line": "",
       "full": "/images/group_members/full/3632359754.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1511249859.webp": {
       "name": "太上老监",
       "line": "",
       "full": "/images/group_members/full/1511249859.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1480623044.webp": {
       "name": "猫的睡前书",
       "line": "",
       "full": "/images/group_members/full/1480623044.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-wjz.webp": {
       "name": "万俊哲",
@@ -1133,6 +2697,100 @@
         },
         {
           "text": "蓝桥杯 国赛🥇2🥉1 省赛🥇4",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗国一",
+          "type": "contest"
+        },
+        {
+          "text": "2024-2025学年国家奖学金",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（贵州）暨贵州省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（福州）暨福建省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（西安）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（香港）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第21届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（东北）暨东北地区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（长春）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 Java·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 Java·B组省赛一等奖",
           "type": "contest"
         },
         {
@@ -1166,6 +2824,72 @@
           "text": "蓝桥杯 国赛🥈1 省赛🥇2🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第22届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·A组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第21届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "3092087056.webp": {
@@ -1193,6 +2917,84 @@
           "text": "睿抗编程技能赛国家一等奖",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（武汉）暨湖北省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第21届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗编程技能赛国家一等奖",
+          "type": "contest"
+        }
       ]
     },
     "1938145196.webp": {
@@ -1212,19 +3014,35 @@
           "text": "信息学院学习部副部",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会组织部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会宣传部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "信息学院学习部副部",
+          "type": "honor"
+        }
       ]
     },
     "1816873448.webp": {
       "name": "大数据",
       "line": "",
       "full": "/images/group_members/full/1816873448.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2539087637.webp": {
       "name": "💤",
       "line": "",
       "full": "/images/group_members/full/2539087637.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-whf.webp": {
       "name": "王海峰",
@@ -1255,13 +3073,96 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（上海）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第20届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（武汉）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第48届 ICPC 亚洲区域赛（济南）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第19届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第14届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届 CCPC 全国邀请赛（湖南）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第13届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "2024 ICPC 江西省赛季军",
+          "type": "contest"
+        },
+        {
+          "text": "保研至北京邮电大学",
+          "type": "destination"
+        },
+        {
+          "text": "🛰️：wanghaifeng684568",
+          "type": "contact"
+        }
       ]
     },
     "3938789542.webp": {
       "name": "24计算机拔尖班杨奕芊",
       "line": "",
       "full": "/images/group_members/full/3938789542.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3533382348.webp": {
       "name": "杨镇宁",
@@ -1292,19 +3193,84 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会财务部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会竞赛部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "睿抗国三",
+          "type": "contest"
+        },
+        {
+          "text": "关注小羊谢谢喵",
+          "type": "contact"
+        }
       ]
     },
     "2183143768.webp": {
       "name": "清欢",
       "line": "",
       "full": "/images/group_members/full/2183143768.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-zyh.webp": {
       "name": "张艺环",
       "line": "21计算机科学与技术1班",
       "full": "/images/excellent_member/zyh.png",
       "tags": [
+        {
+          "text": "保研至北京交通大学",
+          "type": "destination"
+        },
+        {
+          "text": "全国大学生数学建模竞赛国家二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "优秀学生",
+          "type": "honor"
+        }
+      ],
+      "sheetTags": [
         {
           "text": "保研至北京交通大学",
           "type": "destination"
@@ -1344,13 +3310,48 @@
           "text": "睿抗国二",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至厦门大学",
+          "type": "destination"
+        },
+        {
+          "text": "国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "睿抗国二",
+          "type": "contest"
+        }
       ]
     },
     "3422389923.webp": {
       "name": "Jerome x3",
       "line": "",
       "full": "/images/group_members/full/3422389923.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1634674268.webp": {
       "name": "詹宇飞",
@@ -1375,6 +3376,48 @@
         },
         {
           "text": "蓝桥杯 国赛🥈2 省赛🥇2",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会机动部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（贵州）暨贵州省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
           "type": "contest"
         }
       ]
@@ -1408,13 +3451,64 @@
           "text": "蓝桥杯 国赛🥈2 省赛🥇2",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（沈阳）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（贵州）暨贵州省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "3053613895.webp": {
       "name": "星·海",
       "line": "",
       "full": "/images/group_members/full/3053613895.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-hjh.webp": {
       "name": "韩家欢",
@@ -1429,19 +3523,43 @@
           "text": "保研至深圳大学VCC组",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第16届蓝桥杯 Java·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至深圳大学VCC组",
+          "type": "destination"
+        }
       ]
     },
     "3288025626.webp": {
       "name": "Retrocal",
       "line": "",
       "full": "/images/group_members/full/3288025626.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2115034969.webp": {
       "name": "小小姜饼人.",
       "line": "",
       "full": "/images/group_members/full/2115034969.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2130025988.webp": {
       "name": "潘洋",
@@ -1454,6 +3572,16 @@
         },
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -1475,6 +3603,36 @@
           "text": "保研至中国科学院大学",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至中国科学院大学",
+          "type": "destination"
+        }
       ]
     },
     "0266046.jpeg": {
@@ -1482,6 +3640,7 @@
       "line": "信管261班",
       "full": "/images/excellent_member/0266046.jpeg",
       "tags": [],
+      "sheetTags": [],
       "message": "刚进入大一，入党申请书，部门面试，班委竞选，综测与绩点，无数事情扑面而来，新一轮竞争排名又开始了，这样的大学生活好像和我高中预想的不太一样。这两天一直在听讲座，出国留学，考研保研升学，学科竞赛，考公考编，直接就业，每一条路都看起来特别吸引人，但能在一条路上走得远，走得好的少之又少。而我才大一，看似很多条路，但我却陷入迷茫，究竟什么适合我，我是否能成为佼佼者？现在的我不知道。希望四年后的我能给出坚定的答案，希望那时的我无悔于这段大学生涯。"
     },
     "ex-zrq.webp": {
@@ -1505,13 +3664,44 @@
           "text": "优秀团干",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至南京师范大学",
+          "type": "destination"
+        },
+        {
+          "text": "优秀团干",
+          "type": "honor"
+        }
       ]
     },
     "2322195416.webp": {
       "name": "梅永哲",
       "line": "25软件工程7班",
       "full": "/images/group_members/full/2322195416.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "ex-dyf.webp": {
       "name": "邓一帆",
@@ -1522,13 +3712,28 @@
           "text": "蓝桥杯 国赛🥉1 省赛🥇2",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第14届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "3451978561.webp": {
       "name": "里程碑",
       "line": "",
       "full": "/images/group_members/full/3451978561.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2947629855.webp": {
       "name": "梁荣昕",
@@ -1539,13 +3744,20 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "1626162368.webp": {
       "name": "KK",
       "line": "",
       "full": "/images/group_members/full/1626162368.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1536366460.webp": {
       "name": "罗文轩",
@@ -1576,13 +3788,84 @@
           "text": "蓝桥杯 国赛🥉1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2026-05-24）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2026-05-24）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（武汉）暨湖北省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（武汉）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛·2025-09-13）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛·2025-09-13）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（东北）暨东北地区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "1677554641.webp": {
       "name": "jbc",
       "line": "",
       "full": "/images/group_members/full/1677554641.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1377176379.webp": {
       "name": "雷霆",
@@ -1591,6 +3874,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥉1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
           "type": "contest"
         }
       ]
@@ -1624,6 +3913,132 @@
           "text": "...",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2022学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第49届 ICPC 全国邀请赛（西安）金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·A组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国赛（郑州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（杭州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第20届百度之星国赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第20届百度之星省赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第20届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届 CCPC 全国邀请赛（山东）暨山东省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 全国邀请赛（武汉）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届 CCPC 全国赛（深圳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第48届 ICPC 亚洲区域赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届 CCPC 全国邀请赛（湖南）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第47届 ICPC 亚洲区域赛（南京）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第7届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第13届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
       ]
     },
     "0266251.png": {
@@ -1631,6 +4046,7 @@
       "line": "大数据261班",
       "full": "/images/excellent_member/0266251.png",
       "tags": [],
+      "sheetTags": [],
       "message": "无需追忆昨日"
     },
     "ld-2023.webp": {
@@ -1662,13 +4078,136 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2023学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "🥉第21届百度之星国赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（沈阳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第21届百度之星省赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组国赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第49届 ICPC 全国邀请赛（西安）金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛个人国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（昆明）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届 CCPC 全国赛（郑州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（杭州）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届 CCPC 全国邀请赛（山东）暨山东省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第9届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第48届 ICPC 亚洲区域赛（济南）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第14届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第8届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第8届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第14届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "天梯赛团体一等奖、个人一等奖（全省第一）",
+          "type": "contest"
+        },
+        {
+          "text": "蓝桥杯国一（全省第二）",
+          "type": "contest"
+        },
+        {
+          "text": "国家奖学金",
+          "type": "honor"
+        },
+        {
+          "text": "上饶银行奖学金 *2",
+          "type": "honor"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
       ]
     },
     "2097921449.webp": {
       "name": "汪美琴",
       "line": "25计算机科学与技术1班",
       "full": "/images/group_members/full/2097921449.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2284462146.webp": {
       "name": "胡昊宇",
@@ -1677,6 +4216,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -1694,19 +4239,39 @@
           "text": "保研至北京交通大学",
           "type": "destination"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第16届蓝桥杯 Java·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第15届蓝桥杯 C++·B组省赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "保研至北京交通大学",
+          "type": "destination"
+        }
       ]
     },
     "1709686429.webp": {
       "name": "随便",
       "line": "",
       "full": "/images/group_members/full/1709686429.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3200139700.webp": {
       "name": "成员 3200139700",
       "line": "",
       "full": "/images/group_members/full/3200139700.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2932732242.webp": {
       "name": "王天宇",
@@ -1715,6 +4280,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -1728,6 +4299,16 @@
           "text": "xCPC 邀请赛🥉1 省赛🥇1",
           "type": "contest"
         },
+        {
+          "text": "考研至上海交通大学计算机学院软件工程",
+          "type": "destination"
+        },
+        {
+          "text": "江西省大学生程序设计大赛一等奖",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
         {
           "text": "考研至上海交通大学计算机学院软件工程",
           "type": "destination"
@@ -1767,32 +4348,94 @@
           "text": "…",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年协会竞赛部负责人",
+          "type": "honor"
+        },
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（贵州）暨贵州省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 Python·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第11届天梯赛个人国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 Python·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第21届百度之星省赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第16届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第10届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "2019 CSP-J 一等奖",
+          "type": "contest"
+        }
       ]
     },
     "2594225347.webp": {
       "name": "高天原",
       "line": "",
       "full": "/images/group_members/full/2594225347.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "258116087.webp": {
       "name": "蒲",
       "line": "",
       "full": "/images/group_members/full/258116087.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "0266268.jpeg": {
       "name": "Thea",
       "line": "大数据261班",
       "full": "/images/excellent_member/0266268.jpeg",
       "tags": [],
+      "sheetTags": [],
       "message": "因为热心的学长了解到程设协会，深入了解之后惊为天人！我要大声喊出来我要加入程设协会！"
     },
     "2777392445.webp": {
       "name": "Z_☆",
       "line": "",
       "full": "/images/group_members/full/2777392445.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1425619793.webp": {
       "name": "严雨睿",
@@ -1809,6 +4452,20 @@
         },
         {
           "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年网络安全协会会长",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（桂林）暨广西区赛铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
           "type": "contest"
         }
       ]
@@ -1838,6 +4495,48 @@
           "text": "...",
           "type": "more"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2025学年会长",
+          "type": "leader"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（桂林）暨广西区赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（秦皇岛）暨河北省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "...",
+          "type": "more"
+        }
       ]
     },
     "1454839682.webp": {
@@ -1853,19 +4552,31 @@
           "text": "蓝桥杯 省赛🥈1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会支书",
+          "type": "honor"
+        },
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
       ]
     },
     "2784667193.webp": {
       "name": "夜",
       "line": "",
       "full": "/images/group_members/full/2784667193.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "548635581.webp": {
       "name": "应该是…",
       "line": "",
       "full": "/images/group_members/full/548635581.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "1677816720.webp": {
       "name": "李鑫",
@@ -1884,6 +4595,108 @@
           "text": "蓝桥杯 国赛🥈2🥉1 省赛🥇3",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第50届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛团体国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届天梯赛个人国家级二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 全国邀请赛（深圳）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（成都）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第50届 ICPC 亚洲区域赛（西安）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（邀请赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第11届 CCPC 全国邀请赛（南昌）暨江西省赛（省赛）银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第10届 CCPC 全国邀请赛（郑州）暨河南省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（邀请赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 全国邀请赛（南昌）暨江西省赛（省赛）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第10届天梯赛团体国家级一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第16届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第49届 ICPC 亚洲区域赛（上海）铜牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第15届蓝桥杯 C++·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛团体国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第9届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第15届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第6届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第6届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "105775873.webp": {
@@ -1899,13 +4712,28 @@
           "text": "蓝桥杯 国赛🥉1 省赛🥇1",
           "type": "contest"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第22届百度之星省赛银牌",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组国赛三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 C++·B组省赛一等奖",
+          "type": "contest"
+        }
       ]
     },
     "534243965.webp": {
       "name": "。",
       "line": "",
       "full": "/images/group_members/full/534243965.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "2386221874.webp": {
       "name": "曹湛云",
@@ -1924,13 +4752,36 @@
           "text": "校优秀学生",
           "type": "honor"
         }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 Java·B组国赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥉第11届天梯赛个人国家级三等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥇第17届蓝桥杯 Java·B组省赛一等奖",
+          "type": "contest"
+        },
+        {
+          "text": "🥈第16届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        },
+        {
+          "text": "校优秀学生",
+          "type": "honor"
+        }
       ]
     },
     "2749073726.webp": {
       "name": "Blossoming",
       "line": "",
       "full": "/images/group_members/full/2749073726.jpg",
-      "tags": []
+      "tags": [],
+      "sheetTags": []
     },
     "3409749044.webp": {
       "name": "陈翊菲",
@@ -1939,6 +4790,12 @@
       "tags": [
         {
           "text": "蓝桥杯 省赛🥉1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
           "type": "contest"
         }
       ]
@@ -1954,6 +4811,16 @@
         },
         {
           "text": "蓝桥杯 省赛🥉1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "2026学年协会干事",
+          "type": "honor"
+        },
+        {
+          "text": "🥉第17届蓝桥杯 C++·B组省赛三等奖",
           "type": "contest"
         }
       ]

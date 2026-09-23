@@ -406,16 +406,21 @@ export function recordsToPills(records = [], mode = 'count') {
  *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱；
  *   奖牌说法按赛事分（medalText 在建记录时就定好，见 medalTextOf）。
  *
+ * **同名赛事撞车时补段名（会长 2026-09-23 报的现象）**：同一支队在同一场比赛里
+ * 既拿邀请赛又拿省赛（「CCPC 全国邀请赛（南昌）暨江西省赛」），两条记录的
+ * `competition_name` 是同一串，逐条列出来就是同一行写两遍。此时给标题补上段名
+ * （·邀请赛 / ·省赛）把两条区分开；**只有真撞车的那一组**会被改，其余一个字不动。
+ *
  * **按时间降序排（会长 2026-09-23 定稿）**：最新的一条在最前面。原先按赛事分组
  * （xCPC → 天梯赛 → 百度之星 → 蓝桥杯），同一赛事内再按年份，读起来是「按比赛分堆」
  * 而不是一条时间线；现在第一排序键就是日期，赛事与奖牌降级为**同日并列时的次序**
  * （同一天拿的团队奖/个人奖仍挨在一起、按赛事既定顺序，同一天同赛事的奖牌按 特等→金→银→铜）。
  * 要改成「最旧在前」，把第一比较键换成 `String(a.date).localeCompare(String(b.date))` 即可。
- * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, date: string, family: string}[]}
+ * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, date: string, family: string, segment: string}[]}
  */
 export function recordsToDetails(records = []) {
   const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
-  return records
+  const list = records
     .filter((r) => r?.title && (r.medalText || MEDAL_TEXT[r.medal]))
     .map((r) => ({
       title: r.title,
@@ -425,13 +430,36 @@ export function recordsToDetails(records = []) {
       year: r.year,
       date: r.date || '',
       family: r.family,
+      segment: r.segment || '',
     }))
-    .sort(
-      (a, b) =>
-        String(b.date).localeCompare(String(a.date)) ||
-        (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
-        MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
-    )
+
+  /* 撞车分两层，先算两张表再一次性补后缀（只看**确实撞车**的那一组，其余一个字符都不动）：
+       ① 同一场比赛既拿邀请赛又拿省赛 → 标题与奖牌一模一样，两条只差 segment；
+       ② 再撞就是同一个赛季里同名的比赛办了两次 —— 例：CCPC 南昌邀请赛 2025-09-13 与
+          2026-05-24 属于同一个赛季（CCPC 赛季跨年），届数都是第 11 届，标题仍然一样，
+          这时只有日期能区分。
+     ⚠ 不要拿「标题里是否已有段名」当守卫：撞车的标题本身写着「暨江西省赛」，
+        '省赛' 与 '邀请赛' 都是它的子串，守卫会把两条都拦下 —— 等于没修（踩过）。 */
+  const countBy = (keyOf) => {
+    const m = new Map()
+    for (const d of list) m.set(keyOf(d), (m.get(keyOf(d)) || 0) + 1)
+    return m
+  }
+  const byTitleMedal = countBy((d) => `${d.title}|${d.medalText}`)
+  const byTitleMedalSeg = countBy((d) => `${d.title}|${d.medalText}|${d.segment}`)
+  for (const d of list) {
+    if ((byTitleMedal.get(`${d.title}|${d.medalText}`) || 0) <= 1) continue
+    const stillSame = (byTitleMedalSeg.get(`${d.title}|${d.medalText}|${d.segment}`) || 0) > 1
+    const bits = [d.segment, stillSame ? d.date : ''].filter(Boolean)
+    if (bits.length) d.title = `${d.title}（${bits.join('·')}）`
+  }
+
+  return list.sort(
+    (a, b) =>
+      String(b.date).localeCompare(String(a.date)) ||
+      (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
+      MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
+  )
 }
 
 /** 手工兜底那几条是写死的「🥉1」文本，图标模式下同样要摊开成「🥉」 */

@@ -11,7 +11,19 @@ import { loadMemberRanking, sortByRanking } from '../utils/honorRanking'
 import HonorViewSwitch from '../components/HonorViewSwitch.vue'
 import HonorPill from '../components/HonorPill.vue'
 
-const { data: members, loading, error } = useJson('/data/members.json', { initial: [] })
+/** 名单 = members.json **原样** + 综合分 ≥ 阈值自动入册的人。
+    入册判据与墙上「分数达标自动入墙」、与本页「卡片显示顺序」是同一份分数（honorRanking.js），
+    所以卡片上看到的分数就是入册依据；生成物见 scripts/gen_group_wall.mjs，
+    阈值在 public/data/wall_rules.json 的 excellentScoreThreshold（会长可调）。
+    读不到生成物就退回 members.json —— 任何情况下这一页都不该空着。 */
+const { data: excellent, loading, error } = useJson('/data/excellent_members.json', { initial: [] })
+const { data: baseMembers } = useJson('/data/members.json', { initial: [] })
+const members = computed(() => {
+  // ⚠ 生成物是个对象（{ _note, threshold, count, members[] }），members.json 才是裸数组 ——
+  // 别写成 excellent.value.length 判断：对象没有 length，会静默回退到 members.json 那 33 人
+  const list = excellent.value?.members
+  return Array.isArray(list) && list.length ? list : baseMembers.value
+})
 const { skeletons } = useSkeleton(9)
 const fallback = '/images/excellent_member/default.png'
 
