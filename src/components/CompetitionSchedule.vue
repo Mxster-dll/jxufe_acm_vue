@@ -47,27 +47,57 @@ function packLanes(bars) {
   return lanes.length
 }
 
-const rows = computed(() =>
-  props.competitions
-    .filter((c) => (c.schedule || []).length)
-    .map((c, i) => {
-      const bars = (c.schedule || []).map((s) => ({
-        stage: s.stage,
-        note: s.note || '',
-        range: s.from === s.to ? `${s.from}月` : `${s.from}-${s.to}月`,
-        left: ((s.from - 1) / 12) * 100,
-        width: ((s.to - s.from + 1) / 12) * 100,
-        lane: 0,
-      }))
-      return {
-        slug: c.slug,
-        name: c.shortName || c.name,
-        color: PALETTE[i % PALETTE.length],
-        lanes: packLanes(bars),
-        bars,
+const rows = computed(() => {
+  const list = props.competitions.filter((c) => (c.schedule || []).length)
+
+  /* ① 合并分组（会长 2026-09-23「ICPC 和 CCPC 合并显示」）：competitions.json 里
+        scheduleGroup 相同的赛事合成一行 —— 图标并排，阶段取并集
+        （ICPC 区域赛 10-12 与 CCPC 区域赛 10-11 并成 10-12），悬停提示里标明区间来自谁。 */
+  const groups = []
+  for (const c of list) {
+    const key = c.scheduleGroup || c.slug
+    let g = groups.find((x) => x.key === key)
+    if (!g) {
+      g = { key, name: c.scheduleGroup || c.shortName || c.name, logos: [], items: [] }
+      groups.push(g)
+    }
+    if (c.image) g.logos.push(c.image)
+    g.items.push(c)
+  }
+
+  return groups.map((g, i) => {
+    const byStage = new Map()
+    for (const c of g.items) {
+      const src = c.shortName || c.name
+      for (const s of c.schedule || []) {
+        const cur = byStage.get(s.stage)
+        if (!cur) byStage.set(s.stage, { stage: s.stage, from: s.from, to: s.to, srcs: [src] })
+        else {
+          cur.from = Math.min(cur.from, s.from)
+          cur.to = Math.max(cur.to, s.to)
+          if (!cur.srcs.includes(src)) cur.srcs.push(src)
+        }
       }
-    })
-)
+    }
+    const bars = [...byStage.values()].map((s) => ({
+      stage: s.stage,
+      note: s.srcs.length > 1 ? s.srcs.join(' / ') : '',
+      range: s.from === s.to ? `${s.from}月` : `${s.from}-${s.to}月`,
+      left: ((s.from - 1) / 12) * 100,
+      width: ((s.to - s.from + 1) / 12) * 100,
+      lane: 0,
+    }))
+    return {
+      slug: g.key,
+      name: g.name,
+      // 每行名前的图标（会长 2026-09-23）；合并行会有两个
+      logos: g.logos,
+      color: PALETTE[i % PALETTE.length],
+      lanes: packLanes(bars),
+      bars,
+    }
+  })
+})
 </script>
 
 <template>
@@ -88,7 +118,16 @@ const rows = computed(() =>
         class="schedule__row"
         :style="{ '--row-color': row.color, '--lanes': row.lanes }"
       >
-        <div class="schedule__name">{{ row.name }}</div>
+        <div class="schedule__name">
+          <img
+            v-for="(lg, i) in row.logos"
+            :key="i"
+            :src="lg"
+            :alt="row.name"
+            class="schedule__logo"
+          />
+          <span class="schedule__name-text">{{ row.name }}</span>
+        </div>
         <div class="schedule__track">
           <!-- 当前月份列：一条贯穿本行泳道的淡蓝底（各行对齐 ⇒ 视觉上是一整列） -->
           <span class="schedule__now" :style="{ left: nowLeft, width: nowWidth }" aria-hidden="true"></span>
@@ -107,7 +146,16 @@ const rows = computed(() =>
     <!-- 窄屏：同一份数据换成「赛事 → 阶段 + 月份」清单（月份刻度在这个宽度下不可读） -->
     <ul class="schedule__list">
       <li v-for="row in rows" :key="row.slug" :style="{ '--row-color': row.color }">
-        <p class="schedule__list-name">{{ row.name }}</p>
+        <p class="schedule__list-name">
+          <img
+            v-for="(lg, i) in row.logos"
+            :key="i"
+            :src="lg"
+            :alt="row.name"
+            class="schedule__logo"
+          />
+          <span>{{ row.name }}</span>
+        </p>
         <p class="schedule__chips">
           <span v-for="(bar, i) in row.bars" :key="i" class="schedule__chip"
             >{{ bar.stage }}<b>{{ bar.range }}</b></span
@@ -115,10 +163,6 @@ const rows = computed(() =>
         </p>
       </li>
     </ul>
-
-    <p class="schedule__note">
-      区间由本会历年真实赛历统计得出（获奖记录日期与赛季资料），非官方公告日历；未收录的阶段不显示。
-    </p>
   </section>
 </template>
 
@@ -128,6 +172,9 @@ const rows = computed(() =>
    ========================================================================== */
 .schedule {
   margin-top: 56px;
+  /* 左侧「图标 + 赛事名」那一列的宽度：坐标轴的 margin-left 与每行的 flex-basis 共用它，
+     加宽是为了容纳行首的赛事 logo（会长 2026-09-23），调一处即可 */
+  --name-col: 200px;
 }
 .schedule__head {
   margin-bottom: 20px;
@@ -161,7 +208,7 @@ const rows = computed(() =>
 .schedule__axis {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  margin-left: 132px;
+  margin-left: var(--name-col);
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(15, 23, 42, 0.07);
 }
@@ -182,14 +229,29 @@ const rows = computed(() =>
   border-bottom: 0;
 }
 .schedule__name {
-  flex: 0 0 132px;
-  width: 132px;
+  display: flex;
+  align-items: center; /* logo 与文字同一条中轴（名字换行时 logo 仍居中） */
+  gap: 8px;
+  flex: 0 0 var(--name-col);
+  width: var(--name-col);
   padding-right: 12px;
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--text);
-  line-height: 30px;
+  line-height: 1.35;
   border-right: 1px solid rgba(15, 23, 42, 0.06);
+}
+.schedule__logo {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.schedule__name-text {
+  min-width: 0;
+  /* 与泳道首行（30px）对齐：名字短时视觉重心与区间条齐平 */
+  padding: 6px 0;
 }
 .schedule__track {
   position: relative;
@@ -241,6 +303,9 @@ const rows = computed(() =>
   border-bottom: 0;
 }
 .schedule__list-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text);
@@ -269,13 +334,6 @@ const rows = computed(() =>
   opacity: 0.75;
 }
 
-.schedule__note {
-  margin-top: 12px;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
 @media (max-width: 768px) {
   .schedule {
     margin-top: 40px;
@@ -292,17 +350,21 @@ const rows = computed(() =>
   }
 }
 /* ── 当前月份列（会长 2026-09-23：「把当前月份列高亮」）──
-   每行的泳道里各放一条贯穿上下的淡蓝底，各行位置一致 ⇒ 看起来是一整列。
+   每行的泳道里各放一条淡蓝底，向上/下各多出 11px —— 行的上下内边距是 10px、行间还有 1px
+   虚线，多出 11px 正好让相邻两条**相接（还重叠 1px）**，看起来就是一整条连续的竖列，
+   而不是一个个格子。第一行的上沿刚好顶到坐标轴的下边框。
    区间条在 DOM 里排在它后面、又是定位元素，天然画在它上面（不用 z-index 打架）。 */
 .schedule__now {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -11px;
+  bottom: -11px;
   z-index: 0;
-  border-radius: 6px;
   background: rgba(26, 115, 232, 0.09);
-  box-shadow: inset 0 0 0 1px rgba(26, 115, 232, 0.16);
   pointer-events: none;
+}
+/* 第一行的高亮再往上够到坐标轴顶端 —— 整列从「9月」那一格一路连到最底部 */
+.schedule__row:first-child .schedule__now {
+  top: -36px;
 }
 .schedule__axis span.is-now {
   color: var(--primary);

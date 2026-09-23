@@ -41,11 +41,24 @@
       "icpc"
     ],
     "schedule": [
-      { "stage": "邀请赛", "from": 4, "to": 7 },
-      { "stage": "网络预选赛", "from": 9, "to": 9 },
-      { "stage": "区域赛", "from": 10, "to": 12 }
+      {
+        "stage": "邀请赛",
+        "from": 4,
+        "to": 7
+      },
+      {
+        "stage": "网络预选赛",
+        "from": 9,
+        "to": 9
+      },
+      {
+        "stage": "区域赛",
+        "from": 10,
+        "to": 12
+      }
     ],
-    "sessions": {}
+    "sessions": {},
+    "scheduleGroup": "ICPC / CCPC"
   },
   {
     "slug": "ccpc",
@@ -90,17 +103,24 @@
       "ccpc"
     ],
     "schedule": [
-      { "stage": "邀请赛", "from": 5, "to": 6 },
-      { "stage": "省赛", "from": 5, "to": 5 },
-      { "stage": "省赛（南昌）", "from": 9, "to": 9 },
-      { "stage": "分站赛", "from": 10, "to": 11 }
+      {
+        "stage": "邀请赛",
+        "from": 5,
+        "to": 6
+      },
+      {
+        "stage": "区域赛",
+        "from": 10,
+        "to": 11
+      }
     ],
-    "sessions": {}
+    "sessions": {},
+    "scheduleGroup": "ICPC / CCPC"
   },
   {
     "slug": "gplt",
     "name": "团体程序设计天梯赛",
-    "shortName": "团体程序设计天梯赛",
+    "shortName": "天梯赛",
     "image": "/images/contest/gplt.png",
     "desc": "团体程序设计天梯赛是中国高校计算机大赛的竞赛版块之一",
     "subtitle": "中国高校计算机大赛的重要竞赛版块",
@@ -141,8 +161,16 @@
       "gplt-individual"
     ],
     "schedule": [
-      { "stage": "校内选拔赛", "from": 3, "to": 3 },
-      { "stage": "全国总决赛", "from": 3, "to": 4 }
+      {
+        "stage": "校内选拔赛",
+        "from": 3,
+        "to": 3
+      },
+      {
+        "stage": "全国总决赛",
+        "from": 4,
+        "to": 4
+      }
     ],
     "sessions": {
       "2016": 1,
@@ -199,8 +227,21 @@
       "lanqiao"
     ],
     "schedule": [
-      { "stage": "省赛", "from": 4, "to": 4 },
-      { "stage": "全国总决赛", "from": 5, "to": 8 }
+      {
+        "stage": "校内选拔赛",
+        "from": 3,
+        "to": 3
+      },
+      {
+        "stage": "省赛",
+        "from": 4,
+        "to": 4
+      },
+      {
+        "stage": "全国总决赛",
+        "from": 6,
+        "to": 6
+      }
     ],
     "sessions": {
       "2010": 1,
@@ -263,8 +304,16 @@
       "baidu"
     ],
     "schedule": [
-      { "stage": "初赛", "from": 6, "to": 9 },
-      { "stage": "决赛", "from": 12, "to": 12 }
+      {
+        "stage": "初赛",
+        "from": 6,
+        "to": 9
+      },
+      {
+        "stage": "决赛",
+        "from": 12,
+        "to": 12
+      }
     ],
     "sessions": {
       "2023": 19,
@@ -314,8 +363,21 @@
       "chuanzhi"
     ],
     "schedule": [
-      { "stage": "校内选拔赛", "from": 11, "to": 11 },
-      { "stage": "省赛 / 全国总决赛", "from": 3, "to": 4 }
+      {
+        "stage": "校内选拔赛",
+        "from": 10,
+        "to": 10
+      },
+      {
+        "stage": "省赛",
+        "from": 11,
+        "to": 11
+      },
+      {
+        "stage": "国赛",
+        "from": 12,
+        "to": 12
+      }
     ],
     "sessions": {}
   }
