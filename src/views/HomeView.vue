@@ -139,93 +139,17 @@ onMounted(() => {
   initShapes();
 });
 
-// ── 滚动吸附（延迟 + 非线性缓动）──
-let snapTimer = null;
-let isSnapping = false;
-
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-function animateScrollTo(targetY, duration = 700) {
-  const html = document.documentElement;
-  html.style.scrollBehavior = "auto";
-  isSnapping = true;
-
-  const startY = window.scrollY;
-  const distance = targetY - startY;
-  if (Math.abs(distance) < 5) {
-    html.style.scrollBehavior = "";
-    isSnapping = false;
-    return;
-  }
-
-  const startTime = performance.now();
-
-  function step(currentTime) {
-    if (!isSnapping) return;
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    } else {
-      html.style.scrollBehavior = "";
-      isSnapping = false;
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-function findNearestSection() {
-  const currentY = window.scrollY;
-  const els = document.querySelectorAll("section[id]");
-  let closest = null;
-  let closestDist = Infinity;
-  els.forEach((el) => {
-    const dist = Math.abs(currentY - el.offsetTop);
-    if (dist < closestDist) {
-      closestDist = dist;
-      closest = el;
-    }
-  });
-  return { section: closest, distance: closestDist };
-}
-
-function scheduleSnap() {
-  clearTimeout(snapTimer);
-  if (isSnapping) return;
-  snapTimer = setTimeout(() => {
-    const { section, distance } = findNearestSection();
-    if (section && distance > 50) {
-      animateScrollTo(section.offsetTop, 700);
-    }
-  }, 800);
-}
-
-function onScrollSnap() {
-  if (isSnapping) {
-    // 用户手动滚动了，取消吸附动画
-    isSnapping = false;
-    document.documentElement.style.scrollBehavior = "";
-    return;
-  }
-  scheduleSnap();
-}
-
-onMounted(() => {
-  window.addEventListener("scroll", onScrollSnap, { passive: true });
-  window.addEventListener("scrollend", scheduleSnap, { passive: true });
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", onScrollSnap);
-  window.removeEventListener("scrollend", scheduleSnap);
-  clearTimeout(snapTimer);
-  isSnapping = false;
-  document.documentElement.style.scrollBehavior = "";
-});
+// ── 滚动吸附：已交给 useSectionSnap（调用见上面第 24 行）──
+//   这里原先还有一台独立引擎：「滚动结束 800ms 后，把离得最近的 section 吸过来」
+//   （window 上的 scroll + scrollend 两个监听 + rAF 缓动 + 独占地把
+//   document.documentElement.style.scrollBehavior 写成 auto/'' 那一套）。
+//   会长 2026-09-24 屎山审查点名后删除，理由：
+//     · 它与 useSectionSnap 抢同一次滚动 —— 一次滚轮会被两套逻辑各吸一遍；
+//     · 选目标的判据不同（它按「离谁最近、超过 50px 就吸」，useSectionSnap 按分界算），
+//       叠加出来的落点是两套规则的产物，无法预测；
+//     · 全仓库只有它写过内联 scrollBehavior，而 useSectionSnap 用的是
+//       window.scrollTo({ behavior: 'smooth' })，不需要那行内联样式。
+//   删除后本视图不再注册任何 window 滚动监听。
 
 // ── 我们参与的赛事 logo ──
 // ICPC 与 CCPC 合并为一张卡（与竞赛详情页 xCPC 合并页同构：两块上下堆叠，各自 logo+名称）
