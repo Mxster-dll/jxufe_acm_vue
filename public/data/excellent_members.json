@@ -1,8 +1,8 @@
 {
   "_note": "生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + 综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。",
-  "generated_at": "2026-09-23T09:28:09.909Z",
-  "threshold": 10,
-  "count": 40,
+  "generated_at": "2026-09-23T09:36:32.428Z",
+  "threshold": 5,
+  "count": 44,
   "members": [
     {
       "name": "王海峰",
@@ -416,6 +416,52 @@
       "honors": [],
       "auto": true,
       "score": 11.55
+    },
+    {
+      "name": "詹宇飞",
+      "class": "",
+      "photo": "/images/group_members/full/1634674268.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 7.54
+    },
+    {
+      "name": "吴穹宇",
+      "class": "",
+      "photo": "/images/group_members/full/2272190898.jpg",
+      "honors": [],
+      "auto": true,
+      "score": 6.77
+    },
+    {
+      "name": "周子诺",
+      "class": "",
+      "photo": "/images/group_members/full/1367193699.jpg",
+      "honors": [
+        {
+          "text": "传智杯省一",
+          "type": "contest"
+        },
+        {
+          "text": "传智杯国优",
+          "type": "contest"
+        }
+      ],
+      "auto": true,
+      "score": 6.2
+    },
+    {
+      "name": "曹湛云",
+      "class": "",
+      "photo": "/images/group_members/full/2386221874.jpg",
+      "honors": [
+        {
+          "text": "校优秀学生",
+          "type": "honor"
+        }
+      ],
+      "auto": true,
+      "score": 5.83
     }
   ]
 }

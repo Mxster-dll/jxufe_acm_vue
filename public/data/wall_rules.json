@@ -2,9 +2,9 @@
   "_note": "协会成员墙的入墙规则 —— 会长维护，scripts/gen_group_wall.mjs 在每次 predev / prebuild 自动读取并应用。改完直接 npm run dev（或 npm run build）即可，会重新生成 group_wall.json / group_wall.manifest.json；缩略图另跑 npm run data:group-thumbs。",
   "_peopleNote": "people[] = 入墙规则名单。两种用法：① 人还不在墙上 → 给齐 name/photo/className 就会新增一格；② 人已经在墙上（群成员或站点名单里）→ 只按 name 给他**补标签**，不会变成两张卡。字段：name(真名，必填) / className(副题，可空) / photo(站内绝对路径；新人必填，已在墙上的人不用给) / role(默认「成员」) / title(金色「会长身份」胶囊，**只给本会会长**用) / honors(标签数组，[{text,type}]，type 省略即 honor 绿色「个人荣誉」—— 其他协会的会长身份走这里) / displayName(对外显示名) / from(备注，只用于追溯)。**不要**把「多喜长安」写进来 —— 他是 2024学年会长衷铭川，人已经在墙上（主仓库那份用的是网名，留言已按真名并入）。",
   "_scoreNote": "scoreThreshold = 分数达到该值的人自动入墙。分数口径与「卡片显示顺序」完全一致（src/utils/honorRanking.js：比赛奖牌分 + 手写战绩分 + 荣誉加项 ×1.5），由本生成器用同一份数据算出。2026-09-23 实测分布（候选池 81 位有真名的人）：≥30 分 2 人 / ≥20 分 8 人 / ≥18 分 10 人 / ≥15 分 16 人 / ≥10 分 32 人 / ≥5 分 45 人。当前墙上 141 人已包含全部 ≥5 分的人，所以现在这条规则不会新增任何人 —— 它是给后续数据（新人拿奖、别的协会的人转入）留的自动入口。",
-  "_scoreNote2": "excellentScoreThreshold = 综合分达到该值的人**自动进优秀成员页**（会长 2026-09-23：「设定一个标度，当综合分超过阈值时自动加入优秀成员页」，随后收紧为「不应该包含会长、阈值改到 10」）。判据与上面的 scoreThreshold 是同一份分数、也与页面上的「卡片显示顺序」同一份，故页面上看到的分数就是入册依据。**会长不参与这条规则** —— 他们已经在「协会负责人」页上有卡片，再进优秀成员页会让同一批人在两张名单里重复曝光（实测阈值 15 分时自动入册的三人恰好全是往届会长）。生成物是 public/data/excellent_members.json（= members.json 原样 + auto:true 的人），**members.json 本身不动**。0 = 关闭这条规则。",
+  "_scoreNote2": "excellentScoreThreshold = 综合分达到该值的人**自动进优秀成员页**（会长 2026-09-23：「设定一个标度，当综合分超过阈值时自动加入优秀成员页」→「不应该包含会长」→「5 分以上的全部入墙」）。判据与上面的 scoreThreshold 是同一份分数、也与页面上的「卡片显示顺序」同一份，故页面上看到的分数就是入册依据。**会长不参与这条规则** —— 他们已经在「协会负责人」页上有卡片，再进优秀成员页会让同一批人在两张名单里重复曝光。生成物是 public/data/excellent_members.json（= members.json 原样 + auto:true 的人），**members.json 本身不动**。0 = 关闭这条规则。",
   "scoreThreshold": 20,
-  "excellentScoreThreshold": 10,
+  "excellentScoreThreshold": 5,
   "people": [
     {
       "name": "陈菁雅",
