@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
-  "generated_at": "2026-09-23T09:45:46.297Z",
+  "generated_at": "2026-09-23T09:57:23.299Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -4235,6 +4235,10 @@
         {
           "text": "上饶银行奖学金 *2",
           "type": "honor"
+        },
+        {
+          "text": "保研至电子科技大学",
+          "type": "destination"
         },
         {
           "text": "...",
