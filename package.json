@@ -11,6 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "data:check": "node scripts/check_awards.mjs",
+    "test": "node --test",
+    "verify": "npm run data:check && npm test",
     "data:gen": "node scripts/gen_events_articles.mjs",
     "data:hero-wall": "node scripts/gen_hero_wall.mjs",
     "data:hero-thumbs": "powershell -ExecutionPolicy Bypass -File scripts/gen_hero_wall_thumbs.ps1",
