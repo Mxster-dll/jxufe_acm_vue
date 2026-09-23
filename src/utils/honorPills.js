@@ -40,8 +40,11 @@
  *    冠亚季军算进去，并且在计数或者图标显示模式时，也要显示奖杯的 icon」——
  *    判据是 contestTaxonomy 的 isTrophyRank(row.rank)（rank 1/2/3），与大事记卡片
  *    右上角的角标同一条规则。当前全库命中 39 条 / 33 人，全部是蓝桥杯省赛的
- *    rank 1/2/3（省赛组别第一名等）。**只在计数与图标两种模式生效**：明细模式与
- *    综合分仍按真实奖牌走（冠军手里拿的是金牌，不是特等奖）。
+ *    rank 1/2/3（省赛组别第一名等）。
+ *    **三种模式都有**：计数与图标模式换桶（🏆1 / 🏆）；明细模式那一条自己也带奖杯
+ *    —— emoji 换 🏆、奖牌说法后追加中文名次（「…省赛一等奖（冠军）」，官方说法保留）。
+ *    唯一不跟的是**综合分**：它仍按真实奖牌算（冠军手里拿的是金牌，不是特等奖），
+ *    要不要给名次加成见 honorRanking.js 的 RANK_MULTIPLIER（当前只对手写文本生效）。
  *  - 同一场团队奖，队内每人各计一枚（这正是「🥈2」的含义）
  *  - 零奖牌的档位不显示（如「区域赛🥈2🥉1」里没有 🥇）
  */
@@ -59,6 +62,7 @@ import {
   MEDAL_ORDER,
   PERSONAL_FILES,
   SEGMENT_ORDER,
+  TROPHY_LABEL,
 } from './contestTaxonomy.js'
 
 export { FAMILY_LABELS }
@@ -380,17 +384,24 @@ export function recordsToDetails(records = []) {
   const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
   const list = records
     .filter((r) => r?.title && (r.medalText || MEDAL_TEXT[r.medal]))
-    .map((r) => ({
-      title: r.title,
-      medal: r.medal,
-      medalText: r.medalText || MEDAL_TEXT[r.medal],
-      emoji: MEDAL_EMOJI[r.medal],
-      year: r.year,
-      date: r.date || '',
-      rank: r.rank ?? null,
-      family: r.family,
-      segment: r.segment || '',
-    }))
+    .map((r) => {
+      /* 冠亚季军这一条明细**自己带出奖杯**（会长 2026-09-24：「详情模式下，也要显示对应条目」）：
+         图标换成 🏆（与计数/图标模式同一个桶），奖牌说法后面补中文名次。
+         ⚠ 官方说法必须保留 —— 「一等奖」是蓝桥杯的叫法，不能替它改成「金牌」；
+         名次是**追加**上去的，所以「官方档位」与「冠军身份」两种信息都在。 */
+      const trophy = isTrophyRank(r.rank) ? TROPHY_LABEL[r.rank] : ''
+      return {
+        title: r.title,
+        medal: r.medal,
+        medalText: (r.medalText || MEDAL_TEXT[r.medal]) + (trophy ? `（${trophy}）` : ''),
+        emoji: trophy ? MEDAL_EMOJI.grand : MEDAL_EMOJI[r.medal],
+        year: r.year,
+        date: r.date || '',
+        rank: r.rank ?? null,
+        family: r.family,
+        segment: r.segment || '',
+      }
+    })
 
   /* 撞车分两层，先算两张表再一次性补后缀（只看**确实撞车**的那一组，其余一个字符都不动）：
        ① 同一场比赛既拿邀请赛又拿省赛 → 标题与奖牌一模一样，两条只差 segment；
