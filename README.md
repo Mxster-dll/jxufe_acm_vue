@@ -89,10 +89,11 @@ jxufe-acm-vue/
 │   ├── gen_group_wall.mjs         # ★ 生成协会成员墙 group_wall.*.json + excellent_members.json
 │   ├── gen_group_wall_thumbs.ps1  # ★ 生成成员墙缩略图 384/256（本地 Windows 专用，不参与服务器构建）
 │   ├── gen_event_badges.mjs       # 由 awards/ + events/ 生成大事记奖牌徽章 event_badges.json
-│   └── source/                    # 生成器专用输入（不参与运行时，不部署）
-│       ├── editions/gplt/<年>.json    # 天梯赛：国赛/省赛 × 高校奖/团队奖/个人奖 + scale
-│       ├── editions/lanqiao/<年>.json # 蓝桥杯：国赛/省赛 × 个人奖（含科目/排名）
-│       └── baidu.json                 # 百度之星：决赛/初赛场次 × 获奖名单
+│   ├── source/                    # 生成器专用输入（不参与运行时，不部署）
+│   │   ├── editions/gplt/<年>.json    # 天梯赛：国赛/省赛 × 高校奖/团队奖/个人奖 + scale
+│   │   ├── editions/lanqiao/<年>.json # 蓝桥杯：国赛/省赛 × 个人奖（含科目/排名）
+│   │   └── baidu.json                 # 百度之星：决赛/初赛场次 × 获奖名单
+│   └── README.md                  # ★ 本目录五类文件与规矩（构建链 / 按需 / 共用库 / 一次性工具 / 数据源）
 
 └── src/
     ├── main.js                    # 应用入口
