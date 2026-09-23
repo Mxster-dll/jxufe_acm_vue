@@ -36,6 +36,12 @@
  *    不并入金牌；分值见 honorRanking.js 的 MEDAL_BASE.grand。全站当前只有一条
  *    （第五届蓝桥杯国赛 陈天楚），是 e5da23a 建新数据层时按「一等/二等/三等」映射
  *    丢掉的，已用 PR #13 补回并加了校验白名单。
+ *  - **冠亚季军也进 🏆 桶**（会长 2026-09-24 裁定）：「个人荣誉统计时，要把各比赛的
+ *    冠亚季军算进去，并且在计数或者图标显示模式时，也要显示奖杯的 icon」——
+ *    判据是 contestTaxonomy 的 isTrophyRank(row.rank)（rank 1/2/3），与大事记卡片
+ *    右上角的角标同一条规则。当前全库命中 39 条 / 33 人，全部是蓝桥杯省赛的
+ *    rank 1/2/3（省赛组别第一名等）。**只在计数与图标两种模式生效**：明细模式与
+ *    综合分仍按真实奖牌走（冠军手里拿的是金牌，不是特等奖）。
  *  - 同一场团队奖，队内每人各计一枚（这正是「🥈2」的含义）
  *  - 零奖牌的档位不显示（如「区域赛🥈2🥉1」里没有 🥇）
  */
@@ -47,6 +53,7 @@ import {
   FAMILY_OF_FILE,
   FAMILY_ORDER,
   GIRLS_RE,
+  isTrophyRank,
   JIANGXI_RE,
   MEDAL_EMOJI,
   MEDAL_ORDER,
@@ -315,8 +322,15 @@ export function recordsToPillParts(records = [], mode = 'count') {
     if (!bySegment) continue
     if (!bySegment[r.segment]) bySegment[r.segment] = zeroCounts()
     const bucket = bySegment[r.segment]
-    if (bucket[r.medal] === undefined) continue
-    bucket[r.medal] += 1
+    /* 冠亚季军（rank 1/2/3）与特等奖**同桶**，都显示 🏆 —— 会长 2026-09-24 裁定：
+       「个人荣誉统计时，要把各比赛的冠亚季军算进去，并且在计数或者图标显示模式时，
+       也要显示奖杯的 icon」。与大事记卡片右上角的角标同一条规则
+       （scripts/gen_event_badges.mjs 里也是 isTrophyRank(row.rank) ? 'grand' : row.medal_type）。
+       ⚠ 只影响**计数 / 图标**两种模式的桶；明细模式与综合分仍用真实奖牌
+       （冠军手里拿的是金牌，不是特等奖 —— 别把 grand 写回 r.medal）。 */
+    const key = isTrophyRank(r.rank) ? 'grand' : r.medal
+    if (bucket[key] === undefined) continue
+    bucket[key] += 1
   }
 
   const pills = []
