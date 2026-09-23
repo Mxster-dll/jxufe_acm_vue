@@ -26,8 +26,6 @@ const MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', 
     坐标轴 12 格等宽（区间条的 left/width 都是按 12 个月算的百分比），所以当下这一列的
     位置就是 (月份-1)/12，宽度 1/12。跨年不影响：赛程表本身就是「一年之内」的视角。 */
 const nowMonth = new Date().getMonth() + 1
-const nowLeft = `${((nowMonth - 1) / 12) * 100}%`
-const nowWidth = `${100 / 12}%`
 
 /* 宽屏那条贯穿整列的高亮：放在「所有行的容器」里，左边让出名称列（--name-col）后 12 等分。
    早先是每行泳道里各放一条、靠 ±11px 溢出互相接上 —— 行首改成「图标在上、名字在下」后，
@@ -51,7 +49,10 @@ const PALETTE = [
 /** 同一赛事的每个阶段**各占一行**（会长 2026-09-23：「我希望仍在不同行，只是取消横线」）。
     早先是「月份重叠才下沉」的贪心泳道，而实际数据里一场赛事的各阶段月份并不重叠
     （邀请赛 4-7 月 / 网络预选赛 9 月 / 区域赛 10-12 月），于是三条都落在同一行。
-    现在按 from 升序一条一行 —— 行数 = 阶段数；将来真出现月份重叠也天然分成两行。 */
+    现在按 from 升序一条一行 —— 行数 = 阶段数；将来真出现月份重叠也天然分成两行。
+
+    ⚠ 它**就地**给 bar 写 lane（模板按 bar.lane 算 top，见 :164），返回值是行数（喂给行高的
+    `--lanes`）—— 别把这个数字当成「排好序的条」：bars 本身仍是调用方给的顺序。 */
 function packBars(bars) {
   const sorted = [...bars].sort((a, b) => a.from - b.from)
   sorted.forEach((bar, i) => {
@@ -103,10 +104,6 @@ const rows = computed(() => {
       width: ((s.to - s.from + 1) / 12) * 100,
       lane: 0,
     }))
-    const froms = bars.map((b) => b.from)
-    const tos = bars.map((b) => b.to)
-    const spanFrom = froms.length ? Math.min(...froms) : 0
-    const spanTo = tos.length ? Math.max(...tos) : 0
     return {
       slug: g.key,
       name: g.name,
@@ -115,8 +112,6 @@ const rows = computed(() => {
       color: PALETTE[i % PALETTE.length],
       lanes: packBars(bars),
       bars,
-      // 窄屏清单右上角的区间概览：「3–6月」/「9月」
-      spanText: spanFrom ? (spanFrom === spanTo ? `${spanFrom}月` : `${spanFrom}–${spanTo}月`) : '',
     }
   })
 })
