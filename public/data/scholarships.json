@@ -1,0 +1,302 @@
+{
+  "_note": "国家奖学金 / 国家励志奖学金 —— 协会成员的获奖荣誉（个人荣誉·绿色）。生成物，请勿手改：由 07_技术项目/奖学金数据/build_scholarships.py 从信息库抓取结果（jxufe_scholarships.json）与协会各份名单匹配生成。文字口径 `<学年>学年<奖项>`；type 恒为 honor。每条带 matchBasis（身份判据）与 sourceUrl（原始公示），可逐条回溯。「已不在站点任何名单里的人」也照存 —— 显示端按综合分与头像门槛决定是否露出，数据不因当前没有展示位而丢失。",
+  "source": {
+    "file": "D:\\江西财经大学信息库\\未处理\\jxufe_scholarships.json",
+    "collectedAt": "2026-09-23",
+    "coverage": [
+      "2016-2017",
+      "2017-2018",
+      "2018-2019",
+      "2019-2020",
+      "2020-2021",
+      "2021-2022",
+      "2022-2023",
+      "2023-2024",
+      "2024-2025"
+    ],
+    "generator": "07_技术项目/奖学金数据/build_scholarships.py",
+    "generatedAt": "2026-09-24T00:35:53"
+  },
+  "people": {
+    "万俊哲": [
+      {
+        "text": "2024-2025学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "数据科学与大数据技术",
+        "studentId": "0235108",
+        "matchBasis": "学号 0235108、源记入学 2023 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202512/t20251225_1424488.html"
+      }
+    ],
+    "吴松烨": [
+      {
+        "text": "2024-2025学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "信息管理与信息系统",
+        "studentId": "0224766",
+        "matchBasis": "学号 0224766、源记入学 2022 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202512/t20251225_1424488.html"
+      }
+    ],
+    "吴清辉": [
+      {
+        "text": "2022-2023学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2022-2023",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理学院",
+        "major": "",
+        "studentId": "0211410",
+        "matchBasis": "学号 0211410、源记入学 2021 年",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1179.html"
+      },
+      {
+        "text": "2023-2024学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1227.html"
+      }
+    ],
+    "官祺舰": [
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "张云菲": [
+      {
+        "text": "2024-2025学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "0235011",
+        "matchBasis": "学号 0235011、源记入学 2023 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202512/t20251225_1424488.html"
+      }
+    ],
+    "张锦宇": [
+      {
+        "text": "2023-2024学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "0210761",
+        "matchBasis": "学号 0210761、源记入学 2021 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202412/t20241230_1172663.html"
+      }
+    ],
+    "朱子豪": [
+      {
+        "text": "2023-2024学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "虚拟现实（VR）现代产业学院",
+        "major": "",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1227.html"
+      },
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "虚拟现实（VR）现代产业学院",
+        "major": "虚拟现实技术",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "牛志义": [
+      {
+        "text": "2022-2023学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2022-2023",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理学院",
+        "major": "",
+        "studentId": "0224571",
+        "matchBasis": "学号 0224571、源记入学 2022 年",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1179.html"
+      },
+      {
+        "text": "2023-2024学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1227.html"
+      }
+    ],
+    "王俊杰": [
+      {
+        "text": "2023-2024学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "0224588",
+        "matchBasis": "学号 0224588、源记入学 2022 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202412/t20241230_1172663.html"
+      }
+    ],
+    "王柯迪": [
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "信息管理与信息系统（金融智能）",
+        "studentId": "",
+        "matchBasis": "源无学号、专业相符",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "邓一帆": [
+      {
+        "text": "2022-2023学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2022-2023",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "软件与物联网工程学院",
+        "major": "",
+        "studentId": "0223591",
+        "matchBasis": "学号 0223591、源记入学 2022 年",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1179.html"
+      },
+      {
+        "text": "2023-2024学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "软件与物联网工程学院",
+        "major": "",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1227.html"
+      },
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "软件与物联网工程学院",
+        "major": "软件工程",
+        "studentId": "",
+        "matchBasis": "源无学号、专业相符",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "陶金杰": [
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "",
+        "matchBasis": "源无学号、专业相符",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "韩家欢": [
+      {
+        "text": "2022-2023学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2022-2023",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理学院",
+        "major": "",
+        "studentId": "0224847",
+        "matchBasis": "学号 0224847、源记入学 2022 年",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1179.html"
+      },
+      {
+        "text": "2023-2024学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2023-2024",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "",
+        "studentId": "",
+        "matchBasis": "源无学号",
+        "sourceUrl": "http://xgc.jxufe.edu.cn/news-show-1227.html"
+      },
+      {
+        "text": "2024-2025学年国家励志奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家励志奖学金",
+        "level": "本科生",
+        "college": "信息管理与数学学院",
+        "major": "信息与计算科学",
+        "studentId": "",
+        "matchBasis": "源无学号、专业相符",
+        "sourceUrl": "https://xgc.jxufe.edu.cn/news-show-1286.html"
+      }
+    ],
+    "黄亦诚": [
+      {
+        "text": "2024-2025学年国家奖学金",
+        "type": "honor",
+        "academicYear": "2024-2025",
+        "scholarship": "国家奖学金",
+        "level": "本科生",
+        "college": "计算机与人工智能学院",
+        "major": "计算机科学与技术",
+        "studentId": "0224574",
+        "matchBasis": "学号 0224574、源记入学 2022 年、专业相符",
+        "sourceUrl": "http://www.moe.gov.cn/srcsite/A05/s7505/202512/t20251225_1424488.html"
+      }
+    ]
+  }
+}

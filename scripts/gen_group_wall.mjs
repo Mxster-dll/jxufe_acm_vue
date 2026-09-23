@@ -7,6 +7,7 @@
  *   duties.json         协会职务胶囊（24 人 / 32 条，来自三份干事名单）
  *   members.json        优秀成员的荣誉
  *   leaders.json        负责人的荣誉
+ *   scholarships.json   国家奖学金 / 国家励志奖学金（生成物，来自信息库全校名单）
  *   awards/*.json       站点的结构化获奖数据 → 自动汇总成比赛战绩胶囊
  *   hero_wall.json      主仓库手写的留言（**只读**）→ 按姓名并入，对不上就不写
  *
@@ -152,6 +153,14 @@ for (const p of rulePeople) {
 const duties = readJson(path.join(DATA, 'duties.json'))
 const membersJson = readJson(path.join(DATA, 'members.json'))
 const leadersJson = readJson(path.join(DATA, 'leaders.json'))
+/* 奖学金（国家奖学金 / 国家励志奖学金）——**生成物**，请勿手改：
+   由工作区的 07_技术项目/奖学金数据/build_scholarships.py 从信息库那份**全校**名单
+   （jxufe_scholarships.json，4379 条）匹配到协会成员后产出，每人每条都带 identity
+   判据（matchBasis）与原始公示 URL（sourceUrl），可逐条回溯。
+   为什么单独一份、不手写进上面两份名单：全校名单每年都会新增学年，重跑脚本即可；
+   而且它还要承载「已不在站点任何名单里的人」（见下面的 scorePool）。 */
+const scholarshipsJson = readJson(path.join(DATA, 'scholarships.json'))
+const scholarshipPeople = scholarshipsJson.people || {}
 
 const awards = {}
 for (const f of AWARD_FILES) awards[f] = readJson(path.join(DATA, `awards/${f}.json`))
@@ -170,6 +179,10 @@ const addSite = (name, list) => {
 }
 for (const m of membersJson) addSite(m.name, m.honors)
 for (const l of leadersJson) addSite(l.name, l.achievements)
+/* 奖学金也并进这同一张表（而不是单独走一条渲染分支）—— 于是墙上标签、悬停卡、
+   综合分三处自动都用上，并且和手写条目一起按 text 去重，不会重复显示。
+   条目自带 `type: 'honor'`，显式走绿色，不依赖 honorType.js 的关键词兜底。 */
+for (const [name, list] of Object.entries(scholarshipPeople)) addSite(name, list)
 
 /** 站点名单里的班级/头像：墙上那份是群昵称侧整理的，只有 36 人有班级，补全一下。
     `----` 是匿名同学故意留的占位（别把「----」当班级写进副题）。 */
@@ -302,6 +315,16 @@ for (const m of members) {
 }
 for (const p of [...membersJson, ...leadersJson]) {
   const key = String(p?.name || '').trim()
+  if (!key || scorePool.has(key)) continue
+  scorePool.set(key, { name: key, honors: manualHonorsOf({ name: key, realName: key }) })
+}
+/* 奖学金名单里的人也进池：他们可能既不在群里、也不在站点两份名单上
+   （例：协会正式队员 官祺舰 / 朱子豪，只有 队员信息.json 里有他们），
+   但荣誉该参与综合分 —— 会长 2026-09-24：「没有显示荣誉的地方不代表不能存他们的信息，
+   只是我们显示时，会卡一下综合分」。今日不新增任何人：他们都没有站点头像，
+   会走下面的 skippedByScore 记一笔，等补了头像（走头像归档流程）就自动露出。 */
+for (const name of Object.keys(scholarshipPeople)) {
+  const key = String(name).trim()
   if (!key || scorePool.has(key)) continue
   scorePool.set(key, { name: key, honors: manualHonorsOf({ name: key, realName: key }) })
 }
