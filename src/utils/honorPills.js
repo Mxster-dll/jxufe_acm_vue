@@ -41,8 +41,9 @@
  *    判据是 contestTaxonomy 的 isTrophyRank(row.rank)（rank 1/2/3），与大事记卡片
  *    右上角的角标同一条规则。当前全库命中 39 条 / 33 人，全部是蓝桥杯省赛的
  *    rank 1/2/3（省赛组别第一名等）。
- *    **三种模式都有**：计数与图标模式换桶（🏆1 / 🏆）；明细模式那一条自己也带奖杯
- *    —— emoji 换 🏆、奖牌说法后追加中文名次（「…省赛一等奖（冠军）」，官方说法保留）。
+ *    **三种模式都有**：计数与图标模式换桶（🏆1 / 🏆）；明细模式那一条以名次代替奖牌
+ *    说法 —— 显示为「🏆 第12届蓝桥杯 C++·B组省赛冠军」（会长 2026-09-24 定稿格式，
+ *    档位让位给名次，不再是「…省赛一等奖（冠军）」）。
  *    唯一不跟的是**综合分**：它仍按真实奖牌算（冠军手里拿的是金牌，不是特等奖），
  *    要不要给名次加成见 honorRanking.js 的 RANK_MULTIPLIER（当前只对手写文本生效）。
  *  - 同一场团队奖，队内每人各计一枚（这正是「🥈2」的含义）
@@ -385,15 +386,15 @@ export function recordsToDetails(records = []) {
   const list = records
     .filter((r) => r?.title && (r.medalText || MEDAL_TEXT[r.medal]))
     .map((r) => {
-      /* 冠亚季军这一条明细**自己带出奖杯**（会长 2026-09-24：「详情模式下，也要显示对应条目」）：
-         图标换成 🏆（与计数/图标模式同一个桶），奖牌说法后面补中文名次。
-         ⚠ 官方说法必须保留 —— 「一等奖」是蓝桥杯的叫法，不能替它改成「金牌」；
-         名次是**追加**上去的，所以「官方档位」与「冠军身份」两种信息都在。 */
+      /* 冠亚季军这条明细**以名次代替奖牌说法**（会长 2026-09-24 定稿格式）：
+           🏆 第12届蓝桥杯 C++·B组省赛冠军
+         而不是「…省赛一等奖（冠军）」—— 冠军就是这一条的身份，档位让位给它。
+         判据与计数 / 图标两个模式的 🏆 桶同源（isTrophyRank），三处永远一致。 */
       const trophy = isTrophyRank(r.rank) ? TROPHY_LABEL[r.rank] : ''
       return {
         title: r.title,
         medal: r.medal,
-        medalText: (r.medalText || MEDAL_TEXT[r.medal]) + (trophy ? `（${trophy}）` : ''),
+        medalText: trophy || r.medalText || MEDAL_TEXT[r.medal],
         emoji: trophy ? MEDAL_EMOJI.grand : MEDAL_EMOJI[r.medal],
         year: r.year,
         date: r.date || '',
