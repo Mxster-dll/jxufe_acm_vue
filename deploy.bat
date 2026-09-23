@@ -32,8 +32,10 @@ set SITE_URL=https://jxufe-acm.cn
 :: scripts/gen_group_wall.mjs likewise - prebuild runs it too: it builds the
 :: club member wall (group_wall.manifest.json + group_wall.json) from
 :: group_members.json, duties.json and awards/.
-:: BOTH must be uploaded - miss one and the server build fails outright.
-:: (Nothing else in scripts/ is needed on the server - upload just those two.
+:: scripts/gen_event_badges.mjs likewise - prebuild runs it too: it builds the
+:: timeline medal badges (event_badges.json) from awards/ + events/.
+:: ALL THREE must be uploaded - miss one and the server build fails outright.
+:: (Nothing else in scripts/ is needed on the server - upload just those three.
 ::  The thumbnail generators are PowerShell scripts and run locally only.)
 set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs scripts\gen_group_wall.mjs scripts\gen_event_badges.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519

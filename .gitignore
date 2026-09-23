@@ -7,3 +7,14 @@ dist-ssr
 public/share/
 .vscode/*
 !.vscode/extensions.json
+
+# 生成物：由 prebuild 的 scripts/gen_*.mjs 每次都重新生成，不入库。
+# 入库只会带来两种噪声：纯粹的 generated_at 时间戳 diff、以及「生成物比生成器活得久」
+# 造成的静默陈旧数据（例：把 wall_rules.json 的 excellentScoreThreshold 改成 0 后，
+# 页面仍在读上一次落盘的名单）。部署不受影响 —— deploy.bat 用 tar 打包本地工作树
+# （不是 git 跟踪文件），服务器端 npm run build 的 prebuild 会重新生成它们。
+public/data/group_wall.json
+public/data/group_wall.manifest.json
+public/data/excellent_members.json
+public/data/event_badges.json
+*.log

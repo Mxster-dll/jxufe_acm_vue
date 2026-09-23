@@ -489,21 +489,43 @@ writeJson(path.join(DATA, 'group_wall.json'), {
     '留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。' +
     'tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。',
   generated_at: now,
-  tiles: Object.fromEntries(items.map((x) => [x.file, x.tile])),
+  tiles: checkTiles(items),
 })
 
-if (EXCELLENT_THRESHOLD > 0) {
-  writeJson(path.join(DATA, 'excellent_members.json'), {
-    _note:
-      '生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + ' +
-      '综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。' +
-      '分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。',
-    generated_at: now,
-    threshold: EXCELLENT_THRESHOLD,
-    count: membersJson.length + excellentAdded.length,
-    members: [...membersJson, ...excellentAdded],
-  })
+/**
+ * tiles 字典以**缩略图文件名**为键 —— 两个人若解析出同一个文件名，后者会静默覆盖前者，
+ * 而 count 与日志用的都是 items.length，两者不一致时页面只是少一格、不报错。
+ * 故这里显式断言（实测 141 人 / 141 个唯一文件名，从未触发过）。
+ */
+function checkTiles(list) {
+  const tiles = Object.fromEntries(list.map((x) => [x.file, x.tile]))
+  const keys = Object.keys(tiles)
+  if (keys.length !== list.length) {
+    const seen = new Set()
+    const dupes = list.map((x) => x.file).filter((f) => (seen.has(f) ? true : (seen.add(f), false)))
+    throw new Error(
+      `[group-wall] 缩略图文件名冲突：${list.length} 人只得到 ${keys.length} 个键` +
+        `（重复：${[...new Set(dupes)].join('、')}）—— 请先查 group_members.json 的 thumb/photo`
+    )
+  }
+  return tiles
 }
+
+// 无条件写。excellentScoreThreshold = 0 的语义是「关闭这条规则」（见 wall_rules.json 的 _scoreNote2），
+// 而页面读的就是这份生成物 —— 早先写成「> 0 才落盘」，设 0 时文件根本不更新，
+// 页面会继续吃上一次的旧名单（阈值已改、名单没变），静默发陈旧数据。
+// 关闭时这里写 members.json 原样（excellentAdded 在 :364 那个 if 里就已为空），页面拿到未入册的名单。
+writeJson(path.join(DATA, 'excellent_members.json'), {
+  _note:
+    '生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + ' +
+    '综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。' +
+    '分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。' +
+    '阈值 ≤ 0（关闭规则）时 members 就是 members.json 原样。',
+  generated_at: now,
+  threshold: EXCELLENT_THRESHOLD,
+  count: membersJson.length + excellentAdded.length,
+  members: [...membersJson, ...excellentAdded],
+})
 
 const tagTally = items.reduce((s, x) => s + x.tile.tags.length, 0)
 const typeTally = {}
