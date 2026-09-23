@@ -518,25 +518,50 @@ async function fetchJson(url) {
   return res.json()
 }
 
+/** 上一次加载里没取到的数据文件（空数组 = 全都读到了）。排查与测试用它。 */
+export const missingHonorSources = []
+
+/** 取不到就返回 null 并**记下来**（而不是静默吞掉）—— 见下面 loadHonorRecords 的说明。 */
+async function fetchJsonSoft(url, label) {
+  try {
+    return await fetchJson(url)
+  } catch (err) {
+    missingHonorSources.push({ url, label, message: String((err && err.message) || err) })
+    return null
+  }
+}
+
 let recordsCache = null
 
 /**
  * 加载并缓存「姓名 → 获奖记录」原始索引。
  * 排名（honorRanking.js）与胶囊共用这一份缓存，整站只请求一次。
- * 任何一份数据取不到都只影响对应赛事，不会让页面报错。
+ * 任何一份数据取不到都只影响对应赛事，不会让页面报错 —— 但**必须留下信号**：
+ * 原先逐文件 `.catch(() => [])` 连一行日志都没有，结果是「某个系列在胶囊与排名里
+ * 凭空消失」在页面上完全看不出来（2026-09-24 审查）。现在失败的文件会攒进
+ * missingHonorSources 并在这里统一 warn 一条（一次说清缺了哪几份）。
  */
 export function loadHonorRecords() {
   if (!recordsCache) {
+    missingHonorSources.length = 0
     recordsCache = Promise.all([
-      fetchJson(`${DATA_ROOT}/competitions.json`).catch(() => []),
-      Promise.all(AWARD_FILES.map((file) => fetchJson(`${DATA_ROOT}/awards/${file}.json`).catch(() => null))),
+      fetchJsonSoft(`${DATA_ROOT}/competitions.json`, 'competitions.json（赛事元信息）'),
+      Promise.all(
+        AWARD_FILES.map((file) => fetchJsonSoft(`${DATA_ROOT}/awards/${file}.json`, `awards/${file}.json`))
+      ),
     ])
-      .then(([competitions, sets]) =>
-        collectRecords({
-          competitions,
+      .then(([competitions, sets]) => {
+        if (missingHonorSources.length) {
+          console.warn(
+            `[honorPills] ${missingHonorSources.length} 份战绩数据没读到，对应系列的胶囊与排名会缺失：` +
+              missingHonorSources.map((m) => `${m.label} —— ${m.message}`).join('；')
+          )
+        }
+        return collectRecords({
+          competitions: competitions || [],
           awards: Object.fromEntries(AWARD_FILES.map((file, i) => [file, sets[i] || []])),
         })
-      )
+      })
       .catch((err) => {
         console.error('比赛战绩数据加载失败:', err)
         return new Map()
