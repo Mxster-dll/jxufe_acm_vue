@@ -292,7 +292,12 @@ const clampCard = (tile) => {
   const r = tile.getBoundingClientRect()
   const c = root.getBoundingClientRect()
   if (!c.width || !c.height) return
-  const cardW = Math.min(CARD_W, c.width - 32)
+  // 卡宽随内容自适应（见 .wall__card 的 width: fit-content），所以这里量实测值：
+  // 既用于边界钳制，也回写 --card-w 供「头像起飞点」--from-x 定位。
+  // 用 offsetWidth 而不是 getBoundingClientRect —— 后者含卡片自身的 scale(.88)。
+  const cardEl = tile.querySelector('.wall__card')
+  const cardW = Math.min((cardEl && cardEl.offsetWidth) || CARD_W, c.width - 32)
+  if (cardEl) tile.style.setProperty('--card-w', cardW + 'px')
   const halfW = cardW / 2 + 10
   const halfH = CARD_H / 2 + 10
   const cx = r.left + r.width / 2 - c.left
@@ -604,6 +609,10 @@ watch(() => props.hoverCard, () => clearPointerTile())
   z-index: 0;
   overflow: hidden;
   animation: wall-in 520ms ease both;
+  /* 悬停卡的头像「起飞点」要按卡宽算（见 .wall__card 的 --from-x），
+     而卡宽现在随内容自适应 —— clampCard 会在每次悬停时把实测宽度写回这一层，
+     这里的 360px 只是没量到之前的兜底值。 */
+  --card-w: 360px;
 }
 @keyframes wall-in {
   from { opacity: 0; }
@@ -703,7 +712,6 @@ watch(() => props.hoverCard, () => clearPointerTile())
    悬停卡（仅 hover 设备）
    ========================================================================== */
 .wall__card {
-  --card-w: 360px;
   --avatar: 96px;
   /* 旧版头像墙（integration 的 AvatarMosaic）悬停卡的内边距是 12px、卡内间距 12px。
      卡片视觉整体按旧版还原（会长 2026-09-23：无遮罩时的悬停要「之前我做的样式」）：
@@ -725,7 +733,13 @@ watch(() => props.hoverCard, () => clearPointerTile())
   display: flex;
   align-items: center;
   gap: 12px;
-  width: min(var(--card-w), calc(100vw - 32px));
+  /* 卡宽**按内容自适应**（会长 2026-09-23：「卡片没有适应宽度，有些内容会超」）：
+     内容短就窄、长就宽，上限 420px / 视口 −32px；再长就由标签换行消化，
+     所以卡里没有任何一层会越界。原来写死 360px，长班级与长标签只能被裁或顶出去。
+     --card-w 现在只作**头像起飞**的参照，由 clampCard 每次悬停按实测宽度回写。 */
+  width: fit-content;
+  min-width: min(300px, calc(100vw - 32px));
+  max-width: min(420px, calc(100vw - 32px));
   padding: var(--pad);
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.058);
@@ -795,7 +809,8 @@ watch(() => props.hoverCard, () => clearPointerTile())
   border-radius: 999px;
   background: rgba(26, 115, 232, 0.08);
   color: #1a73e8;
-  white-space: nowrap;
+  /* 不再 nowrap：nowrap 的 flex 项不肯收缩，会把卡片顶穿。放不下时在空格处换行
+     （整条战绩本身就是「系列 段 段」用空格分隔的，所以换行正好落在段之间）。 */
 }
 
 /* 带头像墙分色的标签（协会成员头像墙用）——颜色走全站那套：
@@ -807,7 +822,6 @@ watch(() => props.hoverCard, () => clearPointerTile())
   font-size: 0.72rem;
   line-height: 1.7;
   padding: 1px 8px;
-  white-space: nowrap;
 }
 
 /* 悬停卡只在**激活态**出现 —— 底纹态悬停是上面那块模糊亮斑，不弹卡。
