@@ -515,6 +515,7 @@ function awardClass(medal) {
   font-size: var(--font-size-xs);
   font-weight: 700;
 }
+.award-grand { background: rgba(198,40,40,0.1); color: #d32f2f; }
 .award-gold { background: rgba(199,145,0,0.1); color: #c79100; }
 .award-silver { background: rgba(122,139,153,0.12); color: #7a8b99; }
 .award-bronze { background: rgba(184,115,51,0.1); color: #b87333; }

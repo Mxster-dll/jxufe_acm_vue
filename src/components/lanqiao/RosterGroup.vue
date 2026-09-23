@@ -143,6 +143,7 @@ function alignName(name) {
   font-weight: 700;
   text-align: center;
 }
+.lq-award-tag.medal-grand { background: rgba(198,40,40,0.1); color: #d32f2f; }
 .lq-award-tag.medal-gold { background: rgba(199,145,0,0.1); color: #c79100; }
 .lq-award-tag.medal-silver { background: rgba(122,139,153,0.12); color: #7a8b99; }
 .lq-award-tag.medal-bronze { background: rgba(184,115,51,0.1); color: #b87333; }
