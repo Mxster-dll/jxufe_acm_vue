@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + 综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。",
-  "generated_at": "2026-09-23T09:36:32.428Z",
+  "generated_at": "2026-09-23T09:40:36.717Z",
   "threshold": 5,
   "count": 44,
   "members": [
@@ -304,7 +304,9 @@
       "photo": "/images/excellent_member/wqh.png",
       "honors": [
         "保研至苏州大学",
-        "2022 - 2025三年国励奖学金"
+        "2022-2023学年国家励志奖学金",
+        "2023-2024学年国家励志奖学金",
+        "2024-2025学年国家励志奖学金"
       ]
     },
     {
