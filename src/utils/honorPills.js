@@ -288,6 +288,10 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
             award: String(row.competition_name || ''),
             title: detailTitle(family, row, segment),
             medalText: medalTextOf(family, medal),
+            // 名次（awards 的 `rank` 字段）。当前只随记录带出：胶囊计数与综合分都**不看它**
+            // （奖牌档位是另一件事，冠军队照样拿金牌）。留着是为了将来要给冠亚季军加成时
+            // 不必再改取数层 —— 判据统一用 contestTaxonomy 的 isTrophyRank()。
+            rank: Number.isInteger(Number(row.rank)) && Number(row.rank) > 0 ? Number(row.rank) : null,
           })
         }
       }
@@ -391,6 +395,7 @@ export function recordsToDetails(records = []) {
       emoji: MEDAL_EMOJI[r.medal],
       year: r.year,
       date: r.date || '',
+      rank: r.rank ?? null,
       family: r.family,
       segment: r.segment || '',
     }))

@@ -19,6 +19,20 @@
  *
  * medal_type 取值：gold / silver / bronze；lanqiao 另允许 grand（特等奖，
  * 只有第五届国赛 陈天楚 这一条）。grand 与金/银/铜并列展示，不并入一等奖。
+ *
+ * 名次字段（2026-09-24 新增，**可选**，规范位置一律紧跟 medal_type）：
+ *   rank          单一数字名次。**语义随赛事不同**：xCPC 是队伍名次、
+ *                 蓝桥杯/百度之星是选手在本组别内的名次。作用域见下面的 rankScope。
+ *   rank_official xCPC 专有：正式队排名（源里 rankOfficial）。rank 取总排名。
+ *   rank_provincial xCPC 专有：「暨江西省赛」场的**省赛组内名次**（源里按省赛分组重算），
+ *                 只写在 medal_level === 'provincial' 那条上 —— 同一支队伍当天有
+ *                 邀请赛 + 省赛两条记录，全场总排名两条都成立，组内名次只对省赛有意义。
+ *   rank_to       并列区间上界（天梯赛推算专用）。天梯赛官方不公布名次，
+ *                 rank = 同分并列块的起点、rank_to = 块尾，两者相同则省略 rank_to。
+ *   rank_source   'official'（榜单直接给的）| 'derived'（按名额与分数推算的）。
+ *   规则：出现即须落在规范位置；rank 为 int ≥ 1；rank_to ≥ rank；作用域内
+ *   「单一数字名次」不得被两个人共用（带 rank_to 的区间不参与该检查，
+ *   因为同分并列块首被多人共用是预期）。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -45,27 +59,36 @@ const GROUPS = ['A', 'B', '研究生组']
 
 const SCHEMA = {
   'icpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial'],
+    rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
   },
   'ccpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial'],
+    rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
   },
   'gplt-team.json': {
     keys: ['session', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    optionalKeys: [],
     levels: null,
     team: true
   },
   'gplt-individual.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'rank_to', 'rank_source', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_to', 'rank_source'],
+    rankScope: (r) => `${r.session}`,
     levels: SINGLE_LEVELS,
     team: false
   },
   'lanqiao.json': {
-    keys: ['session', 'members', 'language', 'group', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'language', 'group', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.session}|${r.medal_level}|${r.language}|${r.group}`,
     levels: SINGLE_LEVELS,
     team: false,
     langs: LANGS,
@@ -73,12 +96,16 @@ const SCHEMA = {
     medals: GRAND_MEDAL_TYPES
   },
   'baidu.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.date}`,
     levels: SINGLE_LEVELS,
     team: false
   },
   'chuanzhi.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.session}|${r.medal_level}`,
     levels: SINGLE_LEVELS,
     team: false
   }
@@ -91,8 +118,11 @@ function validateRecords(file, rows) {
 
   rows.forEach((r, i) => {
     const keys = Object.keys(r)
-    if (keys.length !== spec.keys.length || keys.some((k, j) => k !== spec.keys[j])) {
-      push(i, `字段名/顺序不符: ${keys.join(',')}（期望 ${spec.keys.join(',')}）`)
+    /* 名次字段是**可选**的（不是每条获奖记录都有名次）：把规范键序里没出现的键过滤掉，
+       剩下的必须与 keys 逐字相等 —— 即「出现即须落在规范位置」，多出未知键也会被抓到。 */
+    const expected = spec.keys.filter((k) => keys.includes(k))
+    if (keys.length !== expected.length || keys.some((k, j) => k !== expected[j])) {
+      push(i, `字段名/顺序不符: ${keys.join(',')}（期望 ${expected.join(',')}；可选键 ${(spec.optionalKeys || []).join('/') || '无'}）`)
       return
     }
     if (spec.team) {
@@ -114,7 +144,39 @@ function validateRecords(file, rows) {
       push(i, `language 非法: ${JSON.stringify(r.language)}`)
     if (spec.groups && r.group !== null && !spec.groups.includes(r.group))
       push(i, `group 非法: ${JSON.stringify(r.group)}`)
+    if ('rank' in r) {
+      if (!Number.isInteger(r.rank) || r.rank < 1) push(i, `rank 非法: ${JSON.stringify(r.rank)}`)
+      if ('rank_official' in r && (!Number.isInteger(r.rank_official) || r.rank_official < 1))
+        push(i, `rank_official 非法: ${JSON.stringify(r.rank_official)}`)
+      if ('rank_provincial' in r && (!Number.isInteger(r.rank_provincial) || r.rank_provincial < 1))
+        push(i, `rank_provincial 非法: ${JSON.stringify(r.rank_provincial)}`)
+      if ('rank_to' in r && (!Number.isInteger(r.rank_to) || r.rank_to < Number(r.rank)))
+        push(i, `rank_to 非法: ${JSON.stringify(r.rank_to)}（应 ≥ rank）`)
+      if ('rank_source' in r && !['official', 'derived'].includes(r.rank_source))
+        push(i, `rank_source 非法: ${JSON.stringify(r.rank_source)}`)
+    }
   })
+
+  /* 名次在**自己的作用域**内不得被两个人共用 —— 作用域的定义与 src/utils/awardGroups.js
+     的 byRank() 一致（名次只在同一比较范围内可比）。同一个人在同作用域重复出现是允许的
+     （源里确有一例：2024 省赛 C/C++ B 组「刘鑫」一等奖与三等奖两条同 rank 2401），
+     但两个人共用同一个名次说明合并脚本连错了人。 */
+  if (spec.rankScope) {
+    const seen = new Map()
+    rows.forEach((r, i) => {
+      if (r.rank == null) return
+      /* 带 rank_to 的是**区间**（天梯赛推算：同分并列块只能给区间），块首被多人共用是预期，
+         不参与撞号检查 —— 只有「单一数字名次」才可能撞。 */
+      if (r.rank_to != null) return
+      const who = (r.members || []).join('、')
+      const k = `${spec.rankScope(r)}#${r.rank}`
+      if (seen.has(k) && seen.get(k).who !== who) {
+        problems.push(`[${i}] 名次撞号: 作用域 ${spec.rankScope(r)} 内 rank=${r.rank} 已被 ${seen.get(k).who}（[${seen.get(k).i}]）占用`)
+      } else if (!seen.has(k)) {
+        seen.set(k, { who, i })
+      }
+    })
+  }
 
   // date 升序，null 排末尾
   let prev = null

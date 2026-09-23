@@ -27,6 +27,17 @@ export const LEVEL_TAG = { invitational: '邀请赛', regional: '区域赛', fin
 export const MEDAL_KEYS = MEDAL_ORDER
 export { MEDAL_RANK }
 
+// ==========================================================================
+// 名次（awards/*.json 的 `rank` 字段）
+//
+// 口径与实现都在 contestTaxonomy.js（**单一真源**：生成器 gen_event_badges.mjs
+// 也要用同一套判据，不能再写一遍 `rank <= 3`）。这里只做转出，页面照旧从本模块 import。
+//
+// ⚠ 别和上面的 `RANK_TEXT` 混：那张表是**奖等**的措辞（一等奖 / 二等奖 / 三等奖），
+//   与「第几名」是两件正交的事 —— 冠军队照样拿着金牌。
+// ==========================================================================
+export { TROPHY_LABEL, isTrophyRank, rankText, rankNote } from './contestTaxonomy.js'
+
 /** 奖牌 → 奖牌色类（供 medal-gold / chip-gold 等样式复用） */
 export function medalClass(medal) {
   if (medal === 'grand') return 'medal-grand'
@@ -97,6 +108,19 @@ function awardPairs(rows) {
   }))
 }
 
+/** 组内按名次升序排（无名次的排后面、并列保持原顺序）。
+    名次的作用域就是「本组」（同届同级别、同科目×组别 / 同场次），故只在本组内排序。 */
+function byRank(rows) {
+  const rankOf = (r) => {
+    const n = Number(r?.rank)
+    return Number.isInteger(n) && n > 0 ? n : Infinity
+  }
+  return rows
+    .map((r, i) => ({ r, i }))
+    .sort((a, b) => rankOf(a.r) - rankOf(b.r) || a.i - b.i)
+    .map((x) => x.r)
+}
+
 // 蓝桥杯科目分组的固定顺序：语言 C/C++ → Java → Python → 其他；组别 A → B → 研究生组 → 未标注
 const LANGS_ORDER = ['C++', 'Java', 'Python', null]
 const LANG_TEXT = { 'C++': 'C/C++', Java: 'Java', Python: 'Python' }
@@ -129,7 +153,9 @@ export function subjectGroups(rows, awardText) {
       icon: 'fa-code',
       awards: awardPairs(g.rows).map((p) => ({
         award: awardText[p.medal],
-        persons: p.rows.map((r) => ({ name: (r.members && r.members[0]) || '', rank: null }))
+        // rank 的作用域就是这个组（同届同级别、同「科目 × 组别」），故组内按名次升序
+        // 排一遍、没名次的排后面 —— 冠军自然排在最前。
+        persons: byRank(p.rows).map((r) => ({ name: (r.members && r.members[0]) || '', rank: r.rank ?? null }))
       }))
     }))
 }
@@ -150,7 +176,7 @@ export function sessionGroups(rows, awardText) {
     icon: 'fa-code',
     awards: awardPairs(map.get(date)).map((p) => ({
       award: awardText[p.medal],
-      persons: p.rows.map((r) => ({ name: (r.members && r.members[0]) || '', rank: null }))
+      persons: byRank(p.rows).map((r) => ({ name: (r.members && r.members[0]) || '', rank: r.rank ?? null }))
     }))
   }))
 }

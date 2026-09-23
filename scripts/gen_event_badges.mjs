@@ -37,6 +37,9 @@
  *      天梯赛不显示获奖胶囊，因为正文有」）：天梯赛卡片的 tagline 本身就是奖牌账
  *      （「国赛：团体🥇1🥈1🥉1、个人🥇1🥈13🥉18 / 省赛：团体🥇2🥈1」），
  *      右上角再挂一枚当场计数属于同一件事说两遍，且那枚只统计国家级、与正文数字对不上。
+ *   6. **冠亚季军按 🏆 统计**（会长 2026-09-24）：获奖行带 `rank` 且属于前三名时，
+ *      并进 grand 桶 —— 角标只显示 🏆N，不按金银铜分开数。判据是 contestTaxonomy.js 的
+ *      `isTrophyRank()`（全站唯一一份，别在别处重写 `rank <= 3`）。
  *
  * 输出：`public/data/event_badges.json`
  *   { _note, generated_at, count, badges: { "<card.link>": "🥇1🥈2" } }
@@ -58,7 +61,7 @@ const readJson = (file, fallback) => {
   }
 }
 
-import { MEDAL_EMOJI, MEDAL_ORDER } from '../src/utils/contestTaxonomy.js'
+import { MEDAL_EMOJI, MEDAL_ORDER, isTrophyRank } from '../src/utils/contestTaxonomy.js'
 
 /** category → 系列（与 src/views/AllActionView.vue 的 CAT_LABEL 同源） */
 const CAT_FAMILY = {
@@ -204,7 +207,14 @@ function main() {
       }
       const hits = pool.filter((row) => !row.medal_level || levels.includes(row.medal_level))
       const counts = {}
-      for (const row of hits) counts[row.medal_type] = (counts[row.medal_type] || 0) + 1
+      for (const row of hits) {
+        /* 冠亚季军并进 grand 桶（= 用 🏆 统计）。会长 2026-09-24：
+           「冠亚季军在大事记卡片右上角的统计中都是被奖杯的 icon 统计」——
+           与特等奖同一个奖杯，不再按金银铜分开数（冠军队的奖牌仍是金牌，
+           那是 awards 里 medal_type 的事，这枚角标只说「当场拿了几个奖杯级结果」）。 */
+        const key = isTrophyRank(row.rank) ? 'grand' : row.medal_type
+        counts[key] = (counts[key] || 0) + 1
+      }
       const text = MEDAL_ORDER.filter((m) => counts[m]).map((m) => MEDAL_EMOJI[m] + counts[m]).join('')
       if (text) {
         badges[card.link] = text

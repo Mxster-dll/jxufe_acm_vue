@@ -5,7 +5,7 @@
 //   awards = [{ award: '一等奖' | '金奖' …, persons: [{ name, rank?, title? }] }]
 // 分组、排序与奖等文案由 utils/awardGroups.js 计算，本组件只负责渲染
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { awardTone } from '../../utils/awardGroups.js'
+import { awardTone, isTrophyRank, rankText } from '../../utils/awardGroups.js'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },
@@ -78,8 +78,11 @@ function alignName(name) {
             <tr v-for="(row, ri) in chunk(aw.persons, MAX_CELLS)" :key="ri">
               <td v-for="(p, ni) in row" :key="ni" class="lq-name-cell" :title="p.title || ''">
                 <span class="lq-cell-inner">
-                  <span v-if="p.rank != null" class="lq-rank-slot">
-                    <span class="lq-rank-pill">#{{ p.rank }}</span>
+                  <!-- 名次：前三名显示「冠军 / 亚军 / 季军」，其余 `#N`（口径在 utils/awardGroups.js） -->
+                  <span v-if="rankText(p.rank)" class="lq-rank-slot">
+                    <span class="lq-rank-pill" :class="{ 'is-trophy': isTrophyRank(p.rank) }">{{
+                      rankText(p.rank)
+                    }}</span>
                   </span>
                   <span class="lq-name">{{ alignName(p.name) }}</span>
                 </span>
@@ -196,12 +199,13 @@ function alignName(name) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* 排名（蓝桥杯 Finder 数据：省赛=省内组排名、国赛=全国组排名）：
-   外层 slot 固定 40px 占位（位于格子最左侧），数字右缘对齐的盈余留在此处；
-   内层 pill 背景贴合文字宽度 */
+/* 排名（awards/*.json 的 rank 字段）：省赛 = 省内同科目组排名、国赛 = 全国同科目组排名；
+   天梯赛个人 = 该届国赛全国名次。外层 slot 固定 44px 占位（位于格子最左侧），
+   内层 pill 背景贴合文字宽度。前三名是「冠军 / 亚军 / 季军」（会长 2026-09-24），
+   两个汉字比 `#12` 宽一点，故 slot 从 40px 放到 44px。 */
 .lq-rank-slot {
   flex-shrink: 0;
-  width: 40px;
+  width: 44px;
   margin-right: 4px;
   display: inline-flex;
   justify-content: flex-end;
@@ -216,5 +220,11 @@ function alignName(name) {
   line-height: 1.5;
   white-space: nowrap;
   text-align: right;
+}
+/* 冠亚季军：走「奖杯」那一档的金色（--honor-leader），与普通 `#N` 的蓝底区分开 ——
+   会长 2026-09-24 的口径是「冠亚季军与特等奖同属奖杯档」，大事记角标也按 🏆 统计。 */
+.lq-rank-pill.is-trophy {
+  background: rgba(161, 98, 7, 0.12);
+  color: var(--honor-leader);
 }
 </style>

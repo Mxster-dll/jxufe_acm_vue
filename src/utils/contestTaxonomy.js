@@ -35,6 +35,71 @@ export const MEDAL_EMOJI_REVERSE = Object.fromEntries(
   Object.entries(MEDAL_EMOJI).map(([medal, emoji]) => [emoji, medal])
 )
 
+// ==========================================================================
+// 名次（awards/*.json 的 `rank` 字段）
+//
+// 会长 2026-09-24：「增加一个排名字段，用于保存 xCPC 队伍排名、蓝桥杯个人排名、
+// 天梯赛个人排名、（未来会有传智杯个人排名）、百度之星个人排名」；「把 #1、#2、#3
+// 改成冠军、亚军、季军」；「自动识别冠亚季军……在大事记卡片右上角的统计中都是被
+// 奖杯的 icon 统计」。
+//
+// `rank` 只表示「同一比较范围内的第几名」，**不跨范围比较**，语义按赛事分家：
+//   · icpc / ccpc      —— 该场比赛里**队伍**的名次
+//   · lanqiao / baidu  —— 同届同级别（省赛 / 国赛）同「科目 × 组别」内的**个人**名次
+//   · gplt-individual  —— 该届国赛**个人**的全国名次（官方名单不直接给，是按
+//                          「同奖项内成绩降序位置 + 更高奖项名额数」推算的）
+//   · chuanzhi         —— 预留给个人名次（与 lanqiao / baidu 同形）
+// 与奖牌（medal_type）**正交**：冠军队照样拿着金牌，两件事各说各的。
+//
+// ⚠ 别和 MEDAL_TEXT / RANK_TEXT 混：那两张表是**奖等**的措辞（金牌 / 一等奖）。
+// ==========================================================================
+
+/** 前三名的说法（冠军 / 亚军 / 季军） */
+export const TROPHY_LABEL = { 1: '冠军', 2: '亚军', 3: '季军' }
+
+/**
+ * 是不是「冠亚季军」。
+ * **这是全站唯一的判据**：页面给金色胶囊、大事记角标把它们与特等奖一样按 🏆 统计，
+ * 都走这个函数 —— 不要在别处再写一遍 `rank <= 3`。
+ */
+export function isTrophyRank(rank) {
+  const n = Number(rank)
+  return Number.isInteger(n) && n >= 1 && n <= 3
+}
+
+/**
+ * 名次 → 展示文本。
+ *   · 冠亚季军 → 「冠军 / 亚军 / 季军」
+ *   · 并列区间（给了 rankTo 且 > rank）→ 「797+」= 「第 797 名起」
+ *     **不能省掉那个 +**：天梯赛官方名单不公布名次，同分并列时档内顺序不是名次，
+ *     只能给区间（106 条个人奖 100% 落在同分块里，见 tianti_ranks.json 的 _note）；
+ *     写成裸的「#797」等于断言一个我们支撑不了的事实。区间与并列人数放 title 里。
+ *   · 其余 → 「#N」
+ * 没有/非法名次返回空串（调用方据此隐藏）。
+ */
+export function rankText(rank, rankTo) {
+  if (rank == null || rank === '') return ''
+  const n = Number(rank)
+  if (!Number.isInteger(n) || n < 1) return ''
+  if (TROPHY_LABEL[n]) return TROPHY_LABEL[n]
+  const to = Number(rankTo)
+  if (Number.isInteger(to) && to > n) return `${n}+`
+  return `#${n}`
+}
+
+/** 名次的悬停说明：并列区间的完整口径（同分块内顺序不是名次，故只能给区间） */
+export function rankNote(rank, rankTo) {
+  if (rank == null || rank === '') return ''
+  const n = Number(rank)
+  if (!Number.isInteger(n) || n < 1) return ''
+  if (TROPHY_LABEL[n]) return `${TROPHY_LABEL[n]}（第 ${n} 名）`
+  const to = Number(rankTo)
+  if (Number.isInteger(to) && to > n) {
+    return `全国名次 ${n}–${to}（同分并列 ${to - n + 1} 人；官方只公布成绩与名额，名次按名额推算）`
+  }
+  return `第 ${n} 名`
+}
+
 /**
  * 参与汇总的 awards 文件。文件本身就区分了团队赛与个人赛
  * （gplt-team / gplt-individual 是同一届的两个文件），不用再靠 level 猜。
