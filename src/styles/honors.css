@@ -28,13 +28,10 @@
   transition: all var(--transition-fast);
 }
 
-.honor-tag--contest {
-  --tag-color: var(--honor-contest);
-  --tag-bg: var(--honor-contest-bg);
-  --tag-border: var(--honor-contest-border);
-  --tag-bg-hover: var(--honor-contest-bg-hover);
-  --tag-border-hover: var(--honor-contest-border-hover);
-}
+/* 比赛类型**不再单列一份**：上面 .honor-tag 的兜底就是比赛色（--honor-contest*），
+   这里原先有一块五行逐字相同的 .honor-tag--contest，2026-09-24 删掉。
+   模板照旧带这个类名（components/HonorPill.vue、components/HeroAvatarWall.vue），
+   它现在只表示「这是比赛类荣誉」，颜色由兜底给 —— 改 --honor-contest* 仍整类生效。 */
 .honor-tag--destination {
   --tag-color: var(--honor-destination);
   --tag-bg: var(--honor-destination-bg);
