@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T14:33:36",
+  "generated_at": "2026-09-23T23:31:22",
   "source": "06_共享资源/图片资源/群成员头像/群成员名单.csv",
   "counts": {
     "total": 138,
@@ -8,7 +8,7 @@
     "member": 106,
     "excellent": 33,
     "leader": 6,
-    "realName": 81,
+    "realName": 82,
     "anonymous": 1,
     "blank": 1
   },
@@ -793,10 +793,11 @@
       "name": "Z_☆",
       "role": "群成员",
       "roleKey": "member",
-      "realName": "",
+      "realName": "章可欣",
       "thumb": "/images/group_members/thumbs/2777392445.webp",
       "photo": "/images/group_members/full/2777392445.jpg",
-      "blank": false
+      "blank": false,
+      "className": "25网络空间安全1班"
     },
     {
       "qq": "2784667193",
@@ -1193,8 +1194,8 @@
       "realName": "韩家欢",
       "excellent": true,
       "initial": "韩",
-      "thumb": "/images/group_members/thumbs/ex-hjh.webp",
-      "photo": "/images/excellent_member/hjh.png",
+      "thumb": "/images/group_members/thumbs/ex-0224847.webp",
+      "photo": "/images/excellent_member/0224847.png",
       "blank": false
     },
     {
@@ -1242,8 +1243,8 @@
       "realName": "邓一帆",
       "excellent": true,
       "initial": "邓",
-      "thumb": "/images/group_members/thumbs/ex-dyf.webp",
-      "photo": "/images/excellent_member/dyf.png",
+      "thumb": "/images/group_members/thumbs/ex-0223591.webp",
+      "photo": "/images/excellent_member/0223591.png",
       "blank": false
     },
     {
@@ -1254,8 +1255,8 @@
       "realName": "张瑞杰",
       "excellent": true,
       "initial": "张",
-      "thumb": "/images/group_members/thumbs/ex-zrj.webp",
-      "photo": "/images/excellent_member/zrj.png",
+      "thumb": "/images/group_members/thumbs/ex-0233430.webp",
+      "photo": "/images/excellent_member/0233430.png",
       "blank": false
     },
     {
@@ -1278,8 +1279,8 @@
       "realName": "肖俊杰",
       "excellent": true,
       "initial": "肖",
-      "thumb": "/images/group_members/thumbs/ex-xjj.webp",
-      "photo": "/images/excellent_member/xjj.png",
+      "thumb": "/images/group_members/thumbs/ex-0224613.webp",
+      "photo": "/images/excellent_member/0224613.png",
       "blank": false
     },
     {
@@ -1290,8 +1291,8 @@
       "realName": "万俊哲",
       "excellent": true,
       "initial": "万",
-      "thumb": "/images/group_members/thumbs/ex-wjz.webp",
-      "photo": "/images/excellent_member/wjz.png",
+      "thumb": "/images/group_members/thumbs/ex-0235108.webp",
+      "photo": "/images/excellent_member/0235108.png",
       "blank": false
     },
     {
@@ -1302,8 +1303,8 @@
       "realName": "张云菲",
       "excellent": true,
       "initial": "张",
-      "thumb": "/images/group_members/thumbs/ex-zyf.webp",
-      "photo": "/images/excellent_member/zyf.png",
+      "thumb": "/images/group_members/thumbs/ex-0235011.webp",
+      "photo": "/images/excellent_member/0235011.png",
       "blank": false
     },
     {
@@ -1314,8 +1315,8 @@
       "realName": "罗潇彬",
       "excellent": true,
       "initial": "罗",
-      "thumb": "/images/group_members/thumbs/ex-lxb.webp",
-      "photo": "/images/excellent_member/lxb.png",
+      "thumb": "/images/group_members/thumbs/ex-0233614.webp",
+      "photo": "/images/excellent_member/0233614.png",
       "blank": false
     },
     {
@@ -1326,8 +1327,8 @@
       "realName": "娄子豪",
       "excellent": true,
       "initial": "娄",
-      "thumb": "/images/group_members/thumbs/ex-lzh.webp",
-      "photo": "/images/excellent_member/lzh.png",
+      "thumb": "/images/group_members/thumbs/ex-0224585.webp",
+      "photo": "/images/excellent_member/0224585.png",
       "blank": false
     },
     {
@@ -1338,8 +1339,8 @@
       "realName": "牛志义",
       "excellent": true,
       "initial": "牛",
-      "thumb": "/images/group_members/thumbs/ex-nzy.webp",
-      "photo": "/images/excellent_member/nzy.png",
+      "thumb": "/images/group_members/thumbs/ex-0224571.webp",
+      "photo": "/images/excellent_member/0224571.png",
       "blank": false
     },
     {
@@ -1350,8 +1351,8 @@
       "realName": "徐昊天",
       "excellent": true,
       "initial": "徐",
-      "thumb": "/images/group_members/thumbs/ex-xht.webp",
-      "photo": "/images/excellent_member/xht.png",
+      "thumb": "/images/group_members/thumbs/ex-0224568.webp",
+      "photo": "/images/excellent_member/0224568.png",
       "blank": false
     },
     {
@@ -1362,8 +1363,8 @@
       "realName": "谢智屹",
       "excellent": true,
       "initial": "谢",
-      "thumb": "/images/group_members/thumbs/ex-xzy.webp",
-      "photo": "/images/excellent_member/xzy.png",
+      "thumb": "/images/group_members/thumbs/ex-0235234.webp",
+      "photo": "/images/excellent_member/0235234.png",
       "blank": false
     },
     {
@@ -1374,8 +1375,8 @@
       "realName": "吴松烨",
       "excellent": true,
       "initial": "吴",
-      "thumb": "/images/group_members/thumbs/ex-wsy.webp",
-      "photo": "/images/excellent_member/wsy.png",
+      "thumb": "/images/group_members/thumbs/ex-0224766.webp",
+      "photo": "/images/excellent_member/0224766.png",
       "blank": false
     },
     {

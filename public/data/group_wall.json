@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
-  "generated_at": "2026-09-23T14:59:15.617Z",
+  "generated_at": "2026-09-23T15:31:31.999Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -290,7 +290,7 @@
         }
       ]
     },
-    "ex-lxb.webp": {
+    "ex-0233614.webp": {
       "name": "罗潇彬",
       "line": "23软件工程12班",
       "full": "/images/excellent_member/0233614.png",
@@ -656,7 +656,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-zyf.webp": {
+    "ex-0235011.webp": {
       "name": "张云菲",
       "line": "23计算机科学与技术2班",
       "full": "/images/excellent_member/0235011.png",
@@ -949,7 +949,7 @@
         }
       ]
     },
-    "ex-lzh.webp": {
+    "ex-0224585.webp": {
       "name": "娄子豪",
       "line": "22计算机科学与技术1班",
       "full": "/images/excellent_member/0224585.png",
@@ -1291,7 +1291,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-nzy.webp": {
+    "ex-0224571.webp": {
       "name": "牛志义",
       "line": "22计算机科学与技术1班",
       "full": "/images/excellent_member/0224571.png",
@@ -2225,7 +2225,7 @@
         }
       ]
     },
-    "ex-xjj.webp": {
+    "ex-0224613.webp": {
       "name": "肖俊杰",
       "line": "22计算机科学与技术2班",
       "full": "/images/excellent_member/0224613.png",
@@ -2378,7 +2378,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-zrj.webp": {
+    "ex-0233430.webp": {
       "name": "张瑞杰",
       "line": "软件231",
       "full": "/images/excellent_member/0233430.png",
@@ -2522,7 +2522,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-xzy.webp": {
+    "ex-0235234.webp": {
       "name": "谢智屹",
       "line": "23网络空间安全1班",
       "full": "/images/excellent_member/0235234.png",
@@ -2675,7 +2675,7 @@
         }
       ]
     },
-    "ex-wsy.webp": {
+    "ex-0224766.webp": {
       "name": "吴松烨",
       "line": "22信息管理与信息系统1班",
       "full": "/images/excellent_member/0224766.png",
@@ -2754,7 +2754,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-wjz.webp": {
+    "ex-0235108.webp": {
       "name": "万俊哲",
       "line": "23数据科学与大数据技术1班",
       "full": "/images/excellent_member/0235108.png",
@@ -3610,7 +3610,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-hjh.webp": {
+    "ex-0224847.webp": {
       "name": "韩家欢",
       "line": "22信息与计算科学1班",
       "full": "/images/excellent_member/0224847.png",
@@ -3803,7 +3803,7 @@
       "tags": [],
       "sheetTags": []
     },
-    "ex-dyf.webp": {
+    "ex-0223591.webp": {
       "name": "邓一帆",
       "line": "22软件工程9班",
       "full": "/images/excellent_member/0223591.png",
@@ -4334,7 +4334,7 @@
         }
       ]
     },
-    "ex-xht.webp": {
+    "ex-0224568.webp": {
       "name": "徐昊天",
       "line": "22计算机科学与技术1班",
       "full": "/images/excellent_member/0224568.png",
@@ -4543,11 +4543,21 @@
       "message": "因为热心的学长了解到程设协会，深入了解之后惊为天人！我要大声喊出来我要加入程设协会！"
     },
     "2777392445.webp": {
-      "name": "Z_☆",
-      "line": "",
+      "name": "章可欣",
+      "line": "25网络空间安全1班",
       "full": "/images/group_members/full/2777392445.jpg",
-      "tags": [],
-      "sheetTags": []
+      "tags": [
+        {
+          "text": "蓝桥杯 省赛🥈1",
+          "type": "contest"
+        }
+      ],
+      "sheetTags": [
+        {
+          "text": "🥈第17届蓝桥杯 C++·B组省赛二等奖",
+          "type": "contest"
+        }
+      ]
     },
     "1425619793.webp": {
       "name": "严雨睿",
