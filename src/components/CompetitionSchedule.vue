@@ -43,7 +43,7 @@ const PALETTE = ['#1a73e8', '#ff9800', '#2e7d32', '#a16207', '#7c3aed', '#c62828
     早先是「月份重叠才下沉」的贪心泳道，而实际数据里一场赛事的各阶段月份并不重叠
     （邀请赛 4-7 月 / 网络预选赛 9 月 / 区域赛 10-12 月），于是三条都落在同一行。
     现在按 from 升序一条一行 —— 行数 = 阶段数；将来真出现月份重叠也天然分成两行。 */
-function packLanes(bars) {
+function packBars(bars) {
   const sorted = [...bars].sort((a, b) => a.from - b.from)
   sorted.forEach((bar, i) => {
     bar.lane = i
@@ -104,7 +104,7 @@ const rows = computed(() => {
       // 每行名前的图标（会长 2026-09-23）；合并行会有两个
       logos: g.logos,
       color: PALETTE[i % PALETTE.length],
-      lanes: packLanes(bars),
+      lanes: packBars(bars),
       bars,
       // 窄屏清单右上角的区间概览：「3–6月」/「9月」
       spanText: spanFrom ? (spanFrom === spanTo ? `${spanFrom}月` : `${spanFrom}–${spanTo}月`) : '',

@@ -4,7 +4,7 @@
  * 输入（都在 public/data/ 下，手写或由别的生成器产出）：
  *   group_members.json  QQ 群 110 人 + 站点 33 位优秀成员 + 6 位负责人，去重后 138 人
  *   wall_rules.json     入墙规则（会长维护）：people[] 无条件入墙 + scoreThreshold 分数达标自动入墙
- *   duties.json         协会职务胶囊（19 人 / 26 条，来自两份干事名单）
+ *   duties.json         协会职务胶囊（24 人 / 32 条，来自三份干事名单）
  *   members.json        优秀成员的荣誉
  *   leaders.json        负责人的荣誉
  *   awards/*.json       站点的结构化获奖数据 → 自动汇总成比赛战绩胶囊

@@ -26,10 +26,13 @@ const ready = computed(() => !loading.value);
 // { kind, date, category, title, tagline, link }，没有奖牌字段、也不允许加，
 // 故由 scripts/gen_event_badges.mjs 在构建期从 awards/*.json 反算，产出这个几 KB 的生成物
 // （不这么做就得让大事记页把 3103 条获奖记录全拉下来）。
-const { data: badgeData } = useJson("/data/event_badges.json", { initial: { badges: {} } });
+const { data: badgeData } = useJson("/data/event_badges.json", { initial: { badges: {}, tiers: {} } });
 const badgeOf = (item) => badgeData.value?.badges?.[item.link] || "";
-/** 角标配色 = 最高奖项：特等奖（蓝桥杯早期，旧站没有这一档）> 金 > 银 > 铜 */
+/** 角标配色 = 最高奖项：特等奖（蓝桥杯早期，旧站没有这一档）> 金 > 银 > 铜。
+    档位直接取生成物的 tiers 字段；老生成物没有该字段时才回退到从 emoji 文本反推。 */
 function badgeToneOf(item) {
+  const tier = badgeData.value?.tiers?.[item.link];
+  if (tier) return tier;
   const text = badgeOf(item);
   if (text.includes("🏆")) return "grand";
   if (text.includes("🥇")) return "gold";

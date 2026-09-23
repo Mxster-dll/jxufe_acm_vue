@@ -1270,13 +1270,15 @@ const { newsList, loading, error } = useNews();
 .page-mask.is-out {
   transform: translate3d(0, 105vh, 0);
   /* 与下面 .is-returning 同一个时长：露墙与请回速度一致（会长 2026-09-23），
-     也对齐翻页吸附那一档（实测 ≈430ms）。改这里必须同步改 JS 的 MASK_MOVE_MS。 */
-  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+     也对齐翻页吸附那一档（实测 ≈430ms）。
+     时长不再写字面量，改用 JS 发布到 <html> 的 --mask-ms —— 早先 CSS(640/520) 与
+     JS(MASK_MOVE_MS) 各写一份，才出过「露墙比请回慢 101ms」的不一致。 */
+  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
 }
 /* 请回来的回程：与露墙同一个时长（原先 640/520 两档不一致，露墙偏慢）。
-   时长与 JS 里的 MASK_MOVE_MS 一致；用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
+   用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
 .page-mask.is-returning {
-  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──

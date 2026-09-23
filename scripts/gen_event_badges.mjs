@@ -161,6 +161,9 @@ function main() {
     .sort()
 
   const badges = {}
+  /** 卡片 link → 最高档位（grand/gold/silver/bronze）。页面用它决定角标配色，
+      不再从 emoji 文本反推 —— 那是「基本类型偏执」：换一套 emoji 就静默失效。 */
+  const tiers = {}
   const stats = { cards: 0, contest: 0, badges: 0, skipped: 0, gpltSkipped: 0 }
   const misses = []
 
@@ -207,6 +210,7 @@ function main() {
       const text = MEDALS.filter((m) => counts[m]).map((m) => MEDAL_EMOJI[m] + counts[m]).join('')
       if (text) {
         badges[card.link] = text
+        tiers[card.link] = MEDALS.find((m) => counts[m]) // MEDALS 已按高→低排好
         stats.badges += 1
       } else {
         misses.push(`${year} ${card.date} [${card.category}] ${card.title}`)
@@ -219,10 +223,11 @@ function main() {
     _note:
       '大事记卡片右上角的奖牌角标（生成物，请勿手改）。由 scripts/gen_event_badges.mjs 从 ' +
       'public/data/awards/*.json + competitions.json 反算；键为卡片 link，值为当场比赛的奖牌计数。' +
-      '只收录有奖牌的场次。',
+      '只收录有奖牌的场次。tiers 是同键的最高档位（供角标配色，别从 emoji 文本反推）。',
     generated_at: new Date().toISOString(),
     count: Object.keys(sorted).length,
-    badges: sorted
+    badges: sorted,
+    tiers: Object.fromEntries(Object.keys(tiers).sort().map((k) => [k, tiers[k]])),
   }
   fs.writeFileSync(path.join(DATA, 'event_badges.json'), `${JSON.stringify(out, null, 2)}\n`, 'utf8')
 

@@ -296,11 +296,20 @@ export function scoreManualContest(text) {
 
 /* ───────────────────────── 荣誉加项 ───────────────────────── */
 
-/** 解析一条荣誉条目（按 type 分流） */
+/**
+ * 解析一条荣誉条目（按 type 分流）。
+ *
+ * 条目可带 `points`（数字）**显式覆盖**规则算出的分值 —— 用于「要显示、但按既定口径
+ * 不该计分」的条目。当前唯一用处：其他协会的会长身份（会长 2026-09-23：「我只是不希望
+ * 在优秀成员页显示本协会的会长，其他协会的会长还是可以以荣誉（绿色）的形式显示的」）。
+ * 绿色胶囊照常显示，但要按 AGENTS.md「职务只用于显示，不进『卡片显示顺序』的分值」
+ * 记 0 分 —— 否则会被下面 HONOR_RULES 的 `/会长/` 命中，白拿 1.0 × HONOR_SCALE。
+ */
 export function scoreHonorEntry(entry) {
   const text = String(entry?.text ?? entry ?? '')
   const type = entry?.type
   if (!text) return { points: 0, label: '', raw: text }
+  if (typeof entry?.points === 'number') return { points: entry.points, label: '显式指定', raw: text, overridden: true }
   if (type === 'contact' || type === 'more') return { points: 0, label: '', raw: text, skipped: type }
   if (type === 'contest') return scoreManualContest(text)
   const rules = type === 'destination' ? DESTINATION_RULES : HONOR_RULES
