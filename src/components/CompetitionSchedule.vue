@@ -133,7 +133,7 @@ const rows = computed(() => {
         <div
           v-for="(row, idx) in rows"
           :key="row.slug"
-          v-reveal="'scale-in'"
+          v-reveal="'fade-up'"
           class="schedule__row"
           :style="{ '--row-color': row.color, '--lanes': row.lanes, '--reveal-index': idx }"
         >
@@ -175,7 +175,7 @@ const rows = computed(() => {
       <p
         v-for="(row, ci) in rows"
         :key="row.slug"
-        v-reveal="'scale-in'"
+        v-reveal="'fade-up'"
         class="schedule__mvhead"
         :style="{ gridRow: 1, gridColumn: ci + 2, '--reveal-index': ci, '--row-color': row.color }"
       >
@@ -200,7 +200,7 @@ const rows = computed(() => {
         <span
           v-for="(bar, i) in row.bars"
           :key="i"
-          v-reveal="'scale-in'"
+          v-reveal="'fade-up'"
           class="schedule__mvbar"
           :style="{
             '--reveal-index': ci,
@@ -271,32 +271,6 @@ const rows = computed(() => {
   color: var(--text-secondary);
   text-align: center;
   font-variant-numeric: tabular-nums;
-}
-/* 入场过渡：与全站卡片同一套。
-   会长 2026-09-23：「赛程卡片的速度有点慢，要与其他组件统一」。
-   实测各页入场元素的计算样式 —— .card / article / .leader-card / .tl-card / .news-card 全是
-   `transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease`：
-   它们自己的 transition 简写把全局 [data-reveal] 的 `opacity .7s, transform .7s` 盖掉了，
-   所以全站卡片的 opacity 是瞬时到位、只有位移在回弹。
-   赛程行是本组件自己的元素、没有这层卡片样式 → **只有它真吃到了 0.7s**，比全站慢近一倍。
-   这里补上同一条声明，桌面行与移动端两块（赛事表头、阶段色块）一起对齐。
-
-   ⚠ 下面必须显式写回 `transition-delay`（会长 2026-09-23：「我还是希望动画有先后，而不是一起出现」）：
-   `transition` 简写会把 delay 一并重置为 0s，而 scoped 编译出的选择器带 `[data-v-*]`、特异性
-   (0,2,0) 与全局那条 `[data-reveal][style*="--reveal-index"]` **打平**，scoped 样式又在 base.css
-   之后注入 → 全局的级联延迟被压掉，5 行会同时冒出来。这里按同一条公式显式写回。
-
-   变体也从 'fade-up' 换成了 'scale-in'（会长 2026-09-23：「我希望不是只有一点点运动距离，
-   我希望是像其他卡片一样」）—— 全站卡片都是 `scale(0.92)` 的 8% 缩放，而整行平移 40px
-   在 1140px 宽的行上几乎看不出动。 */
-.schedule__row,
-.schedule__mvhead,
-.schedule__mvbar {
-  transition:
-    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-  transition-delay: calc(var(--reveal-index, 0) * 0.1s);
 }
 .schedule__row {
   display: flex;
