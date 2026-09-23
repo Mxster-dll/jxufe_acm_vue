@@ -1,6 +1,6 @@
 {
   "_note": "生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、荣誉来自 group_members.json + members.json + leaders.json、留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。tags 是卡片用的计数版战绩（最多 6 枚）；sheetTags 是浮窗用的明细版（逐条赛事全名，不设上限）。",
-  "generated_at": "2026-09-23T14:18:05.144Z",
+  "generated_at": "2026-09-23T14:32:24.770Z",
   "tiles": {
     "1240840076.webp": {
       "name": "王俊杰",
@@ -2512,6 +2512,10 @@
       "full": "/images/excellent_member/0235234.png",
       "tags": [
         {
+          "text": "2023学年协会机动部负责人",
+          "type": "honor"
+        },
+        {
           "text": "江财网安神",
           "type": "honor"
         },
@@ -2521,6 +2525,10 @@
         }
       ],
       "sheetTags": [
+        {
+          "text": "2023学年协会机动部负责人",
+          "type": "honor"
+        },
         {
           "text": "江财网安神",
           "type": "honor"
@@ -4644,6 +4652,10 @@
       "full": "/images/group_members/full/1677816720.jpg",
       "tags": [
         {
+          "text": "2023学年协会竞赛部负责人",
+          "type": "honor"
+        },
+        {
           "text": "xCPC 区域赛🥉3 邀请赛🥇1🥈3🥉3 省赛🥈2🥉2",
           "type": "contest"
         },
@@ -4657,6 +4669,10 @@
         }
       ],
       "sheetTags": [
+        {
+          "text": "2023学年协会竞赛部负责人",
+          "type": "honor"
+        },
         {
           "text": "🥇第11届 CCPC 全国邀请赛（桂林）暨广西区赛金牌",
           "type": "contest"
