@@ -14,6 +14,12 @@ import { discoverYears, loadTop, loadYear } from '../utils/eventsSource.js'
  * 归一化后节点额外带 year / dateStr / key，且 date 为 Date 对象。
  */
 
+/** `"2017-09"` 这种只有年月的精度 → 「2017年9月」；其它精度返回空串（交给 toLocaleDateString） */
+const monthOnlyStr = (s) => {
+  const m = typeof s === 'string' ? /^(\d{4})-(\d{2})$/.exec(s) : null
+  return m ? `${m[1]}年${Number(m[2])}月` : ''
+}
+
 /** 年份文件内容 → 统一节点（纯函数，便于测试与比对） */
 export function buildNodes(nodes = [], year = '') {
   return nodes.map((n) => {
@@ -29,8 +35,10 @@ export function buildNodes(nodes = [], year = '') {
       tagline: n.tagline || '',
       link: n.link || '',
       key: `${kind}|${n.link || ''}|${n.title || ''}`,
-      // 无具体日期的节点（如天梯赛 2018 届）回退显示年份
-      dateStr: valid ? d.toLocaleDateString('zh-CN') : `${year}年`
+      // 无具体日期的节点（如天梯赛 2018 届）回退显示年份；
+      // 只有年月的（"2017-09"，如协会成立）不能走 Date —— ISO 会补成 1 日、显示成「2017/9/1」，
+      // 那种精度数据里没有，所以直接按字符串格式化（顺带免掉时区把月份挪走的风险）。
+      dateStr: valid ? monthOnlyStr(n.date) || d.toLocaleDateString('zh-CN') : `${year}年`
     }
   })
 }

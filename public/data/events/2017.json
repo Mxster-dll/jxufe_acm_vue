@@ -1,6 +1,14 @@
 {
   "cards": [
     {
+      "kind": "news",
+      "date": "2017-09",
+      "category": "club",
+      "title": "程序设计竞赛协会成立",
+      "tagline": "2017 年 9 月，协会成立",
+      "link": "2017-9-club-founded"
+    },
+    {
       "kind": "event",
       "date": "2017-05-28",
       "category": "lanqiao",
@@ -26,6 +34,18 @@
     }
   ],
   "articles": {
+    "2017-9-club-founded": {
+      "title": "程序设计竞赛协会成立",
+      "date": "2017-09",
+      "blocks": [
+        {
+          "type": "text",
+          "paras": [
+            "2017 年 9 月，江西财经大学程序设计竞赛协会成立。"
+          ]
+        }
+      ]
+    },
     "2017-5-28-lanqiao-national": {
       "title": "第八届蓝桥杯国赛",
       "date": "2017-05-28",
