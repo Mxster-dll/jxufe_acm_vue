@@ -22,12 +22,17 @@
  */
 import fs from 'node:fs'
 import path from 'node:path'
+// 荣誉类型（contest / destination / honor / contact / more / leader）只有一处真源：
+// src/utils/honorType.js —— 校验 wall_rules.json 的 honors[].type 时按它判定，别再抄一份。
+import { HONOR_TYPE_LABELS } from '../src/utils/honorType.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DATA = path.join(ROOT, 'public', 'data')
 const AWARDS = path.join(DATA, 'awards')
 
 const readJSON = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
+
+const HONOR_TYPES = Object.keys(HONOR_TYPE_LABELS)
 
 const MEDAL_TYPES = ['gold', 'silver', 'bronze']
 // 特等奖（grand）：只有蓝桥杯早期届次存在这一档（第五届国赛 陈天楚）。
@@ -320,6 +325,167 @@ console.log(
 )
 artProblems.slice(0, 10).forEach((p) => console.log('         ' + p))
 if (artProblems.length) failed += artProblems.length
+
+/* ==========================================================================
+   我们这一支新增的数据文件（会长 2026-09-23 屎山审查：knowledge.md 把本脚本称作
+   「全量校验」，但它原先对下面这些文件一行都没查）。
+   分两类：**真源**（入库、缺了就是错）与**派生**（构建期由生成器产出、可以不在场，
+   在场就顺手交叉核对 —— 它们正是最容易「生成物比生成器活得久」的地方）。
+   ========================================================================== */
+console.log('\n=== 协会名单 / 规则 / 奖学金（真源）===')
+const srcProblems = []
+const needJSON = (name) => {
+  const p = path.join(DATA, name)
+  if (!fs.existsSync(p)) {
+    srcProblems.push(`${name} 不存在（真源，必须入库）`)
+    return null
+  }
+  return readJSON(p)
+}
+const ROLES = ['owner', 'admin', 'member', 'excellent', 'leader']
+
+// 群成员名单：由仓外 build_site_assets.py 派生后入库（页面的「墙上有没有这个人」看它）
+const gm = needJSON('group_members.json')
+if (gm) {
+  if (!Array.isArray(gm.members)) srcProblems.push('group_members.json 缺 members 数组')
+  else {
+    if (gm.counts?.total !== gm.members.length)
+      srcProblems.push(`group_members.json counts.total=${gm.counts?.total} 与 members.length=${gm.members.length} 不等`)
+    const badRole = gm.members.filter((m) => !ROLES.includes(m.roleKey)).map((m) => m.name || m.qq)
+    if (badRole.length) srcProblems.push(`group_members.json 身份非法（roleKey 应为 ${ROLES.join('/')}）: ${badRole.slice(0, 5).join(', ')}`)
+    // counts 是生成器写的统计，最容易和名单脱节 —— 三项群身份逐个对账
+    for (const k of ['owner', 'admin', 'member']) {
+      const real = gm.members.filter((m) => m.roleKey === k).length
+      if (gm.counts?.[k] !== real) srcProblems.push(`group_members.json counts.${k}=${gm.counts?.[k]} 与实际 ${real} 人不等`)
+    }
+    const noImg = gm.members.filter((m) => !m.blank && !m.thumb).map((m) => m.name || m.qq)
+    if (noImg.length) srcProblems.push(`group_members.json 有 ${noImg.length} 人既非 blank 又没有 thumb 缩略图: ${noImg.slice(0, 5).join(', ')}`)
+    const real = gm.members.filter((m) => m.realName).length
+    if (gm.counts?.realName !== real) srcProblems.push(`group_members.json counts.realName=${gm.counts?.realName} 与实际有真名的 ${real} 人不等`)
+    console.log(`  OK   group_members.json      ${gm.members.length} 人（真名 ${real} / 无头像 ${gm.counts?.blank ?? 0}）`)
+  }
+}
+
+// 协会职务胶囊：文字口径必须逐字是「<年份>学年<职务>」（会长裁定的展示口径）
+const duties = needJSON('duties.json')
+if (duties) {
+  const rows = Object.entries(duties.people || {})
+  const bad = []
+  for (const [name, list] of rows) {
+    if (!Array.isArray(list)) { bad.push(`${name} 的值不是数组`); continue }
+    for (const d of list) {
+      if (typeof d?.year !== 'number' || !d?.role) { bad.push(`${name} 条目缺 year/role`); continue }
+      if (d.text !== `${d.year}学年${d.role}`) bad.push(`${name} 的 text「${d.text}」与「${d.year}学年${d.role}」不符`)
+    }
+  }
+  if (duties.count !== rows.length) bad.push(`count=${duties.count} 与实际 ${rows.length} 人不等`)
+  srcProblems.push(...bad)
+  console.log(`  ${bad.length ? 'ERR' : 'OK '}  duties.json              ${rows.length} 人 / ${rows.reduce((s, [, l]) => s + l.length, 0)} 条（文字口径 <年份>学年<职务>）`)
+}
+
+// 入墙规则：两个阈值 + 规则名单；`0` 是「关闭这条规则」的合法值
+const rules = needJSON('wall_rules.json')
+if (rules) {
+  const rp = []
+  for (const k of ['scoreThreshold', 'excellentScoreThreshold']) {
+    if (typeof rules[k] !== 'number' || rules[k] < 0) rp.push(`${k} 应为 ≥0 的数字（0 = 关闭该规则），实际 ${JSON.stringify(rules[k])}`)
+  }
+  for (const p of rules.people || []) {
+    if (!p?.name) rp.push('people[] 有缺 name 的条目')
+    for (const h of p?.honors || []) {
+      if (!h?.text) rp.push(`${p.name} 的 honors 有缺 text 的条目`)
+      else if (h.type && !HONOR_TYPES.includes(h.type)) rp.push(`${p.name} 的荣誉类型「${h.type}」不在 ${HONOR_TYPES.join('/')} 内`)
+    }
+  }
+  srcProblems.push(...rp)
+  console.log(
+    `  ${rp.length ? 'ERR' : 'OK '}  wall_rules.json          上墙阈值 ${rules.scoreThreshold} 分` +
+      `（0=关） / 优秀成员页阈值 ${rules.excellentScoreThreshold} 分（0=关） / 规则名单 ${(rules.people || []).length} 人`
+  )
+}
+
+// 奖学金（仓外 build_scholarships.py 产出后入库）：type 恒为 honor，文字含学年
+const sch = needJSON('scholarships.json')
+if (sch) {
+  const rows = Object.entries(sch.people || {})
+  const bad = []
+  for (const [name, list] of rows) {
+    if (!Array.isArray(list)) { bad.push(`${name} 的值不是数组`); continue }
+    for (const s of list) {
+      if (!s?.text) bad.push(`${name} 有条目缺 text`)
+      else if (s.type !== 'honor') bad.push(`${name} 的「${s.text}」type=${JSON.stringify(s.type)}（应恒为 honor）`)
+      else if (!/学年/.test(s.text)) bad.push(`${name} 的「${s.text}」不含学年`)
+    }
+  }
+  srcProblems.push(...bad)
+  console.log(`  ${bad.length ? 'ERR' : 'OK '}  scholarships.json        ${rows.length} 人 / ${rows.reduce((s, [, l]) => s + l.length, 0)} 条（type 恒为 honor）`)
+}
+
+srcProblems.slice(0, 8).forEach((p) => console.log('         ' + p))
+if (srcProblems.length) failed += srcProblems.length
+
+/* 派生文件：不在场只提示（构建期会生成、且已 gitignore），在场就交叉核对 ——
+   这两条恰好把两类「静默错」钉死：阈值被改而生成物没重建、以及 tiles 键撞名丢格。 */
+console.log('\n=== 派生文件（构建期生成；在场则交叉核对）===')
+const optJSON = (name) => {
+  const p = path.join(DATA, name)
+  return fs.existsSync(p) ? readJSON(p) : null
+}
+const derProblems = []
+const gw = optJSON('group_wall.json')
+const gwm = optJSON('group_wall.manifest.json')
+if (gw && gwm) {
+  const tileKeys = Object.keys(gw.tiles || {})
+  if (gwm.count !== gwm.images?.length)
+    derProblems.push(`group_wall.manifest.json count=${gwm.count} 与 images.length=${gwm.images?.length} 不等`)
+  if (tileKeys.length !== (gwm.images || []).length)
+    derProblems.push(
+      `group_wall.json 有 ${tileKeys.length} 格、manifest 有 ${gwm.images?.length} 张图 —— ` +
+        '缩略图文件名撞名会让 tiles 静默覆盖（生成器已改为抛错，这里是第二道网）'
+    )
+  console.log(`  ${derProblems.length ? 'ERR' : 'OK '}  group_wall.json          ${tileKeys.length} 格 / manifest ${gwm.images?.length} 张图`)
+} else {
+  console.log('  --   group_wall.*.json       不在场（跑 npm run data:group-wall 生成）')
+}
+
+// 阈值这条最重要：生成物记的 threshold 必须与 wall_rules.json 现在写的一致，
+// 否则页面会拿旧名单渲染（2026-09-23 修的就是这个：阈值设 0 时生成器曾不重写文件）。
+const exMembers = optJSON('excellent_members.json')
+if (exMembers && rules) {
+  const exProblems = []
+  if (exMembers.threshold !== rules.excellentScoreThreshold)
+    exProblems.push(
+      `excellent_members.json 的 threshold=${exMembers.threshold} 与 wall_rules.json 的 ` +
+        `excellentScoreThreshold=${rules.excellentScoreThreshold} 不一致 —— 页面读的是前者，请重跑 npm run data:group-wall`
+    )
+  if (exMembers.count !== exMembers.members?.length)
+    exProblems.push(`excellent_members.json count=${exMembers.count} 与 members.length=${exMembers.members?.length} 不等`)
+  const auto = (exMembers.members || []).filter((m) => m.auto).length
+  derProblems.push(...exProblems)
+  console.log(`  ${exProblems.length ? 'ERR' : 'OK '}  excellent_members.json   ${exMembers.count} 人（自动入册 ${auto} 人，阈值 ${exMembers.threshold}）`)
+} else if (exMembers) {
+  console.log('  --   excellent_members.json   在场，但 wall_rules.json 缺失，无法核对阈值')
+} else {
+  console.log('  --   excellent_members.json   不在场（跑 npm run data:group-wall 生成）')
+}
+
+const badges = optJSON('event_badges.json')
+if (badges) {
+  const bkTiers = Object.keys(badges.tiers || {})
+  const bkB = Object.keys(badges.badges || {})
+  const badTier = bkTiers
+    .map((k) => badges.tiers[k])
+    .filter((t) => !['grand', 'gold', 'silver', 'bronze'].includes(t))
+  const mismatch = bkTiers.length !== bkB.length || bkB.some((k) => !(k in (badges.tiers || {})))
+  if (badTier.length) derProblems.push(`event_badges.json 有非法 tier: ${[...new Set(badTier)].join(', ')}`)
+  if (mismatch) derProblems.push('event_badges.json 的 badges 与 tiers 键集合不一致（页面按 tiers 取档位配色）')
+  console.log(`  ${badTier.length || mismatch ? 'ERR' : 'OK '}  event_badges.json        ${bkB.length} 枚角标 / tiers 同键 ${bkTiers.length}`)
+} else {
+  console.log('  --   event_badges.json       不在场（跑 npm run data:event-badges 生成）')
+}
+
+derProblems.slice(0, 8).forEach((p) => console.log('         ' + p))
+if (derProblems.length) failed += derProblems.length
 
 console.log(failed ? `\n校验未通过：${failed} 处问题` : '\n全部通过。')
 process.exit(failed ? 1 : 0)
