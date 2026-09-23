@@ -124,8 +124,10 @@ export function resolveHonorType(item) {
  * 放在**展示归一化**里做而不是去改数据：需要它的是渲染，数据里那 40 多条手写条目
  * 保持原样；口径判定（honorCoverage / honorRanking）匹配的是中文关键词与「优秀奖」
  * 这类字样，不受空格影响，而且它们都在这一步之前跑。
+ *
+ * 只在本文件内部用（normalizeHonors 调用），不对外导出。
  */
-export function spaceAcronyms(text) {
+function spaceAcronyms(text) {
   return String(text)
     .replace(/\s*(ICPC|CCPC)\s*/g, ' $1 ')
     .replace(/\s{2,}/g, ' ')

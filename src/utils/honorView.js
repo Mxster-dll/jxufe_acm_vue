@@ -34,7 +34,8 @@ export const HONOR_VIEWS = [
   },
 ]
 
-export const DEFAULT_HONOR_VIEW = 'count'
+// 兜底口径：读不到偏好时用它（不导出 —— 外部只需要 HONOR_VIEWS 与 honorView）
+const DEFAULT_HONOR_VIEW = 'count'
 
 const STORAGE_KEY = 'jxufe:honor-view'
 const VALUES = HONOR_VIEWS.map((v) => v.value)

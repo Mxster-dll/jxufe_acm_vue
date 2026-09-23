@@ -83,32 +83,14 @@ export function editionLabel(n) {
   return `第${CN_DIGIT[Math.floor(v / 10)]}十${v % 10 ? CN_DIGIT[v % 10] : ''}届`
 }
 
-/** 从「第N届…」标题解析届数，兼容「第十一届」与「第21届」两种写法 */
-export function sessionFromTitle(title) {
-  const m = String(title || '').match(/第\s*(\d+|[一二三四五六七八九十]+)\s*届/)
-  if (!m) return null
-  if (/^\d+$/.test(m[1])) return Number(m[1])
-  const D = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 }
-  let section = 0
-  let num = 0
-  for (const ch of m[1]) {
-    if (ch === '十') {
-      section += (num || 1) * 10
-      num = 0
-    } else if (D[ch]) {
-      num = D[ch]
-    }
-  }
-  return section + num
-}
-
 /** 两字姓名中间插全角空格（与 RosterGroup 的 alignName 保持一致） */
 export function alignName(name) {
   return /^[\u4e00-\u9fff]{2}$/.test(name || '') ? name[0] + '\u3000' + name[1] : name
 }
 
-/** 把一组记录按奖牌归成 [{ medal, rows }]，顺序固定为 金 → 银 → 铜 */
-export function awardPairs(rows) {
+/** 把一组记录按奖牌归成 [{ medal, rows }]，顺序固定为 金 → 银 → 铜。
+    只在本文件内部用（subjectGroups / sessionGroups），不对外导出。 */
+function awardPairs(rows) {
   return MEDAL_KEYS.filter((m) => rows.some((r) => r.medal_type === m)).map((m) => ({
     medal: m,
     rows: rows.filter((r) => r.medal_type === m)

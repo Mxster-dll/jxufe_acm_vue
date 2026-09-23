@@ -107,8 +107,9 @@ export function teamSegments(family, row) {
 /**
  * 个人奖落到哪个分段。天梯赛个人 / 蓝桥杯 / 百度之星各有自己的两档。
  * 天梯赛个人奖在数据里全是 national，故直接归「个人」。
+ * 只在本文件内部用（collectRecords），不对外导出。
  */
-export function personalSegments(family, row) {
+function personalSegments(family, row) {
   if (family === 'gplt') return ['个人']
   if (family === 'lanqiao' || family === 'baidu') {
     return [row?.medal_level === 'national' ? '国赛' : '省赛']

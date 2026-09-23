@@ -918,7 +918,7 @@ const unloadedCount = computed(() => years.value.length - loadedYears.value.leng
 .tl-badge--grand {
   background: linear-gradient(135deg, #ffebee, #ffcdd2);
   border-color: rgba(198, 40, 40, 0.45);
-  color: #c62828;
+  color: var(--honor-grand);
 }
 .tl-badge--gold {
   background: linear-gradient(135deg, #fff3d6, #ffe3a1);

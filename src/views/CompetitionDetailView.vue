@@ -1024,7 +1024,7 @@ function setView(v) {
   font-size: var(--font-size-xs);
   font-weight: 700;
 }
-.m-award.chip-grand { background: rgba(198, 40, 40, 0.12); color: #c62828; border-color: rgba(198, 40, 40, 0.4); }
+.m-award.chip-grand { background: rgba(198, 40, 40, 0.12); color: var(--honor-grand); border-color: rgba(198, 40, 40, 0.4); }
 .m-award.chip-gold { background: rgba(199, 145, 0, 0.12); color: #b8860b; border-color: rgba(199, 145, 0, 0.4); }
 .m-award.chip-silver { background: rgba(122, 139, 153, 0.13); color: #64717e; border-color: rgba(122, 139, 153, 0.4); }
 .m-award.chip-bronze { background: rgba(184, 115, 51, 0.14); color: #a35e2b; border-color: rgba(184, 115, 51, 0.4); }
@@ -1100,7 +1100,7 @@ function setView(v) {
 }
 .chip-grand {
   background: rgba(198, 40, 40, 0.12);
-  color: #c62828;
+  color: var(--honor-grand);
   border: 1px solid rgba(198, 40, 40, 0.4);
 }
 .chip-gold {
