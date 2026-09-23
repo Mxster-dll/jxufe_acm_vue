@@ -296,6 +296,32 @@ const clampCard = (tile) => {
   // 既用于边界钳制，也回写 --card-w 供「头像起飞点」--from-x 定位。
   // 用 offsetWidth 而不是 getBoundingClientRect —— 后者含卡片自身的 scale(.88)。
   const cardEl = tile.querySelector('.wall__card')
+  if (cardEl) {
+    // 卡宽 = 「正好装得下最宽的那一条」（见 .wall__card 的 width: max-content 注释）。
+    // 先按「胶囊不折行」量自然宽度：.is-fitw 给出 nowrap + flex:none，
+    // 此时胶囊的 offsetWidth 就是它整条摊开的宽度，与当前卡宽无关。
+    cardEl.classList.add('is-fitw')
+    const natural = [
+      ...cardEl.querySelectorAll('.wall__tag, .wall__tag--typed, .wall__name, .wall__line'),
+    ].reduce(
+      // 姓名/班级是 nowrap + ellipsis：被截断时 offsetWidth 只是截断后的宽度，
+      // scrollWidth 才是全文宽度（标准的「有没有被省略」判据）。
+      (m, el) => Math.max(m, el.offsetWidth || 0, el.scrollWidth || 0),
+      0
+    )
+    // 卡内固定开销：左右内边距 + 头像与文字块的间距 + 头像 —— 跟随 CSS 变量，不写死。
+    const cs = getComputedStyle(cardEl)
+    const chrome =
+      parseFloat(cs.paddingLeft) +
+      parseFloat(cs.paddingRight) +
+      (parseFloat(cs.columnGap) || 0) +
+      (parseFloat(cs.getPropertyValue('--avatar')) || 96)
+    const avail = Math.max(240, window.innerWidth - 32)
+    const fit = natural + chrome + 2 // +2：亚像素取整留余量，免得差 1px 又折行
+    // 视口实在装不下最宽那条 → 摘掉 .is-fitw，退回「允许折行」，而不是让文字溢出卡片
+    if (fit > avail) cardEl.classList.remove('is-fitw')
+    tile.style.setProperty('--card-max', Math.max(300, Math.min(fit, avail)) + 'px')
+  }
   const cardW = Math.min((cardEl && cardEl.offsetWidth) || CARD_W, c.width - 32)
   if (cardEl) tile.style.setProperty('--card-w', cardW + 'px')
   const halfW = cardW / 2 + 10
@@ -734,13 +760,18 @@ watch(() => props.hoverCard, () => clearPointerTile())
   display: flex;
   align-items: center;
   gap: 10px;
-  /* 卡宽**按内容自适应**（会长 2026-09-23：「卡片没有适应宽度，有些内容会超」）：
-     内容短就窄、长就宽，上限 420px / 视口 −32px；再长就由标签换行消化，
-     所以卡里没有任何一层会越界。原来写死 360px，长班级与长标签只能被裁或顶出去。
-     --card-w 现在只作**头像起飞**的参照，由 clampCard 每次悬停按实测宽度回写。 */
-  width: fit-content;
+  /* 卡宽**由内容决定**（会长 2026-09-23：先「卡片没有适应宽度，有些内容会超」，
+     再「成员墙的胶囊内还是换行了」）。
+     ⚠ 光靠 `fit-content` 不行：卡片绝对定位在格子里（--step = 136px），
+     收缩到合适宽度时的「可用宽度」就是那 136px → 只会退到 min-width，
+     于是每张卡都被钉在 ~300px，而信息列只剩 172px，最宽的一条战绩胶囊有 278px
+     —— 胶囊只能折成两行（实测 695 条胶囊里 104 条折行）。
+     现在：`max-content` 按内容撑开，上限 --card-max 由 clampCard() 每次悬停实测回写
+     （= 最宽的那一条 + 头像 96 + 间距 10 + 内边距 20），即「正好装得下最宽的一条」。
+     配合 .is-fitw 下胶囊禁止内部折行，要换行就只在两条胶囊之间换。 */
+  width: max-content;
   min-width: min(300px, calc(100vw - 32px));
-  max-width: min(420px, calc(100vw - 32px));
+  max-width: min(var(--card-max, 420px), calc(100vw - 32px));
   padding: var(--pad);
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.058);
@@ -803,6 +834,16 @@ watch(() => props.hoverCard, () => clearPointerTile())
   gap: 3px;
   /* 正文（姓名 / 班级）与胶囊之间只留 4px —— 旧版是 8px，会长 2026-09-23「胶囊与正文的距离太大」 */
   margin-top: 4px;
+}
+/* 胶囊是**不该拆开的单位**（会长 2026-09-23：「成员墙的胶囊内还是换行了」）：
+   一条战绩胶囊要么整条在一行、要么整条换到下一行。`.is-fitw` 由 clampCard() 在
+   「这条胶囊装得下」时挂上（卡宽也正好按它撑开，两条是一件事的两面）。
+   视口实在装不下最宽那条时它会摘掉这个类 —— 退回「允许折行」，而不是让文字溢出卡片。
+   ⚠ 只作用于格子里的悬停卡：触屏的居中卡不在 .wall__tile 下，不受影响。 */
+.wall__card.is-fitw .wall__tag,
+.wall__card.is-fitw .wall__tag--typed {
+  white-space: nowrap;
+  flex: none;
 }
 .wall__tag {
   font-size: 0.75rem;
