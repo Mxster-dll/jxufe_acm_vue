@@ -7,6 +7,7 @@
  *   members.json        优秀成员的荣誉
  *   leaders.json        负责人的荣誉
  *   awards/*.json       站点的结构化获奖数据 → 自动汇总成比赛战绩胶囊
+ *   hero_wall.json      主仓库手写的留言（**只读**）→ 按姓名并入，对不上就不写
  *
  * 输出（都是生成物，请勿手改）：
  *   group_wall.manifest.json   { source, count, images[] }        —— 墙上铺哪些图
@@ -169,9 +170,34 @@ const imageOf = (m) => {
 }
 
 let repaired = 0
+
+/* ── 留言：并入主仓库 hero_wall.json 里已有的那几条（只读，不改它）──
+   会长 2026-09-23 裁定：按姓名自动匹配，「能对上几个算几个」。
+   对不上就留空 —— 组件对空留言一个字符都不渲染（作者自己的口径：墙上没留言的是绝大多数，
+   写一句「这位成员还没有留言」只是噪音）。
+   匹配键取「显示名 → 真名 → 清洗后的群昵称」：作者那几条留言里既有真名（陈菁雅、黄简鑫）
+   也有网名（Thea、多喜长安），而网名正好是我们墙上显示的群昵称。 */
+const heroMessages = new Map()
+try {
+  const hero = readJson(path.join(DATA, 'hero_wall.json'))
+  for (const t of Object.values(hero?.tiles || {})) {
+    const name = String(t?.name || '').trim()
+    const msg = String(t?.message || '').trim()
+    if (name && msg && !heroMessages.has(name)) heroMessages.set(name, msg)
+  }
+} catch {
+  // hero_wall.json 不存在也不影响：留言留空即可，其它字段照旧
+}
+const messageOf = (m) =>
+  heroMessages.get(shownNameOf(m)) ||
+  (m.realName ? heroMessages.get(String(m.realName).trim()) : '') ||
+  heroMessages.get(cleanNick(m.name)) ||
+  ''
+
 const items = shuffle(members).map((m) => {
   const img = imageOf(m)
   if (img.repaired) repaired++
+  const message = messageOf(m)
   return {
     file: img.file,
     tile: {
@@ -179,6 +205,8 @@ const items = shuffle(members).map((m) => {
       line: String(m.className || '').trim() || (m.realName ? siteClass.get(m.realName) || '' : ''),
       full: img.full,
       tags: tagsOf(m),
+      // 只有主仓库写过的留言才落这个字段；没有就整个字段不写，不在 JSON 里堆空串
+      ...(message ? { message } : {}),
     },
   }
 })
@@ -202,7 +230,8 @@ writeJson(path.join(DATA, 'group_wall.json'), {
   _note:
     '生成物，请勿手改。key 是缩略图文件名，value 是悬浮卡片的内容（同 hero_wall.json 的形状）。' +
     '由 scripts/gen_group_wall.mjs 生成：职务来自 duties.json、战绩来自 awards/、' +
-    '荣誉来自 group_members.json + members.json + leaders.json。',
+    '荣誉来自 group_members.json + members.json + leaders.json、' +
+    '留言按姓名并入主仓库 hero_wall.json（对不上就没有这个字段）。',
   generated_at: now,
   tiles: Object.fromEntries(items.map((x) => [x.file, x.tile])),
 })
