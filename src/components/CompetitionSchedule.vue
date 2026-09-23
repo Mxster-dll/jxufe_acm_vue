@@ -361,9 +361,12 @@ const rows = computed(() => {
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
+/* 窄屏竖置时间线：当前月份那个刻度同样加底色（与宽屏同一条口径） */
 .schedule__vaxis span.is-now {
   color: var(--primary);
   font-weight: 700;
+  background: rgba(26, 115, 232, 0.14);
+  border-radius: 4px;
 }
 .schedule__vcol {
   flex: 1 1 0;
@@ -456,8 +459,12 @@ const rows = computed(() => {
   background: rgba(26, 115, 232, 0.09);
   pointer-events: none;
 }
+/* 当前月份的表头也加底色（会长 2026-09-23：「列高亮时列表头也要背景高亮」）——
+   与那一列的底色同源、略深一档，于是从表头到图表底部连成一条完整的列高亮 */
 .schedule__axis span.is-now {
   color: var(--primary);
   font-weight: 700;
+  background: rgba(26, 115, 232, 0.14);
+  border-radius: 4px;
 }
 </style>
