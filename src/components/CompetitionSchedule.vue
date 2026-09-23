@@ -415,6 +415,12 @@ const rows = computed(() => {
   pointer-events: none;
 }
 .schedule__mvmonth {
+  /* 列必须**显式**写成 1：当前月那一行被 .schedule__mvnow（grid-column: 1 / -1）整行占满，
+     若这里只给 gridRow、列交给自动放置，算法在本行找不到任何空列，就会给它开一个
+     **隐式列**放在表格右端之外 —— 会长看到的「高亮行的表头跑到右端」就是这个
+     （实测 390px：其余 11 个标签 left=45，当前月那个 left=330，落在高亮带 45~326 之外，
+      并且隐式列还从 1fr 的列宽里抠走了约 16px）。 */
+  grid-column: 1;
   /* 月份格要压在色带之上（静态元素的背景/文字会被定位元素盖住） */
   position: relative;
   z-index: 1;
