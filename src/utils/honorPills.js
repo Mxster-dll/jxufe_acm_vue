@@ -20,7 +20,11 @@
  *    若将来它有了数据，加进 AWARD_FILES 之前先确认手写条目的去留，否则会重复显示。
  *  - xCPC 的「区域赛 / 邀请赛 / 省赛」**同属一枚胶囊**（2026-09-23 会长裁定：原先省赛
  *    单独成枚，现合并；三段各自是一个折行单位，见 recordsToPillParts）
- *  - 「暨X省赛」的邀请赛（如 ICPC全国邀请赛（南昌）暨江西省赛）：邀请赛与省赛【各计一次】
+ *  - **一切以 awards 数据为准**（会长 2026-09-24 裁定，取代先前的「暨X省赛各计一次」）：
+ *    「暨江西省赛」那种一场两赛的比赛**不再按赛事名自动补一枚省赛** —— 队伍到底有没有
+ *    拿省赛奖，只看数据里有没有 `medal_level: 'provincial'` 那一行。实测：icpc 的 6 条
+ *    南昌行（2025-05-18）只有 invitational，源里那 6 队也确实没进省赛池；而 CCPC
+ *    2026-05-24 南昌同队同日**各有两条**（invitational + provincial），两枚都计。
  *  - **省赛段只认江西省赛**（会长 2026-09 裁定）：其他省的省赛 / 区赛（广东、河南、
  *    广西、山东、吉林、东北、湖北、福建、河北、贵州…）不计入省赛段，只计邀请赛。
  *  - 天梯赛：团体（只统计国赛团队奖；分省团队奖在数据里没有成员名单，无法归属到人）/ 个人
@@ -87,20 +91,20 @@ const splitMembers = (text) =>
         .filter(Boolean)
 
 /**
- * 团队奖落到哪些分段。
- * 返回数组：因为「暨江西省赛」的邀请赛要同时落进「邀请赛」和「省赛」两段。
- * 新版只看结构化的 medal_level（不再靠中文正则猜档位），唯一例外是「女生专场」——
+ * 团队奖落到哪个分段 —— **一条记录只落一段**，与数据一一对应。
+ * 只看结构化的 medal_level（不再靠中文正则猜档位），唯一例外是「女生专场」——
  * 它在数据里同样是 provincial，必须先按赛事名挑出来单列，否则会混进省赛桶。
  * 返回空数组 = 这条不计入任何分段（非江西的省赛 / 区赛）。
+ * ⚠ 别再加回「暨X省赛的邀请赛同时落进省赛段」：那是替数据做主。会长 2026-09-24 裁定
+ *   「以源为准」—— 有没有省赛奖，看数据里有没有那一行（旧的 jiangxiProvincialKeys
+ *   去重补丁随之删除）。
  */
 export function teamSegments(family, row) {
   const name = String(row?.competition_name || '')
   if (family === 'gplt') return ['团体']
   if (GIRLS_RE.test(name)) return ['girls']
   if (row?.medal_level === 'provincial') return JIANGXI_RE.test(name) ? ['省赛'] : []
-  if (row?.medal_level === 'invitational') {
-    return JIANGXI_RE.test(name) ? ['邀请赛', '省赛'] : ['邀请赛']
-  }
+  if (row?.medal_level === 'invitational') return ['邀请赛']
   return ['区域赛']
 }
 
@@ -146,26 +150,6 @@ function sessionYearTable(competitions = []) {
     table[comp?.slug] = reverse
   }
   return table
-}
-
-/**
- * 显式省赛行的指纹。
- * 新数据层里 2026-05-24 的 CCPC 南昌场同时有 invitational 与 provincial 两条
- * （同一天 / 同队 / 同奖牌）：一条是邀请赛奖、一条是江西省赛奖。而 2025-09-13 那一届、
- * 以及 icpc 的全部 6 条南昌行只有 invitational 一条 —— 省赛那半只能靠
- * 「暨江西省赛的邀请赛要各计一次」这条口径推出来。
- * 两处都算就会把 2026 那两条重复计一次，故先收一遍显式省赛行的指纹，
- * 邀请赛行推出的省赛若与之重合就跳过。
- */
-function jiangxiProvincialKeys(rows = []) {
-  const keys = new Set()
-  for (const row of rows) {
-    if (row?.medal_level !== 'provincial') continue
-    const name = String(row?.competition_name || '')
-    if (!JIANGXI_RE.test(name)) continue
-    keys.add(`${row.date || ''}|${name}|${row.team_name || ''}|${row.medal_type || ''}`)
-  }
-  return keys
 }
 
 /** 奖牌说法按赛事官方口径分开（会长 2026-09-23）：
@@ -259,7 +243,6 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
     const family = FAMILY_OF_FILE[file]
     const rows = awards[file] || []
     const bySession = sessionYears[COMPETITION_OF_FILE[file]] || {}
-    const explicitProvincial = jiangxiProvincialKeys(rows)
 
     for (const row of rows) {
       const medal = row?.medal_type
@@ -273,11 +256,6 @@ export function collectRecords({ awards = {}, competitions = [] } = {}) {
       if (!members.length) continue
 
       for (const segment of segments) {
-        // 「暨江西省赛」的省赛那半若已有显式的 provincial 行，就不再由邀请赛行重复推出
-        if (segment === '省赛' && row.medal_level === 'invitational') {
-          const key = `${row.date || ''}|${row.competition_name || ''}|${row.team_name || ''}|${medal}`
-          if (explicitProvincial.has(key)) continue
-        }
         for (const name of members) {
           push(name, {
             family,
