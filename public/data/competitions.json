@@ -58,7 +58,7 @@
       }
     ],
     "sessions": {},
-    "scheduleGroup": "ICPC / CCPC"
+    "scheduleGroup": "xCPC"
   },
   {
     "slug": "ccpc",
@@ -115,7 +115,7 @@
       }
     ],
     "sessions": {},
-    "scheduleGroup": "ICPC / CCPC"
+    "scheduleGroup": "xCPC"
   },
   {
     "slug": "gplt",

@@ -172,9 +172,9 @@ const rows = computed(() => {
    ========================================================================== */
 .schedule {
   margin-top: 56px;
-  /* 左侧「图标 + 赛事名」那一列的宽度：坐标轴的 margin-left 与每行的 flex-basis 共用它，
-     加宽是为了容纳行首的赛事 logo（会长 2026-09-23），调一处即可 */
-  --name-col: 200px;
+  /* 左侧「图标 + 赛事名」那一列的宽度：坐标轴的 margin-left 与每行的 flex-basis 共用它。
+     会长 2026-09-23 定稿的排版是「图标在上、名字在下」，所以这一列不需要很宽 */
+  --name-col: 132px;
 }
 .schedule__head {
   margin-bottom: 20px;
@@ -229,16 +229,22 @@ const rows = computed(() => {
   border-bottom: 0;
 }
 .schedule__name {
+  /* 图标在上、名字在下（会长 2026-09-23：格子够大，logo 放大、文字下移）。
+     用 wrap + 文字的 flex-basis:100% 实现：xCPC 有两枚 logo 时它们**并排**站一行，
+     名字仍被挤到下一行；若直接 flex-direction:column，两枚 logo 会上下叠起来把行撑高。 */
   display: flex;
-  align-items: center; /* logo 与文字同一条中轴（名字换行时 logo 仍居中） */
-  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 6px;
   flex: 0 0 var(--name-col);
   width: var(--name-col);
-  padding-right: 12px;
+  padding: 2px 10px 2px 0;
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--text);
   line-height: 1.35;
+  text-align: center;
   border-right: 1px solid rgba(15, 23, 42, 0.06);
 }
 .schedule__logo {
@@ -248,10 +254,15 @@ const rows = computed(() => {
   object-fit: contain;
   border-radius: 4px;
 }
+/* 图表里的行首图标放大一档（窄屏清单仍是 20px，那里一行放不下更大的） */
+.schedule__name .schedule__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+}
 .schedule__name-text {
   min-width: 0;
-  /* 与泳道首行（30px）对齐：名字短时视觉重心与区间条齐平 */
-  padding: 6px 0;
+  flex-basis: 100%; /* 占满一整行 → 一定落在图标下方（而不是被挤到图标右边） */
 }
 .schedule__track {
   position: relative;
