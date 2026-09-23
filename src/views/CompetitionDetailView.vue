@@ -20,6 +20,7 @@ import {
   subjectGroups,
   sessionGroups
 } from '../utils/awardGroups.js'
+import { mergeXcpc } from '../utils/contestTaxonomy.js'
 
 const route = useRoute()
 const { data: competitions, loading: compLoading, error } = useJson('/data/competitions.json', {
@@ -34,22 +35,10 @@ const { data: competitions, loading: compLoading, error } = useJson('/data/compe
 const comp = computed(() => {
   const slug = route.params.slug
   const list = competitions.value || []
-  if (slug === 'xcpc') {
-    const icpc = list.find((c) => c.slug === 'icpc')
-    const ccpc = list.find((c) => c.slug === 'ccpc')
-    if (!icpc || !ccpc) return null
-    return {
-      slug: 'xcpc',
-      name: 'xCPC 程序设计竞赛',
-      subtitle: 'ICPC × CCPC —— 国际与中国大学生程序设计竞赛',
-      image: icpc.image,
-      mode: 'xcpc',
-      intro: [],
-      details: [],
-      children: [icpc, ccpc],
-      awards: ['icpc', 'ccpc']
-    }
-  }
+  /* 合并页与首页那张大卡现在由同一份构造：contestTaxonomy.js 的 mergeXcpc()
+     （判据 = competitions.json 的 mode === 'xcpc'，奖项文件列表由各项自带的 awards
+     拼出来）。原先这里又写死了一遍名称、副标题与 awards 名单，是「三套判据」里的第二套。 */
+  if (slug === 'xcpc') return mergeXcpc(list)
   return list.find((c) => c.slug === slug)
 })
 

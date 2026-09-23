@@ -12,7 +12,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 
-import { AWARD_FILES } from '../src/utils/contestTaxonomy.js'
+import { AWARD_FILES, XCPC_MODE, mergeXcpc } from '../src/utils/contestTaxonomy.js'
 import { collectRecords, MANUAL_PILLS, buildHonorPills } from '../src/utils/honorPills.js'
 import {
   rankMembers,
@@ -206,4 +206,22 @@ test('胶囊：人名数 1795，vesper 那枚在', () => {
   const pills = buildHonorPills({ awards, competitions })
   assert.equal(pills.size, 1795)
   assert.deepEqual(pills.get('vesper'), ['xCPC 邀请赛🥉1 省赛🥇1'])
+})
+
+/* ── 9. xCPC 合并判据只有一条（mode === 'xcpc'）── */
+test('xCPC 合并：判据、子项、奖项文件都由 competitions.json 决定', () => {
+  const comps = read('competitions.json')
+  const xcpc = mergeXcpc(comps)
+  assert.equal(xcpc.slug, 'xcpc')
+  assert.equal(xcpc.mode, XCPC_MODE)
+  assert.equal(xcpc.isXcpc, true, '首页卡片模板靠它分支')
+  assert.deepEqual(xcpc.children.map((c) => c.slug), ['icpc', 'ccpc'])
+  // 奖项文件列表不再写死，而是各项自带的 awards 拼出来
+  assert.deepEqual(xcpc.awards, ['icpc', 'ccpc'])
+  assert.deepEqual(xcpc.awards, xcpc.children.flatMap((c) => c.awards || []))
+  assert.equal(xcpc.awards.every((f) => AWARD_FILES.includes(f)), true)
+  // 数据不齐时返回 null（调用方各自决定怎么退），不抛
+  assert.equal(mergeXcpc([]), null)
+  assert.equal(mergeXcpc([{ slug: 'x', mode: 'roster' }]), null)
+  assert.equal(mergeXcpc(comps.filter((c) => c.mode !== XCPC_MODE)), null)
 })

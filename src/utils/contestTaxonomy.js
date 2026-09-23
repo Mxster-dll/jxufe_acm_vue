@@ -128,6 +128,46 @@ export const COMPETITION_OF_FILE = {
   baidu: 'baidu',
 }
 
+/**
+ * xCPC 合并页（/competition/xcpc）与首页那张 xCPC 大卡的**唯一构造入口**。
+ *
+ * 2026-09-24 审查：同一件事（「哪几项赛事合成一张 xCPC 卡」）原先有三套判据 ——
+ * `ContestView.vue` 写死 `slug === 'icpc' / 'ccpc'`；`CompetitionDetailView.vue` 又写死
+ * 一遍名称、副标题与 `awards: ['icpc', 'ccpc']`（既绕开本文件的 COMPETITION_OF_FILE，
+ * 也绕开 competitions.json 自带的 awards 字段）；`CompetitionSchedule.vue` 用
+ * `c.scheduleGroup || c.slug`。
+ * 现在判据只有一条：**competitions.json 里 `mode === 'xcpc'`** —— 视图本来就用 mode
+ * 决定用哪套分组渲染（CompetitionDetailView 的 hasTableData），奖项文件列表由各项自带的
+ * `awards` 拼出来。以后加赛事只改数据、不改代码。
+ *
+ * 返回 null 表示数据不齐（mode=xcpc 的赛事少于两项）—— 调用方各自决定怎么退。
+ * `isXcpc` 是给卡片模板用的（ContestView 的 `card--xcpc` 类与子卡分支都看它）。
+ * 副标题是写死的展示文案（数据里没有「xCPC」这一项），将来 mode=xcpc 的赛事不止两项时
+ * 要跟着改这一行。
+ *
+ * 顺带记一笔：CompetitionSchedule 那个 `scheduleGroup`（icpc/ccpc 都是 "xCPC"）是
+ * **赛程图排版**的分组，与本函数的「合并成一张卡」不是一回事 —— 保持数据驱动即可，
+ * 不要并进来。
+ */
+export const XCPC_MODE = 'xcpc'
+
+export function mergeXcpc(list = []) {
+  const children = (Array.isArray(list) ? list : []).filter((c) => c && c.mode === XCPC_MODE)
+  if (children.length < 2) return null
+  return {
+    slug: 'xcpc',
+    isXcpc: true,
+    name: 'xCPC 程序设计竞赛',
+    subtitle: 'ICPC × CCPC —— 国际与中国大学生程序设计竞赛',
+    image: children[0].image,
+    mode: XCPC_MODE,
+    intro: [],
+    details: [],
+    children,
+    awards: children.flatMap((c) => c.awards || []),
+  }
+}
+
 /** 个人赛文件（一行一个人/一队人，但分段按个人赛算） */
 export const PERSONAL_FILES = new Set(['gplt-individual', 'lanqiao', 'baidu'])
 
