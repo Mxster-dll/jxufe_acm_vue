@@ -2,28 +2,23 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useNews } from "../composables/useNews";
 import AppFooter from "../components/AppFooter.vue";
-/* 头像墙：独立叠加层。删掉这一行 import、下面那个 ref、模板里那一个标签、
-   .hero-inner 上的 :class，以及 <style> 末尾那段 .is-wall-on 规则，即完全回滚。
-   它自己不读也不改轮播/文案的任何状态，只由 wallOn 决定谁在前面。 */
+/* 头像墙：hero 的底纹层 + 自带那颗开关按钮。删掉这一行 import、下面那个 ref、
+   模板里那一个标签、.hero-inner 上的 :class，以及 <style> 里那段 .is-wall-on 规则，
+   即完全回滚。它自己不读也不改轮播/文案的任何状态，只由 wallOn 决定谁在前面。
+   ⚠ 它必须是 .hero 的孩子（而不是包一层固定层）：墙的几何是量**宿主盒子**算出来的，
+   而且旧版那颗「成员墙 / 返回」按钮就贴在 hero 底部 —— 进入后页面不动，按钮还在原处，
+   再点一下就是退出口。（会长 2026-09-24：不要「整页滑走」那套遮罩机制。） */
 import HeroAvatarWall from "../components/HeroAvatarWall.vue";
-import { useMaskReveal } from "../composables/useMaskReveal";
 import { useSectionSnap } from "../composables/useSectionSnap";
-import { useHeaderHint } from "../composables/useHeaderHint";
 
 // ── 头像墙开关（纯叠加：false 时页面与改动前逐像素一致）──
 const wallOn = ref(false);
 
-// ── 遮罩（= 除了墙和导航栏的整个页面）、分节吸附、导航栏入口 ──
-//   这三件事原先全塞在这个视图里（会长 2026-09-23 屎山审查点名：2200 行的上帝视图）。
-//   现在各由一个 composable 管，这里只做编排 —— 口径与理由都随代码搬到了各自文件里：
-//     · useMaskReveal  —— 遮罩位移、滚轮/触摸两套驱动、露墙与请回、把状态发布到 <html>；
-//     · useSectionSnap —— 滚轮「按部分对齐」吸附（#home / #about / #news 三个分界）；
-//     · useHeaderHint  —— 导航栏那枚「成员墙」入口的横向让位、随滚动隐藏、切页淡入。
-//   注意 useMaskReveal 的监听在内部注册（wheel / touchmove 必须 passive: false），
-//   销毁时自己摘干净；吸附只是被它回调，所以先建 snap 再建 mask。
-const { snapToSection } = useSectionSnap(["home", "about", "news"]);
-const { maskShift, maskOut, maskReturning, revealWall } = useMaskReveal({ snap: snapToSection });
-const { hintEl, hintLeft, hintHidden, hintReady } = useHeaderHint();
+// ── 滚轮「按部分对齐」吸附（#home / #about / #news 三个分界）──
+//   会长 2026-09-23 屎山审查把这件事从本视图抽出来；抽出来时它是被 useMaskReveal
+//   在滚轮处理里回调的（遮罩优先、吸附其次）。2026-09-24 首页不再有遮罩，于是它自己
+//   听滚轮、自己摘监听（wheel 必须 passive: false，否则拦不下默认滚动）。
+useSectionSnap(["home", "about", "news"]);
 
 // ── 轮播图 ──
 const slides = Array.from({ length: 10 }, (_, i) => ({
@@ -139,7 +134,7 @@ onMounted(() => {
   initShapes();
 });
 
-// ── 滚动吸附：已交给 useSectionSnap（调用见上面第 24 行）──
+// ── 滚动吸附：已交给 useSectionSnap（调用见上面的 import 之后）──
 //   这里原先还有一台独立引擎：「滚动结束 800ms 后，把离得最近的 section 吸过来」
 //   （window 上的 scroll + scrollend 两个监听 + rAF 缓动 + 独占地把
 //   document.documentElement.style.scrollBehavior 写成 auto/'' 那一套）。
@@ -149,7 +144,7 @@ onMounted(() => {
 //       叠加出来的落点是两套规则的产物，无法预测；
 //     · 全仓库只有它写过内联 scrollBehavior，而 useSectionSnap 用的是
 //       window.scrollTo({ behavior: 'smooth' })，不需要那行内联样式。
-//   删除后本视图不再注册任何 window 滚动监听。
+//   删除后本视图不再注册任何 window 滚动监听（吸附自己的监听在 useSectionSnap 里）。
 
 // ── 我们参与的赛事 logo ──
 // ICPC 与 CCPC 合并为一张卡（与竞赛详情页 xCPC 合并页同构：两块上下堆叠，各自 logo+名称）
@@ -241,54 +236,6 @@ const { newsList, loading, error } = useNews();
 </script>
 
 <template>
-  <!-- ── 墙：整页固定底纹 ──
-       它不在遮罩里，而是铺在遮罩**下面**；导航栏在 App.vue，天然也在遮罩之外。
-       形状与首页原来那份 hero_wall.json 完全一致（manifest + tiles），
-       所以组件一行没改，只多传几个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成，
-       人数：QQ 群 110 + 优秀成员 33 + 负责人 6，按真名去重后 138 人。 -->
-  <div class="page-wall">
-    <HeroAvatarWall
-      v-model:active="wallOn"
-      :hover-card="maskOut"
-      manifest-url="/data/group_wall.manifest.json"
-      copy-url="/data/group_wall.json"
-      thumbs-base="/images/group_wall_thumbs"
-      label="协会成员墙"
-      :dim-opacity="1"
-    />
-  </div>
-
-  <!-- ── 「成员墙」入口：会长 2026-09-23 要求搬进导航栏，且点一下就直接收起遮罩 ──
-       Teleport 到 AppHeader 里的 #header-hint 锚点 —— DOM 上它成了导航栏的孩子，
-       但状态与逻辑仍留在本页（遮罩归 HomeView 管），不必为它引一个全局 store。
-       横向位置由 measureHint() 实测后写进 --hint-left（见脚本里的说明）：
-       有空间时落在导航栏中线上，被 logo / 导航按钮夹住时退开 —— 就是会长说的
-       「宽度小时被导航栏按钮挤离中心」。 -->
-  <Teleport to="#header-hint">
-    <button
-      ref="hintEl"
-      type="button"
-      class="wall-hint"
-      :class="{ 'is-hidden': hintHidden, 'is-ready': hintReady }"
-      :style="{ '--hint-left': hintLeft }"
-      aria-label="露出成员墙"
-      @click="revealWall"
-    >
-      <i class="fas fa-chevron-up" aria-hidden="true"></i>
-      <span class="wall-hint__label">成员墙</span>
-    </button>
-  </Teleport>
-
-  <!-- ── 遮罩 = 除了墙和导航栏的整个页面 ──
-       正常滚动时它跟着页面上下走：往下滚就是遮罩上移，于是看到 #about 的
-       「以代码为桥梁 / 连接技术与未来」；在页首继续往上滚则是遮罩下移，
-       把上面的墙露出来（桌面滚轮一动即触发；移动端要拉过一屏的 10% 再松手）。
-       往回收也一样：滚一下就把遮罩请回来。（首页不渲染页脚，见 App.vue 的 v-if） -->
-  <div
-    class="page-mask"
-    :class="{ 'is-out': maskOut, 'is-returning': maskReturning }"
-    :style="{ '--mask-shift': maskShift + 'px' }"
-  >
   <!-- 英雄区 -->
   <section
     id="home"
@@ -298,6 +245,24 @@ const { newsList, loading, error } = useNews();
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
+    <!-- ── 协会成员墙：hero 的第一个子元素 = 同为 z-index: 0 的那几层里最靠下的一层。
+         它自带那颗开关按钮（在 .hero-inner 之外，所以文案退场后它还在原处）：
+           · 空闲 = 白胶囊 + 网格图标 +「成员墙」，点一下进入；
+           · 激活 = 蓝色反色 + 返回箭头 +「返回」，再点一下退出 —— 这就是退出口。
+         清单与文案由 scripts/gen_group_wall.mjs 生成，人数：QQ 群 110 + 优秀成员 33 +
+         负责人 6，按真名去重后 141 人。
+         prop 只传数据源那几个，其余全用组件默认值：
+           · 不传 dim-opacity —— 用默认 0.18，底纹态就是旧版那层淡淡的墙；
+           · hover-card 跟 active 走 —— 底纹态不弹卡（悬停只出模糊亮斑），
+             进入后点击任意一格才弹出成员卡。 -->
+    <HeroAvatarWall
+      v-model:active="wallOn"
+      :hover-card="wallOn"
+      manifest-url="/data/group_wall.manifest.json"
+      copy-url="/data/group_wall.json"
+      thumbs-base="/images/group_wall_thumbs"
+    />
+
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div
@@ -599,8 +564,6 @@ const { newsList, loading, error } = useNews();
     </div>
     <AppFooter />
   </section>
-  </div>
-  <!-- /.page-mask（到此为止 = 除了墙和导航栏的整个页面） -->
 </template>
 
 <style scoped>
@@ -634,17 +597,11 @@ const { newsList, loading, error } = useNews();
         transparent 60%
       ),
     /* 底部过渡：向 About 区渐变。
-       这层原本是**不透明**的（#f8fafc → #fff）：墙搬到遮罩下面之后会被它盖死，
-       于是改成半透明 —— 墙照旧只是淡淡一层底纹（≈12% 透出来），遮罩整体让开时
-       让出来的位置没有这层东西，墙就是全亮的。
-       ⚠ 这个透明度是**静态**的：会长 2026-09-23「我不希望鼠标悬停在遮罩上时改变其透明度」
-       —— 悬停只能影响墙自己那一层（见 HeroAvatarWall 的 .is-pointer）。 */
-    linear-gradient(
-      175deg,
-      rgba(248, 250, 252, 0.86) 0%,
-      rgba(255, 255, 255, 0.9) 40%,
-      rgba(255, 255, 255, 0.92) 100%
-    );
+       这层是**不透明**的：墙是 .hero 的子元素，画在 hero 自己的背景**之上**，
+       所以不透明的白底盖不住它；底纹态那层「淡淡的墙」靠的是组件给墙自己压的
+       --wall-opacity（默认 0.18），与这层背景无关。
+       2026-09-24：遮罩机制撤掉后，从半透明改回旧版的不透明值。 */
+    linear-gradient(175deg, #f8fafc 0%, #fff 40%, #fff 100%);
   background-size: 100% 100%;
   cursor: default;
 }
@@ -825,137 +782,13 @@ const { newsList, loading, error } = useNews();
   transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── 露墙：**遮罩 = 除了墙和导航栏的整个页面** ──
-   层序：墙（.page-wall 固定层，z-index: 0）→ 遮罩（.page-mask，1）→ 导航栏（在 App.vue，天然在外）。
-   遮罩铺在墙上面，所以首页照旧把墙当底纹用（hero 那层背景是半透明的）；
-   而它一旦让开，让出来的位置就是墙本身 —— 这就是「露出墙」。
-   位移由 HomeView 的滚轮 / 触摸处理器写进 --mask-shift：
-   未到阈值时严格跟手（故这一档不能有 transition，否则每一帧都在追赶），
-   过了阈值再加缓动整体滑出一屏。 */
-.page-wall {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-/* 会长 2026-09-23：不要那个「协会成员墙」开关按钮。
-   组件自带它（.wall-toggle，文案由 label / labelActive 两个 prop 给），但首页露墙已经
-   是「上滚把遮罩拉下去」这套手势了，角上再挂个按钮既重复又抢视线 —— 这里藏掉，
-   不动组件本身（组件是上游的，我们的改动越少越好在 PR 里对齐）。 */
-.page-wall :deep(.wall-toggle) {
-  display: none;
-}
-.page-mask {
-  position: relative;
-  z-index: 1;
-  transform: translate3d(0, var(--mask-shift, 0px), 0);
-  transition: none;
-  will-change: transform;
-}
-/* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来。
-   位移量 = tokens.css 的 --mask-travel（105vh），与 AppHeader 里导航栏那一份同值；
-   JS 侧同值的量是 useMaskReveal.js 的 MASK_MAX_RATIO = 1.05（触摸拖动上限）。 */
-.page-mask.is-out {
-  transform: translate3d(0, var(--mask-travel), 0);
-  /* 与下面 .is-returning 同一个时长：露墙与请回速度一致（会长 2026-09-23），
-     也对齐翻页吸附那一档（实测 ≈430ms）。
-     时长不再写字面量，改用 JS 发布到 <html> 的 --mask-ms —— 早先 CSS(640/520) 与
-     JS(MASK_MOVE_MS) 各写一份，才出过「露墙比请回慢 101ms」的不一致。 */
-  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* 请回来的回程：与露墙同一个时长（原先 640/520 两档不一致，露墙偏慢）。
-   用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
-.page-mask.is-returning {
-  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──
-   位置：Teleport 进导航栏的 #header-hint 锚点（DOM 上属于 AppHeader，逻辑与状态仍留在本页）。
-   锚点铺满 .bar，所以下面的 50% 就是整条导航栏的中线；横向位置再由 JS 实测邻居后
-   写进 --hint-left 覆盖（见本文件 measureHint）：有空间时中线居中，
-   被 logo / 导航按钮夹住时退开 —— 会长 2026-09-23 第 2 条要的就是这个让位行为。
-   结构：箭头在上、字样在下，共用一条中轴；箭头是卡片外的独立元素、24px。
-   竖排尺寸账：24 + gap 4 + 卡片 44 = 72px，导航栏 80px，上下各余 4px。
-   卡片样式照搬我们删掉的那枚 .wall-toggle（HeroAvatarWall.vue:849-895）：
-   白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
-   连「hover 抬 2px、active 缩到 0.97」也一并照搬。 */
-.wall-hint {
-  /* 竖排尺寸账：箭头 24 + gap 4 + 卡片 44 = 72px，导航栏 80px。
-     会长 2026-09-23：整块居中会让箭头偏上（箭头中心落在 y=16），改为让**箭头**居中 ——
-     top 减去半个箭头高度，箭头中心就落在导航栏中线上；代价是卡片底边伸出导航栏下沿
-     （y≈102 > 80，页头是透明的，会悬在下面）。调位置只改这一个 top 即可。 */
-  --hint-arrow: var(--font-size-2xl); /* 24px */
-  position: absolute;
-  top: calc(50% - var(--hint-arrow) / 2);
-  left: var(--hint-left, 50%);
-  transform: translateX(-50%);
-  display: inline-flex;
-  flex-direction: column; /* 箭头在上、字样在下 */
-  align-items: center; /* 两者共用一条中轴 */
-  gap: var(--space-xs);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
-  /* 挂上 is-ready（位置已实测 + 路由滚动已落定）之前一直透明，切页回首页就不会「凭空冒出来」 */
-  opacity: 0;
-  transition:
-    left 200ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.wall-hint.is-ready {
-  opacity: 1;
-}
-/* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面 */
-.wall-hint.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%) translateY(-10px);
-}
-.wall-hint:hover {
-  transform: translateX(-50%) translateY(-2px);
-}
-.wall-hint:active {
-  transform: translateX(-50%) scale(0.97);
-}
-.wall-hint:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 3px;
-  border-radius: var(--radius-full);
-}
-.wall-hint i {
-  font-size: var(--hint-arrow); /* 24px：放大到一眼能认出是「往上」 */
-  line-height: 1;
-  color: var(--primary);
-  animation: wall-hint-bob 1.8s ease-in-out infinite;
-}
-/* 卡片本体：与 .wall-toggle 同款（那枚按钮已按会长要求从首页撤掉，这里接上它的观感） */
-.wall-hint__label {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px; /* 与 .wall-toggle 同档的触控高度 */
-  padding: 0 var(--space-md);
-  border: 1px solid rgba(26, 115, 232, 0.24);
-  border-radius: var(--radius-full);
-  background: #fff;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
-  color: var(--primary);
-  font-size: 0.9375rem; /* 15px，与 .wall-toggle 一致 */
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-}
-@keyframes wall-hint-bob {
-  0%,
-  100% {
-    transform: translateY(4px);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
+/* ── 「成员墙 / 返回」那颗按钮在组件里，本页不写它的样式 ──
+   HeroAvatarWall 自带 .wall-toggle：绝对定位在墙（= hero 的盒子）的底部，
+   桌面居中、≤991px 收到左下角 44px 圆形只留图标、769–991px 挪到顶栏下方。
+   它在 .hero-inner 之外，所以文案退场后它还在原处 —— 进入与退出都是它，再点一下即退出。
+   2026-09-23 曾按会长要求把它藏掉、改成导航栏里那枚「上箭头 + 成员墙」提示，
+   配「整页滑走」的遮罩；2026-09-24 会长要求回到旧版：按钮回 hero 底部、进出都靠它，
+   遮罩那套（useMaskReveal / useHeaderHint / --mask-* 令牌）随之删除。 */
 .hero-content {
   text-align: left;
   padding-left: 6%;

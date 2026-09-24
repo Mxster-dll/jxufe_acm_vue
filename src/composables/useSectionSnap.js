@@ -1,3 +1,5 @@
+import { onMounted, onUnmounted } from 'vue'
+
 /**
  * 主页「按部分对齐」的滚轮吸附（会长 2026-09-23）。
  *
@@ -7,11 +9,13 @@
  *   · 开始滚动前已经对齐在分界处 → 直接跳到**下一页显示的位置**（再往前一个分界）。
  * 两条合起来就是一条规则：**吸附到当前滚动位置严格之后（或之前）的那个分界**。
  *
- * 分界用布局盒算（offsetTop 链），**不能用 getBoundingClientRect** —— 遮罩是靠 transform
- * 让开的，rect 会跟着位移，而吸附必须按真实文档位置算。
+ * 分界用布局盒算（offsetTop 链），不用 getBoundingClientRect：后者会被任何 transform
+ * （悬停位移、动画）污染，而吸附必须按**真实文档位置**算。
  *
- * 触摸**不做**吸附（会长只要求滚轮）；露墙那一下也不走这里 ——
- * 页首之上那一屏是成员墙，由 useMaskReveal 的露墙分支负责。
+ * 监听由本 composable 自己注册（wheel 必须 passive: false，否则拦不下默认滚动），
+ * 组件销毁时自己摘干净 —— 2026-09-24 之前它是被 useMaskReveal 在滚轮处理里回调的
+ * （遮罩优先、吸附其次）；首页撤掉遮罩后，它自己听滚轮。
+ * 触摸**不做**吸附（会长只要求滚轮）。
  *
  * @param {string[]} sectionIds 参与吸附的区块 id（自上而下）
  */
@@ -64,7 +68,7 @@ export function useSectionSnap(sectionIds) {
         if (nextB != null && y + dy >= nextB - SNAP_EPS) target = nextB
       }
     } else if (alignedIdx >= 0) {
-      // 往上同理；页首之上那一屏是成员墙，由 useMaskReveal 的露墙分支负责，这里不接
+      // 往上同理；页首就是第一个分界，再往上没有可去的分界了（返回 null 即不吸附）
       target = alignedIdx > 0 ? bounds[alignedIdx - 1] : null
     } else {
       const prevB = [...bounds].reverse().find((b) => b < y - SNAP_EPS)
@@ -76,6 +80,26 @@ export function useSectionSnap(sectionIds) {
     window.scrollTo({ top: target, left: 0, behavior: 'smooth' })
     return true
   }
+
+  /** 成员卡浮窗开着时，滚轮归浮窗自己（它的正文本就可滚）。
+      HeroAvatarWall 开卡时会给 body 挂 `hero-wall-sheet` 并锁掉 body 的 overflow，
+      这里不站开的话会 preventDefault，浮窗正文就滚不动了。 */
+  const sheetOpen = () => document.body.classList.contains('hero-wall-sheet')
+
+  /** 滚轮 = 桌面。位移量取**原始** deltaY（浏览器真正会滚多少），不是阻尼后的值 ——
+      吸附判据要比的是「这一格滚下去会不会露出下一部分」。deltaMode 1 = 行、2 = 页。 */
+  const onWheel = (e) => {
+    if (sheetOpen()) return
+    const raw =
+      e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY
+    if (snapToSection(raw)) e.preventDefault()
+  }
+
+  onMounted(() => {
+    // passive: false —— Chrome 把 window 上的 wheel 默认当 passive，那样 preventDefault 无效
+    window.addEventListener('wheel', onWheel, { passive: false })
+  })
+  onUnmounted(() => window.removeEventListener('wheel', onWheel))
 
   return { snapToSection }
 }
