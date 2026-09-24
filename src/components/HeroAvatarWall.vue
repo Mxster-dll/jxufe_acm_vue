@@ -140,9 +140,13 @@ const openShortTags = computed(() => (openItem.value?.sheetTags || []).filter((t
 const openDetailTags = computed(() => (openItem.value?.sheetTags || []).filter((t) => t.type === 'contest'))
 
 /** 战绩明细按赛事系列分组，组顺序 = contestTaxonomy 的 FAMILY_ORDER（与胶囊同序）。
-    family 是生成器从 awards 文件名映射出来的数据；没有 family 的是**手写的其它竞赛**
-    （传智杯 / 睿抗 / 数模 / CSP…，全库 558 条明细里 21 条），归到最后一组「其他赛事」——
-    留空标题会让它们看起来像上面那一组的续表。 */
+    family 是生成器从 awards 文件名映射出来的数据；手写在 members.json / leaders.json 里的
+    条目没有 family（实测 141 格里 17 人 / 21 条），归到最后一组。
+    ⚠ 这一组里绝大多数是「胶囊表达不了的其它竞赛」（睿抗 / 传智杯 / 数模 / CSP…），但**不是全部**：
+    王海峰的「2024 ICPC 江西省赛季军」与邓一帆的「第十五届蓝桥杯国家级优秀奖」其实是主线赛事，
+    只是手写条目同样没有 family —— 所以组名不能用「其他赛事」这种断言（会写错归类）。
+    根治要在数据侧给这两条补 family（members/leaders 的 honors 目前是纯字符串，属会长口径）；
+    组件里不去猜文案里的赛事名（「暨江西省赛」这类标题同时含两个段名，正则拦不住）。 */
 const openDetailGroups = computed(() => {
   const byFamily = new Map()
   for (const t of openDetailTags.value) {
@@ -157,7 +161,7 @@ const openDetailGroups = computed(() => {
     byFamily.delete(f)
   }
   for (const [key, items] of byFamily) {
-    groups.push({ key: key || 'other', label: key ? key : '其他赛事', items })
+    groups.push({ key: key || 'other', label: key ? FAMILY_LABELS[key] : '其他战绩', items })
   }
   return groups
 })
@@ -198,13 +202,14 @@ const measure = () => {
 /**
  * 悬停卡最多铺几条标签，其余折成一枚「+N」。
  * 不设上限时，标签是一条条往下的柱子（实测最多 9 条，韩家欢 5 条就已经看不出主次）；
- * 全站 141 人里 100 人 ≤3 条 —— 这个上限对大多数人不产生「+N」，真正收拾的是
- * 那 26 位 6 条以上的。明细在浮窗里，点一下就有。
+ * 全站 141 人里 100 人 ≤3 条 —— 这个上限对大多数人不产生「+N」，真正收拾的是标签多的那批
+ * （实测 2026-09-24：≥6 条 14 人、≥5 条 26 人、最多 9 条）。明细在浮窗里，点一下就有。
  *
  * ⚠ 2026-09-24 起「身份」与「战绩」**分开计数**（会长：tag 与奖项要能区分）：
  *   两者本来混在同一排里，会长身份的金色胶囊紧挨着蓝桥杯的蓝色胶囊，读起来是一堆
  *   没有主次的色块。现在身份那排归身份、战绩那排归战绩，各自折各自的 +N。
- *   战绩每系列一枚、全墙最多 4 枚，给 2 枚就够看出「这人打过什么比赛」。
+ *   战绩里四个「自动汇总」系列各一枚，另有手写竞赛条目会再加（实测单卡 contest 标签最多 6 枚），
+ *   给 2 枚就够看出「这人打过什么比赛」。
  */
 const PREVIEW_IDENTITY = 3
 const PREVIEW_CONTEST = 2
@@ -1186,7 +1191,7 @@ watch(() => props.hoverCard, () => {
              那句话不提供任何信息，只是噪音。
              ⚠ v-if 挂在这一层（而不是里面的 <p>）也是刻意的：这一块带 padding，
                空着留在这儿会在「奖项」和底部提示之间拉出一条几十像素的空白带。 -->
-        <div v-if="openItem.message || openDetailTags.length" class="wall-sheet__body">
+        <div v-if="openItem.message || openDetailGroups.length" class="wall-sheet__body">
           <!-- 正文分「节」：寄语一节、荣誉明细一节，两节之间一条分隔线 + 一个小节标题。
                没有这层结构时，一小段灰字留言和几十枚彩色胶囊直接挨在一起，
                留言会被胶囊的色块淹掉（会长 2026-09-24：寄语「和别的没有层次区分」）。 -->
