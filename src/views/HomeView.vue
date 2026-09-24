@@ -908,7 +908,11 @@ const { newsList, loading, error } = useNews();
 .wall-hint.is-ready {
   opacity: 1;
 }
-/* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面 */
+/* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面。
+   ⚠ 这里的 opacity / pointer-events 不是全部真相：这枚按钮被 Teleport 进导航栏，
+   而 HeroAvatarWall.vue 有一条带 id 的全局规则 `body.hero-wall-present #app > header button`
+   （(1,1,3)）会把 pointer-events 压回 auto —— 真正压回去的是 AppHeader.vue:305-315 那条
+   (1,2,1) 的覆盖。改这里之前先看那条，否则会出现「改了没反应」。 */
 .wall-hint.is-hidden {
   opacity: 0;
   pointer-events: none;
