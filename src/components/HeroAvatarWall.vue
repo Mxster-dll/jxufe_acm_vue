@@ -80,6 +80,7 @@ import {
   BODY_WALL_PRESENT,
   BODY_WALL_SHEET,
 } from '../utils/domMarkers.js'
+import { honorText } from '../utils/honorType.js'
 
 const props = defineProps({
   /** 由父组件 v-model:active 控制（HomeView 里就是那个按钮的开关） */
@@ -177,6 +178,15 @@ const measure = () => {
  *   · { text, type } —— 协会成员头像墙，type 交给全站那套分色（styles/honors.css 的
  *     .honor-tag--contest|destination|honor|contact|leader|more）。
  * 统一成 { text, type }，type 为空字符串时按纯字符串渲染。
+ * 取值那一步（字符串 / { text } / 也认 { label } / { name }）收口到 honorType.js 的 honorText()，
+ * 这里不再自己写第二遍 —— 同一份 JSON 在墙上与在两个页面必须认得出同一批字段。
+ *
+ * ⚠ 有意**不**调用 honorType.js 的 normalizeHonors()（它就是干这件事的）：那个函数会按关键词
+ * **推断** type（认不出的兜底成 contest），而本组件对「没有 type」的默认观感是中性色。
+ * 实测两种实现在生成物上逐条相同（group_wall.json 939 条标签 0 差异 —— 因为
+ * gen_group_wall.mjs 写标签时已经过 normalizeHonors），但在上游那份纯字符串数据
+ * （hero_wall.json 92 条）上会整片变成推断出来的类型色、并给「ICPC」补上空格 ——
+ * 那是渲染口径的改动，不该顺手做。真要统一就整卡一起改，别只换这一处。
  */
 const normalizeTags = (list) => {
   if (!Array.isArray(list)) return []
@@ -184,7 +194,7 @@ const normalizeTags = (list) => {
     .map((t) =>
       typeof t === 'string'
         ? { text: t, type: '' }
-        : { text: String(t?.text ?? ''), type: String(t?.type ?? '') }
+        : { text: honorText(t), type: String(t?.type ?? '') }
     )
     .filter((t) => t.text.trim())
 }
