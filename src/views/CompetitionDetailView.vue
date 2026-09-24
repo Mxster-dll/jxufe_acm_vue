@@ -1087,21 +1087,9 @@ function setView(v) {
   line-height: 1.9;
   color: var(--text-light);
 }
-.cell-level {
-  white-space: nowrap;
-  font-weight: 650;
-  font-size: 0.78rem;
-  width: 1%;
-}
-.level-国际 {
-  color: #c79100;
-}
-.level-国家 {
-  color: var(--primary);
-}
-.level-省 {
-  color: #7a8b99;
-}
+/* 删于 2026-09-24：`.cell-level` 与 `.level-国际|国家|省` 全站只有定义、没有使用者
+   （模板里是 cell-award / cell-year / cell-edition / cell-team / cell-desc /
+   cell-members / cell-title）—— 奖项级别现在由下面的 `.medal-*` 上色。 */
 .cell-title {
   font-weight: 600;
 }
@@ -1217,9 +1205,8 @@ function setView(v) {
   color: #b87333 !important;
   font-weight: 600;
 }
-.medal-iron {
-  color: #999 !important;
-}
+/* 删于 2026-09-24：`.medal-iron` 挂不上 —— src/utils/awardGroups.js 的 medalClass()
+   只返回 medal-grand|gold|silver|bronze，其余一律空串（再被 memberAwardClass 折成 member-plain）。 */
 .cell-members {
   color: var(--text-light);
   font-size: var(--font-size-sm);
