@@ -46,16 +46,11 @@ onUnmounted(() => {
 const heroEl = ref(null);
 const mx = ref(0); // 0..1 鼠标在 hero 中的相对位置
 const my = ref(0);
-const mouseX = ref(0); // 像素坐标
-const mouseY = ref(0);
-
 const onMouseMove = (e) => {
   if (!heroEl.value) return;
   const rect = heroEl.value.getBoundingClientRect();
   mx.value = (e.clientX - rect.left) / rect.width;
   my.value = (e.clientY - rect.top) / rect.height;
-  mouseX.value = e.clientX;
-  mouseY.value = e.clientY;
   // 浮动形状排斥
   updateShapeRepel(e.clientX, e.clientY);
   // 磁吸按钮
@@ -64,7 +59,26 @@ const onMouseMove = (e) => {
 const onMouseLeave = () => {
   mx.value = 0.5;
   my.value = 0.5;
+  /* 形状偏移的唯一衰减在 updateShapeRepel 里，而它只被 mousemove 调用 —— 鼠标一离开 hero
+     就没人再衰减，被推开的形状冻在最后那个偏移上。这里归零，让它们回到基准位置。 */
+  floatingShapes.value.forEach((s) => {
+    s.offsetX = 0;
+    s.offsetY = 0;
+  });
 };
+
+// ── 浮动粒子（随机量只抽一次） ──
+/* 模板里绝不能写 Math.random()：hero 的 mousemove 每帧都在改 mx/my（绑在 .hero-inner 的
+   内联样式上），一次 mousemove 就是一次整组件重渲染 —— 模板里的随机表达式会跟着重算，
+   12 颗粒子的位置（--x 改 left）、时长（--d 改动画）、尺寸、透明度当场跳变。
+   同一文件里 floatingShapes / codeRows / randCode 都在 setup 里只算一次，这里对齐。 */
+const particles = Array.from({ length: 12 }, (_, i) => ({
+  id: i,
+  x: `${Math.random() * 100}%`,
+  d: `${8 + Math.random() * 16}s`,
+  s: `${2 + Math.random() * 4}px`,
+  o: `${0.08 + Math.random() * 0.18}`,
+}));
 
 // ── 浮动形状（带排斥） ──
 const floatingShapes = ref([]);
@@ -304,18 +318,13 @@ const { newsList, loading, error } = useNews();
     <!-- 底部白渐变遮罩 -->
     <div class="hero-fade-bottom"></div>
 
-    <!-- 浮动粒子 -->
+    <!-- 浮动粒子（数值来自 setup 的 particles：写在模板里会被每次重渲染重抽） -->
     <div class="hero-particles" aria-hidden="true">
       <span
-        v-for="n in 12"
-        :key="n"
+        v-for="p in particles"
+        :key="p.id"
         class="particle"
-        :style="{
-          '--x': `${Math.random() * 100}%`,
-          '--d': `${8 + Math.random() * 16}s`,
-          '--s': `${2 + Math.random() * 4}px`,
-          '--o': `${0.08 + Math.random() * 0.18}`,
-        }"
+        :style="{ '--x': p.x, '--d': p.d, '--s': p.s, '--o': p.o }"
       ></span>
     </div>
 
