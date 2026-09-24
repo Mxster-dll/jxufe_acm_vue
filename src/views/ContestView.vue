@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useJson } from '../composables/useJson'
 import { useSkeleton } from '../composables/useSkeleton'
+import CompetitionSchedule from '../components/CompetitionSchedule.vue'
+import { mergeXcpc, XCPC_MODE } from '../utils/contestTaxonomy.js'
 
 const { data: competitions, loading, error } = useJson('/data/competitions.json', {
   initial: []
@@ -10,15 +12,13 @@ const { skeletons } = useSkeleton(8)
 
 // ICPC 与 CCPC 合并为一张 xCPC 大卡（1×2：一张卡片、两大赛事并排）。
 // 子卡保留各自原有内容布局，仅卡片合并；点击进入 /competition/xcpc 合并页。
+// 合并判据与合并页、与奖项文件列表**共用一份**：contestTaxonomy.js 的 mergeXcpc()
+// （2026-09-24 收口 —— 原先这里按 slug 写死，合并页又写死一套 awards 名单）。
 const cards = computed(() => {
   const list = competitions.value || []
-  const icpc = list.find((c) => c.slug === 'icpc')
-  const ccpc = list.find((c) => c.slug === 'ccpc')
-  if (!icpc || !ccpc) return list
-  return [
-    { slug: 'xcpc', isXcpc: true, children: [icpc, ccpc] },
-    ...list.filter((c) => c.slug !== 'icpc' && c.slug !== 'ccpc'),
-  ]
+  const xcpc = mergeXcpc(list)
+  if (!xcpc) return list
+  return [xcpc, ...list.filter((c) => c.mode !== XCPC_MODE)]
 })
 </script>
 
@@ -44,8 +44,12 @@ const cards = computed(() => {
       <!-- Error -->
       <p v-else-if="error" class="hint">加载失败</p>
 
-      <!-- 竞赛卡片 -->
-      <div v-else class="grid">
+      <!-- 全年赛程 + 竞赛卡片（同一份数据，故共用加载态）
+           会长 2026-09-23：日程放到各竞赛卡片**上方** —— 它是「什么时候比」，
+           比「有哪些比赛」更该先看到 -->
+      <template v-else>
+      <CompetitionSchedule :competitions="competitions || []" />
+      <div class="grid">
         <RouterLink
           v-for="(c, i) in cards"
           :key="c.slug"
@@ -81,6 +85,7 @@ const cards = computed(() => {
           </template>
         </RouterLink>
       </div>
+      </template>
     </div>
   </main>
 </template>

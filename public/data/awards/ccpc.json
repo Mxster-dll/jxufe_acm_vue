@@ -4,6 +4,8 @@
     "medal_level": "regional",
     "team_name": "你一生的故事",
     "medal_type": "silver",
+    "rank": 73,
+    "rank_official": 60,
     "members": [
       "刘力溯",
       "王安",
@@ -17,6 +19,8 @@
     "medal_level": "provincial",
     "team_name": "酱菜幼儿园",
     "medal_type": "bronze",
+    "rank": 141,
+    "rank_official": 141,
     "members": [
       "宋嘉荟",
       "李婷",
@@ -30,6 +34,8 @@
     "medal_level": "provincial",
     "team_name": "会写的一把过",
     "medal_type": "bronze",
+    "rank": 135,
+    "rank_official": 135,
     "members": [
       "宋嘉荟",
       "徐雅",
@@ -43,6 +49,8 @@
     "medal_level": "provincial",
     "team_name": "神之一手",
     "medal_type": "bronze",
+    "rank": 180,
+    "rank_official": 135,
     "members": [
       "廖凌翔",
       "王海峰",
@@ -56,6 +64,8 @@
     "medal_level": "invitational",
     "team_name": "神之一手",
     "medal_type": "bronze",
+    "rank": 144,
+    "rank_official": 144,
     "members": [
       "廖凌翔",
       "王海峰",
@@ -69,6 +79,8 @@
     "medal_level": "invitational",
     "team_name": "逐梦",
     "medal_type": "bronze",
+    "rank": 161,
+    "rank_official": 161,
     "members": [
       "何洋",
       "王玛琪",
@@ -82,6 +94,8 @@
     "medal_level": "regional",
     "team_name": "三只小猪",
     "medal_type": "bronze",
+    "rank": 121,
+    "rank_official": 97,
     "members": [
       "何洋",
       "王玛琪",
@@ -95,6 +109,8 @@
     "medal_level": "provincial",
     "team_name": "彩虹海",
     "medal_type": "bronze",
+    "rank": 153,
+    "rank_official": 151,
     "members": [
       "喻琰",
       "肖丛宇",
@@ -108,6 +124,8 @@
     "medal_level": "provincial",
     "team_name": "能不能不爆零",
     "medal_type": "bronze",
+    "rank": 181,
+    "rank_official": 179,
     "members": [
       "彭俊杰",
       "徐晓律",
@@ -121,6 +139,8 @@
     "medal_level": "invitational",
     "team_name": "能不能不爆零",
     "medal_type": "silver",
+    "rank": 46,
+    "rank_official": 43,
     "members": [
       "彭俊杰",
       "徐晓律",
@@ -134,6 +154,8 @@
     "medal_level": "provincial",
     "team_name": "AC钙奶",
     "medal_type": "bronze",
+    "rank": 63,
+    "rank_official": 53,
     "members": [
       "潘登",
       "董泓毅",
@@ -147,6 +169,8 @@
     "medal_level": "invitational",
     "team_name": "Fe^3=Au",
     "medal_type": "silver",
+    "rank": 75,
+    "rank_official": 65,
     "members": [
       "王玛琪",
       "石翰林",
@@ -160,6 +184,8 @@
     "medal_level": "regional",
     "team_name": "她还爱着我对不队",
     "medal_type": "bronze",
+    "rank": 108,
+    "rank_official": 102,
     "members": [
       "王玛琪",
       "石翰林",
@@ -173,6 +199,8 @@
     "medal_level": "invitational",
     "team_name": "别开香槟开早了",
     "medal_type": "silver",
+    "rank": 116,
+    "rank_official": 111,
     "members": [
       "周政",
       "孙天成",
@@ -186,6 +214,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉",
     "medal_type": "bronze",
+    "rank": 156,
+    "rank_official": 150,
     "members": [
       "万俊哲",
       "张云菲",
@@ -199,6 +229,8 @@
     "medal_level": "invitational",
     "team_name": "~到了赛场上就要拿出真本事~",
     "medal_type": "silver",
+    "rank": 38,
+    "rank_official": 33,
     "members": [
       "吴星乐",
       "王翔",
@@ -212,6 +244,8 @@
     "medal_level": "invitational",
     "team_name": "彩虹海",
     "medal_type": "bronze",
+    "rank": 78,
+    "rank_official": 70,
     "members": [
       "喻琰",
       "杨源鑫",
@@ -221,23 +255,12 @@
     "date": "2025-05-25"
   },
   {
-    "competition_name": "CCPC全国邀请赛（长春）",
-    "medal_level": "invitational",
-    "team_name": "喜欢只是错觉",
-    "medal_type": "bronze",
-    "members": [
-      "衷铭川",
-      "万俊哲",
-      "张云菲"
-    ],
-    "coach_names": [],
-    "date": "2025-05-25"
-  },
-  {
     "competition_name": "CCPC全国邀请赛（郑州）暨河南省赛",
     "medal_level": "invitational",
     "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
     "medal_type": "silver",
+    "rank": 96,
+    "rank_official": 95,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -251,6 +274,8 @@
     "medal_level": "invitational",
     "team_name": "彩虹海",
     "medal_type": "silver",
+    "rank": 83,
+    "rank_official": 82,
     "members": [
       "周政",
       "喻琰",
@@ -264,6 +289,8 @@
     "medal_level": "invitational",
     "team_name": "ACM败犬太多了",
     "medal_type": "bronze",
+    "rank": 123,
+    "rank_official": 113,
     "members": [
       "喻芷珊",
       "张瑞杰",
@@ -277,6 +304,8 @@
     "medal_level": "invitational",
     "team_name": "~到了赛场上就要拿出真本事~",
     "medal_type": "bronze",
+    "rank": 90,
+    "rank_official": 82,
     "members": [
       "吴星乐",
       "王翔",
@@ -290,6 +319,8 @@
     "medal_level": "invitational",
     "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
     "medal_type": "silver",
+    "rank": 44,
+    "rank_official": 38,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -303,6 +334,8 @@
     "medal_level": "invitational",
     "team_name": "别开香槟开早了",
     "medal_type": "silver",
+    "rank": 52,
+    "rank_official": 46,
     "members": [
       "孙天成",
       "罗文轩",
@@ -316,6 +349,8 @@
     "medal_level": "invitational",
     "team_name": "阳光彩虹不白码",
     "medal_type": "bronze",
+    "rank": 160,
+    "rank_official": 150,
     "members": [
       "李承志",
       "李润卓",
@@ -329,6 +364,8 @@
     "medal_level": "invitational",
     "team_name": "别开香槟开早了",
     "medal_type": "silver",
+    "rank": 89,
+    "rank_official": 74,
     "members": [
       "孙天成",
       "杨源鑫",
@@ -342,6 +379,9 @@
     "medal_level": "provincial",
     "team_name": "别开香槟开早了",
     "medal_type": "silver",
+    "rank": 89,
+    "rank_official": 74,
+    "rank_provincial": 10,
     "members": [
       "孙天成",
       "杨源鑫",
@@ -355,6 +395,8 @@
     "medal_level": "invitational",
     "team_name": "天空之矛",
     "medal_type": "bronze",
+    "rank": 146,
+    "rank_official": 128,
     "members": [
       "张瑞杰",
       "曹京顺",
@@ -368,6 +410,9 @@
     "medal_level": "provincial",
     "team_name": "天空之矛",
     "medal_type": "bronze",
+    "rank": 146,
+    "rank_official": 128,
+    "rank_provincial": 17,
     "members": [
       "张瑞杰",
       "曹京顺",
@@ -381,6 +426,8 @@
     "medal_level": "invitational",
     "team_name": "200g金牌和200g铁牌哪个更重.",
     "medal_type": "silver",
+    "rank": 67,
+    "rank_official": 63,
     "members": [
       "杨镇宁",
       "陈帆",
@@ -394,6 +441,8 @@
     "medal_level": "invitational",
     "team_name": "哔站复活小聪明粉丝团.",
     "medal_type": "silver",
+    "rank": 99,
+    "rank_official": 95,
     "members": [
       "彭俊杰",
       "王翔",
@@ -407,6 +456,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉",
     "medal_type": "silver",
+    "rank": 74,
+    "rank_official": 70,
     "members": [
       "万俊哲",
       "张云菲",
@@ -420,6 +471,8 @@
     "medal_level": "invitational",
     "team_name": "阳光彩虹不白码.",
     "medal_type": "silver",
+    "rank": 97,
+    "rank_official": 93,
     "members": [
       "李承志",
       "李润卓",
@@ -433,6 +486,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉.",
     "medal_type": "silver",
+    "rank": 99,
+    "rank_official": 98,
     "members": [
       "万俊哲",
       "张云菲",
@@ -446,6 +501,8 @@
     "medal_level": "invitational",
     "team_name": "200g金牌和200g铁牌哪个更重..",
     "medal_type": "silver",
+    "rank": 60,
+    "rank_official": 57,
     "members": [
       "杨镇宁",
       "陈帆",
@@ -459,6 +516,8 @@
     "medal_level": "invitational",
     "team_name": "关注复活小聪明喵,关注复活小聪明谢谢喵",
     "medal_type": "gold",
+    "rank": 27,
+    "rank_official": 24,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -472,6 +531,8 @@
     "medal_level": "invitational",
     "team_name": "别开香槟开早了",
     "medal_type": "silver",
+    "rank": 42,
+    "rank_official": 39,
     "members": [
       "孙天成",
       "杨源鑫",
@@ -485,6 +546,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉..",
     "medal_type": "gold",
+    "rank": 26,
+    "rank_official": 23,
     "members": [
       "万俊哲",
       "张云菲",
@@ -498,6 +561,8 @@
     "medal_level": "invitational",
     "team_name": "四氧化三铁",
     "medal_type": "silver",
+    "rank": 77,
+    "rank_official": 74,
     "members": [
       "周君",
       "詹宇飞",
@@ -511,6 +576,8 @@
     "medal_level": "invitational",
     "team_name": "我发现用大脑思考不用token",
     "medal_type": "bronze",
+    "rank": 143,
+    "rank_official": 140,
     "members": [
       "蒋滔",
       "钟俊",
@@ -524,6 +591,8 @@
     "medal_level": "invitational",
     "team_name": "清纯粉毛小萝莉.",
     "medal_type": "bronze",
+    "rank": 120,
+    "rank_official": 117,
     "members": [
       "万涛涛",
       "严雨睿",
@@ -537,6 +606,8 @@
     "medal_level": "invitational",
     "team_name": "酱菜一队",
     "medal_type": "silver",
+    "rank": 50,
+    "rank_official": 47,
     "members": [
       "吴穹宇",
       "喻芷珊",
@@ -550,6 +621,8 @@
     "medal_level": "invitational",
     "team_name": "阳光彩虹不白码..",
     "medal_type": "silver",
+    "rank": 72,
+    "rank_official": 69,
     "members": [
       "李承志",
       "李润卓",
@@ -563,6 +636,8 @@
     "medal_level": "invitational",
     "team_name": "三人驭六丸",
     "medal_type": "bronze",
+    "rank": 77,
+    "rank_official": 72,
     "members": [
       "周君",
       "詹宇飞",
@@ -576,6 +651,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉",
     "medal_type": "silver",
+    "rank": 44,
+    "rank_official": 40,
     "members": [
       "万俊哲",
       "张云菲",

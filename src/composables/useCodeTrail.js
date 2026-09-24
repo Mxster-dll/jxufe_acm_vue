@@ -23,14 +23,14 @@ const CHARS = [
   '[]', '()', '=>',
 ]
 
-let trailContainer = null
-
 function randomChar() {
   return CHARS[Math.floor(Math.random() * CHARS.length)]
 }
 
-function spawn(e) {
-  if (!trailContainer) return
+/** 容器由调用方传进来 —— 不再用模块级单例：两个实例各自 start() 会互相抢容器，
+ *  谁先 stop() 谁把对方的容器整个删掉（2026-09-24 审查）。 */
+function spawn(e, container) {
+  if (!container) return
   const span = document.createElement('span')
   span.textContent = randomChar()
   span.className = 'code-trail-char'
@@ -44,7 +44,7 @@ function spawn(e) {
   span.style.fontSize = size + 'px'
   span.style.opacity = 0.25 + Math.random() * 0.25
 
-  trailContainer.appendChild(span)
+  container.appendChild(span)
 
   span.addEventListener('animationend', () => {
     span.remove()
@@ -54,12 +54,13 @@ function spawn(e) {
 export function useCodeTrail(containerRef) {
   let lastSpawn = 0
   let target = null
+  let trailContainer = null
 
   const throttledMove = (e) => {
     const now = Date.now()
     if (now - lastSpawn < 80) return
     lastSpawn = now
-    spawn(e)
+    spawn(e, trailContainer)
   }
 
   const start = () => {

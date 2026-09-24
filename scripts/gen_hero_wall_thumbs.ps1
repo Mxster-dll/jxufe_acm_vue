@@ -32,6 +32,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
+. (Join-Path $PSScriptRoot 'lib\thumbs.ps1')
 
 $root = Split-Path -Parent $PSScriptRoot
 if (-not $SourceDir) { $SourceDir = Join-Path $root 'public\images\excellent_member' }
@@ -41,66 +42,13 @@ if (-not (Test-Path $SourceDir)) { Write-Host "[thumbs] 找不到源目录 $Sour
 
 $exts = @('.png', '.jpg', '.jpeg', '.webp')
 $excludeBase = @('default')   # 占位图，不是某个人
-$sources = Get-ChildItem $SourceDir -File |
+# 交给 lib\thumbs.ps1 的形状：Base = 输出基名、Src = 原图绝对路径
+$entries = Get-ChildItem $SourceDir -File |
   Where-Object { $exts -contains $_.Extension.ToLower() } |
-  Where-Object { $excludeBase -notcontains $_.BaseName.ToLower() }
+  Where-Object { $excludeBase -notcontains $_.BaseName.ToLower() } |
+  ForEach-Object { [pscustomobject]@{ Base = $_.BaseName; Src = $_.FullName } }
 
-if (-not $sources) { Write-Host "[thumbs] 源目录里没有可用图片，跳过"; exit 0 }
+if (-not $entries) { Write-Host "[thumbs] 源目录里没有可用图片，跳过"; exit 0 }
 
-# JPEG 编码器 + 质量参数
-$codec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() |
-  Where-Object { $_.MimeType -eq 'image/jpeg' } | Select-Object -First 1
-
-function Resize-One {
-  param([string]$InPath, [string]$OutPath, [int]$Size)
-  $img = [System.Drawing.Image]::FromFile($InPath)
-  try {
-    $bmp = New-Object System.Drawing.Bitmap ([int]$Size), ([int]$Size)
-    try {
-      $g = [System.Drawing.Graphics]::FromImage($bmp)
-      try {
-        $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-        $g.PixelOffsetMode   = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
-        $g.SmoothingMode     = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
-        # 真源大多是正方形，非正方形的走 cover 语义（居中裁切），与墙上 object-fit: cover 一致
-        $scale = [Math]::Max($Size / $img.Width, $Size / $img.Height)
-        $dw = [int][Math]::Round($img.Width * $scale)
-        $dh = [int][Math]::Round($img.Height * $scale)
-        $g.DrawImage($img, [int](($Size - $dw) / 2), [int](($Size - $dh) / 2), $dw, $dh)
-      } finally { $g.Dispose() }
-
-      if ($codec) {
-        $ep = New-Object System.Drawing.Imaging.EncoderParameters 1
-        $ep.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), ([long]$Quality)
-        try { $bmp.Save($OutPath, $codec, $ep) } finally { $ep.Dispose() }
-      } else {
-        $bmp.Save($OutPath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
-      }
-    } finally { $bmp.Dispose() }
-  } finally { $img.Dispose() }
-}
-
-$grandTotal = 0
-foreach ($size in $Sizes) {
-  $dir = Join-Path $OutDir $size
-  New-Item -ItemType Directory -Force $dir | Out-Null
-
-  $made = 0; $skipped = 0
-  foreach ($src in $sources) {
-    $out = Join-Path $dir ($src.BaseName + '.jpg')
-    if (-not $Force -and (Test-Path $out) -and ((Get-Item $out).LastWriteTime -ge $src.LastWriteTime)) {
-      $skipped++
-      continue
-    }
-    Resize-One -InPath $src.FullName -OutPath $out -Size $size
-    $made++
-  }
-
-  $files = Get-ChildItem $dir -File -Filter *.jpg
-  $total = ($files | Measure-Object Length -Sum).Sum
-  $grandTotal += $total
-  Write-Host ("[thumbs] {0}px: 共 {1} 张，{2} KB（本次新生成 {3}，跳过 {4}）" -f `
-    $size, $files.Count, [math]::Round($total / 1KB), $made, $skipped)
-}
-
-Write-Host ("[thumbs] 两档合计 {0} KB → {1}" -f [math]::Round($grandTotal / 1KB), $OutDir)
+# 缩放、按档位循环、增量跳过、统计打印都在 lib\thumbs.ps1（与 group 那面墙共用同一份）
+Write-ThumbSet -Entries $entries -OutDir $OutDir -Sizes $Sizes -Quality $Quality -Force:$Force

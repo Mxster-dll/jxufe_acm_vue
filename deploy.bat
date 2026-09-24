@@ -16,6 +16,11 @@ setlocal enabledelayedexpansion
 ::        .bat combined with the "chcp" command makes cmd.exe resume reading
 ::        the file at a wrong byte offset and execute a fragment of a comment
 ::        as a command. Non-ASCII here = flaky script.
+::
+::  What ships: the archive is built from the WORKING TREE, but step 2 refuses
+::  to run while the uploaded paths differ from HEAD (override: DEPLOY_ALLOW_DIRTY).
+::  The server build goes into "dist.new" and is swapped into "dist" only after
+::  it succeeded, so a broken build never takes the live site down.
 :: ============================================================
 
 :: ---- Server config ----
@@ -26,11 +31,25 @@ set REMOTE_PATH=/var/www/jxufe_acm_vue
 set SITE_URL=https://jxufe-acm.cn
 
 :: ---- Local config (leave as is) ----
-:: scripts/gen_hero_wall.mjs MUST be uploaded: the "prebuild" hook in
-:: package.json runs it on the server during "npm run build", rescanning
-:: public/images/excellent_member/ to regenerate the avatar-wall manifest.
-:: (Nothing else in scripts/ is needed on the server - upload just that file.)
-set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\gen_hero_wall.mjs
+:: The "prebuild" hook in package.json runs these TWO generators on the server
+:: during "npm run build":
+::   scripts/gen_group_wall.mjs    club member wall (group_wall.*.json + excellent_members.json)
+::                                 from group_members.json, duties.json, scholarships.json,
+::                                 wall_rules.json, awards/ and the two site rosters.
+::   scripts/gen_event_badges.mjs  timeline medal badges (event_badges.json) from awards/ + events/.
+::   scripts/lib/data-io.mjs       data-file read policy imported by BOTH generators.
+::                                 The whole scripts\lib dir is uploaded, so future
+::                                 shared helpers come along automatically.
+:: ALL of the above must be uploaded - miss one and the server build fails outright
+:: (node cannot find the file -> "npm run build" exits non-zero -> deploy stops at step 4).
+:: NOT uploaded on purpose:
+::   scripts/gen_hero_wall.mjs     the upstream author's 33-avatar wall pipeline. Its product
+::                                 (hero_wall.manifest.json) has no consumer left in src/ -
+::                                 the home wall reads group_wall.* instead - so it was taken
+::                                 out of predev/prebuild as well. Run it by hand if ever needed:
+::                                 "npm run data:hero-wall".
+::   scripts/*.ps1                 thumbnail generators (PowerShell, Windows only, local only).
+set UPLOAD_ITEMS=src public package.json package-lock.json vite.config.js index.html scripts\lib scripts\gen_group_wall.mjs scripts\gen_event_badges.mjs
 set KEY_FILE=%~dp0.deploy\id_ed25519
 set TAR_FILE=%TEMP%\jxufe_acm_deploy.tar.gz
 set REMOTE_TAR=/tmp/jxufe_acm_deploy.tar.gz
@@ -78,6 +97,39 @@ icacls "%KEY_FILE%" /grant:r "%USERNAME%:R" >nul 2>nul
 
 :: ---- 2. Pack project files locally ----
 echo [2/5] Packing project files...
+:: Guard (2026-09-24): the archive below is built from the WORKING TREE, not from
+:: git. Anything uncommitted under the uploaded paths would ship silently, and the
+:: damage would only surface later - on a fresh clone, in CI, or for whoever
+:: deploys next. So refuse to pack while those paths differ from HEAD.
+:: Override on purpose (emergency hotfix):  set DEPLOY_ALLOW_DIRTY=1
+set DIRTY=
+if "%DEPLOY_ALLOW_DIRTY%"=="1" goto :pack_skip_guard
+where git >nul 2>nul
+if errorlevel 1 (
+    echo [WARN] git not found in PATH - the uncommitted-changes guard is OFF.
+    goto :pack_do
+)
+:: A copied-without-.git tree has no HEAD to compare against - say so instead of
+:: pretending the guard ran.
+git rev-parse --is-inside-work-tree >nul 2>nul
+if errorlevel 1 (
+    echo [WARN] not a git working tree - the uncommitted-changes guard is OFF.
+    goto :pack_do
+)
+for /f "delims=" %%L in ('git status --porcelain -- src public package.json package-lock.json vite.config.js index.html scripts/lib scripts/gen_group_wall.mjs scripts/gen_event_badges.mjs 2^>nul') do (
+    set DIRTY=1
+    echo [DIRTY] %%L
+)
+if not defined DIRTY goto :pack_do
+echo [ERROR] The paths listed above differ from HEAD ^(uncommitted or untracked^).
+echo         Commit them first, or rerun with:  set DEPLOY_ALLOW_DIRTY=1
+goto :fail
+
+:pack_skip_guard
+echo [WARN] DEPLOY_ALLOW_DIRTY=1 - shipping the working tree as is.
+
+:pack_do
+for /f "delims=" %%L in ('git rev-parse --short HEAD 2^>nul') do echo         shipping HEAD %%L
 if exist "%TAR_FILE%" del /q "%TAR_FILE%"
 tar -czf "%TAR_FILE%" %UPLOAD_ITEMS%
 if errorlevel 1 (
@@ -107,16 +159,29 @@ if errorlevel 1 (
 echo [OK] Upload completed
 echo.
 
-:: ---- 4. Install deps and build on server ----
-echo [4/5] npm install ^&^& npm run build on server...
-ssh %SSH_OPTS% %TARGET% "cd %REMOTE_PATH% && npm install --no-audit --no-fund && npm run build"
+:: ---- 4. Install deps and build on server (into a staging dir) ----
+:: Vite empties its output directory before writing, so building straight into
+:: "dist" is the one step that can take the LIVE site down (nginx serves
+:: %REMOTE_PATH%/dist - see the header). Build into "dist.new" and swap it in
+:: only after index.html really exists. The previous build is kept as "dist.old";
+:: manual rollback:  cd %REMOTE_PATH% && rm -rf dist && mv dist.old dist
+echo [4/5] npm install ^&^& build into dist.new on server...
+ssh %SSH_OPTS% %TARGET% "cd %REMOTE_PATH% && npm install --no-audit --no-fund && rm -rf dist.new && npm run build -- --outDir dist.new"
 if errorlevel 1 (
-    echo [ERROR] Build failed on server. See npm output above.
+    echo [ERROR] Build failed on server. The live site still serves the old dist.
+    echo         Fix the cause and rerun - nothing was swapped in.
     goto :fail
 )
-ssh %SSH_OPTS% %TARGET% "test -f %REMOTE_PATH%/dist/index.html"
+ssh %SSH_OPTS% %TARGET% "test -f %REMOTE_PATH%/dist.new/index.html"
 if errorlevel 1 (
-    echo [ERROR] Build finished but dist/index.html is missing.
+    echo [ERROR] Build finished but dist.new/index.html is missing. Live site untouched.
+    goto :fail
+)
+ssh %SSH_OPTS% %TARGET% "cd %REMOTE_PATH% && rm -rf dist.old && (mv dist dist.old || true) && rm -rf dist && mv dist.new dist && test -f dist/index.html"
+if errorlevel 1 (
+    echo [ERROR] Swapping dist.new into place failed - the live dist may be missing.
+    echo         The previous build is still at %REMOTE_PATH%/dist.old. Roll back with:
+    echo           ssh root@%SERVER_IP% "cd %REMOTE_PATH% && rm -rf dist && mv dist.old dist"
     goto :fail
 )
 echo [OK] Build completed

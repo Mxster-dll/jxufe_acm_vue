@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useTimeline } from "../composables/useTimeline";
+import { useJson } from "../composables/useJson";
 
 // 数据来自 public/data/events/：年份自动探测，首屏 = top + 最新两个年份，其余年份点侧栏再拉
 // 月份 / 分类计数随年份加载实时派生，没有任何索引文件
@@ -18,6 +19,27 @@ const {
   error,
 } = useTimeline();
 const ready = computed(() => !loading.value);
+
+// ── 卡片右上角的奖牌角标（旧站还原，2026-09-23 会长要求）──
+// 旧站（integration 分支）的大事迹卡片右上角有一枚角标，内容是**当场比赛的奖牌计数**，
+// 颜色按最高奖项定。旧实现直接读旧数据里的 `summary` 字段；新数据层的 cards[] 只有
+// { kind, date, category, title, tagline, link }，没有奖牌字段、也不允许加，
+// 故由 scripts/gen_event_badges.mjs 在构建期从 awards/*.json 反算，产出这个几 KB 的生成物
+// （不这么做就得让大事记页把 3103 条获奖记录全拉下来）。
+const { data: badgeData } = useJson("/data/event_badges.json", { initial: { badges: {}, tiers: {} } });
+const badgeOf = (item) => badgeData.value?.badges?.[item.link] || "";
+/** 角标配色 = 最高奖项：特等奖（蓝桥杯早期，旧站没有这一档）> 金 > 银 > 铜。
+    档位直接取生成物的 tiers 字段；老生成物没有该字段时才回退到从 emoji 文本反推。 */
+function badgeToneOf(item) {
+  const tier = badgeData.value?.tiers?.[item.link];
+  if (tier) return tier;
+  const text = badgeOf(item);
+  if (text.includes("🏆")) return "grand";
+  if (text.includes("🥇")) return "gold";
+  if (text.includes("🥈")) return "silver";
+  if (text.includes("🥉")) return "bronze";
+  return "";
+}
 
 // ── 筛选：年份 + 月份 + 类型 + 搜索 ──
 const searchQuery = ref("");
@@ -333,6 +355,11 @@ const unloadedCount = computed(() => years.value.length - loadedYears.value.leng
                 :class="{ right: idx % 2 === 1 }"
               >
                 <div class="tl-card" :class="'tl-card--' + item.category">
+                  <span
+                    v-if="badgeOf(item)"
+                    class="tl-badge"
+                    :class="'tl-badge--' + badgeToneOf(item)"
+                  >{{ badgeOf(item) }}</span>
                   <span class="tl-date">{{ item.dateStr }}</span>
                   <h3>{{ item.title }}</h3>
                   <p>{{ item.tagline }}</p>
@@ -867,11 +894,46 @@ const unloadedCount = computed(() => years.value.length - loadedYears.value.leng
 .tl-card--school { --cat: #d81b60; }
 .tl-card--other { --cat: #b0bec5; }
 .tl-card h3 {
+  padding-right: 96px; /* 给右上角的奖牌角标留位 */
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--text);
   margin-bottom: 6px;
   transition: color var(--transition-fast);
+}
+/* ── 奖牌角标（右上角；底色与最高奖项同色，样式沿用旧站 .tl-badge）── */
+.tl-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+/* 特等奖是蓝桥杯早期届次才有的最高档，旧站没有这一档 —— 配色与全站的特等奖红一致 */
+.tl-badge--grand {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  border-color: rgba(198, 40, 40, 0.45);
+  color: var(--honor-grand);
+}
+.tl-badge--gold {
+  background: linear-gradient(135deg, #fff3d6, #ffe3a1);
+  border-color: rgba(212, 167, 44, 0.45);
+  color: #8a6d1a;
+}
+.tl-badge--silver {
+  background: linear-gradient(135deg, #f3f3f4, #dcddde);
+  border-color: rgba(150, 152, 156, 0.5);
+  color: #6d6f73;
+}
+.tl-badge--bronze {
+  background: linear-gradient(135deg, #fbe9dc, #f0cdb0);
+  border-color: rgba(205, 127, 50, 0.45);
+  color: #9c5a1e;
 }
 .tl-date {
   display: block;

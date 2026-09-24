@@ -40,7 +40,25 @@
     "awards": [
       "icpc"
     ],
-    "sessions": {}
+    "schedule": [
+      {
+        "stage": "邀请赛",
+        "from": 4,
+        "to": 7
+      },
+      {
+        "stage": "网络赛",
+        "from": 9,
+        "to": 9
+      },
+      {
+        "stage": "区域赛",
+        "from": 10,
+        "to": 12
+      }
+    ],
+    "sessions": {},
+    "scheduleGroup": "xCPC"
   },
   {
     "slug": "ccpc",
@@ -84,12 +102,25 @@
     "awards": [
       "ccpc"
     ],
-    "sessions": {}
+    "schedule": [
+      {
+        "stage": "邀请赛",
+        "from": 5,
+        "to": 6
+      },
+      {
+        "stage": "区域赛",
+        "from": 10,
+        "to": 11
+      }
+    ],
+    "sessions": {},
+    "scheduleGroup": "xCPC"
   },
   {
     "slug": "gplt",
     "name": "团体程序设计天梯赛",
-    "shortName": "团体程序设计天梯赛",
+    "shortName": "天梯赛",
     "image": "/images/contest/gplt.png",
     "desc": "团体程序设计天梯赛是中国高校计算机大赛的竞赛版块之一",
     "subtitle": "中国高校计算机大赛的重要竞赛版块",
@@ -128,6 +159,18 @@
     "awards": [
       "gplt-team",
       "gplt-individual"
+    ],
+    "schedule": [
+      {
+        "stage": "校内选拔赛",
+        "from": 3,
+        "to": 3
+      },
+      {
+        "stage": "全国总决赛",
+        "from": 4,
+        "to": 4
+      }
     ],
     "sessions": {
       "2016": 1,
@@ -182,6 +225,23 @@
     "mode": "roster",
     "awards": [
       "lanqiao"
+    ],
+    "schedule": [
+      {
+        "stage": "校内选拔赛",
+        "from": 3,
+        "to": 3
+      },
+      {
+        "stage": "省赛",
+        "from": 4,
+        "to": 4
+      },
+      {
+        "stage": "全国总决赛",
+        "from": 6,
+        "to": 6
+      }
     ],
     "sessions": {
       "2010": 1,
@@ -243,6 +303,18 @@
     "awards": [
       "baidu"
     ],
+    "schedule": [
+      {
+        "stage": "初赛",
+        "from": 6,
+        "to": 9
+      },
+      {
+        "stage": "决赛",
+        "from": 12,
+        "to": 12
+      }
+    ],
     "sessions": {
       "2023": 19,
       "2024": 20,
@@ -289,6 +361,23 @@
     "mode": "none",
     "awards": [
       "chuanzhi"
+    ],
+    "schedule": [
+      {
+        "stage": "校内选拔赛",
+        "from": 10,
+        "to": 10
+      },
+      {
+        "stage": "省赛",
+        "from": 11,
+        "to": 11
+      },
+      {
+        "stage": "国赛",
+        "from": 12,
+        "to": 12
+      }
     ],
     "sessions": {}
   }

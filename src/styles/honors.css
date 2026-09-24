@@ -1,0 +1,137 @@
+/* ==========================================================================
+   荣誉标签（优秀成员 / 协会负责人 两页共用）
+   一条荣誉 = 一枚胶囊标签，颜色按类型区分：比赛 / 毕业去向 / 个人荣誉·职位 / 联系方式。
+   类型判定见 utils/honorType.js，配色见 tokens.css 的 --honor-*。
+
+   用法：<span class="honor-tag honor-tag--{type}">
+   这里只管标签本身的几何与颜色；容器排布（居中 / 靠左、间距）留在各页面 scoped 样式里。
+   卡片 hover 时加深**在本文件末尾**（不各页一份）：标签由 components/HonorTags.vue 渲染，
+   页面 scoped 选择器带 [data-v-*]、匹配不到子组件的元素 —— 各写一份会静默失效。
+   加深通过 --tag-bg-hover / --tag-border-hover 取值，故分色不会失效。
+   ========================================================================== */
+.honor-tag {
+  /* 兜底＝比赛色：类型没认出来时与改造前观感一致，不会突然变突兀 */
+  --tag-color: var(--honor-contest);
+  --tag-bg: var(--honor-contest-bg);
+  --tag-border: var(--honor-contest-border);
+  --tag-bg-hover: var(--honor-contest-bg-hover);
+  --tag-border-hover: var(--honor-contest-border-hover);
+
+  display: inline-block;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+/* 比赛类型**不再单列一份**：上面 .honor-tag 的兜底就是比赛色（--honor-contest*），
+   这里原先有一块五行逐字相同的 .honor-tag--contest，2026-09-24 删掉。
+   模板照旧带这个类名（components/HonorPill.vue、components/HeroAvatarWall.vue），
+   它现在只表示「这是比赛类荣誉」，颜色由兜底给 —— 改 --honor-contest* 仍整类生效。 */
+.honor-tag--destination {
+  --tag-color: var(--honor-destination);
+  --tag-bg: var(--honor-destination-bg);
+  --tag-border: var(--honor-destination-border);
+  --tag-bg-hover: var(--honor-destination-bg-hover);
+  --tag-border-hover: var(--honor-destination-border-hover);
+}
+.honor-tag--honor {
+  --tag-color: var(--honor-honor);
+  --tag-bg: var(--honor-honor-bg);
+  --tag-border: var(--honor-honor-border);
+  --tag-bg-hover: var(--honor-honor-bg-hover);
+  --tag-border-hover: var(--honor-honor-border-hover);
+}
+.honor-tag--contact {
+  --tag-color: var(--honor-contact);
+  --tag-bg: var(--honor-contact-bg);
+  --tag-border: var(--honor-contact-border);
+  --tag-bg-hover: var(--honor-contact-bg-hover);
+  --tag-border-hover: var(--honor-contact-border-hover);
+}
+/* 会长身份：协会成员头像墙上那枚「2026学年会长」。
+   只此一处用金色（2026-09-22 会长指定）—— 它与去向的暗琥珀同属黄系，但更黄更亮，
+   同屏时看得出是两种东西；颜色同样取自 --honor-* 令牌，不在组件里写死。 */
+.honor-tag--leader {
+  --tag-color: var(--honor-leader);
+  --tag-bg: var(--honor-leader-bg);
+  --tag-border: var(--honor-leader-border);
+  --tag-bg-hover: var(--honor-leader-bg-hover);
+  --tag-border-hover: var(--honor-leader-border-hover);
+}
+/* 「…」＝还有更多荣誉（leaders.json 的省略写法）：中性虚线，不属于任何一类 */
+.honor-tag--more {
+  --tag-color: var(--honor-more);
+  --tag-bg: transparent;
+  --tag-border: var(--honor-more-border);
+  --tag-bg-hover: rgba(107, 114, 128, 0.08);
+  --tag-border-hover: var(--honor-more);
+}
+
+/* 比赛战绩胶囊：由站点竞赛数据自动汇总（口径与生成逻辑见 utils/honorPills.js），
+   如「xCPC 区域赛🥈2🥉1 邀请赛🥇1🥈3🥉4 省赛🥇1」。
+   颜色仍走比赛色（--honor-contest）——xCPC / 天梯赛 / 百度之星 / 蓝桥杯同属比赛类，
+   系列之间靠开头的名字区分，奖牌档位靠 emoji 区分（🥇🥈🥉，特等奖是 🏆）。
+
+   **折行只在「部分」之间发生**（会长 2026-09-23）：
+   页面把每一部分渲染成一个 .honor-tag__seg 子项（recordsToPillParts 给的分段），
+   这里用 inline-flex + flex-wrap + 段间列间距 —— flex 子项是整体换行的原子单位，
+   于是窄卡片里胶囊折行时只会从「区域赛 / 邀请赛 / 省赛」之间断开，
+   不会把「区域赛🥈2」切成两行。故本类不再自己写 white-space: normal（交给子项）。
+   段间不用空格撑开（Vue 的 condense 会把元素间含换行的空白节点删掉，靠不住），
+   间距一律由 column-gap 提供 —— 模板里各段各占一行即可。 */
+.honor-tag--stat {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.4em;
+  row-gap: 0.15em;
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 一枚胶囊里的一段（一块奖牌统计、或明细模式里的一条赛事名）。
+   min-width: 0 让超长的一段（如带「暨河北省赛」的全名）能在段内兜底折行，不撑破卡片。 */
+.honor-tag__seg {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   荣誉显示区的两条跨页规则（会长 2026-09-23 审查后从两页的 scoped 块搬来）
+
+   它们以前写在 ExcellentView.vue / LeaderView.vue 各自的 <style scoped> 里，能生效是
+   因为它们标的是**页面自己编译**的节点（明细模式的 emoji 是 HonorPill 的 slot 内容，
+   带所在页的 data-v）。现在这些节点由 components/HonorTags.vue 渲染，页面 scoped
+   选择器（编译成 `.medal-emoji[data-v-页]`）永远匹配不到，各写一份等于静默失效 ——
+   所以收进全局，两页同源。
+   ========================================================================== */
+
+/* 页面命令区：荣誉显示方式（控件样式在 view-toggle.css）。
+   位于标题区与卡片网格之间 —— 它管的是下面整片网格里每张卡片的画法，属页面级。 */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* 明细模式每条前面的奖牌 emoji：只负责「一眼看出这块牌子是什么档位」。
+   奖牌文字本身**不再着色**（会长 2026-09-23）—— 整条胶囊保持自己的颜色，
+   档位信息由 emoji 承担，段内再换颜色会把一条胶囊拆成两截色。 */
+.medal-emoji {
+  margin-right: var(--space-xs);
+}
+
+/* 卡片 hover 时胶囊按各自类型加深（--tag-*-hover 由 .honor-tag--xxx 提供）。
+   两页的卡片类名不同，故两条选择器并列 —— 这是唯一会随页面新增而变化的地方。 */
+.member-card:hover .honor-tag,
+.leader-card:hover .honor-tag {
+  background: var(--tag-bg-hover);
+  border-color: var(--tag-border-hover);
+}

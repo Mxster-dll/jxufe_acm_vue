@@ -5,15 +5,20 @@
   "description": "江西财经大学程序设计竞赛协会官网 - Vue 迁移版",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/gen_hero_wall.mjs",
+    "predev": "node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/gen_hero_wall.mjs",
+    "prebuild": "node scripts/gen_group_wall.mjs && node scripts/gen_event_badges.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "data:check": "node scripts/check_awards.mjs",
+    "test": "node --test",
+    "verify": "npm run data:check && npm test",
     "data:gen": "node scripts/gen_events_articles.mjs",
     "data:hero-wall": "node scripts/gen_hero_wall.mjs",
-    "data:hero-thumbs": "powershell -ExecutionPolicy Bypass -File scripts/gen_hero_wall_thumbs.ps1"
+    "data:hero-thumbs": "powershell -ExecutionPolicy Bypass -File scripts/gen_hero_wall_thumbs.ps1",
+    "data:group-wall": "node scripts/gen_group_wall.mjs",
+    "data:group-thumbs": "powershell -ExecutionPolicy Bypass -File scripts/gen_group_wall_thumbs.ps1",
+    "data:event-badges": "node scripts/gen_event_badges.mjs"
   },
   "dependencies": {
     "vue": "^3.4.0",

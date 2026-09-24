@@ -6,9 +6,24 @@ import AppFooter from "../components/AppFooter.vue";
    .hero-inner 上的 :class，以及 <style> 末尾那段 .is-wall-on 规则，即完全回滚。
    它自己不读也不改轮播/文案的任何状态，只由 wallOn 决定谁在前面。 */
 import HeroAvatarWall from "../components/HeroAvatarWall.vue";
+import { useMaskReveal } from "../composables/useMaskReveal";
+import { useSectionSnap } from "../composables/useSectionSnap";
+import { useHeaderHint } from "../composables/useHeaderHint";
 
 // ── 头像墙开关（纯叠加：false 时页面与改动前逐像素一致）──
 const wallOn = ref(false);
+
+// ── 遮罩（= 除了墙和导航栏的整个页面）、分节吸附、导航栏入口 ──
+//   这三件事原先全塞在这个视图里（会长 2026-09-23 屎山审查点名：2200 行的上帝视图）。
+//   现在各由一个 composable 管，这里只做编排 —— 口径与理由都随代码搬到了各自文件里：
+//     · useMaskReveal  —— 遮罩位移、滚轮/触摸两套驱动、露墙与请回、把状态发布到 <html>；
+//     · useSectionSnap —— 滚轮「按部分对齐」吸附（#home / #about / #news 三个分界）；
+//     · useHeaderHint  —— 导航栏那枚「成员墙」入口的横向让位、随滚动隐藏、切页淡入。
+//   注意 useMaskReveal 的监听在内部注册（wheel / touchmove 必须 passive: false），
+//   销毁时自己摘干净；吸附只是被它回调，所以先建 snap 再建 mask。
+const { snapToSection } = useSectionSnap(["home", "about", "news"]);
+const { maskShift, maskOut, maskReturning, revealWall } = useMaskReveal({ snap: snapToSection });
+const { hintEl, hintLeft, hintHidden, hintReady } = useHeaderHint();
 
 // ── 轮播图 ──
 const slides = Array.from({ length: 10 }, (_, i) => ({
@@ -124,93 +139,17 @@ onMounted(() => {
   initShapes();
 });
 
-// ── 滚动吸附（延迟 + 非线性缓动）──
-let snapTimer = null;
-let isSnapping = false;
-
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-function animateScrollTo(targetY, duration = 700) {
-  const html = document.documentElement;
-  html.style.scrollBehavior = "auto";
-  isSnapping = true;
-
-  const startY = window.scrollY;
-  const distance = targetY - startY;
-  if (Math.abs(distance) < 5) {
-    html.style.scrollBehavior = "";
-    isSnapping = false;
-    return;
-  }
-
-  const startTime = performance.now();
-
-  function step(currentTime) {
-    if (!isSnapping) return;
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    } else {
-      html.style.scrollBehavior = "";
-      isSnapping = false;
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-function findNearestSection() {
-  const currentY = window.scrollY;
-  const els = document.querySelectorAll("section[id]");
-  let closest = null;
-  let closestDist = Infinity;
-  els.forEach((el) => {
-    const dist = Math.abs(currentY - el.offsetTop);
-    if (dist < closestDist) {
-      closestDist = dist;
-      closest = el;
-    }
-  });
-  return { section: closest, distance: closestDist };
-}
-
-function scheduleSnap() {
-  clearTimeout(snapTimer);
-  if (isSnapping) return;
-  snapTimer = setTimeout(() => {
-    const { section, distance } = findNearestSection();
-    if (section && distance > 50) {
-      animateScrollTo(section.offsetTop, 700);
-    }
-  }, 800);
-}
-
-function onScrollSnap() {
-  if (isSnapping) {
-    // 用户手动滚动了，取消吸附动画
-    isSnapping = false;
-    document.documentElement.style.scrollBehavior = "";
-    return;
-  }
-  scheduleSnap();
-}
-
-onMounted(() => {
-  window.addEventListener("scroll", onScrollSnap, { passive: true });
-  window.addEventListener("scrollend", scheduleSnap, { passive: true });
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", onScrollSnap);
-  window.removeEventListener("scrollend", scheduleSnap);
-  clearTimeout(snapTimer);
-  isSnapping = false;
-  document.documentElement.style.scrollBehavior = "";
-});
+// ── 滚动吸附：已交给 useSectionSnap（调用见上面第 24 行）──
+//   这里原先还有一台独立引擎：「滚动结束 800ms 后，把离得最近的 section 吸过来」
+//   （window 上的 scroll + scrollend 两个监听 + rAF 缓动 + 独占地把
+//   document.documentElement.style.scrollBehavior 写成 auto/'' 那一套）。
+//   会长 2026-09-24 屎山审查点名后删除，理由：
+//     · 它与 useSectionSnap 抢同一次滚动 —— 一次滚轮会被两套逻辑各吸一遍；
+//     · 选目标的判据不同（它按「离谁最近、超过 50px 就吸」，useSectionSnap 按分界算），
+//       叠加出来的落点是两套规则的产物，无法预测；
+//     · 全仓库只有它写过内联 scrollBehavior，而 useSectionSnap 用的是
+//       window.scrollTo({ behavior: 'smooth' })，不需要那行内联样式。
+//   删除后本视图不再注册任何 window 滚动监听。
 
 // ── 我们参与的赛事 logo ──
 // ICPC 与 CCPC 合并为一张卡（与竞赛详情页 xCPC 合并页同构：两块上下堆叠，各自 logo+名称）
@@ -302,6 +241,54 @@ const { newsList, loading, error } = useNews();
 </script>
 
 <template>
+  <!-- ── 墙：整页固定底纹 ──
+       它不在遮罩里，而是铺在遮罩**下面**；导航栏在 App.vue，天然也在遮罩之外。
+       形状与首页原来那份 hero_wall.json 完全一致（manifest + tiles），
+       所以组件一行没改，只多传几个 prop。清单与文案由 scripts/gen_group_wall.mjs 生成，
+       人数：QQ 群 110 + 优秀成员 33 + 负责人 6，按真名去重后 138 人。 -->
+  <div class="page-wall">
+    <HeroAvatarWall
+      v-model:active="wallOn"
+      :hover-card="maskOut"
+      manifest-url="/data/group_wall.manifest.json"
+      copy-url="/data/group_wall.json"
+      thumbs-base="/images/group_wall_thumbs"
+      label="协会成员墙"
+      :dim-opacity="1"
+    />
+  </div>
+
+  <!-- ── 「成员墙」入口：会长 2026-09-23 要求搬进导航栏，且点一下就直接收起遮罩 ──
+       Teleport 到 AppHeader 里的 #header-hint 锚点 —— DOM 上它成了导航栏的孩子，
+       但状态与逻辑仍留在本页（遮罩归 HomeView 管），不必为它引一个全局 store。
+       横向位置由 measureHint() 实测后写进 --hint-left（见脚本里的说明）：
+       有空间时落在导航栏中线上，被 logo / 导航按钮夹住时退开 —— 就是会长说的
+       「宽度小时被导航栏按钮挤离中心」。 -->
+  <Teleport to="#header-hint">
+    <button
+      ref="hintEl"
+      type="button"
+      class="wall-hint"
+      :class="{ 'is-hidden': hintHidden, 'is-ready': hintReady }"
+      :style="{ '--hint-left': hintLeft }"
+      aria-label="露出成员墙"
+      @click="revealWall"
+    >
+      <i class="fas fa-chevron-up" aria-hidden="true"></i>
+      <span class="wall-hint__label">成员墙</span>
+    </button>
+  </Teleport>
+
+  <!-- ── 遮罩 = 除了墙和导航栏的整个页面 ──
+       正常滚动时它跟着页面上下走：往下滚就是遮罩上移，于是看到 #about 的
+       「以代码为桥梁 / 连接技术与未来」；在页首继续往上滚则是遮罩下移，
+       把上面的墙露出来（桌面滚轮一动即触发；移动端要拉过一屏的 10% 再松手）。
+       往回收也一样：滚一下就把遮罩请回来。（首页不渲染页脚，见 App.vue 的 v-if） -->
+  <div
+    class="page-mask"
+    :class="{ 'is-out': maskOut, 'is-returning': maskReturning }"
+    :style="{ '--mask-shift': maskShift + 'px' }"
+  >
   <!-- 英雄区 -->
   <section
     id="home"
@@ -311,10 +298,6 @@ const { newsList, loading, error } = useNews();
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
-    <!-- 头像墙：hero 的第一个子元素 = 同为 z-index:0 的那几层里最靠下的一层。
-         它自带那个开关按钮（在 .hero-inner 之外，所以文案退场后它还在）。 -->
-    <HeroAvatarWall v-model:active="wallOn" />
-
     <!-- 横滚代码背景 -->
     <div class="code-scroll-bg" aria-hidden="true">
       <div
@@ -616,6 +599,8 @@ const { newsList, loading, error } = useNews();
     </div>
     <AppFooter />
   </section>
+  </div>
+  <!-- /.page-mask（到此为止 = 除了墙和导航栏的整个页面） -->
 </template>
 
 <style scoped>
@@ -648,7 +633,18 @@ const { newsList, loading, error } = useNews();
         rgba(26, 115, 232, 0.06) 0%,
         transparent 60%
       ),
-    linear-gradient(175deg, #f8fafc 0%, #fff 40%, #fff 100%);
+    /* 底部过渡：向 About 区渐变。
+       这层原本是**不透明**的（#f8fafc → #fff）：墙搬到遮罩下面之后会被它盖死，
+       于是改成半透明 —— 墙照旧只是淡淡一层底纹（≈12% 透出来），遮罩整体让开时
+       让出来的位置没有这层东西，墙就是全亮的。
+       ⚠ 这个透明度是**静态**的：会长 2026-09-23「我不希望鼠标悬停在遮罩上时改变其透明度」
+       —— 悬停只能影响墙自己那一层（见 HeroAvatarWall 的 .is-pointer）。 */
+    linear-gradient(
+      175deg,
+      rgba(248, 250, 252, 0.86) 0%,
+      rgba(255, 255, 255, 0.9) 40%,
+      rgba(255, 255, 255, 0.92) 100%
+    );
   background-size: 100% 100%;
   cursor: default;
 }
@@ -827,6 +823,138 @@ const { newsList, loading, error } = useNews();
 .hero.is-wall-on .hero-particles {
   opacity: 0;
   transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── 露墙：**遮罩 = 除了墙和导航栏的整个页面** ──
+   层序：墙（.page-wall 固定层，z-index: 0）→ 遮罩（.page-mask，1）→ 导航栏（在 App.vue，天然在外）。
+   遮罩铺在墙上面，所以首页照旧把墙当底纹用（hero 那层背景是半透明的）；
+   而它一旦让开，让出来的位置就是墙本身 —— 这就是「露出墙」。
+   位移由 HomeView 的滚轮 / 触摸处理器写进 --mask-shift：
+   未到阈值时严格跟手（故这一档不能有 transition，否则每一帧都在追赶），
+   过了阈值再加缓动整体滑出一屏。 */
+.page-wall {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+/* 会长 2026-09-23：不要那个「协会成员墙」开关按钮。
+   组件自带它（.wall-toggle，文案由 label / labelActive 两个 prop 给），但首页露墙已经
+   是「上滚把遮罩拉下去」这套手势了，角上再挂个按钮既重复又抢视线 —— 这里藏掉，
+   不动组件本身（组件是上游的，我们的改动越少越好在 PR 里对齐）。 */
+.page-wall :deep(.wall-toggle) {
+  display: none;
+}
+.page-mask {
+  position: relative;
+  z-index: 1;
+  transform: translate3d(0, var(--mask-shift, 0px), 0);
+  transition: none;
+  will-change: transform;
+}
+/* 拉过一屏的 10%：整层滑出页面，只剩墙；往回滚一下就把遮罩请回来。
+   位移量 = tokens.css 的 --mask-travel（105vh），与 AppHeader 里导航栏那一份同值；
+   JS 侧同值的量是 useMaskReveal.js 的 MASK_MAX_RATIO = 1.05（触摸拖动上限）。 */
+.page-mask.is-out {
+  transform: translate3d(0, var(--mask-travel), 0);
+  /* 与下面 .is-returning 同一个时长：露墙与请回速度一致（会长 2026-09-23），
+     也对齐翻页吸附那一档（实测 ≈430ms）。
+     时长不再写字面量，改用 JS 发布到 <html> 的 --mask-ms —— 早先 CSS(640/520) 与
+     JS(MASK_MOVE_MS) 各写一份，才出过「露墙比请回慢 101ms」的不一致。 */
+  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 请回来的回程：与露墙同一个时长（原先 640/520 两档不一致，露墙偏慢）。
+   用户重新滚动时 JS 会立刻摘掉这个类，保证跟手。 */
+.page-mask.is-returning {
+  transition: transform var(--mask-ms, 520ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── 「成员墙」入口：点一下直接把遮罩收起来，露出整面成员墙 ──
+   位置：Teleport 进导航栏的 #header-hint 锚点（DOM 上属于 AppHeader，逻辑与状态仍留在本页）。
+   锚点铺满 .bar，所以下面的 50% 就是整条导航栏的中线；横向位置再由 JS 实测邻居后
+   写进 --hint-left 覆盖（见本文件 measureHint）：有空间时中线居中，
+   被 logo / 导航按钮夹住时退开 —— 会长 2026-09-23 第 2 条要的就是这个让位行为。
+   结构：箭头在上、字样在下，共用一条中轴；箭头是卡片外的独立元素、24px。
+   竖排尺寸账：24 + gap 4 + 卡片 44 = 72px，导航栏 80px，上下各余 4px。
+   卡片样式照搬我们删掉的那枚 .wall-toggle（HeroAvatarWall.vue:849-895）：
+   白底 + 主色 24% 发丝边 + 全圆角 + 0 6px 20px 投影 + 主色 semibold 文字；
+   连「hover 抬 2px、active 缩到 0.97」也一并照搬。 */
+.wall-hint {
+  /* 竖排尺寸账：箭头 24 + gap 4 + 卡片 44 = 72px，导航栏 80px。
+     会长 2026-09-23：整块居中会让箭头偏上（箭头中心落在 y=16），改为让**箭头**居中 ——
+     top 减去半个箭头高度，箭头中心就落在导航栏中线上；代价是卡片底边伸出导航栏下沿
+     （y≈102 > 80，页头是透明的，会悬在下面）。调位置只改这一个 top 即可。 */
+  --hint-arrow: var(--font-size-2xl); /* 24px */
+  position: absolute;
+  top: calc(50% - var(--hint-arrow) / 2);
+  left: var(--hint-left, 50%);
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column; /* 箭头在上、字样在下 */
+  align-items: center; /* 两者共用一条中轴 */
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto; /* 锚点整层不吃指针，这里收回来 */
+  /* 挂上 is-ready（位置已实测 + 路由滚动已落定）之前一直透明，切页回首页就不会「凭空冒出来」 */
+  opacity: 0;
+  transition:
+    left 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.wall-hint.is-ready {
+  opacity: 1;
+}
+/* 往下滚了（scrollY > 0）：整枚入口往上退场 —— 邀请的是「往上」，就别赖在下面 */
+.wall-hint.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-10px);
+}
+.wall-hint:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+.wall-hint:active {
+  transform: translateX(-50%) scale(0.97);
+}
+.wall-hint:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-full);
+}
+.wall-hint i {
+  font-size: var(--hint-arrow); /* 24px：放大到一眼能认出是「往上」 */
+  line-height: 1;
+  color: var(--primary);
+  animation: wall-hint-bob 1.8s ease-in-out infinite;
+}
+/* 卡片本体：与 .wall-toggle 同款（那枚按钮已按会长要求从首页撤掉，这里接上它的观感） */
+.wall-hint__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* 与 .wall-toggle 同档的触控高度 */
+  padding: 0 var(--space-md);
+  border: 1px solid rgba(26, 115, 232, 0.24);
+  border-radius: var(--radius-full);
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+  color: var(--primary);
+  font-size: 0.9375rem; /* 15px，与 .wall-toggle 一致 */
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+@keyframes wall-hint-bob {
+  0%,
+  100% {
+    transform: translateY(4px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 .hero-content {
   text-align: left;

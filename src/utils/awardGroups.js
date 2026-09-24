@@ -10,6 +10,8 @@
  * grand 是独立一档（排在金之前、单独计数），只存在于蓝桥杯早期届次。
  */
 
+import { MEDAL_ORDER, MEDAL_RANK } from './contestTaxonomy.js'
+
 // 奖牌 → 文案：xcpc / 百度之星 / 天梯赛团队奖用「金/银/铜奖」措辞
 // grand（特等奖）是蓝桥杯早期届次才有的最高档，两种措辞体系下都写作「特等奖」
 export const MEDAL_TEXT = { grand: '特等奖', gold: '金奖', silver: '银奖', bronze: '铜奖' }
@@ -20,9 +22,21 @@ export const LEVEL_CAT = { invitational: 'inv', regional: 'reg', final: 'reg', p
 // medal_level → 徽章小字
 export const LEVEL_TAG = { invitational: '邀请赛', regional: '区域赛', final: '区域赛', provincial: '省赛' }
 
-// 顺序即展示顺序：特等奖 → 金 → 银 → 铜
-export const MEDAL_KEYS = ['grand', 'gold', 'silver', 'bronze']
-export const MEDAL_ORDER = { grand: 0, gold: 1, silver: 2, bronze: 3 }
+// 顺序与档位表都在 contestTaxonomy.js（单一真源）；这里只做别名，别在本文件再抄一份。
+// MEDAL_KEYS 是「顺序即展示顺序」的数组；MEDAL_RANK 是同序的查表版（排序用）。
+export const MEDAL_KEYS = MEDAL_ORDER
+export { MEDAL_RANK }
+
+// ==========================================================================
+// 名次（awards/*.json 的 `rank` 字段）
+//
+// 口径与实现都在 contestTaxonomy.js（**单一真源**：生成器 gen_event_badges.mjs
+// 也要用同一套判据，不能再写一遍 `rank <= 3`）。这里只做转出，页面照旧从本模块 import。
+//
+// ⚠ 别和上面的 `RANK_TEXT` 混：那张表是**奖等**的措辞（一等奖 / 二等奖 / 三等奖），
+//   与「第几名」是两件正交的事 —— 冠军队照样拿着金牌。
+// ==========================================================================
+export { TROPHY_LABEL, isTrophyRank, rankText, rankNote } from './contestTaxonomy.js'
 
 /** 奖牌 → 奖牌色类（供 medal-gold / chip-gold 等样式复用） */
 export function medalClass(medal) {
@@ -80,36 +94,31 @@ export function editionLabel(n) {
   return `第${CN_DIGIT[Math.floor(v / 10)]}十${v % 10 ? CN_DIGIT[v % 10] : ''}届`
 }
 
-/** 从「第N届…」标题解析届数，兼容「第十一届」与「第21届」两种写法 */
-export function sessionFromTitle(title) {
-  const m = String(title || '').match(/第\s*(\d+|[一二三四五六七八九十]+)\s*届/)
-  if (!m) return null
-  if (/^\d+$/.test(m[1])) return Number(m[1])
-  const D = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 }
-  let section = 0
-  let num = 0
-  for (const ch of m[1]) {
-    if (ch === '十') {
-      section += (num || 1) * 10
-      num = 0
-    } else if (D[ch]) {
-      num = D[ch]
-    }
-  }
-  return section + num
-}
-
 /** 两字姓名中间插全角空格（与 RosterGroup 的 alignName 保持一致） */
 export function alignName(name) {
   return /^[\u4e00-\u9fff]{2}$/.test(name || '') ? name[0] + '\u3000' + name[1] : name
 }
 
-/** 把一组记录按奖牌归成 [{ medal, rows }]，顺序固定为 金 → 银 → 铜 */
-export function awardPairs(rows) {
+/** 把一组记录按奖牌归成 [{ medal, rows }]，顺序固定为 金 → 银 → 铜。
+    只在本文件内部用（subjectGroups / sessionGroups），不对外导出。 */
+function awardPairs(rows) {
   return MEDAL_KEYS.filter((m) => rows.some((r) => r.medal_type === m)).map((m) => ({
     medal: m,
     rows: rows.filter((r) => r.medal_type === m)
   }))
+}
+
+/** 组内按名次升序排（无名次的排后面、并列保持原顺序）。
+    名次的作用域就是「本组」（同届同级别、同科目×组别 / 同场次），故只在本组内排序。 */
+function byRank(rows) {
+  const rankOf = (r) => {
+    const n = Number(r?.rank)
+    return Number.isInteger(n) && n > 0 ? n : Infinity
+  }
+  return rows
+    .map((r, i) => ({ r, i }))
+    .sort((a, b) => rankOf(a.r) - rankOf(b.r) || a.i - b.i)
+    .map((x) => x.r)
 }
 
 // 蓝桥杯科目分组的固定顺序：语言 C/C++ → Java → Python → 其他；组别 A → B → 研究生组 → 未标注
@@ -144,7 +153,9 @@ export function subjectGroups(rows, awardText) {
       icon: 'fa-code',
       awards: awardPairs(g.rows).map((p) => ({
         award: awardText[p.medal],
-        persons: p.rows.map((r) => ({ name: (r.members && r.members[0]) || '', rank: null }))
+        // rank 的作用域就是这个组（同届同级别、同「科目 × 组别」），故组内按名次升序
+        // 排一遍、没名次的排后面 —— 冠军自然排在最前。
+        persons: byRank(p.rows).map((r) => ({ name: (r.members && r.members[0]) || '', rank: r.rank ?? null }))
       }))
     }))
 }
@@ -165,7 +176,7 @@ export function sessionGroups(rows, awardText) {
     icon: 'fa-code',
     awards: awardPairs(map.get(date)).map((p) => ({
       award: awardText[p.medal],
-      persons: p.rows.map((r) => ({ name: (r.members && r.members[0]) || '', rank: null }))
+      persons: byRank(p.rows).map((r) => ({ name: (r.members && r.members[0]) || '', rank: r.rank ?? null }))
     }))
   }))
 }

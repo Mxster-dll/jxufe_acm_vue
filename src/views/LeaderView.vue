@@ -1,13 +1,40 @@
 <script setup>
+import { computed } from "vue";
 import { useJson } from "../composables/useJson";
 import { useSkeleton } from "../composables/useSkeleton";
+import { useHonorDisplay } from "../composables/useHonorDisplay";
+import { honorView } from "../utils/honorView";
+import HonorViewSwitch from "../components/HonorViewSwitch.vue";
+import HonorTags from "../components/HonorTags.vue";
 
 const {
   data: leaders,
   loading,
   error,
 } = useJson("/data/leaders.json", { initial: [] });
-const { skeletons } = useSkeleton(5);
+/* 6 位负责人 —— 原先写 5，骨架屏条数与实际列表不等 */
+const { skeletons } = useSkeleton(6);
+
+/** 荣誉显示的三份公共数据与归一化 —— 与优秀成员页共用同一套取数
+    （composables/useHonorDisplay.js），渲染在 <HonorTags>。
+    dutyOf 与优秀成员页同源：**职务胶囊在这两页都要传**（2026-09-24 修）—— 原先只有
+    优秀成员页传 :duties，于是「2025学年协会干事」这类职务在本页永不显示，哪怕人就站在
+    这一页上（实测 6 位负责人里衷铭川有职务，其余 5 位没有）。 */
+const { records, dutyOf, shownName, cleanHonors } = useHonorDisplay();
+
+/** 每条荣誉：手写条目 + 奖学金，先过掉已被自动汇总覆盖的（口径见 utils/honorCoverage.js），
+    再归一化成 { text, type }，type 决定标签颜色（类型判定见 utils/honorType.js）。
+    第二个参数传**真名** —— 奖学金按真名查。 */
+const list = computed(() =>
+  (leaders.value || []).map((l) => ({
+    ...l,
+    achievements: cleanHonors(l.achievements, l.name),
+  }))
+);
+
+/* 比赛战绩的取数已收进 useHonorDisplay（record 是 Map<真名, 记录[]>，两页共用缓存），
+   渲染在 <HonorTags> 里；本页**不按显示排名重排**：显示排名只决定优秀成员页的卡片顺序
+   （见 utils/honorRanking.js），负责人页保持 leaders.json 的原顺序（届次从新到旧）。 */
 </script>
 
 <template>
@@ -52,6 +79,12 @@ const { skeletons } = useSkeleton(5);
         <p class="page-desc">这故事开始一个人，我认真写成了我们</p>
       </header>
 
+      <!-- 荣誉显示方式（会长 2026-09-23）：与优秀成员页同一份偏好，切换在这里改、
+           两页同时生效（偏好存 localStorage，见 utils/honorView.js）；不加说明文字。 -->
+      <div class="page-toolbar">
+        <HonorViewSwitch />
+      </div>
+
       <!-- Loading -->
       <div v-if="loading" class="skeleton-list">
         <div
@@ -72,7 +105,7 @@ const { skeletons } = useSkeleton(5);
       <!-- 负责人列表 -->
       <div v-else class="leader-grid">
         <article
-          v-for="(l, i) in leaders"
+          v-for="(l, i) in list"
           :key="l.name"
           v-reveal="'fade-up'"
           :style="{ '--reveal-index': i }"
@@ -84,20 +117,25 @@ const { skeletons } = useSkeleton(5);
           <!-- 头像区 -->
           <div class="leader-avatar-wrap">
             <div class="avatar-ring"></div>
-            <img :src="l.avatar" :alt="l.name" class="leader-avatar" />
+            <img :src="l.avatar" :alt="shownName(l)" class="leader-avatar" />
           </div>
 
           <!-- 信息区 -->
           <div class="leader-body">
-            <h2 class="leader-name">{{ l.name }}</h2>
+            <h2 class="leader-name">{{ shownName(l) }}</h2>
             <p class="leader-class">{{ l.class }}</p>
             <p class="leader-message">{{ l.message }}</p>
 
-            <!-- 成就标签 -->
+            <!-- 成就标签：比赛战绩（三种显示模式，会长 2026-09-23）在前，手写荣誉在后；
+                 均按类型分色。顺序与模式都在 <HonorTags> 里 —— 与优秀成员页共用。 -->
             <div class="achievement-tags">
-              <span v-for="a in l.achievements" :key="a" class="ach-tag">{{
-                a
-              }}</span>
+              <HonorTags
+                :person="l"
+                :records="records"
+                :honors="l.achievements"
+                :duties="dutyOf(l)"
+                :view="honorView"
+              />
             </div>
           </div>
         </article>
@@ -176,6 +214,10 @@ const { skeletons } = useSkeleton(5);
   color: var(--text-muted);
 }
 
+/* ── 页面命令区与明细模式的奖牌 emoji ──
+   `.page-toolbar` 与 `.medal-emoji` 已移到 styles/honors.css：后者标的是
+   <HonorTags> 渲染的节点，写在本文件的 scoped 块里匹配不到（只会静默失效）。 */
+
 .hint {
   text-align: center;
   color: var(--text-muted);
@@ -187,10 +229,15 @@ const { skeletons } = useSkeleton(5);
   margin: 0 auto;
 }
 
-/* ── 双列布局 ── */
+/* ── 双列等高行 ──
+   负责人页刻意【不用】瀑布流（与优秀成员页相反）：这里只有 6 张卡、2 列，
+   同一行的两张卡必须上下边对齐 —— 靠 grid 默认的 align-items: stretch 把矮卡
+   拉到本行最高那张的高度，多出来的空白留在卡片底部（胶囊仍紧跟寄语，不贴底），
+   所以本页不要引 useMasonry。口径见 README「两个页面的卡片排布」节。 */
 .leader-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
   gap: var(--space-xl);
 }
 
@@ -251,12 +298,9 @@ const { skeletons } = useSkeleton(5);
   );
   opacity: 0;
   transition: opacity var(--transition-slow);
-  animation: ring-spin 4s linear infinite;
-}
-@keyframes ring-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  /* 与优秀成员页 .photo-ring 同一个 @keyframes（在 styles/base.css）；
+     时长原先这里是 4s、那边 5s —— 审查发现的无意漂移，现统一 5s。 */
+  animation: ring-spin 5s linear infinite;
 }
 .leader-card:hover .avatar-ring {
   opacity: 0.3;
@@ -309,27 +353,17 @@ const { skeletons } = useSkeleton(5);
   overflow: hidden;
 }
 
-/* ── 成就标签 ── */
+/* ── 成就标签 ──
+   标签本身的几何与配色、以及卡片 hover 时加深，都在 styles/honors.css
+   （与优秀成员页共用同一条 hover 规则）；这里只管排布。
+   **不要**在这个文件里再写 .honor-tag 的颜色或 hover：标签由 <HonorTags> 渲染，
+   scoped 选择器带 [data-v-*]、匹配不到子组件的元素。 */
 .achievement-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
-}
-.ach-tag {
-  display: inline-block;
-  padding: 3px 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: rgba(26, 115, 232, 0.06);
-  border: 1px solid rgba(26, 115, 232, 0.1);
-  border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
-}
-.leader-card:hover .ach-tag {
-  background: rgba(26, 115, 232, 0.1);
-  border-color: rgba(26, 115, 232, 0.2);
+  /* 紧跟寄语（.leader-message 自带 margin-bottom: var(--space-md)），不顶到卡片底部
+     —— 原因同优秀成员页 .honor-tags。 */
 }
 
 /* ── 响应式 ── */

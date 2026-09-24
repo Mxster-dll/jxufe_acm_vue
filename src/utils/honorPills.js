@@ -1,0 +1,576 @@
+/**
+ * 比赛战绩胶囊：从站点的 awards 数据（public/data/awards/*.json）聚合出每人的奖牌摘要。
+ *
+ * 为什么要有它：「优秀成员」「协会负责人」两页原先手写 ICPC / CCPC / 天梯赛 /
+ * 蓝桥杯的荣誉条目，比赛一多就得手工维护、还容易漏。现在直接从 awards/<file>.json
+ * 汇总成一枚枚「xCPC 区域赛🥈2🥉1」式的胶囊，数据一更新页面自动跟上。
+ *
+ * 【与 PR #12 那版的区别】旧版读 /data/editions/<slug>/<year>.json 与 /data/baidu.json，
+ * 那两处在主仓库的新数据层（e5da23a）里已被删除，取数会 404 —— 本文件是照新数据层重写的。
+ * 字段映射（2026-09 逐一实测对账，见下）：
+ *   edition.year          → 有 session 用 competitions.json 的 sessions 反查年份，否则 date 前四位
+ *   team.members 顿号串    → members[] 姓名数组
+ *   award 中文文本         → medal_type（grand/gold/silver/bronze，已结构化）+ medal_level
+ * 行数对账（新层 vs 旧 editions，**迁移当时**的快照）：icpc 32 = 32；ccpc 45 = 旧 43 + 新层
+ * 多出的 2 条 2026-05-24 江西省赛 provincial 行；gplt/lanqiao/baidu 见各节注释。
+ * ⚠ 上面那个 ccpc 45 已经不成立了：当前是 **44**（`fa4fcf1 fix(awards): 口径改为「以源为准」
+ * + 删掉重复的长春那条` 删掉了一行重复记录）。行数随数据维护变动，**以 `npm run data:check`
+ * 打印的为准**，别把这里的数字当断言用。
+ *
+ * 口径（2026-09 与会长逐条裁定，改动前先问）：
+ *  - 四个系列：xCPC（ICPC + CCPC 合并）/ 天梯赛 / 百度之星 / 蓝桥杯。
+ *    **chuanzhi.json 有意不汇总**：该文件当前为空，且传智杯的荣誉一直是手写条目；
+ *    若将来它有了数据，加进 AWARD_FILES 之前先确认手写条目的去留，否则会重复显示。
+ *  - xCPC 的「区域赛 / 邀请赛 / 省赛」**同属一枚胶囊**（2026-09-23 会长裁定：原先省赛
+ *    单独成枚，现合并；三段各自是一个折行单位，见 recordsToPillParts）
+ *  - **一切以 awards 数据为准**（会长 2026-09-24 裁定，取代先前的「暨X省赛各计一次」）：
+ *    「暨江西省赛」那种一场两赛的比赛**不再按赛事名自动补一枚省赛** —— 队伍到底有没有
+ *    拿省赛奖，只看数据里有没有 `medal_level: 'provincial'` 那一行。实测：icpc 的 6 条
+ *    南昌行（2025-05-18）只有 invitational，源里那 6 队也确实没进省赛池；而 CCPC
+ *    2026-05-24 南昌同队同日**各有两条**（invitational + provincial），两枚都计。
+ *  - **省赛段只认江西省赛**（会长 2026-09 裁定）：其他省的省赛 / 区赛（广东、河南、
+ *    广西、山东、吉林、东北、湖北、福建、河北、贵州…）不计入省赛段，只计邀请赛。
+ *  - 天梯赛：团体（只统计国赛团队奖；分省团队奖**不要** —— 会长 2026-09-24 明示「我不需要
+ *    分省团队奖的数据」，且源里 provincial.teams[] 只有队名 + 奖项、没有成员名单）/ 个人
+ *  - 天梯赛的「省赛」段 = **省内个人名次**（2026-09-24 新增，会长要的那个「省冠军」）：
+ *    官方分省名单只有高校奖与团队奖、**没有个人奖**，故省内名次是**推算**的 ——
+ *    awards 的 `province_rank`（全国名单的逐人成绩 + 分省名单反推学校归属，
+ *    推法见工作区 `.tmp/ref/jiangxi-individual-rank.mjs`）。**只在省内前三时才成段**：
+ *    106 条记录里 90 条落在同分并列块里，全列出来只会变成「省赛#37」这种噪声。
+ *    实测全库 3 人 —— 2025 黄亦诚（省内 1，276 分）、2025 石翰林（省内 3~4）、
+ *    2026 钟明皓（省内 1~6，6 人同分 256）；明细显示「🏆第10届天梯赛江西省个人冠军」。
+ *  - 百度之星：决赛（medal_level=national）→ 国赛、初赛（provincial）→ 省赛
+ *  - 优秀奖不计入任何奖牌数（新 awards 层根本不收优秀奖，天然满足；旧层是数据源保留、
+ *    展示层过滤 —— 效果相同，但数据里「有没有」变了，这是有意的）
+ *  - CCPC 女生专场不并进计数分段，按「2021 CCPC女生专场 铜牌」单独列一条
+ *  - **特等奖（grand）是独立一档**（2026-09 会长裁定）：单独计数、前面显示 🏆，
+ *    不并入金牌；分值见 honorRanking.js 的 MEDAL_BASE.grand。全站当前只有一条
+ *    （第五届蓝桥杯国赛 陈天楚），是 e5da23a 建新数据层时按「一等/二等/三等」映射
+ *    丢掉的，已用 PR #13 补回并加了校验白名单。
+ *  - **冠亚季军也进 🏆 桶**（会长 2026-09-24 裁定）：「个人荣誉统计时，要把各比赛的
+ *    冠亚季军算进去，并且在计数或者图标显示模式时，也要显示奖杯的 icon」——
+ *    判据是 contestTaxonomy 的 isTrophyRank(row.rank)（rank 1/2/3），与大事记卡片
+ *    右上角的角标同一条规则。当前全库命中 39 条 / 33 人，全部是蓝桥杯省赛的
+ *    rank 1/2/3（省赛组别第一名等）。
+ *    **三种模式都有**：计数与图标模式换桶（🏆1 / 🏆）；明细模式那一条以名次代替奖牌
+ *    说法 —— 显示为「🏆 第12届蓝桥杯 C++·B组省赛冠军」（会长 2026-09-24 定稿格式，
+ *    档位让位给名次，不再是「…省赛一等奖（冠军）」）。
+ *    唯一不跟的是**综合分**：它仍按真实奖牌算（冠军手里拿的是金牌，不是特等奖），
+ *    要不要给名次加成见 honorRanking.js 的 RANK_MULTIPLIER（当前只对手写文本生效）。
+ *  - 同一场团队奖，队内每人各计一枚（这正是「🥈2」的含义）
+ *  - 零奖牌的档位不显示（如「区域赛🥈2🥉1」里没有 🥇）
+ */
+
+import {
+  AWARD_FILES,
+  COMPETITION_OF_FILE,
+  FAMILY_LABELS,
+  FAMILY_OF_FILE,
+  FAMILY_ORDER,
+  GIRLS_RE,
+  isTrophyRank,
+  JIANGXI_RE,
+  MEDAL_EMOJI,
+  MEDAL_ORDER,
+  PERSONAL_FILES,
+  SEGMENT_ORDER,
+  TROPHY_LABEL,
+} from './contestTaxonomy.js'
+
+export { FAMILY_LABELS }
+
+const DATA_ROOT = '/data'
+
+/* 档位 / 系列 / awards 文件这几张表都在 contestTaxonomy.js（单一真源，别在本文件再抄一份）。
+   这里只留**措辞**：xcpc 与百度之星用「金/银/铜牌」，蓝桥杯与天梯赛用官方「一/二/三等奖」
+   —— 按赛事分家是会长 2026-09 的裁定（见下 medalTextOf 与 MEDAL_TEXT_RANK）。 */
+const MEDAL_TEXT = { grand: '特等奖', gold: '金牌', silver: '银牌', bronze: '铜牌' }
+
+/**
+ * 手工兜底：站点数据里查不到的人（昵称），由人工折算。
+ * vesper：CCPC湘潭邀请赛铜牌 → 邀请赛🥉1；江西省大学生程序设计大赛一等奖 → 省赛🥇1
+ *
+ * 注意「不愿透露姓名」与「查不到」是两件事（2026-09 会长裁定）：前者只是**显示**匿名 ——
+ * 数据里照样写实名（members.json / leaders.json 的 `name`，本文件与排名都按它匹配），
+ * 另给一个 `displayName` 决定页面显示什么。所以有真名的人一律不进这张表。
+ */
+export const MANUAL_PILLS = {
+  // 每枚胶囊是**分段数组**（与 recordsToPillParts 同一形状）：省赛与邀请赛同枚、
+  // 各自是一个折行单位（会长 2026-09-23 把 xCPC 省赛并回同枚）。
+  // 系列名只写在第一段上，避免折行后第二段孤零零出现「xCPC 省赛」。
+  vesper: [['xCPC 邀请赛🥉1', '省赛🥇1']],
+}
+
+/** CCPC 女生专场与「只认江西省赛」两条判据见 contestTaxonomy.js 的 GIRLS_RE / JIANGXI_RE */
+const zeroCounts = () => Object.fromEntries(MEDAL_ORDER.map((m) => [m, 0]))
+
+/** 队内成员串（「万俊哲、张云菲、衷铭川」）→ 姓名数组；新数据层已是数组，这里只兜底 */
+const splitMembers = (text) =>
+  Array.isArray(text)
+    ? text.map((s) => String(s).trim()).filter(Boolean)
+    : String(text || '')
+        .split(/[、,，/]+/)
+        .map((s) => s.trim())
+        .filter(Boolean)
+
+/**
+ * 团队奖落到哪个分段 —— **一条记录只落一段**，与数据一一对应。
+ * 只看结构化的 medal_level（不再靠中文正则猜档位），唯一例外是「女生专场」——
+ * 它在数据里同样是 provincial，必须先按赛事名挑出来单列，否则会混进省赛桶。
+ * 返回空数组 = 这条不计入任何分段（非江西的省赛 / 区赛）。
+ * ⚠ 别再加回「暨X省赛的邀请赛同时落进省赛段」：那是替数据做主。会长 2026-09-24 裁定
+ *   「以源为准」—— 有没有省赛奖，看数据里有没有那一行（旧的 jiangxiProvincialKeys
+ *   去重补丁随之删除）。
+ */
+export function teamSegments(family, row) {
+  const name = String(row?.competition_name || '')
+  if (family === 'gplt') return ['团体']
+  if (GIRLS_RE.test(name)) return ['girls']
+  if (row?.medal_level === 'provincial') return JIANGXI_RE.test(name) ? ['省赛'] : []
+  if (row?.medal_level === 'invitational') return ['邀请赛']
+  return ['区域赛']
+}
+
+/**
+ * 个人奖落到哪个分段。天梯赛个人 / 蓝桥杯 / 百度之星各有自己的两档。
+ * 天梯赛个人奖在数据里全是 national，故直接归「个人」。
+ * 只在本文件内部用（collectRecords），不对外导出。
+ */
+function personalSegments(family, row) {
+  if (family === 'gplt') {
+    /* 天梯赛个人奖在数据里全是 national，故归「个人」；**省内前三（冠亚季军）另起一段「省赛」**
+       —— 会长 2026-09-24：黄亦诚 2025 第十届是江西省个人第一名（276 分）。
+       省内名次官方不公布，是推算出来的（province_rank，推算方法见工作区
+       `.tmp/ref/jiangxi-individual-rank.mjs`：全国名单的逐人成绩 + 分省名单的学校归属）。
+       只在 ≤3 时单列：106 条记录里 90 条都是同分并列块，全列出来会变成「省赛#37」这种噪声。*/
+    return isTrophyRank(row?.province_rank) ? ['个人', '省赛'] : ['个人']
+  }
+  if (family === 'lanqiao' || family === 'baidu') {
+    return [row?.medal_level === 'national' ? '国赛' : '省赛']
+  }
+  return []
+}
+
+/**
+ * 该记录在**本分段**里可比的名次 —— 决定 🏆 桶与「冠军/亚军/季军」文案（recordsToPillParts /
+ * recordsToDetails 都用它）。名次只在同一比较范围内可比，所以按段分开取：
+ *   · 省赛段：天梯赛用省内个人名次 province_rank（推算）；xCPC 用省赛组内名次
+ *     rank_provincial（只在 medal_level === 'provincial' 那条上有值）——
+ *     全场总排名对省赛段没有意义，别拿 row.rank 顶替。
+ *   · 其余段：row.rank（xCPC 是队伍总排名、蓝桥杯/百度之星是组内名次、天梯赛是全国名次）。
+ */
+function segmentRankOf(family, row, segment) {
+  const int = (v) => (Number.isInteger(Number(v)) && Number(v) > 0 ? Number(v) : null)
+  if (segment === '省赛') {
+    if (family === 'gplt') return int(row?.province_rank)
+    if (family === 'xcpc' && row?.medal_level === 'provincial') return int(row?.rank_provincial) ?? int(row?.rank)
+  }
+  return int(row?.rank)
+}
+
+/** 年份：优先 session 反查（届次是这三个系列的权威标识），缺失时退回 date 前四位 */
+function yearOf(row, sessionToYear) {
+  const bySession = sessionToYear?.[row?.session]
+  if (bySession) return String(bySession)
+  if (row?.date) return String(row.date).slice(0, 4)
+  return ''
+}
+
+/**
+ * 排序用的日期（会长 2026-09-23 要求明细模式按时间顺序排）。
+ * 绝大多数记录带完整 date，直接用；没有日期的只有蓝桥杯省赛 ——
+ * 全库省赛一条日期都没有（有日期的全是国赛，422 条省赛全空），
+ * 旧数据源（scripts/source/editions/lanqiao/）同样只到「届 → 年」，无处可补，
+ * 故退回该年 1 月 1 日：同届省赛（春）自然排在国赛（初夏）之前，也不会跨到相邻届去。
+ */
+function sortDateOf(row, year) {
+  if (row?.date) return String(row.date)
+  return year ? `${year}-01-01` : ''
+}
+
+/** competitions.json → { slug: { session: year } }（sessions 是 year→session，这里反过来） */
+function sessionYearTable(competitions = []) {
+  const table = {}
+  for (const comp of competitions) {
+    const reverse = {}
+    for (const [year, session] of Object.entries(comp?.sessions || {})) reverse[session] = year
+    table[comp?.slug] = reverse
+  }
+  return table
+}
+
+/** 奖牌说法按赛事官方口径分开（会长 2026-09-23）：
+    xCPC 与百度之星写金/银/铜，蓝桥杯与天梯赛写一等/二等/三等 —— 后两个赛事官方就这么叫，
+    明细模式照抄官方说法，别把「省赛一等奖」硬翻成「省赛金牌」。 */
+const MEDAL_TEXT_RANK = { grand: '特等奖', gold: '一等奖', silver: '二等奖', bronze: '三等奖' }
+const RANK_TEXT_FAMILIES = new Set(['lanqiao', 'gplt'])
+
+function medalTextOf(family, medal) {
+  return (RANK_TEXT_FAMILIES.has(family) ? MEDAL_TEXT_RANK : MEDAL_TEXT)[medal] || ''
+}
+
+/**
+ * 「ICPC亚洲区域赛 南京站」→「ICPC 亚洲区域赛（南京）」「CCPC全国赛 绵阳站」→「CCPC 全国赛（绵阳）」
+ * 会长 2026-09-23 的排版要求：站名一律写成括号；ICPC / CCPC 字样前后要有空格。
+ * 数据里两种写法并存（区域赛用「xx站」、邀请赛已带「（xx）」），所以只做这两件必要的事：
+ *   · 末尾「xx站」搬进括号 —— 字符类排除空白，所以只会圈住站名前那一小段，不会把整个赛名吞进去；
+ *   · 给 ICPC / CCPC 前后补空格，再收敛多余空白。
+ */
+function formatXcpcName(name) {
+  return String(name)
+    .replace(/\s*([^\s（()]+?)站$/, '（$1）')
+    .replace(/\s*(ICPC|CCPC)\s*/g, ' $1 ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * 明细模式（会长 2026-09-23 第 3 种视图）要的那句人话标题，例：第45届 ICPC 亚洲区域赛（南京）。
+ *
+ * 届数从哪来：
+ *   · xcpc —— awards 里没有届数，只能按工作区 AGENTS.md 的赛季规则从日期推：
+ *       赛季判定：比赛月份 ≥ 9 月 → (年)-(年+1)，否则 (年-1)-(年)；
+ *       ICPC 届数 = 赛季止年 − 1976；CCPC 届数 = 赛季起年 − 2014。
+ *     icpc 与 ccpc 混在同一个 family 里，靠 competition_name 里有没有 CCPC 区分。
+ *   · gplt / lanqiao / baidu —— 数据里直接带 session（届数），但没有赛事全名，按字段拼。
+ * 奖牌那半截不在这里，由 medalTextOf() 追加（见 recordsToDetails）。
+ */
+function xcpcEdition(row) {
+  const date = String(row?.date || '')
+  const year = Number(date.slice(0, 4))
+  const month = Number(date.slice(5, 7))
+  if (!year || !month) return ''
+  const isCcpc = /CCPC/i.test(String(row?.competition_name || ''))
+  const seasonStart = month >= 9 ? year : year - 1
+  const edition = isCcpc ? seasonStart - 2014 : seasonStart + 1 - 1976
+  return edition > 0 ? `第${edition}届` : ''
+}
+
+function detailTitle(family, row, segment) {
+  const name = String(row?.competition_name || '')
+  if (family === 'xcpc') return `${xcpcEdition(row)} ${formatXcpcName(name)}`.trim()
+
+  const edition = row?.session ? `第${row.session}届` : ''
+  // 天梯赛 —— 「第6届天梯赛个人国家级三等奖」：团体/个人 + 国家级/省级
+  if (family === 'gplt') {
+    // 省赛段承载的是「省内个人名次」这一件事，与国家级奖牌无关，说法单独给：
+    // 明细拼出来是「🏆第10届天梯赛江西省个人冠军」（奖牌那半截由 recordsToDetails 追加）
+    if (segment === '省赛') return `${edition}天梯赛江西省个人`
+    const level = row?.medal_level === 'provincial' ? '省级' : '国家级'
+    return `${edition}天梯赛${segment}${level}`
+  }
+  // 蓝桥杯 —— 「第14届蓝桥杯 C++·B组省赛一等奖」：科目·组别 + 国赛/省赛
+  //   注意 group 本身就可能是「研究生组」，直接补「组」会变成「研究生组组」。
+  if (family === 'lanqiao') {
+    const group = String(row?.group || '')
+    const subject = [String(row?.language || ''), group && (group.endsWith('组') ? group : `${group}组`)]
+      .filter(Boolean)
+      .join('·')
+    const level = row?.medal_level === 'national' ? '国赛' : '省赛'
+    return `${edition}蓝桥杯${subject ? ` ${subject}` : ''}${level}`
+  }
+  if (family === 'baidu') {
+    return `${edition}百度之星${row?.medal_level === 'national' ? '国赛' : '省赛'}`
+  }
+  return `${edition}${name}`.trim()
+}
+
+/**
+ * 把 awards 数据展平成「姓名 → 获奖记录」。
+ * @param {{ awards?: { [file: string]: object[] }, competitions?: object[] }} sources
+ * @returns {Map<string, {family: string, segment: string, medal: string, year: string, award: string}[]>}
+ */
+export function collectRecords({ awards = {}, competitions = [] } = {}) {
+  const sessionYears = sessionYearTable(competitions)
+  const index = new Map()
+  const push = (name, record) => {
+    if (!name) return
+    if (!index.has(name)) index.set(name, [])
+    index.get(name).push(record)
+  }
+
+  for (const file of AWARD_FILES) {
+    const family = FAMILY_OF_FILE[file]
+    const rows = awards[file] || []
+    const bySession = sessionYears[COMPETITION_OF_FILE[file]] || {}
+
+    for (const row of rows) {
+      const medal = row?.medal_type
+      // 优秀奖与未知档位一律不计（新层里优秀奖根本不收，这里是纵深防御）
+      if (!MEDAL_EMOJI[medal]) continue
+      const year = yearOf(row, bySession)
+      const segments = PERSONAL_FILES.has(file)
+        ? personalSegments(family, row)
+        : teamSegments(family, row)
+      const members = splitMembers(row?.members)
+      if (!members.length) continue
+
+      for (const segment of segments) {
+        const rank = segmentRankOf(family, row, segment)
+        for (const name of members) {
+          push(name, {
+            family,
+            segment,
+            medal,
+            year,
+            date: sortDateOf(row, year),
+            award: String(row.competition_name || ''),
+            title: detailTitle(family, row, segment),
+            medalText: medalTextOf(family, medal),
+            // 名次（awards 的 `rank` / `rank_provincial` / `province_rank`，**按分段取**，
+            // 见 segmentRankOf）。胶囊计数与综合分都**不看它**（奖牌档位是另一件事，
+            // 冠军队照样拿金牌）；它只决定 🏆 桶与「冠军/亚军/季军」文案，
+            // 判据统一用 contestTaxonomy 的 isTrophyRank()。
+            rank,
+          })
+        }
+      }
+    }
+  }
+
+  return index
+}
+
+/** 「区域赛🥈2🥉1」——零奖牌的档位不写；特等奖排在金牌之前。
+    mode = 'icons' 时改写成「区域赛🥈🥈🥉」，每块奖牌各占一个图标（会长 2026-09-23 第 2 种视图）。 */
+function segmentText(segment, counts, mode = 'count') {
+  const medals = MEDAL_ORDER.filter((m) => counts[m] > 0)
+    .map((m) => (mode === 'icons' ? MEDAL_EMOJI[m].repeat(counts[m]) : MEDAL_EMOJI[m] + counts[m]))
+    .join('')
+  return medals ? segment + medals : ''
+}
+
+/**
+ * 一个人的获奖记录 → 胶囊的**分段数组**：一枚胶囊 = 一个数组，数组元素是它的各个部分。
+ * 分段是给页面折行用的（会长 2026-09-23）：页面把每段渲染成一个 flex 子项，
+ * 胶囊需要换行时便只在「区域赛 / 邀请赛 / 省赛」这样的部分之间折，
+ * 不会从「区域赛🥈2」当中断开。要整串文本的地方（头像墙标签、核验脚本）用 recordsToPills()。
+ * 顺序：xCPC 区域赛/邀请赛/省赛（同属一枚） → 天梯赛 → 百度之星 → 蓝桥杯 → 女生专场。
+ * @param {object[]} records
+ * @param {'count'|'icons'|'detail'} mode 见 utils/honorView.js
+ * @returns {string[][]}
+ */
+export function recordsToPillParts(records = [], mode = 'count') {
+  if (mode === 'detail') {
+    return recordsToDetails(records).map((d) => [d.emoji + d.title + d.medalText])
+  }
+
+  /* 系列清单只有一份：contestTaxonomy.js 的 FAMILY_ORDER（原先这里手抄了第二份键集，
+     加系列要改两处；2026-09-24 改为派生）。'girls' 不是系列、单独走下面的 girls 桶。 */
+  const counts = Object.fromEntries(FAMILY_ORDER.map((f) => [f, {}]))
+  const girls = []
+
+  for (const r of records) {
+    if (r.segment === 'girls') {
+      girls.push(r)
+      continue
+    }
+    const bySegment = counts[r.family]
+    if (!bySegment) continue
+    if (!bySegment[r.segment]) bySegment[r.segment] = zeroCounts()
+    const bucket = bySegment[r.segment]
+    /* 冠亚季军（rank 1/2/3）与特等奖**同桶**，都显示 🏆 —— 会长 2026-09-24 裁定：
+       「个人荣誉统计时，要把各比赛的冠亚季军算进去，并且在计数或者图标显示模式时，
+       也要显示奖杯的 icon」。与大事记卡片右上角的角标同一条规则
+       （scripts/gen_event_badges.mjs 里也是 isTrophyRank(row.rank) ? 'grand' : row.medal_type）。
+       ⚠ 只影响**计数 / 图标**两种模式的桶；明细模式与综合分仍用真实奖牌
+       （冠军手里拿的是金牌，不是特等奖 —— 别把 grand 写回 r.medal）。 */
+    const key = isTrophyRank(r.rank) ? 'grand' : r.medal
+    if (bucket[key] === undefined) continue
+    bucket[key] += 1
+  }
+
+  const pills = []
+  for (const family of FAMILY_ORDER) {
+    const bySegment = counts[family]
+    if (!Object.keys(bySegment).length) continue
+    const parts = SEGMENT_ORDER[family]
+      .map((segment) => (bySegment[segment] ? segmentText(segment, bySegment[segment], mode) : ''))
+      .filter(Boolean)
+    if (!parts.length) continue
+    // 系列名与第一段绑成一个折行单位：窄卡片折行时不会留下孤零零一行「xCPC」
+    parts[0] = `${FAMILY_LABELS[family]} ${parts[0]}`
+    pills.push(parts)
+  }
+  // 女生专场：按年份列出具体记录，不做奖牌计数
+  for (const r of girls.slice().sort((a, b) => String(a.year).localeCompare(String(b.year)))) {
+    pills.push([`${r.year} CCPC女生专场`, r.medalText || MEDAL_TEXT[r.medal]])
+  }
+  return pills
+}
+
+/** 与 recordsToPillParts 同源，把每枚胶囊拼回整串文本（头像墙标签、核验脚本用这个）。 */
+export function recordsToPills(records = [], mode = 'count') {
+  return recordsToPillParts(records, mode).map((parts) => parts.join(' '))
+}
+
+/**
+ * 明细模式：一条记录一项，带上赛事全名与奖牌，供页面按结构化数据渲染。
+ * 例：🥇第45届 ICPC 亚洲区域赛（南京）金牌 / 🥇第14届蓝桥杯 C++·B组省赛一等奖
+ *   emoji 单独给一份（会长 2026-09-23 要求每条前面挂一个奖牌 emoji）；
+ *   奖牌文字**不着色** —— 底色已经说明档位，段内再换颜色会把整条胶囊的色彩打乱；
+ *   奖牌说法按赛事分（medalText 在建记录时就定好，见 medalTextOf）。
+ *
+ * **同名赛事撞车时补段名（会长 2026-09-23 报的现象）**：同一支队在同一场比赛里
+ * 既拿邀请赛又拿省赛（「CCPC 全国邀请赛（南昌）暨江西省赛」），两条记录的
+ * `competition_name` 是同一串，逐条列出来就是同一行写两遍。此时给标题补上段名
+ * （·邀请赛 / ·省赛）把两条区分开；**只有真撞车的那一组**会被改，其余一个字不动。
+ *
+ * **按时间降序排（会长 2026-09-23 定稿）**：最新的一条在最前面。原先按赛事分组
+ * （xCPC → 天梯赛 → 百度之星 → 蓝桥杯），同一赛事内再按年份，读起来是「按比赛分堆」
+ * 而不是一条时间线；现在第一排序键就是日期，赛事与奖牌降级为**同日并列时的次序**
+ * （同一天拿的团队奖/个人奖仍挨在一起、按赛事既定顺序，同一天同赛事的奖牌按 特等→金→银→铜）。
+ * 要改成「最旧在前」，把第一比较键换成 `String(a.date).localeCompare(String(b.date))` 即可。
+ * @returns {{title: string, medal: string, medalText: string, emoji: string, year: string, date: string, family: string, segment: string}[]}
+ */
+export function recordsToDetails(records = []) {
+  const familyRank = Object.fromEntries(FAMILY_ORDER.map((f, i) => [f, i]))
+  const list = records
+    .filter((r) => r?.title && (r.medalText || MEDAL_TEXT[r.medal]))
+    .map((r) => {
+      /* 冠亚季军这条明细**以名次代替奖牌说法**（会长 2026-09-24 定稿格式）：
+           🏆 第12届蓝桥杯 C++·B组省赛冠军
+         而不是「…省赛一等奖（冠军）」—— 冠军就是这一条的身份，档位让位给它。
+         判据与计数 / 图标两个模式的 🏆 桶同源（isTrophyRank），三处永远一致。 */
+      const trophy = isTrophyRank(r.rank) ? TROPHY_LABEL[r.rank] : ''
+      return {
+        title: r.title,
+        medal: r.medal,
+        medalText: trophy || r.medalText || MEDAL_TEXT[r.medal],
+        emoji: trophy ? MEDAL_EMOJI.grand : MEDAL_EMOJI[r.medal],
+        year: r.year,
+        date: r.date || '',
+        rank: r.rank ?? null,
+        family: r.family,
+        segment: r.segment || '',
+      }
+    })
+
+  /* 撞车分两层，先算两张表再一次性补后缀（只看**确实撞车**的那一组，其余一个字符都不动）：
+       ① 同一场比赛既拿邀请赛又拿省赛 → 标题与奖牌一模一样，两条只差 segment；
+       ② 再撞就是同一个赛季里同名的比赛办了两次 —— 例：CCPC 南昌邀请赛 2025-09-13 与
+          2026-05-24 属于同一个赛季（CCPC 赛季跨年），届数都是第 11 届，标题仍然一样，
+          这时只有日期能区分。
+     ⚠ 不要拿「标题里是否已有段名」当守卫：撞车的标题本身写着「暨江西省赛」，
+        '省赛' 与 '邀请赛' 都是它的子串，守卫会把两条都拦下 —— 等于没修（踩过）。 */
+  const countBy = (keyOf) => {
+    const m = new Map()
+    for (const d of list) m.set(keyOf(d), (m.get(keyOf(d)) || 0) + 1)
+    return m
+  }
+  const byTitleMedal = countBy((d) => `${d.title}|${d.medalText}`)
+  const byTitleMedalSeg = countBy((d) => `${d.title}|${d.medalText}|${d.segment}`)
+  for (const d of list) {
+    if ((byTitleMedal.get(`${d.title}|${d.medalText}`) || 0) <= 1) continue
+    const stillSame = (byTitleMedalSeg.get(`${d.title}|${d.medalText}|${d.segment}`) || 0) > 1
+    const bits = [d.segment, stillSame ? d.date : ''].filter(Boolean)
+    if (bits.length) d.title = `${d.title}（${bits.join('·')}）`
+  }
+
+  return list.sort(
+    (a, b) =>
+      String(b.date).localeCompare(String(a.date)) ||
+      (familyRank[a.family] ?? 9) - (familyRank[b.family] ?? 9) ||
+      MEDAL_ORDER.indexOf(a.medal) - MEDAL_ORDER.indexOf(b.medal)
+  )
+}
+
+/** 手工兜底那几条是写死的「🥉1」文本，图标模式下同样要摊开成「🥉」 */
+const expandMedalCounts = (text) =>
+  String(text).replace(/([\u{1F3C6}\u{1F947}\u{1F948}\u{1F949}])(\d+)/gu, (_, emoji, n) =>
+    emoji.repeat(Number(n))
+  )
+
+/**
+ * 页面用：某人的**分段**胶囊（两个页面都用这份）。
+ * 自动汇总为主，一条记录都没有才退回 MANUAL_PILLS 的分段；支持按显示模式切换
+ * （会长 2026-09-23）。要整串文本的地方（头像墙标签、核验脚本）用 recordsToPills()。
+ * @param {Map<string, object[]>} records loadHonorRecords() 的返回值
+ * @returns {string[][]}
+ */
+export function pillPartsForName(records, name, mode = 'count') {
+  const parts = recordsToPillParts(records?.get?.(name) || [], mode)
+  if (parts.length) return parts
+  return (MANUAL_PILLS[name] || []).map((segs) =>
+    mode === 'icons' ? segs.map(expandMedalCounts) : [...segs]
+  )
+}
+
+/** 记录索引 → 「姓名 → 胶囊文本数组」，并补上手工兜底（只在自动汇总没有该 key 时写入） */
+function pillsFromRecords(records) {
+  const pills = new Map()
+  for (const [name, list] of records) {
+    const texts = recordsToPills(list)
+    if (texts.length) pills.set(name, texts)
+  }
+  for (const [name, list] of Object.entries(MANUAL_PILLS)) {
+    if (!pills.has(name)) pills.set(name, list.map((parts) => parts.join(' ')))
+  }
+  return pills
+}
+
+/**
+ * 纯函数：数据 → 「姓名 → 胶囊文本数组」。核验脚本与页面共用同一份逻辑。
+ * @param {{ awards?: object, competitions?: object[] }} sources
+ */
+export function buildHonorPills({ awards = {}, competitions = [] } = {}) {
+  return pillsFromRecords(collectRecords({ awards, competitions }))
+}
+
+async function fetchJson(url) {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`${url} HTTP ${res.status}`)
+  return res.json()
+}
+
+/** 上一次加载里没取到的数据文件（空数组 = 全都读到了）。排查与测试用它。 */
+export const missingHonorSources = []
+
+/** 取不到就返回 null 并**记下来**（而不是静默吞掉）—— 见下面 loadHonorRecords 的说明。 */
+async function fetchJsonSoft(url, label) {
+  try {
+    return await fetchJson(url)
+  } catch (err) {
+    missingHonorSources.push({ url, label, message: String((err && err.message) || err) })
+    return null
+  }
+}
+
+let recordsCache = null
+
+/**
+ * 加载并缓存「姓名 → 获奖记录」原始索引。
+ * 排名（honorRanking.js）与胶囊共用这一份缓存，整站只请求一次。
+ * 任何一份数据取不到都只影响对应赛事，不会让页面报错 —— 但**必须留下信号**：
+ * 原先逐文件 `.catch(() => [])` 连一行日志都没有，结果是「某个系列在胶囊与排名里
+ * 凭空消失」在页面上完全看不出来（2026-09-24 审查）。现在失败的文件会攒进
+ * missingHonorSources 并在这里统一 warn 一条（一次说清缺了哪几份）。
+ */
+export function loadHonorRecords() {
+  if (!recordsCache) {
+    missingHonorSources.length = 0
+    recordsCache = Promise.all([
+      fetchJsonSoft(`${DATA_ROOT}/competitions.json`, 'competitions.json（赛事元信息）'),
+      Promise.all(
+        AWARD_FILES.map((file) => fetchJsonSoft(`${DATA_ROOT}/awards/${file}.json`, `awards/${file}.json`))
+      ),
+    ])
+      .then(([competitions, sets]) => {
+        if (missingHonorSources.length) {
+          console.warn(
+            `[honorPills] ${missingHonorSources.length} 份战绩数据没读到，对应系列的胶囊与排名会缺失：` +
+              missingHonorSources.map((m) => `${m.label} —— ${m.message}`).join('；')
+          )
+        }
+        return collectRecords({
+          competitions: competitions || [],
+          awards: Object.fromEntries(AWARD_FILES.map((file, i) => [file, sets[i] || []])),
+        })
+      })
+      .catch((err) => {
+        console.error('比赛战绩数据加载失败:', err)
+        return new Map()
+      })
+  }
+  return recordsCache
+}

@@ -19,15 +19,42 @@
  *
  * medal_type 取值：gold / silver / bronze；lanqiao 另允许 grand（特等奖，
  * 只有第五届国赛 陈天楚 这一条）。grand 与金/银/铜并列展示，不并入一等奖。
+ *
+ * 名次字段（2026-09-24 新增，**可选**，规范位置一律紧跟 medal_type）：
+ *   rank          单一数字名次。**语义随赛事不同**：xCPC 是队伍名次、
+ *                 蓝桥杯/百度之星是选手在本组别内的名次。作用域见下面的 rankScope。
+ *   rank_official xCPC 专有：正式队排名（源里 rankOfficial）。rank 取总排名。
+ *   rank_provincial xCPC 专有：「暨江西省赛」场的**省赛组内名次**（源里按省赛分组重算），
+ *                 只写在 medal_level === 'provincial' 那条上 —— 同一支队伍当天有
+ *                 邀请赛 + 省赛两条记录，全场总排名两条都成立，组内名次只对省赛有意义。
+ *   rank_to       并列区间上界（天梯赛推算专用）。天梯赛官方不公布名次，
+ *                 rank = 同分并列块的起点、rank_to = 块尾，两者相同则省略 rank_to。
+ *   rank_source   'official'（榜单直接给的）| 'derived'（按名额与分数推算的）
+ *                 | 'backfill'（来自补录层：源里 rank 是字符串、medals[].tier 为 null，
+ *                 源自标「待核实」—— xCPC 的西安 2023/2024/2025 共 3 条）。
+ *   province_rank  gplt-individual 专有：**省内个人名次**（2026-09-24 会长要的「省冠军」）。
+ *                 天梯赛官方分省名单只有高校奖与团队奖、**没有个人奖**，故这个名次也是推算的
+ *                 （全国名单的逐人成绩 + 分省名单反推学校归属；推法见工作区
+ *                 `.tmp/ref/jiangxi-individual-rank.mjs`），rank_source 沿用 'derived'。
+ *   province_rank_to 省内名次的并列区间上界，仅当 > province_rank 时写。
+ *   规则：出现即须落在规范位置；rank 为 int ≥ 1；rank_to ≥ rank；province_rank_to ≥ province_rank；
+ *   作用域内「单一数字名次」不得被两个人共用（带 rank_to / province_rank_to 的区间不参与该检查，
+ *   因为同分并列块首被多人共用是预期）；省内名次与全国名次**各自一个作用域**，不可混比
+ *   （2025 黄亦诚：全国 110~185、省内 1）。
  */
 import fs from 'node:fs'
 import path from 'node:path'
+// 荣誉类型（contest / destination / honor / contact / more / leader）只有一处真源：
+// src/utils/honorType.js —— 校验 wall_rules.json 的 honors[].type 时按它判定，别再抄一份。
+import { HONOR_TYPE_LABELS } from '../src/utils/honorType.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DATA = path.join(ROOT, 'public', 'data')
 const AWARDS = path.join(DATA, 'awards')
 
 const readJSON = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
+
+const HONOR_TYPES = Object.keys(HONOR_TYPE_LABELS)
 
 const MEDAL_TYPES = ['gold', 'silver', 'bronze']
 // 特等奖（grand）：只有蓝桥杯早期届次存在这一档（第五届国赛 陈天楚）。
@@ -40,27 +67,38 @@ const GROUPS = ['A', 'B', '研究生组']
 
 const SCHEMA = {
   'icpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'rank_source', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial', 'rank_source'],
+    rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
   },
   'ccpc.json': {
-    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    keys: ['competition_name', 'medal_level', 'team_name', 'medal_type', 'rank', 'rank_official', 'rank_provincial', 'rank_source', 'members', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_official', 'rank_provincial', 'rank_source'],
+    rankScope: (r) => `${r.date}|${r.competition_name}|${r.medal_level}`,
     levels: XCPC_LEVELS,
     team: true
   },
   'gplt-team.json': {
     keys: ['session', 'team_name', 'medal_type', 'members', 'coach_names', 'date'],
+    optionalKeys: [],
     levels: null,
     team: true
   },
   'gplt-individual.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'rank_to', 'rank_source', 'province_rank', 'province_rank_to', 'coach_names', 'date'],
+    optionalKeys: ['rank', 'rank_to', 'rank_source', 'province_rank', 'province_rank_to'],
+    rankScope: (r) => `${r.session}`,
+    // 省内名次与全国名次不可比，各占一个作用域
+    provinceRankScope: (r) => `${r.session}|province`,
     levels: SINGLE_LEVELS,
     team: false
   },
   'lanqiao.json': {
-    keys: ['session', 'members', 'language', 'group', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'language', 'group', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.session}|${r.medal_level}|${r.language}|${r.group}`,
     levels: SINGLE_LEVELS,
     team: false,
     langs: LANGS,
@@ -68,12 +106,16 @@ const SCHEMA = {
     medals: GRAND_MEDAL_TYPES
   },
   'baidu.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.date}`,
     levels: SINGLE_LEVELS,
     team: false
   },
   'chuanzhi.json': {
-    keys: ['session', 'members', 'medal_level', 'medal_type', 'coach_names', 'date'],
+    keys: ['session', 'members', 'medal_level', 'medal_type', 'rank', 'coach_names', 'date'],
+    optionalKeys: ['rank'],
+    rankScope: (r) => `${r.session}|${r.medal_level}`,
     levels: SINGLE_LEVELS,
     team: false
   }
@@ -86,8 +128,11 @@ function validateRecords(file, rows) {
 
   rows.forEach((r, i) => {
     const keys = Object.keys(r)
-    if (keys.length !== spec.keys.length || keys.some((k, j) => k !== spec.keys[j])) {
-      push(i, `字段名/顺序不符: ${keys.join(',')}（期望 ${spec.keys.join(',')}）`)
+    /* 名次字段是**可选**的（不是每条获奖记录都有名次）：把规范键序里没出现的键过滤掉，
+       剩下的必须与 keys 逐字相等 —— 即「出现即须落在规范位置」，多出未知键也会被抓到。 */
+    const expected = spec.keys.filter((k) => keys.includes(k))
+    if (keys.length !== expected.length || keys.some((k, j) => k !== expected[j])) {
+      push(i, `字段名/顺序不符: ${keys.join(',')}（期望 ${expected.join(',')}；可选键 ${(spec.optionalKeys || []).join('/') || '无'}）`)
       return
     }
     if (spec.team) {
@@ -109,7 +154,49 @@ function validateRecords(file, rows) {
       push(i, `language 非法: ${JSON.stringify(r.language)}`)
     if (spec.groups && r.group !== null && !spec.groups.includes(r.group))
       push(i, `group 非法: ${JSON.stringify(r.group)}`)
+    if ('rank' in r) {
+      if (!Number.isInteger(r.rank) || r.rank < 1) push(i, `rank 非法: ${JSON.stringify(r.rank)}`)
+      if ('rank_official' in r && (!Number.isInteger(r.rank_official) || r.rank_official < 1))
+        push(i, `rank_official 非法: ${JSON.stringify(r.rank_official)}`)
+      if ('rank_provincial' in r && (!Number.isInteger(r.rank_provincial) || r.rank_provincial < 1))
+        push(i, `rank_provincial 非法: ${JSON.stringify(r.rank_provincial)}`)
+      if ('rank_to' in r && (!Number.isInteger(r.rank_to) || r.rank_to < Number(r.rank)))
+        push(i, `rank_to 非法: ${JSON.stringify(r.rank_to)}（应 ≥ rank）`)
+      if ('rank_source' in r && !['official', 'derived', 'backfill'].includes(r.rank_source))
+        push(i, `rank_source 非法: ${JSON.stringify(r.rank_source)}`)
+      if ('province_rank' in r && (!Number.isInteger(r.province_rank) || r.province_rank < 1))
+        push(i, `province_rank 非法: ${JSON.stringify(r.province_rank)}`)
+      if ('province_rank_to' in r && (!Number.isInteger(r.province_rank_to) || r.province_rank_to < Number(r.province_rank)))
+        push(i, `province_rank_to 非法: ${JSON.stringify(r.province_rank_to)}（应 ≥ province_rank）`)
+    }
   })
+
+  /* 名次在**自己的作用域**内不得被两个人共用 —— 作用域的定义与 src/utils/awardGroups.js
+     的 byRank() 一致（名次只在同一比较范围内可比）。同一个人在同作用域重复出现是允许的
+     （源里确有一例：2024 省赛 C/C++ B 组「刘鑫」一等奖与三等奖两条同 rank 2401），
+     但两个人共用同一个名次说明合并脚本连错了人。
+     全国名次与省内名次各查一遍，规则相同、作用域不同。 */
+  for (const scope of [
+    { label: '名次', fn: spec.rankScope, value: (r) => r.rank, blockEnd: (r) => r.rank_to },
+    { label: '省内名次', fn: spec.provinceRankScope, value: (r) => r.province_rank, blockEnd: (r) => r.province_rank_to },
+  ]) {
+    if (!scope.fn) continue
+    const seen = new Map()
+    rows.forEach((r, i) => {
+      const v = scope.value(r)
+      if (v == null) return
+      /* 带 rank_to / province_rank_to 的是**区间**（天梯赛推算：同分并列块只能给区间），
+         块首被多人共用是预期，不参与撞号检查 —— 只有「单一数字名次」才可能撞。 */
+      if (scope.blockEnd(r) != null) return
+      const who = (r.members || []).join('、')
+      const k = `${scope.fn(r)}#${v}`
+      if (seen.has(k) && seen.get(k).who !== who) {
+        problems.push(`[${i}] ${scope.label}撞号: 作用域 ${scope.fn(r)} 内 ${v} 已被 ${seen.get(k).who}（[${seen.get(k).i}]）占用`)
+      } else if (!seen.has(k)) {
+        seen.set(k, { who, i })
+      }
+    })
+  }
 
   // date 升序，null 排末尾
   let prev = null
@@ -320,6 +407,167 @@ console.log(
 )
 artProblems.slice(0, 10).forEach((p) => console.log('         ' + p))
 if (artProblems.length) failed += artProblems.length
+
+/* ==========================================================================
+   我们这一支新增的数据文件（会长 2026-09-23 屎山审查：knowledge.md 把本脚本称作
+   「全量校验」，但它原先对下面这些文件一行都没查）。
+   分两类：**真源**（入库、缺了就是错）与**派生**（构建期由生成器产出、可以不在场，
+   在场就顺手交叉核对 —— 它们正是最容易「生成物比生成器活得久」的地方）。
+   ========================================================================== */
+console.log('\n=== 协会名单 / 规则 / 奖学金（真源）===')
+const srcProblems = []
+const needJSON = (name) => {
+  const p = path.join(DATA, name)
+  if (!fs.existsSync(p)) {
+    srcProblems.push(`${name} 不存在（真源，必须入库）`)
+    return null
+  }
+  return readJSON(p)
+}
+const ROLES = ['owner', 'admin', 'member', 'excellent', 'leader']
+
+// 群成员名单：由仓外 build_site_assets.py 派生后入库（页面的「墙上有没有这个人」看它）
+const gm = needJSON('group_members.json')
+if (gm) {
+  if (!Array.isArray(gm.members)) srcProblems.push('group_members.json 缺 members 数组')
+  else {
+    if (gm.counts?.total !== gm.members.length)
+      srcProblems.push(`group_members.json counts.total=${gm.counts?.total} 与 members.length=${gm.members.length} 不等`)
+    const badRole = gm.members.filter((m) => !ROLES.includes(m.roleKey)).map((m) => m.name || m.qq)
+    if (badRole.length) srcProblems.push(`group_members.json 身份非法（roleKey 应为 ${ROLES.join('/')}）: ${badRole.slice(0, 5).join(', ')}`)
+    // counts 是生成器写的统计，最容易和名单脱节 —— 三项群身份逐个对账
+    for (const k of ['owner', 'admin', 'member']) {
+      const real = gm.members.filter((m) => m.roleKey === k).length
+      if (gm.counts?.[k] !== real) srcProblems.push(`group_members.json counts.${k}=${gm.counts?.[k]} 与实际 ${real} 人不等`)
+    }
+    const noImg = gm.members.filter((m) => !m.blank && !m.thumb).map((m) => m.name || m.qq)
+    if (noImg.length) srcProblems.push(`group_members.json 有 ${noImg.length} 人既非 blank 又没有 thumb 缩略图: ${noImg.slice(0, 5).join(', ')}`)
+    const real = gm.members.filter((m) => m.realName).length
+    if (gm.counts?.realName !== real) srcProblems.push(`group_members.json counts.realName=${gm.counts?.realName} 与实际有真名的 ${real} 人不等`)
+    console.log(`  OK   group_members.json      ${gm.members.length} 人（真名 ${real} / 无头像 ${gm.counts?.blank ?? 0}）`)
+  }
+}
+
+// 协会职务胶囊：文字口径必须逐字是「<年份>学年<职务>」（会长裁定的展示口径）
+const duties = needJSON('duties.json')
+if (duties) {
+  const rows = Object.entries(duties.people || {})
+  const bad = []
+  for (const [name, list] of rows) {
+    if (!Array.isArray(list)) { bad.push(`${name} 的值不是数组`); continue }
+    for (const d of list) {
+      if (typeof d?.year !== 'number' || !d?.role) { bad.push(`${name} 条目缺 year/role`); continue }
+      if (d.text !== `${d.year}学年${d.role}`) bad.push(`${name} 的 text「${d.text}」与「${d.year}学年${d.role}」不符`)
+    }
+  }
+  if (duties.count !== rows.length) bad.push(`count=${duties.count} 与实际 ${rows.length} 人不等`)
+  srcProblems.push(...bad)
+  console.log(`  ${bad.length ? 'ERR' : 'OK '}  duties.json              ${rows.length} 人 / ${rows.reduce((s, [, l]) => s + l.length, 0)} 条（文字口径 <年份>学年<职务>）`)
+}
+
+// 入墙规则：两个阈值 + 规则名单；`0` 是「关闭这条规则」的合法值
+const rules = needJSON('wall_rules.json')
+if (rules) {
+  const rp = []
+  for (const k of ['scoreThreshold', 'excellentScoreThreshold']) {
+    if (typeof rules[k] !== 'number' || rules[k] < 0) rp.push(`${k} 应为 ≥0 的数字（0 = 关闭该规则），实际 ${JSON.stringify(rules[k])}`)
+  }
+  for (const p of rules.people || []) {
+    if (!p?.name) rp.push('people[] 有缺 name 的条目')
+    for (const h of p?.honors || []) {
+      if (!h?.text) rp.push(`${p.name} 的 honors 有缺 text 的条目`)
+      else if (h.type && !HONOR_TYPES.includes(h.type)) rp.push(`${p.name} 的荣誉类型「${h.type}」不在 ${HONOR_TYPES.join('/')} 内`)
+    }
+  }
+  srcProblems.push(...rp)
+  console.log(
+    `  ${rp.length ? 'ERR' : 'OK '}  wall_rules.json          上墙阈值 ${rules.scoreThreshold} 分` +
+      `（0=关） / 优秀成员页阈值 ${rules.excellentScoreThreshold} 分（0=关） / 规则名单 ${(rules.people || []).length} 人`
+  )
+}
+
+// 奖学金（仓外 build_scholarships.py 产出后入库）：type 恒为 honor，文字含学年
+const sch = needJSON('scholarships.json')
+if (sch) {
+  const rows = Object.entries(sch.people || {})
+  const bad = []
+  for (const [name, list] of rows) {
+    if (!Array.isArray(list)) { bad.push(`${name} 的值不是数组`); continue }
+    for (const s of list) {
+      if (!s?.text) bad.push(`${name} 有条目缺 text`)
+      else if (s.type !== 'honor') bad.push(`${name} 的「${s.text}」type=${JSON.stringify(s.type)}（应恒为 honor）`)
+      else if (!/学年/.test(s.text)) bad.push(`${name} 的「${s.text}」不含学年`)
+    }
+  }
+  srcProblems.push(...bad)
+  console.log(`  ${bad.length ? 'ERR' : 'OK '}  scholarships.json        ${rows.length} 人 / ${rows.reduce((s, [, l]) => s + l.length, 0)} 条（type 恒为 honor）`)
+}
+
+srcProblems.slice(0, 8).forEach((p) => console.log('         ' + p))
+if (srcProblems.length) failed += srcProblems.length
+
+/* 派生文件：不在场只提示（构建期会生成、且已 gitignore），在场就交叉核对 ——
+   这两条恰好把两类「静默错」钉死：阈值被改而生成物没重建、以及 tiles 键撞名丢格。 */
+console.log('\n=== 派生文件（构建期生成；在场则交叉核对）===')
+const optJSON = (name) => {
+  const p = path.join(DATA, name)
+  return fs.existsSync(p) ? readJSON(p) : null
+}
+const derProblems = []
+const gw = optJSON('group_wall.json')
+const gwm = optJSON('group_wall.manifest.json')
+if (gw && gwm) {
+  const tileKeys = Object.keys(gw.tiles || {})
+  if (gwm.count !== gwm.images?.length)
+    derProblems.push(`group_wall.manifest.json count=${gwm.count} 与 images.length=${gwm.images?.length} 不等`)
+  if (tileKeys.length !== (gwm.images || []).length)
+    derProblems.push(
+      `group_wall.json 有 ${tileKeys.length} 格、manifest 有 ${gwm.images?.length} 张图 —— ` +
+        '缩略图文件名撞名会让 tiles 静默覆盖（生成器已改为抛错，这里是第二道网）'
+    )
+  console.log(`  ${derProblems.length ? 'ERR' : 'OK '}  group_wall.json          ${tileKeys.length} 格 / manifest ${gwm.images?.length} 张图`)
+} else {
+  console.log('  --   group_wall.*.json       不在场（跑 npm run data:group-wall 生成）')
+}
+
+// 阈值这条最重要：生成物记的 threshold 必须与 wall_rules.json 现在写的一致，
+// 否则页面会拿旧名单渲染（2026-09-23 修的就是这个：阈值设 0 时生成器曾不重写文件）。
+const exMembers = optJSON('excellent_members.json')
+if (exMembers && rules) {
+  const exProblems = []
+  if (exMembers.threshold !== rules.excellentScoreThreshold)
+    exProblems.push(
+      `excellent_members.json 的 threshold=${exMembers.threshold} 与 wall_rules.json 的 ` +
+        `excellentScoreThreshold=${rules.excellentScoreThreshold} 不一致 —— 页面读的是前者，请重跑 npm run data:group-wall`
+    )
+  if (exMembers.count !== exMembers.members?.length)
+    exProblems.push(`excellent_members.json count=${exMembers.count} 与 members.length=${exMembers.members?.length} 不等`)
+  const auto = (exMembers.members || []).filter((m) => m.auto).length
+  derProblems.push(...exProblems)
+  console.log(`  ${exProblems.length ? 'ERR' : 'OK '}  excellent_members.json   ${exMembers.count} 人（自动入册 ${auto} 人，阈值 ${exMembers.threshold}）`)
+} else if (exMembers) {
+  console.log('  --   excellent_members.json   在场，但 wall_rules.json 缺失，无法核对阈值')
+} else {
+  console.log('  --   excellent_members.json   不在场（跑 npm run data:group-wall 生成）')
+}
+
+const badges = optJSON('event_badges.json')
+if (badges) {
+  const bkTiers = Object.keys(badges.tiers || {})
+  const bkB = Object.keys(badges.badges || {})
+  const badTier = bkTiers
+    .map((k) => badges.tiers[k])
+    .filter((t) => !['grand', 'gold', 'silver', 'bronze'].includes(t))
+  const mismatch = bkTiers.length !== bkB.length || bkB.some((k) => !(k in (badges.tiers || {})))
+  if (badTier.length) derProblems.push(`event_badges.json 有非法 tier: ${[...new Set(badTier)].join(', ')}`)
+  if (mismatch) derProblems.push('event_badges.json 的 badges 与 tiers 键集合不一致（页面按 tiers 取档位配色）')
+  console.log(`  ${badTier.length || mismatch ? 'ERR' : 'OK '}  event_badges.json        ${bkB.length} 枚角标 / tiers 同键 ${bkTiers.length}`)
+} else {
+  console.log('  --   event_badges.json       不在场（跑 npm run data:event-badges 生成）')
+}
+
+derProblems.slice(0, 8).forEach((p) => console.log('         ' + p))
+if (derProblems.length) failed += derProblems.length
 
 console.log(failed ? `\n校验未通过：${failed} 处问题` : '\n全部通过。')
 process.exit(failed ? 1 : 0)

@@ -4,6 +4,8 @@
     "medal_level": "regional",
     "team_name": "地球往事",
     "medal_type": "bronze",
+    "rank": 153,
+    "rank_official": 151,
     "members": [
       "刘力溯",
       "王安",
@@ -17,6 +19,8 @@
     "medal_level": "regional",
     "team_name": "均衡存乎万物之间",
     "medal_type": "bronze",
+    "rank": 165,
+    "rank_official": 159,
     "members": [
       "倪超骏",
       "李梦豪",
@@ -30,6 +34,8 @@
     "medal_level": "regional",
     "team_name": "逐梦",
     "medal_type": "bronze",
+    "rank": 158,
+    "rank_official": 150,
     "members": [
       "何洋",
       "王玛琪",
@@ -43,6 +49,9 @@
     "medal_level": "regional",
     "team_name": "三只小猪",
     "medal_type": "bronze",
+    "rank": 244,
+    "rank_official": 238,
+    "rank_source": "backfill",
     "members": [
       "何洋",
       "王玛琪",
@@ -56,6 +65,8 @@
     "medal_level": "regional",
     "team_name": "从第一个WA开始",
     "medal_type": "silver",
+    "rank": 100,
+    "rank_official": 96,
     "members": [
       "廖凌翔",
       "王海峰",
@@ -69,6 +80,8 @@
     "medal_level": "invitational",
     "team_name": "三只小猪",
     "medal_type": "bronze",
+    "rank": 73,
+    "rank_official": 70,
     "members": [
       "王海峰",
       "王玛琪",
@@ -82,6 +95,9 @@
     "medal_level": "invitational",
     "team_name": "志在必得！",
     "medal_type": "bronze",
+    "rank": 243,
+    "rank_official": 232,
+    "rank_source": "backfill",
     "members": [
       "彭俊杰",
       "林俊坤",
@@ -95,6 +111,8 @@
     "medal_level": "invitational",
     "team_name": "彩虹海",
     "medal_type": "bronze",
+    "rank": 95,
+    "rank_official": 93,
     "members": [
       "喻琰",
       "肖丛宇",
@@ -108,6 +126,8 @@
     "medal_level": "invitational",
     "team_name": "志在必得!",
     "medal_type": "bronze",
+    "rank": 118,
+    "rank_official": 115,
     "members": [
       "彭俊杰",
       "林俊坤",
@@ -121,6 +141,8 @@
     "medal_level": "regional",
     "team_name": "她还爱我对不队",
     "medal_type": "bronze",
+    "rank": 244,
+    "rank_official": 222,
     "members": [
       "王玛琪",
       "石翰林",
@@ -134,6 +156,8 @@
     "medal_level": "regional",
     "team_name": "我队友自带三金",
     "medal_type": "bronze",
+    "rank": 190,
+    "rank_official": 175,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -147,6 +171,8 @@
     "medal_level": "regional",
     "team_name": "她还爱我对不队",
     "medal_type": "bronze",
+    "rank": 149,
+    "rank_official": 137,
     "members": [
       "王玛琪",
       "石翰林",
@@ -160,6 +186,8 @@
     "medal_level": "regional",
     "team_name": "彩虹海",
     "medal_type": "bronze",
+    "rank": 234,
+    "rank_official": 221,
     "members": [
       "喻琰",
       "张瑞杰",
@@ -173,6 +201,9 @@
     "medal_level": "invitational",
     "team_name": "拿牌掰弯xzy",
     "medal_type": "gold",
+    "rank": 24,
+    "rank_official": 24,
+    "rank_source": "backfill",
     "members": [
       "王玛琪",
       "石翰林",
@@ -186,6 +217,8 @@
     "medal_level": "invitational",
     "team_name": "ACM败犬太多了",
     "medal_type": "bronze",
+    "rank": 214,
+    "rank_official": 206,
     "members": [
       "张瑞杰",
       "杨源鑫",
@@ -199,6 +232,8 @@
     "medal_level": "invitational",
     "team_name": "廉颇老矣",
     "medal_type": "silver",
+    "rank": 117,
+    "rank_official": 114,
     "members": [
       "王玛琪",
       "石翰林",
@@ -212,6 +247,8 @@
     "medal_level": "invitational",
     "team_name": "彩虹海",
     "medal_type": "bronze",
+    "rank": 145,
+    "rank_official": 141,
     "members": [
       "周政",
       "喻琰",
@@ -225,6 +262,8 @@
     "medal_level": "invitational",
     "team_name": "注意力涣散",
     "medal_type": "bronze",
+    "rank": 176,
+    "rank_official": 169,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -238,6 +277,8 @@
     "medal_level": "regional",
     "team_name": "关注哔站复活小聪明谢谢喵",
     "medal_type": "bronze",
+    "rank": 227,
+    "rank_official": 215,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -251,6 +292,8 @@
     "medal_level": "regional",
     "team_name": "魂殿十天尊——瑞杰",
     "medal_type": "bronze",
+    "rank": 192,
+    "rank_official": 184,
     "members": [
       "张瑞杰",
       "李鑫",
@@ -264,6 +307,8 @@
     "medal_level": "regional",
     "team_name": "别开香槟开早了",
     "medal_type": "bronze",
+    "rank": 291,
+    "rank_official": 253,
     "members": [
       "周政",
       "孙天成",
@@ -277,6 +322,8 @@
     "medal_level": "regional",
     "team_name": "我从丹东来,抽中真嗨77",
     "medal_type": "bronze",
+    "rank": 202,
+    "rank_official": 194,
     "members": [
       "彭俊杰",
       "肖俊杰",
@@ -290,6 +337,8 @@
     "medal_level": "regional",
     "team_name": "Fondness? Delusion!",
     "medal_type": "bronze",
+    "rank": 81,
+    "rank_official": 76,
     "members": [
       "万俊哲",
       "张云菲",
@@ -303,6 +352,8 @@
     "medal_level": "invitational",
     "team_name": "天空之矛",
     "medal_type": "bronze",
+    "rank": 210,
+    "rank_official": 162,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -316,6 +367,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉",
     "medal_type": "silver",
+    "rank": 87,
+    "rank_official": 69,
     "members": [
       "万俊哲",
       "张云菲",
@@ -329,6 +382,8 @@
     "medal_level": "invitational",
     "team_name": "服务器未响应",
     "medal_type": "bronze",
+    "rank": 211,
+    "rank_official": 182,
     "members": [
       "杨镇宁",
       "陈帆",
@@ -342,6 +397,8 @@
     "medal_level": "invitational",
     "team_name": "~到了赛场上就要拿出真本事~",
     "medal_type": "silver",
+    "rank": 103,
+    "rank_official": 94,
     "members": [
       "喻芷珊",
       "曹京顺",
@@ -355,6 +412,8 @@
     "medal_level": "invitational",
     "team_name": "天空之矛",
     "medal_type": "silver",
+    "rank": 97,
+    "rank_official": 88,
     "members": [
       "彭俊杰",
       "李鑫",
@@ -368,6 +427,8 @@
     "medal_level": "invitational",
     "team_name": "别开香槟开早了",
     "medal_type": "bronze",
+    "rank": 114,
+    "rank_official": 114,
     "members": [
       "孙天成",
       "杨源鑫",
@@ -381,6 +442,8 @@
     "medal_level": "invitational",
     "team_name": "三人驭六丸",
     "medal_type": "silver",
+    "rank": 66,
+    "rank_official": 65,
     "members": [
       "周君",
       "彭俊杰",
@@ -394,6 +457,8 @@
     "medal_level": "invitational",
     "team_name": "喜欢只是错觉",
     "medal_type": "bronze",
+    "rank": 157,
+    "rank_official": 155,
     "members": [
       "万俊哲",
       "张云菲",
@@ -407,6 +472,8 @@
     "medal_level": "invitational",
     "team_name": "服务器未响应",
     "medal_type": "silver",
+    "rank": 70,
+    "rank_official": 69,
     "members": [
       "杨镇宁",
       "陈帆",

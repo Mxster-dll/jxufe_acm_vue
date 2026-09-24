@@ -8,8 +8,11 @@ import {
   RANK_TEXT,
   LEVEL_CAT,
   LEVEL_TAG,
-  MEDAL_ORDER,
+  MEDAL_RANK,
   medalClass,
+  rankText,
+  rankNote,
+  isTrophyRank,
   dateTextOf,
   yearOf,
   editionLabel,
@@ -17,6 +20,7 @@ import {
   subjectGroups,
   sessionGroups
 } from '../utils/awardGroups.js'
+import { mergeXcpc } from '../utils/contestTaxonomy.js'
 
 const route = useRoute()
 const { data: competitions, loading: compLoading, error } = useJson('/data/competitions.json', {
@@ -31,22 +35,10 @@ const { data: competitions, loading: compLoading, error } = useJson('/data/compe
 const comp = computed(() => {
   const slug = route.params.slug
   const list = competitions.value || []
-  if (slug === 'xcpc') {
-    const icpc = list.find((c) => c.slug === 'icpc')
-    const ccpc = list.find((c) => c.slug === 'ccpc')
-    if (!icpc || !ccpc) return null
-    return {
-      slug: 'xcpc',
-      name: 'xCPC 程序设计竞赛',
-      subtitle: 'ICPC × CCPC —— 国际与中国大学生程序设计竞赛',
-      image: icpc.image,
-      mode: 'xcpc',
-      intro: [],
-      details: [],
-      children: [icpc, ccpc],
-      awards: ['icpc', 'ccpc']
-    }
-  }
+  /* 合并页与首页那张大卡现在由同一份构造：contestTaxonomy.js 的 mergeXcpc()
+     （判据 = competitions.json 的 mode === 'xcpc'，奖项文件列表由各项自带的 awards
+     拼出来）。原先这里又写死了一遍名称、副标题与 awards 名单，是「三套判据」里的第二套。 */
+  if (slug === 'xcpc') return mergeXcpc(list)
   return list.find((c) => c.slug === slug)
 })
 
@@ -109,7 +101,26 @@ const xcpcGroups = computed(() => {
       })
       groups.push(map.get(key))
     }
-    map.get(key).rows.push(row)
+    const group = map.get(key)
+    // 同一支队伍可能同时拿到邀请赛与省赛（「CCPC 全国邀请赛（南昌）暨江西省赛」在
+    // 2026-05-24 就是同队同名同天两条：一条 invitational、一条 provincial），
+    // 数据里是两行 —— 这里按队伍合并成一行，获奖栏渲染两枚胶囊。
+    // 组合键带上成员，避免队名为空时不同的队伍被并到一起。
+    const teamKey = `${row.team_name || ''}|${(row.members || []).join('、')}`
+    let team = group.rows.find((t) => t.key === teamKey)
+    if (!team) {
+      team = { key: teamKey, team_name: row.team_name, members: row.members || [], awards: [] }
+      group.rows.push(team)
+    }
+    // rank = 该队在这场比赛里的名次（同队可能有两个不同名次：邀请赛与省赛各一），
+    // 故跟着每一枚奖牌走，不放在队伍上。rank_provincial 只对省赛那条有意义。
+    team.awards.push({
+      medal: row.medal_type,
+      level: row.medal_level,
+      rank: row.rank ?? null,
+      rank_official: row.rank_official ?? null,
+      rank_provincial: row.rank_provincial ?? null
+    })
   }
   return groups
 })
@@ -125,10 +136,16 @@ const gpltGroups = computed(() => {
   const teams = awardsByFile.value['gplt-team'] || []
   const individuals = awardsByFile.value['gplt-individual'] || []
 
+  // 姓名 → 该届国赛的个人成绩（奖牌 + 全国名次），用于给成员姓名着色并挂名次小签。
+  // ⚠ 键必须带**届数**：23 个人参加过两届以上（石翰林 ×3、肖丛宇 ×4 …），只按姓名索引
+  //   会把先遇到的那届的名次套到他所有届次的表格里。
   const personalMap = new Map()
   for (const p of individuals) {
     const n = p.members && p.members[0]
-    if (n && !personalMap.has(n)) personalMap.set(n, p.medal_type)
+    const k = `${p.session}|${n}`
+    if (n && !personalMap.has(k)) {
+      personalMap.set(k, { medal: p.medal_type, rank: p.rank ?? null, rank_to: p.rank_to ?? null })
+    }
   }
 
   const bySession = new Map()
@@ -144,15 +161,15 @@ const gpltGroups = computed(() => {
       const date = list.map((t) => t.date).filter(Boolean).sort()[0] || null
       const rows = list
         .slice()
-        .sort((a, b) => (MEDAL_ORDER[a.medal_type] ?? 9) - (MEDAL_ORDER[b.medal_type] ?? 9))
+        .sort((a, b) => (MEDAL_RANK[a.medal_type] ?? 9) - (MEDAL_RANK[b.medal_type] ?? 9))
         .map((t) => ({
           team_name: t.team_name,
           national: t.medal_type,
           provincial: null,
-          members: (t.members || []).map((name) => ({
-            name,
-            medal: personalMap.get(name) || null
-          }))
+          members: (t.members || []).map((name) => {
+            const p = personalMap.get(`${session}|${name}`)
+            return { name, medal: p?.medal || null, rank: p?.rank ?? null, rank_to: p?.rank_to ?? null }
+          })
         }))
       return {
         session,
@@ -164,9 +181,29 @@ const gpltGroups = computed(() => {
     })
 })
 
+/** 队伍名次的悬停说明。xCPC 有两个口径：rank 是全体队伍总排名、rank_official 是正式队排名，
+ *  两者不同时一起写出来（榜单里两者都公布，只看一个会让人以为是同一个数） */
+function rankTitle(a) {
+  if (!a || a.rank == null) return ''
+  const parts = []
+  if (a.rank_official != null && a.rank_official !== a.rank) parts.push(`总排名 ${a.rank} / 正式队第 ${a.rank_official}`)
+  else parts.push(`第 ${a.rank} 名`)
+  if (a.rank_provincial != null) parts.push(`省赛组内第 ${a.rank_provincial}`)
+  return parts.join('；')
+}
+
 /** 成员个人奖 → 姓名配色（无个人奖用默认色） */
 function memberAwardClass(medal) {
   return medalClass(medal) || 'member-plain'
+}
+
+/** 合并后的一行里最好的那枚奖牌（卡片配色取它） */
+function bestMedal(row) {
+  return (
+    (row.awards || [])
+      .slice()
+      .sort((a, b) => (MEDAL_RANK[a.medal] ?? 9) - (MEDAL_RANK[b.medal] ?? 9))[0]?.medal || ''
+  )
 }
 
 // ==========================================================================
@@ -249,11 +286,16 @@ const hasTableData = computed(() =>
 const viewMode = ref('table')
 const VIEW_KEY = 'jufc-history-view'
 
+/* localStorage 在隐私模式 / 禁用站点数据时会直接抛。视图偏好只是可选记忆：
+   读不到就用默认值、写不进就下次再说 —— 但不该让它掀翻整个页面，
+   所以这里是**故意**吞掉异常的（2026-09-24 审查：原先的空 catch 一句话都没解释）。 */
 onMounted(() => {
   let saved = null
   try {
     saved = localStorage.getItem(VIEW_KEY)
-  } catch (e) {}
+  } catch {
+    saved = null
+  }
   viewMode.value =
     saved === 'table' || saved === 'card'
       ? saved
@@ -265,7 +307,9 @@ onMounted(() => {
 watch(viewMode, (v) => {
   try {
     localStorage.setItem(VIEW_KEY, v)
-  } catch (e) {}
+  } catch {
+    /* 隐私模式下写不进：不影响本次会话里的切换 */
+  }
 })
 
 function setView(v) {
@@ -427,7 +471,12 @@ function setView(v) {
                             class="member-name"
                             :class="memberAwardClass(m.medal)"
                             :title="m.medal ? MEDAL_TEXT[m.medal] : '未获个人奖'"
-                          >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
+                          >{{ alignName(m.name) }}<i
+                            v-if="rankText(m.rank, m.rank_to)"
+                            class="mem-rank"
+                            :title="rankNote(m.rank, m.rank_to)"
+                            :class="{ 'is-trophy': isTrophyRank(m.rank) }"
+                          >{{ rankText(m.rank, m.rank_to) }}</i><template v-if="mi < t.members.length - 1">、</template></span>
                         </template>
                         <span v-else class="member-name member-plain">—</span>
                       </td>
@@ -437,12 +486,12 @@ function setView(v) {
                 <!-- xcpc：按场次分组，rowspan 合并日期 / 赛事列 -->
                 <template v-else>
                   <template v-for="g in xcpcGroups" :key="g.date + '|' + g.title">
-                    <tr v-for="(row, ri) in g.rows" :key="g.date + '-' + ri" :class="'row-' + g.cat">
+                    <tr v-for="(row, ri) in g.rows" :key="row.key" :class="'row-' + g.cat">
                       <td v-if="ri === 0" class="cell-year" :rowspan="g.rows.length">{{ g.dateText }}</td>
                       <td v-if="ri === 0" class="cell-title" :rowspan="g.rows.length">{{ g.title }}</td>
                       <td class="cell-team">{{ row.team_name || '—' }}</td>
                       <td class="cell-desc">
-                        <span class="award-chip" :class="'chip-' + row.medal_type">{{ MEDAL_TEXT[row.medal_type] }}<i class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</i></span>
+                        <span v-for="(a, ai) in row.awards" :key="ai" class="award-chip" :class="'chip-' + a.medal">{{ MEDAL_TEXT[a.medal] }}<i class="chip-tag">{{ LEVEL_TAG[a.level] || '' }}</i><i v-if="rankText(a.rank)" class="chip-rank" :title="rankTitle(a)" :class="{ 'is-trophy': isTrophyRank(a.rank) }">{{ rankText(a.rank) }}</i><i v-if="a.rank_provincial" class="chip-rank chip-rank--prov" :title="'省赛组内第 ' + a.rank_provincial + ' 名'">省赛第{{ a.rank_provincial }}</i></span>
                       </td>
                       <td class="cell-members">
                         <template v-if="row.members && row.members.length">
@@ -486,7 +535,12 @@ function setView(v) {
                         class="member-name"
                         :class="memberAwardClass(m.medal)"
                         :title="m.medal ? MEDAL_TEXT[m.medal] : '未获个人奖'"
-                      >{{ alignName(m.name) }}<template v-if="mi < t.members.length - 1">、</template></span>
+                      >{{ alignName(m.name) }}<i
+                        v-if="rankText(m.rank, m.rank_to)"
+                        class="mem-rank"
+                        :title="rankNote(m.rank, m.rank_to)"
+                        :class="{ 'is-trophy': isTrophyRank(m.rank) }"
+                      >{{ rankText(m.rank, m.rank_to) }}</i><template v-if="mi < t.members.length - 1">、</template></span>
                     </template>
                     <span v-else class="member-name member-plain">—</span>
                   </div>
@@ -498,10 +552,10 @@ function setView(v) {
                   <span class="m-edition">{{ g.title }}</span>
                   <span class="m-date">{{ g.dateText }}</span>
                 </div>
-                <div v-for="(row, ri) in g.rows" :key="'mr' + ri" class="m-team-card m-team-card--event" :class="'tone-' + row.medal_type">
+                <div v-for="row in g.rows" :key="'mr' + row.key" class="m-team-card m-team-card--event" :class="'tone-' + bestMedal(row)">
                   <div class="m-team-name">{{ row.team_name || '—' }}</div>
                   <div class="m-awards">
-                    <span class="m-award" :class="'chip-' + row.medal_type"><i class="fa-solid fa-trophy"></i> {{ MEDAL_TEXT[row.medal_type] }} <span class="chip-tag">{{ LEVEL_TAG[row.medal_level] || '' }}</span></span>
+                    <span v-for="(a, ai) in row.awards" :key="ai" class="m-award" :class="'chip-' + a.medal"><i class="fa-solid fa-trophy"></i> {{ MEDAL_TEXT[a.medal] }} <span class="chip-tag">{{ LEVEL_TAG[a.level] || '' }}</span><i v-if="rankText(a.rank)" class="chip-rank" :title="rankTitle(a)" :class="{ 'is-trophy': isTrophyRank(a.rank) }">{{ rankText(a.rank) }}</i><i v-if="a.rank_provincial" class="chip-rank chip-rank--prov" :title="'省赛组内第 ' + a.rank_provincial + ' 名'">省赛第{{ a.rank_provincial }}</i></span>
                   </div>
                   <div class="m-fields">
                     <p class="m-field"><strong>参赛成员：</strong>
@@ -744,40 +798,8 @@ function setView(v) {
   padding-bottom: 0;
   border-bottom: none;
 }
-.view-toggle {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(26, 115, 232, 0.06);
-  border: 1px solid rgba(26, 115, 232, 0.12);
-  border-radius: var(--radius-full);
-}
-.view-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-.view-btn:hover {
-  color: var(--primary);
-}
-.view-btn.active {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
-}
-/* 视图显隐：表格/卡片二选一展示 */
-.view-hidden {
-  display: none !important;
-}
+/* .view-toggle / .view-btn / .view-hidden 已提到 styles/view-toggle.css（全局）——
+   会长 2026-09-23 要求「荣誉显示」也复用同一套，两处样式从此同源，不要再拷回这里。 */
 
 /* ── 蓝桥杯总名单（个人赛：姓名/科目/奖项，按年分组；每年国赛/省赛两个卡片）── */
 .lq-list {
@@ -1036,7 +1058,7 @@ function setView(v) {
   font-size: var(--font-size-xs);
   font-weight: 700;
 }
-.m-award.chip-grand { background: rgba(198, 40, 40, 0.12); color: #c62828; border-color: rgba(198, 40, 40, 0.4); }
+.m-award.chip-grand { background: rgba(198, 40, 40, 0.12); color: var(--honor-grand); border-color: rgba(198, 40, 40, 0.4); }
 .m-award.chip-gold { background: rgba(199, 145, 0, 0.12); color: #b8860b; border-color: rgba(199, 145, 0, 0.4); }
 .m-award.chip-silver { background: rgba(122, 139, 153, 0.13); color: #64717e; border-color: rgba(122, 139, 153, 0.4); }
 .m-award.chip-bronze { background: rgba(184, 115, 51, 0.14); color: #a35e2b; border-color: rgba(184, 115, 51, 0.4); }
@@ -1110,9 +1132,46 @@ function setView(v) {
   font-size: 0.68rem;
   opacity: 0.75;
 }
+/* 名次（队伍在该场比赛中的名次）：冠亚季军给金色小签，其余 `#N` 用中性灰底。
+   与 .chip-tag 的区别是它有自己的底色 —— 奖牌色已经在 chip 上，名次不能再借用。 */
+.chip-rank {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.68rem;
+  padding: 0 5px;
+  border-radius: var(--radius-full);
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-muted);
+}
+.chip-rank.is-trophy {
+  background: rgba(161, 98, 7, 0.14);
+  color: var(--honor-leader);
+}
+/* 省赛组内名次（「暨江西省赛」场才有）：同一支队伍当天可能同时挂着邀请赛与省赛两条记录，
+   全场总排名两条都成立，组内名次只对省赛那条有意义 —— 用描边而非实底，避免与上个名次签打架。 */
+.chip-rank--prov {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.22);
+  color: var(--text-muted);
+}
+/* 天梯赛个人名次（该届国赛的全国名次）：跟在姓名后面，比成员的奖牌色更轻 */
+.mem-rank {
+  font-style: normal;
+  font-size: 0.66rem;
+  font-weight: 700;
+  margin-left: 2px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-muted);
+}
+.mem-rank.is-trophy {
+  background: rgba(161, 98, 7, 0.14);
+  color: var(--honor-leader);
+}
 .chip-grand {
   background: rgba(198, 40, 40, 0.12);
-  color: #c62828;
+  color: var(--honor-grand);
   border: 1px solid rgba(198, 40, 40, 0.4);
 }
 .chip-gold {
