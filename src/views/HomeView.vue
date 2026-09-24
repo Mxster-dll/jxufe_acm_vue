@@ -344,9 +344,7 @@ const { newsList, loading, error } = useNews();
             ref="heroBtn"
             href="#about"
             class="btn btn-secondary hero-btn-magnet"
-            :style="{
-              transform: `translate(${btnMagnetX}px, ${btnMagnetY}px)`,
-            }"
+            :style="{ '--magnet-x': `${btnMagnetX}px`, '--magnet-y': `${btnMagnetY}px` }"
             >了解更多</a
           >
         </div>
@@ -676,8 +674,12 @@ const { newsList, loading, error } = useNews();
   display: none;
 }
 
-/* ── 磁吸按钮 ── */
+/* ── 磁吸按钮 ──
+   位移走 CSS 变量、不写内联 transform：内联 transform 会顶掉 `:hover` 里那条位移
+   （`.hero .btn-secondary:hover` 要让按钮抬起 2px），磁吸一动悬停效果就永远不生效。
+   变量只给数值，位移由下面这条与 hover 各自组合。 */
 .hero-btn-magnet {
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
   transition: transform 0.15s ease-out;
 }
 
@@ -849,7 +851,8 @@ const { newsList, loading, error } = useNews();
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
-  transform: translateY(-2px);
+  /* 与磁吸位移叠加（磁吸已改成 CSS 变量，否则这行被内联 transform 顶掉、永远不生效） */
+  transform: translate(var(--magnet-x, 0px), calc(var(--magnet-y, 0px) - 2px));
   box-shadow: 0 6px 24px rgba(26, 115, 232, 0.25);
 }
 
@@ -1014,15 +1017,8 @@ const { newsList, loading, error } = useNews();
   flex-direction: column;
   align-items: flex-end;
 }
-.about-visual-title {
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--text-muted);
-  margin-bottom: var(--space-xl);
-  font-weight: 600;
-  align-self: flex-end;
-}
+/* 删于 2026-09-24：`.about-visual-title` 与下面 992px 档里的那条，全站只有定义、没有这个元素
+   （`.about-visual` 的直接子元素只有 `.contest-grid`）。 */
 .contest-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1493,15 +1489,9 @@ const { newsList, loading, error } = useNews();
   .float-shapes {
     display: none;
   }
-  .hero-fade-bottom {
-    display: none;
-  }
   .about-visual {
     order: 2;
     align-items: center;
-  }
-  .about-visual-title {
-    align-self: center;
   }
   .contest-grid {
     max-width: 480px;
@@ -1564,8 +1554,9 @@ const { newsList, loading, error } = useNews();
     order: 2;
     margin-top: -8px;
   }
-  .hero-particles,
-  .code-trail-container {
+  /* 代码拖尾的容器由 useCodeTrail.js 建在 <body> 下，不带本页的 data-v 属性 ——
+     隐藏规则已搬到 src/styles/base.css，写在这里永远不会命中。 */
+  .hero-particles {
     display: none;
   }
   .floating-code {
