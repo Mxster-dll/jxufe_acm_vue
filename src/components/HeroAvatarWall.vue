@@ -76,6 +76,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { FAMILY_LABELS, FAMILY_ORDER } from '../utils/contestTaxonomy.js'
 import { honorText } from '../utils/honorType.js'
+import { BODY_WALL_SHEET } from '../utils/domMarkers.js'
 
 const props = defineProps({
   /** 由父组件 v-model:active 控制（HomeView 里就是那个按钮的开关） */
@@ -1006,7 +1007,7 @@ const lockPage = (on) => {
   if (typeof document === 'undefined') return
   document.documentElement.style.overflow = on ? 'hidden' : ''
   document.body.style.overflow = on ? 'hidden' : ''
-  document.body.classList.toggle('hero-wall-sheet', on)
+  document.body.classList.toggle(BODY_WALL_SHEET, on)
 }
 
 watch(openItem, (v) => {
