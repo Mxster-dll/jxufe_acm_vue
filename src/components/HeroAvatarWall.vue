@@ -1633,7 +1633,8 @@ watch(() => props.hoverCard, () => {
      保留 line-height: 1 让首行跟着长高。字号从 2.2em 收到 1.6em（会长 2026-09-24：
      寄语「很丑」）—— 2.2em 在 13px 正文上是 28.6px 的蓝块，比句子本身还抢眼；
      1.6em 在现在的 14px / 1.75 正文上是 22.4px，落在 24.5px 的行盒里，既不被裁、
-     也不再喧宾夺主。 */
+     也不再喧宾夺主。浮窗正文是 17px / 1.85（.wall-sheet__msg）⇒ 27.2px，落在 31.45px 的
+     行盒里同样不裁、也不撑破（2026-09-24 复核：这条规则悬停卡与浮窗共用，两处都算过）。 */
 .wall__quote,
 .wall-sheet__quote {
   font-family: Georgia, 'Times New Roman', 'Songti SC', 'SimSun', serif;
@@ -1713,8 +1714,13 @@ watch(() => props.hoverCard, () => {
      卡片变矮之后它自己就滚起来（实测正文可视 638 / 内容 803）。
      ⚠ 导航栏实际占位是 **80 + 1**：AppHeader 的 header 恒定带一条 1px 底边框
      （颜色透明而已），所以量到的是 81。少算这 1px，抽屉贴底那一档就会差 1px 压线。 */
-  --sheet-top: calc(var(--header-height, 80px) + 1px);
-  padding: calc(var(--sheet-top) + 20px) 20px 20px;
+  --sheet-top: calc(var(--header-height) + 1px);
+  /* 一处留白 = --sheet-gap：padding 与卡片 max-height 必须成对（卡片是垂直居中的，
+     只改一半就会让展开卡片顶部重新顶回导航栏底下，而 CSS 不会报错、不报错就看不出）。
+     下面 .wall-sheet__card 的 `- 2 * var(--sheet-gap)` 就是这份 padding 的对应项，
+     矮屏那档只覆写 --sheet-gap 一个数。 */
+  --sheet-gap: 20px;
+  padding: calc(var(--sheet-top) + var(--sheet-gap)) var(--sheet-gap) var(--sheet-gap);
   background: rgba(15, 23, 42, 0.34);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -1731,11 +1737,11 @@ watch(() => props.hoverCard, () => {
   width: min(560px, 100%);
   /* ⚠ 上限写两行：认识 dvh 的浏览器用 dvh（手机地址栏收放时跟得上），
      不认识的忽略第二行、落到 vh。顺序不能反。
-     上限还要再减去导航栏那 80px —— 与上面 .wall-sheet 的 padding-top 是同一个账：
-     容器内容区 = 视口 −(导航栏 + 20)−20，卡片的 max-height 必须 ≤ 它，否则居中之后
-     顶部又会顶回导航栏底下。 */
-  max-height: calc(100vh - var(--sheet-top) - 40px);
-  max-height: calc(100dvh - var(--sheet-top) - 40px);
+     上限还要再减去上下两份 --sheet-gap —— 与上面 .wall-sheet 的 padding 是同一个账：
+     容器内容区 = 视口 −(导航栏 + gap)−gap，卡片的 max-height 必须 ≤ 它，否则居中之后
+     顶部又会顶回导航栏底下。`2 * var(--sheet-gap)` 让这对数只能一起改。 */
+  max-height: calc(100vh - var(--sheet-top) - 2 * var(--sheet-gap));
+  max-height: calc(100dvh - var(--sheet-top) - 2 * var(--sheet-gap));
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
@@ -1946,6 +1952,8 @@ watch(() => props.hoverCard, () => {
        会长 2026-09-24：「内容多时和顶部贴在一起了，留点空隙」→ 先让 16px，
        再要求「上侧留白再大点」→ 24px（约等于抽屉圆角 20px 的呼吸量）。
        内容多时由正文自己滚，不再往上顶。 */
+    /* 贴底抽屉没有下/侧 padding（上面 .wall-sheet 的 padding: 0），这 24px 只是**顶部**空隙，
+       所以是 -24 而不是 -2 * var(--sheet-gap)：改 --sheet-gap 不影响这一档，有意如此。 */
     max-height: calc(100vh - var(--sheet-top) - 24px);
     max-height: calc(100dvh - var(--sheet-top) - 24px);
     border-radius: 20px 20px 0 0;
@@ -1973,13 +1981,12 @@ watch(() => props.hoverCard, () => {
   .wall-sheet {
     /* 矮屏把留白压到 10px，但**导航栏那 80px（+1px 边框）不能省**：这一档最容易出
        「上部被遮挡」（520px 高的窗口里导航栏占 15%）。让出来的空间从正文里扣，
-       头上那条线照旧看得见。 */
-    padding: calc(var(--sheet-top) + 10px) 10px 10px;
+       头上那条线照旧看得见。
+       只改这一个数就够：padding 与卡片 max-height 都由基档的公式按 --sheet-gap 算。 */
+    --sheet-gap: 10px;
   }
   .wall-sheet__card {
     width: min(640px, 100%);
-    max-height: calc(100vh - var(--sheet-top) - 20px);
-    max-height: calc(100dvh - var(--sheet-top) - 20px);
     border-radius: 14px;
   }
   .wall-sheet__head {
@@ -2108,7 +2115,9 @@ watch(() => props.hoverCard, () => {
    好消息是这一档 hero 的上内边距是 header + 120px，顶上有一大片空白 —— 挪上去正好。 */
 @media (min-width: 769px) and (max-width: 991px) {
   .wall-toggle {
-    top: calc(var(--header-height, 80px) + 24px);
+    /* 高度只认令牌（与 AppHeader 的 height / --sheet-top 同一份）：兜底的 80px 是第三份
+     字面量，令牌改名时它会静默顶上、当天看不出差别。 */
+  top: calc(var(--header-height) + 24px);
     bottom: auto;
   }
 }
