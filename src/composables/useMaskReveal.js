@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { BODY_WALL_SHEET, ROOT_MASK_OUT, ROOT_MASK_RETURNING } from '../utils/domMarkers.js'
 
 /** 触摸触发所需的位移：一屏的 10%（只给移动端用，桌面已取消阈值）。 */
 export const MASK_REVEAL_RATIO = 0.1
@@ -120,7 +121,7 @@ export function useMaskReveal({ snap } = {}) {
       —— 会长 2026-09-23：「点击显示成员浮窗后，鼠标滚轮不应该再移动遮罩」。
       HeroAvatarWall 开浮窗时会给 body 挂 `hero-wall-sheet`（同时把 body 的 overflow 锁掉），
       这里只读那个类名即可，不必让组件再往上传一份状态。 */
-  const sheetOpen = () => document.body.classList.contains('hero-wall-sheet')
+  const sheetOpen = () => document.body.classList.contains(BODY_WALL_SHEET)
 
   /** 滚轮 = 桌面。会长 2026-09-23：取消 10% 阈值 —— 在页首轻轻往上一动就整层收起。
       （以前要先累积到一屏的 10%，现在第一下就算数。） */
@@ -210,7 +211,7 @@ export function useMaskReveal({ snap } = {}) {
     // watchEffect 会随组件销毁，但它写在 <html> 上的东西得自己擦掉
     const root = document.documentElement
     root.style.removeProperty('--mask-shift')
-    root.classList.remove('is-mask-out', 'is-mask-returning')
+    root.classList.remove(ROOT_MASK_OUT, ROOT_MASK_RETURNING)
   })
 
   // 导航栏在 App.vue 里、属于遮罩之外（会长最早的口径就是「除了墙和导航栏」），
@@ -225,8 +226,8 @@ export function useMaskReveal({ snap } = {}) {
       '--mask-ms',
       maskOut.value || maskReturning.value ? `${MASK_MOVE_MS}ms` : '0ms'
     )
-    root.classList.toggle('is-mask-out', maskOut.value)
-    root.classList.toggle('is-mask-returning', maskReturning.value)
+    root.classList.toggle(ROOT_MASK_OUT, maskOut.value)
+    root.classList.toggle(ROOT_MASK_RETURNING, maskReturning.value)
   })
 
   return {

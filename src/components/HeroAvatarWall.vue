@@ -74,6 +74,12 @@
  * 数据层不做任何截断，两个视图读的是同一份完整文本。
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import {
+  APP_HEADER_SELECTOR,
+  BODY_WALL_ON,
+  BODY_WALL_PRESENT,
+  BODY_WALL_SHEET,
+} from '../utils/domMarkers.js'
 
 const props = defineProps({
   /** 由父组件 v-model:active 控制（HomeView 里就是那个按钮的开关） */
@@ -117,7 +123,7 @@ const emit = defineEmits(['update:active', 'tile-hover'])
 /* 这个类在 setup 期就挂上，而不是等 onMounted ——
    它控制的是「hero 在手机上一屏高」这条布局规则，晚一帧挂就会看到首屏先 683px、
    装载后再跳到一屏高的抖动。 */
-if (typeof document !== 'undefined') document.body.classList.add('hero-wall-present')
+if (typeof document !== 'undefined') document.body.classList.add(BODY_WALL_PRESENT)
 
 const rootEl = ref(null)
 const items = ref([])
@@ -641,7 +647,7 @@ let lastTile = null
     「不许钻到导航栏底下」这条会把**每一张**卡都往下推 ~700px —— 整卡飞到屏幕外。
     offsetTop/offsetHeight 走的是布局盒，不受 transform 影响。 */
 const headerBottom = () => {
-  const h = typeof document !== 'undefined' ? document.querySelector('#app > header') : null
+  const h = typeof document !== 'undefined' ? document.querySelector(APP_HEADER_SELECTOR) : null
   return h ? h.offsetTop + h.offsetHeight : 0
 }
 
@@ -864,7 +870,7 @@ watch(
   () => props.active,
   (v) => {
     if (typeof document === 'undefined') return
-    document.body.classList.toggle('hero-wall-on', !!v)
+    document.body.classList.toggle(BODY_WALL_ON, !!v)
   },
   { immediate: true }
 )
@@ -914,7 +920,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointerleave', clearPointerTile)
   if (moveRaf) cancelAnimationFrame(moveRaf)
   lockPage(false) // 组件卸载（比如离开首页）时别把页面留在锁死状态
-  if (typeof document !== 'undefined') document.body.classList.remove('hero-wall-present', 'hero-wall-on')
+  if (typeof document !== 'undefined') document.body.classList.remove(BODY_WALL_PRESENT, BODY_WALL_ON)
 })
 
 /* ── 成员卡打开 / 关闭时的全局副作用 ──
@@ -928,7 +934,7 @@ const lockPage = (on) => {
   if (typeof document === 'undefined') return
   document.documentElement.style.overflow = on ? 'hidden' : ''
   document.body.style.overflow = on ? 'hidden' : ''
-  document.body.classList.toggle('hero-wall-sheet', on)
+  document.body.classList.toggle(BODY_WALL_SHEET, on)
 }
 
 watch(openItem, (v) => {

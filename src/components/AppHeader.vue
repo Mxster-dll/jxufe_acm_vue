@@ -281,6 +281,7 @@ header.menu-open .hamburger-icon {
   所以这里老老实实写全局规则，并用 #app > header 提高优先级压过上面那条 scoped 的 transition。
   状态由 src/views/HomeView.vue 写在 <html> 上：
   --mask-shift（拖动位移）/ --mask-ms（过渡时长）/ is-mask-out / is-mask-returning。
+  这些字符串的同源清单在 src/utils/domMarkers.js（写方在读方之外的文件里，改名容易只改一半）。
 -->
 <style>
 /* 会长 2026-09-23 裁定：首页把遮罩拉下去时，导航栏也要**一起**下移。
