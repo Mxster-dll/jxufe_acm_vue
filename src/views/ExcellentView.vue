@@ -70,10 +70,20 @@ watch(
   { immediate: true }
 )
 
-/** 卡片顺序：按显示排名重排，数据没就绪时保持 members.json 原序 */
+/** 卡片顺序：**置顶的历任会长最前** → 其余按显示排名；排名没就绪时保持原序。
+    置顶标记 pinned 由 scripts/gen_group_wall.mjs 写在 excellent_members.json 里
+    （会长 2026-09-24：「把几个协会负责人，也放进优秀成员，放在前面」——
+    这条推翻了 2026-09-23 的「自动入册不应该包含会长」）。
+
+    ⚠ 必须在这里把置顶的人**摘出排序**，不能只靠数据里的顺序：
+    下面 sortByRanking 是按综合分排的，只把会长塞进数组开头会被它整个打散，
+    「放在前面」当场落空。置顶组内保持数据原序（= 届次从新到旧），也不参与排名。 */
 const list = computed(() => {
   const arr = cleanedMembers.value
-  return byName.value ? sortByRanking(arr, byName.value) : arr
+  const pinned = arr.filter((m) => m.pinned)
+  if (!pinned.length) return byName.value ? sortByRanking(arr, byName.value) : arr
+  const rest = arr.filter((m) => !m.pinned)
+  return [...pinned, ...(byName.value ? sortByRanking(rest, byName.value) : rest)]
 })
 
 /** 瀑布流：卡片高度按内容自适应（荣誉条数差别很大），位置由 useMasonry 逐张放进

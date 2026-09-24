@@ -74,6 +74,7 @@
  * 数据层不做任何截断，两个视图读的是同一份完整文本。
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { FAMILY_LABELS, FAMILY_ORDER } from '../utils/contestTaxonomy.js'
 
 const props = defineProps({
   /** 由父组件 v-model:active 控制（HomeView 里就是那个按钮的开关） */
@@ -92,15 +93,16 @@ const props = defineProps({
   /** 单个网格允许的最大格数 —— DOM 节点数上的偏好（最软的一条约束） */
   blockBudget: { type: Number, default: 700 },
   /** 悬停/点击是否弹成员卡（会长 2026-09-23）。
-      与 active **分开**：首页的露墙是自有遮罩机制，墙并不进入作者的「激活态」
-      （激活态还会给导航栏加一层白纱），但那时恰恰要弹卡。
-      false = 底纹态的那套「放大并虚化」；true = 弹卡。
-      首页传 `:hover-card="maskOut"`：有遮罩时虚化、露墙后弹卡。 */
+      与 active 分开是为**别的宿主**留的余地 —— 组件最初那份首页用法里，墙是随遮罩让开
+      而「露」出来的，墙并没进入激活态，但那时恰恰要弹卡。
+      首页（HomeView）现在传 `:hover-card="wallOn"`：跟 active 走 —— 底纹态不弹卡
+      （悬停只出模糊亮斑），点「成员墙」进入后才弹。
+      false = 底纹态的那套「放大并虚化」；true = 弹卡。 */
   hoverCard: { type: Boolean, default: false },
   /** 可用的缩略图档位（<thumbsBase>/ 下的目录名） */
   sizes: { type: Array, default: () => [384, 256] },
-  /** 缩略图根目录。默认是首页那 33 位优秀成员的墙；「协会成员头像墙」（138 人
-      群成员 + 优秀成员 + 负责人）传自己的目录即可，不用动组件。 */
+  /** 缩略图根目录。默认是首页那 33 位优秀成员的墙；「协会成员头像墙」（QQ 群 110 +
+      优秀成员 33 + 负责人 6，按真名去重后 141 人）传自己的目录即可，不用动组件。 */
   thumbsBase: { type: String, default: '/images/hero_wall_thumbs' },
   /** 缩略图扩展名。默认 .jpg（hero_wall_thumbs 是 GDI+ 转出来的）；群成员墙用 .webp */
   thumbsExt: { type: String, default: '.jpg' },
@@ -126,11 +128,37 @@ const sourceBase = ref('/images/excellent_member/')
     瓷砖序号（0..cols×rows-1）和图片下标（0..n-1）不是一个东西，
     而且几何重排后同一序号会换成另一张脸。 */
 const openItem = ref(null)
-/* 浮窗里的标签分两类（会长 2026-09-23：「点出成员个人浮窗时，荣誉不再以『计数』显示，
-   而是用『详细条目』」）：短标签留在头部，战绩明细落到可滚的正文里。
-   卡片只有 360×132，明细长句必须换行显示，头部放不下 —— 正文本来就能滚。 */
+/* ── 浮窗里的标签分三类（会长 2026-09-23：「点出成员个人浮窗时，荣誉不再以『计数』显示，
+      而是用『详细条目』」；2026-09-24 又要求「tag、奖项、寄语三者要有布局、要能区分」）：
+        · 身份类（会长身份 / 协会职务 / 学业排名 / 奖学金 / 毕业去向）→ 头部胶囊，短；
+        · 战绩明细（逐条赛事全名）→ 正文，**按赛事系列分组**成清单；
+        · 寄语 → 正文第一节，无色底 + 一对大引号。
+      卡片只有 360×132，明细长句必须换行显示，头部放不下 —— 正文本来就能滚。 */
 const openShortTags = computed(() => (openItem.value?.sheetTags || []).filter((t) => t.type !== 'contest'))
 const openDetailTags = computed(() => (openItem.value?.sheetTags || []).filter((t) => t.type === 'contest'))
+
+/** 战绩明细按赛事系列分组，组顺序 = contestTaxonomy 的 FAMILY_ORDER（与胶囊同序）。
+    family 是生成器从 awards 文件名映射出来的数据；没有 family 的是**手写的其它竞赛**
+    （传智杯 / 睿抗 / 数模 / CSP…，全库 558 条明细里 21 条），归到最后一组「其他赛事」——
+    留空标题会让它们看起来像上面那一组的续表。 */
+const openDetailGroups = computed(() => {
+  const byFamily = new Map()
+  for (const t of openDetailTags.value) {
+    const key = FAMILY_LABELS[t.family] ? t.family : ''
+    if (!byFamily.has(key)) byFamily.set(key, [])
+    byFamily.get(key).push(t)
+  }
+  const groups = []
+  for (const f of FAMILY_ORDER) {
+    if (!byFamily.has(f)) continue
+    groups.push({ key: f, label: FAMILY_LABELS[f], items: byFamily.get(f) })
+    byFamily.delete(f)
+  }
+  for (const [key, items] of byFamily) {
+    groups.push({ key: key || 'other', label: key ? key : '其他赛事', items })
+  }
+  return groups
+})
 
 /* ── 环境能力 ── */
 const canHover = ref(true)
@@ -166,19 +194,39 @@ const measure = () => {
 
 /* ── 数据：清单（有哪些图）× 文案（写什么） ── */
 /**
+ * 悬停卡最多铺几条标签，其余折成一枚「+N」。
+ * 不设上限时，标签是一条条往下的柱子（实测最多 9 条，韩家欢 5 条就已经看不出主次）；
+ * 全站 141 人里 100 人 ≤3 条 —— 这个上限对大多数人不产生「+N」，真正收拾的是
+ * 那 26 位 6 条以上的。明细在浮窗里，点一下就有。
+ *
+ * ⚠ 2026-09-24 起「身份」与「战绩」**分开计数**（会长：tag 与奖项要能区分）：
+ *   两者本来混在同一排里，会长身份的金色胶囊紧挨着蓝桥杯的蓝色胶囊，读起来是一堆
+ *   没有主次的色块。现在身份那排归身份、战绩那排归战绩，各自折各自的 +N。
+ *   战绩每系列一枚、全墙最多 4 枚，给 2 枚就够看出「这人打过什么比赛」。
+ */
+const PREVIEW_IDENTITY = 3
+const PREVIEW_CONTEST = 2
+
+/**
  * 卡片标签的两种写法都收：
  *   · 纯字符串 —— 首页那 33 位优秀成员的 hero_wall.json 就是这么写的（中性蓝胶囊）；
- *   · { text, type } —— 协会成员头像墙，type 交给全站那套分色（styles/honors.css 的
- *     .honor-tag--contest|destination|honor|contact|leader|more）。
- * 统一成 { text, type }，type 为空字符串时按纯字符串渲染。
+ *   · { text, type, family } —— 协会成员头像墙。type 交给全站那套分色（styles/honors.css 的
+ *     .honor-tag--contest|destination|honor|contact|leader|more）；
+ *     family 只有浮窗的战绩明细有（gen_group_wall.mjs 的 sheetTagsOf 从 awards 的文件名映射），
+ *     浮窗正文靠它按赛事系列分组。
+ * 统一成 { text, type, family }，type 为空字符串时按纯字符串渲染。
  */
 const normalizeTags = (list) => {
   if (!Array.isArray(list)) return []
   return list
     .map((t) =>
       typeof t === 'string'
-        ? { text: t, type: '' }
-        : { text: String(t?.text ?? ''), type: String(t?.type ?? '') }
+        ? { text: t, type: '', family: '' }
+        : {
+            text: String(t?.text ?? ''),
+            type: String(t?.type ?? ''),
+            family: String(t?.family ?? ''),
+          }
     )
     .filter((t) => t.text.trim())
 }
@@ -192,10 +240,23 @@ async function loadData() {
   items.value = files.map((file) => {
     const c = dict[file] || {}
     const tags = normalizeTags(c.tags)
+    /* 悬停卡那一版：身份与战绩**各切各的前几条**，剩下的只留个数字（见 PREVIEW_IDENTITY /
+        PREVIEW_CONTEST）。切在这里而不是模板里，是为了让 clampCard() 量到的胶囊就是真正
+       渲染的那几条 —— 它按「最宽的一条」定卡宽，多出来的隐藏标签不该参与。 */
+    const identity = tags.filter((t) => t.type !== 'contest')
+    const contest = tags.filter((t) => t.type === 'contest')
+    const identShown = identity.slice(0, PREVIEW_IDENTITY)
+    const contestShown = contest.slice(0, PREVIEW_CONTEST)
     /* 浮窗那一版标签：同一套顺序，但**战绩是逐条明细**而不是计数（🥇1🥈2 → 「🥇第47届 ICPC
        亚洲区域赛（南京）金牌」）。只有我们的生成器会给这个字段（gen_group_wall.mjs 的
        sheetTagsOf），作者的数据没有 → 没有就退回 tags，形状一致。 */
     const sheet = normalizeTags(c.sheetTags)
+    const message = typeof c.message === 'string' ? c.message.trim() : ''
+    /* 悬停卡的「块」= 身份 / 竞赛战绩 / 寄语（会长 2026-09-24：内容之间要有线、要有层次）。
+       块与块之间画一条发丝线；**块标题只在块数 ≥2 时出现** —— 全墙 141 人里 100 人 ≤3 条
+       标签、多数只有一块，给一张只有一条标签的卡挂一枚「身份」小标题纯属噪音。 */
+    const blockCount =
+      (identity.length ? 1 : 0) + (contest.length ? 1 : 0) + (message ? 1 : 0)
     return {
       file,
       // 原图（缩略图失败时的兜底）。留空则退回 manifest 的 source 前缀。
@@ -203,10 +264,16 @@ async function loadData() {
       name: typeof c.name === 'string' ? c.name : '',
       line: typeof c.line === 'string' ? c.line : '',
       tags,
+      identShown,
+      identHidden: identity.length - identShown.length,
+      contestShown,
+      contestHidden: contest.length - contestShown.length,
+      hasBlocks: blockCount > 0,
+      secLabeled: blockCount >= 2,
       sheetTags: sheet.length ? sheet : tags,
       /* 留言：可以是一整段话（「给未来留一行」那种）。**不截断数据**，只由 CSS 限制行数 ——
          同一份文本在悬停卡里显示 5 行、在触屏居中卡里显示全文。 */
-      message: typeof c.message === 'string' ? c.message.trim() : '',
+      message,
     }
   })
 }
@@ -760,19 +827,20 @@ const onWallLeave = () => {
   openTileFile.value = ''
 }
 
-/* ── 底纹态（有遮罩）下的悬停：指针到不了瓷砖，按坐标算 ──
-   首页的遮罩（.page-mask）整层盖在墙上面，指针事件全被它接走 —— 瓷砖的 :hover 永远
-   不会发生，于是「透过遮罩看悬浮效果」根本无从触发。这里在 window 上听 pointermove，
-   按栅格几何算出指针落在哪一格，给它挂 .is-pointer（CSS 与 :hover 共用同一套声明）。
-   效果只作用在墙自己这一层：**不动遮罩的透明度**（会长 2026-09-23 明确要求）。
-   只在**未开启弹卡**时工作：露墙后指针能直接摸到瓷砖，走 :hover / pointerover 那条路。 */
+/* ── 底纹态下的悬停：不依赖 :hover，按坐标算 ──
+   它原先**必需**：首页那套遮罩（.page-mask）整层盖在墙上面，指针事件全被它接走，
+   瓷砖的 :hover 永远不会发生。2026-09-24 遮罩撤掉、墙回到 .hero 里之后，:hover 能正常
+   触发了 —— 这条 window pointermove 的路子于是成了冗余的备份（两条选择器共用同一套
+   CSS 声明，结果一致，留着不冲突）。保留它是因为本组件要与上游保持一致，改动越少越好。
+   效果只作用在墙自己这一层：**不动任何外层的透明度**（会长 2026-09-23 明确要求）。
+   只在**未开启弹卡**时工作：进入激活态后指针直接摸瓷砖，走 :hover / pointerover 那条路。 */
 let pointerTile = null
 const setPointerTile = (tile) => {
   if (tile === pointerTile) return
   pointerTile?.classList.remove('is-pointer')
   pointerTile = tile
   pointerTile?.classList.add('is-pointer')
-  // 供宿主页面做联动（首页目前不消费；遮罩透明度必须保持静态）
+  // 供宿主页面做联动（首页目前不消费；任何外层的透明度都必须保持静态）
   emit('tile-hover', !!tile)
 }
 
@@ -993,24 +1061,66 @@ watch(() => props.hoverCard, () => {
                 <div v-if="openTileFile === m.file" class="wall__info">
                   <p class="wall__name">{{ m.name || ' ' }}</p>
                   <p v-if="m.line" class="wall__line">{{ m.line }}</p>
-                  <div v-if="m.tags.length" class="wall__tags">
-                    <span
-                      v-for="(t, j) in m.tags"
-                      :key="j"
-                      :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
-                      >{{ t.text }}</span
-                    >
-                  </div>
-                  <!-- 留言：悬停卡只是个**预览**（最多 10 行，见 .wall__msg 的 line-clamp）。
-                       被截断时底部会淡出并挂一行「点击查看全文」，全文在 .wall-sheet 里。 -->
-                  <div
-                    v-if="m.message"
-                    class="wall__msg-block"
-                    :class="{ 'is-clipped': clipped.has(m.file) }"
-                  >
-                    <p class="wall__msg"><span class="wall__quote" aria-hidden="true">“</span>{{ m.message }}<span class="wall__quote wall__quote--close" aria-hidden="true">”</span></p>
-                    <p v-if="clipped.has(m.file)" class="wall__msg-more">点击查看全文</p>
-                  </div>
+
+                  <!-- 姓名（谁）与下面所有内容之间一条发丝线。会长 2026-09-23 把胶囊与正文的
+                       间距收到 4px 是为了紧凑，但两段信息贴在一起就读不出层次了 ——
+                       一条线比再加一截空白更省纵向空间。 -->
+                  <div v-if="m.hasBlocks" class="wall__rule"></div>
+
+                  <!-- ① 身份：会长身份 / 协会职务 / 学业排名 / 奖学金 / 毕业去向。
+                       「块」是这张卡的排版单位（见 loadData 里 blockCount 的注释）：
+                       每块之间一条线，块数 ≥2 才挂小标题。 -->
+                  <section v-if="m.identShown.length || m.identHidden" class="wall__sec">
+                    <p v-if="m.secLabeled" class="wall__sec-label">身份</p>
+                    <div class="wall__tags">
+                      <span
+                        v-for="(t, j) in m.identShown"
+                        :key="j"
+                        :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
+                        >{{ t.text }}</span
+                      >
+                      <!-- 「+N」用全站那枚中性虚线胶囊（.honor-tag--more）：它得一眼看出
+                           「这里还有东西」，又不能被误读成一条真荣誉 —— 所以不上任何一类色。 -->
+                      <span
+                        v-if="m.identHidden"
+                        class="honor-tag honor-tag--more wall__tag--typed wall__tag-more"
+                        :title="`另有 ${m.identHidden} 条身份标签，点开看全部`"
+                        >+{{ m.identHidden }}</span
+                      >
+                    </div>
+                  </section>
+
+                  <!-- ② 竞赛战绩：每个系列一枚计数胶囊（xCPC / 天梯赛 / 百度之星 / 蓝桥杯）。
+                       计数版在卡片上，**明细版在浮窗里**（点一下就有）。 -->
+                  <section v-if="m.contestShown.length || m.contestHidden" class="wall__sec">
+                    <p v-if="m.secLabeled" class="wall__sec-label">竞赛战绩</p>
+                    <div class="wall__tags">
+                      <span
+                        v-for="(t, j) in m.contestShown"
+                        :key="j"
+                        :class="t.type ? ['honor-tag', `honor-tag--${t.type}`, 'wall__tag--typed'] : 'wall__tag'"
+                        >{{ t.text }}</span
+                      >
+                      <span
+                        v-if="m.contestHidden"
+                        class="honor-tag honor-tag--more wall__tag--typed wall__tag-more"
+                        :title="`另有 ${m.contestHidden} 个系列，点开看全部`"
+                        >+{{ m.contestHidden }}</span
+                      >
+                    </div>
+                  </section>
+
+                  <!-- ③ 寄语：悬停卡里只是**预览**（最多 10 行，见 .wall__msg 的 line-clamp）。
+                       被截断时底部淡出并挂一行「点击查看全文」，全文在 .wall-sheet 里。
+                       它是这张卡里唯一「人说的话」，所以单独成一块、字号抬一档，
+                       与上面两排胶囊在**形态**上区分开（无色底 + 大引号，会长 2026-09-23 裁定）。 -->
+                  <section v-if="m.message" class="wall__sec">
+                    <p v-if="m.secLabeled" class="wall__sec-label">寄语</p>
+                    <div class="wall__msg-block" :class="{ 'is-clipped': clipped.has(m.file) }">
+                      <p class="wall__msg"><span class="wall__quote" aria-hidden="true">“</span>{{ m.message }}<span class="wall__quote wall__quote--close" aria-hidden="true">”</span></p>
+                      <p v-if="clipped.has(m.file)" class="wall__msg-more">点击查看全文</p>
+                    </div>
+                  </section>
                 </div>
               </div>
             </div>
@@ -1066,22 +1176,35 @@ watch(() => props.hoverCard, () => {
              ⚠ v-if 挂在这一层（而不是里面的 <p>）也是刻意的：这一块带 padding，
                空着留在这儿会在「奖项」和底部提示之间拉出一条几十像素的空白带。 -->
         <div v-if="openItem.message || openDetailTags.length" class="wall-sheet__body">
-          <!-- 留言：无色底，两端用一对很大的引号括住（会长 2026-09-23 裁定）。
-               引号是 aria-hidden 的装饰，读屏听到的还是原句。 -->
-          <p v-if="openItem.message" class="wall-sheet__msg">
-            <span class="wall-sheet__quote" aria-hidden="true">“</span>{{ openItem.message
-            }}<span class="wall-sheet__quote wall-sheet__quote--close" aria-hidden="true">”</span>
-          </p>
+          <!-- 正文分「节」：寄语一节、荣誉明细一节，两节之间一条分隔线 + 一个小节标题。
+               没有这层结构时，一小段灰字留言和几十枚彩色胶囊直接挨在一起，
+               留言会被胶囊的色块淹掉（会长 2026-09-24：寄语「和别的没有层次区分」）。 -->
+          <section v-if="openItem.message" class="wall-sheet__sec">
+            <p class="wall-sheet__label">寄语</p>
+            <!-- 留言：无色底，两端用一对引号括住（会长 2026-09-23 裁定）。
+                 引号是 aria-hidden 的装饰，读屏听到的还是原句。
+                 无色的代价是它没有色块撑腰，所以字号 / 字重 / 颜色都得单独抬一档，
+                 否则在这张卡里它比胶囊还弱。 -->
+            <p class="wall-sheet__msg">
+              <span class="wall-sheet__quote" aria-hidden="true">“</span>{{ openItem.message
+              }}<span class="wall-sheet__quote wall-sheet__quote--close" aria-hidden="true">”</span>
+            </p>
+          </section>
 
-          <!-- 荣誉：逐条明细（与优秀成员页「详细条目」模式同一口径），长句允许换行 -->
-          <div v-if="openDetailTags.length" class="wall-sheet__honors">
-            <span
-              v-for="(t, j) in openDetailTags"
-              :key="j"
-              class="honor-tag honor-tag--contest wall__tag--typed wall-sheet__detail"
-              >{{ t.text }}</span
-            >
-          </div>
+          <!-- 战绩：逐条明细（与优秀成员页「详细条目」模式同一口径），
+               **按赛事系列分组、一条一行**（会长 2026-09-24：「奖项堆成一团，没有布局、
+               也没有区分」）。分组键 family 是生成器从 awards 文件名映射出来的数据，
+               顺序走 contestTaxonomy 的 FAMILY_ORDER（与胶囊同序），不在组件里解析文案。
+               仍然**不写条数** —— 会长 2026-09-23：荣誉不以「计数」显示，用详细条目。 -->
+          <section v-if="openDetailGroups.length" class="wall-sheet__sec">
+            <p class="wall-sheet__label">竞赛战绩</p>
+            <div v-for="g in openDetailGroups" :key="g.key" class="wall-sheet__group">
+              <p class="wall-sheet__group-title">{{ g.label }}</p>
+              <ul class="wall-sheet__list">
+                <li v-for="(t, j) in g.items" :key="j" class="wall-sheet__item">{{ t.text }}</li>
+              </ul>
+            </div>
+          </section>
         </div>
 
         <div class="wall-sheet__foot">
@@ -1373,12 +1496,51 @@ watch(() => props.hoverCard, () => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* 身份（姓名 / 班级）与内容（标签 / 留言）之间的发丝线。
+   比「再加一截空白」更省纵向空间，又能真把两段分开 ——
+   会长 2026-09-23 把胶囊与正文的间距收到 4px 是为了紧凑，但两段信息贴在一起
+   就读不出层次了（会长 2026-09-24：「所有都堆在一起，没有 line 或者层次的区分」）。 */
+.wall__rule {
+  height: 1px;
+  /* 刻意压得很紧（4px / 5px）：会长 2026-09-23 嫌过「胶囊与正文的距离太大」，
+     所以这条线只负责「分开」，不负责「撑开」—— 总间距 10px，比当年被嫌的 8px 方案还省。 */
+  margin: 4px 0 5px;
+  background: rgba(0, 0, 0, 0.07);
+}
 .wall__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  /* 正文（姓名 / 班级）与胶囊之间只留 4px —— 旧版是 8px，会长 2026-09-23「胶囊与正文的距离太大」 */
-  margin-top: 4px;
+  gap: 4px;
+  margin-top: 0;
+}
+/* ── 悬停卡的「块」：身份 / 竞赛战绩 / 寄语 ──
+   会长 2026-09-24：「不同内容之间要有 line 或者别的东西做出划分，不要全部堆在一起」。
+   所以每块之间一条发丝线 + 一块一枚小标题，标题样式与浮窗的 .wall-sheet__label 同构
+   （11px / 拉开字距 / 灰字 / 前面一小段主色竖条）—— 两个界面因此有同一套层次语言。
+   ⚠ 线只画在**块与块之间**（.wall__sec + .wall__sec）：只有一块的卡（全墙大多数）
+     不会多出一条孤零零的线。 */
+.wall__sec + .wall__sec {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+.wall__sec-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #94a3b8;
+}
+.wall__sec-label::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--primary);
 }
 /* 胶囊是**不该拆开的单位**（会长 2026-09-23：「成员墙的胶囊内还是换行了」）：
    一条战绩胶囊要么整条在一行、要么整条换到下一行。`.is-fitw` 由 clampCard() 在
@@ -1412,13 +1574,21 @@ watch(() => props.hoverCard, () => {
   padding: 1px 8px;
 }
 
+/* 「+N」＝悬停卡里被折起来的标签条数（明细在浮窗里）。
+   几何跟 .wall__tag--typed 一致、跟着它一起参与 clampCard 的量宽；
+   颜色与虚线边框由全站那枚 .honor-tag--more 给 —— 中性灰，不冒充任何一类荣誉。 */
+.wall__tag-more {
+  font-variant-numeric: tabular-nums;
+}
+
 /* 留言（「给未来留一行」那种一整段话）。
    长段落 clamp 到 10 行 —— 悬停卡只是**预览**，不该随留言长度无限变高
    （hero 是 overflow: clip，卡片长过头会被切掉半张）。
    clamp 只是**视觉截断，数据一个字都没丢**：点一下弹出来的 .wall-sheet 里是全文。
-   ⚠ 截断的前提是卡片宽度够读：所以 .wall__card.has-message 把卡放宽到 440px。 */
+   ⚠ 截断的前提是卡片宽度够读：所以 .wall__card.has-message 把卡放宽到 440px。
+   margin-top 归 0：它现在住在 .wall__sec 里，上方的间距由「块标题 / 块间那条线」给。 */
 .wall__msg-block {
-  margin-top: 8px;
+  margin-top: 0;
 }
 .wall__msg {
   display: -webkit-box;
@@ -1427,30 +1597,35 @@ watch(() => props.hoverCard, () => {
   line-clamp: 10;
   overflow: hidden;
   /* 无色底（会长 2026-09-23）：「留言不要以现有的蓝色底显示，而是无色底，
-     然后用一对引号把留的言括起来」。原先这里是 3px 蓝色左边线 + 5% 蓝底 + 圆角。 */
+     然后用一对引号把留的言括起来」。原先这里是 3px 蓝色左边线 + 5% 蓝底 + 圆角。
+     它的层次感只能靠**字**来给：13px 灰字读起来跟胶囊一样重，而这张卡里它是唯一
+     「人说的话」，所以字号抬到 14px、字重 500、颜色压深一档（会长 2026-09-24：
+     寄语和别的内容没有层次区分）。 */
   margin: 0;
   padding: 0;
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.75;
+  color: #334155;
   /* 作者自己敲的换行留着；一长串英文 / URL 也必须能断，否则会把卡片撑破 */
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 /* 留言两端那对引号（悬停卡与浮窗共用）。
    ⚠ 别写 line-height: 0 —— 它确实能让大引号「不撑高行盒」，但悬停卡那段是 line-clamp 的
-     `overflow: hidden`：实测引号盒 41px 高、段落首行只有 21px，引号被**齐根裁掉**，
-     页面上只剩一道发丝（截图里几乎看不见，量 box 才发现）。
-     改成 line-height: 1 让首行跟着长高（首行约 29px），多出的几像素换引号完整可见。
-   vertical-align 的位移按**引号自身**字号算，所以给得很小（2.2em × 0.18em ≈ 0.4em）。 */
+     `overflow: hidden`：实测引号盒过高时会被**齐根裁掉**，页面上只剩一道发丝。
+     保留 line-height: 1 让首行跟着长高。字号从 2.2em 收到 1.6em（会长 2026-09-24：
+     寄语「很丑」）—— 2.2em 在 13px 正文上是 28.6px 的蓝块，比句子本身还抢眼；
+     1.6em 在现在的 14px / 1.75 正文上是 22.4px，落在 24.5px 的行盒里，既不被裁、
+     也不再喧宾夺主。 */
 .wall__quote,
 .wall-sheet__quote {
   font-family: Georgia, 'Times New Roman', 'Songti SC', 'SimSun', serif;
-  font-size: 2.2em;
+  font-size: 1.6em;
   line-height: 1;
-  vertical-align: -0.18em;
+  vertical-align: -0.14em;
   margin: 0 0.04em;
-  color: rgba(26, 115, 232, 0.45);
+  color: rgba(26, 115, 232, 0.5);
 }
 /* 悬停卡里留言被 clamp 到 10 行时，收尾的引号根本看不到 —— 留一个孤零零的开引号
    反而像排版事故，所以只在「整段看得见」的时候才给收尾引号。 */
@@ -1514,7 +1689,16 @@ watch(() => props.hoverCard, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  /* 顶部让开固定导航栏（会长 2026-09-24：「展开卡片上部会被遮挡」）。
+     全文卡是**垂直居中**的，卡片一高，顶部就钻到导航栏底下 —— 导航栏 z-index 1000、
+     本层 20，激活态它还带一层 90% 白的白纱，于是正好糊住「这是谁」那一行。
+     实测 1440×900：卡 860px 高、top = 20px，导航栏下沿 81px ⇒ 顶部被压 61px，
+     头像与姓名被盖掉一半。让出来的高度不需要新机制 —— 正文本来就是 overflow-y: auto，
+     卡片变矮之后它自己就滚起来（实测正文可视 638 / 内容 803）。
+     ⚠ 导航栏实际占位是 **80 + 1**：AppHeader 的 header 恒定带一条 1px 底边框
+     （颜色透明而已），所以量到的是 81。少算这 1px，抽屉贴底那一档就会差 1px 压线。 */
+  --sheet-top: calc(var(--header-height, 80px) + 1px);
+  padding: calc(var(--sheet-top) + 20px) 20px 20px;
   background: rgba(15, 23, 42, 0.34);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -1530,9 +1714,12 @@ watch(() => props.hoverCard, () => {
   flex-direction: column;
   width: min(560px, 100%);
   /* ⚠ 上限写两行：认识 dvh 的浏览器用 dvh（手机地址栏收放时跟得上），
-     不认识的忽略第二行、落到 vh。顺序不能反。 */
-  max-height: calc(100vh - 40px);
-  max-height: calc(100dvh - 40px);
+     不认识的忽略第二行、落到 vh。顺序不能反。
+     上限还要再减去导航栏那 80px —— 与上面 .wall-sheet 的 padding-top 是同一个账：
+     容器内容区 = 视口 −(导航栏 + 20)−20，卡片的 max-height 必须 ≤ 它，否则居中之后
+     顶部又会顶回导航栏底下。 */
+  max-height: calc(100vh - var(--sheet-top) - 40px);
+  max-height: calc(100dvh - var(--sheet-top) - 40px);
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
@@ -1636,33 +1823,80 @@ watch(() => props.hoverCard, () => {
   padding: 18px 20px;
   text-align: left;
 }
-/* 正文排版是给「读一段话」的，不是给「扫一眼」的：15px / 1.9 行距。
+/* 正文分「节」：寄语一节、荣誉明细一节。这是这张卡里唯一的层次来源 ——
+   在此之前，一小段灰字留言和几十枚彩色胶囊直接挨在一起，留言被色块整个淹掉
+   （会长 2026-09-24：「寄语部分很丑，而且和别的没有层次区分」）。
+   `.wall-sheet__sec + .wall-sheet__sec` 只在**两节都在**时才画线，
+   所以「只有荣誉」的绝大多数人（141 人里 137 人没有留言）不会多出一条孤线。 */
+.wall-sheet__sec + .wall-sheet__sec {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.07);
+}
+/* 小节标题：11px、字距拉开、灰。
+   前面那一小段主色竖条是这一节**唯一**的颜色 —— 留言被裁定为无色底，
+   颜色就得由标题来给，否则整节仍是灰的，等于没分层。 */
+.wall-sheet__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 9px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #94a3b8;
+}
+.wall-sheet__label::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+
+/* 正文排版是给「读一段话」的，不是给「扫一眼」的：17px / 1.85 行距 / 深一档的字色。
+   字号刻意比下面的荣誉胶囊（0.72rem）重得多 —— 寄语是这张卡的主句，
+   原来和胶囊同为 15px 灰字，读者根本分不出哪句是「人说的话」。
    悬停卡那套 13px / 1.6 是短句用的，拿来读 200 字很累。 */
 .wall-sheet__msg {
   margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.9;
-  color: #334155;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  font-weight: 500;
+  color: #1e293b;
   white-space: pre-wrap; /* 作者自己敲的换行留着 */
   overflow-wrap: anywhere;
 }
-/* 浮窗里的荣誉明细：逐条一行行排（长句「🥇第47届 ICPC 亚洲区域赛（南京）金牌」约 25 字，
-   两枚并排就挤了），完全复用全站比赛蓝胶囊，只把几何改成可换行的统计样式。
-   默认 margin-top 让它在留言下面留出间隔；没有留言的人（墙上大多数）它就是第一块。 */
-.wall-sheet__honors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+/* 浮窗里的战绩：**一条一行**的清单，不再是胶囊。
+   为什么不留胶囊：明细是「🥇第10届天梯赛团体国家级一等奖」这种 25 字长句，
+   26 条 flex-wrap 起来就是一片蓝云 —— 分不出条目边界，也扫不出拿了几个系列
+   （会长 2026-09-24：「奖项、tag 堆在一起，没有布局」）。
+   每行开头的 🥇/🥈/🥉/🏆 就是它的项目符号，所以不再另加 bullet。
+   竖线 + 缩进把这组圈成一块，与寄语那种「无色底 + 大引号」在形态上区分开。 */
+.wall-sheet__group + .wall-sheet__group {
   margin-top: 14px;
 }
-.wall-sheet__msg + .wall-sheet__honors {
-  margin-top: 12px;
+.wall-sheet__group-title {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
 }
-.wall-sheet__detail {
-  max-width: 100%;
-  white-space: normal;
-  text-align: left;
-  line-height: 1.5;
+.wall-sheet__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0 0 0 10px;
+  border-left: 2px solid rgba(26, 115, 232, 0.14);
+  list-style: none;
+}
+.wall-sheet__item {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #334155;
+  overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1690,8 +1924,14 @@ watch(() => props.hoverCard, () => {
   }
   .wall-sheet__card {
     width: 100%;
-    max-height: 88vh;
-    max-height: 88dvh;
+    /* 同样是「顶部让开导航栏」：抽屉贴底，所以约束落在高度上 ——
+       88dvh 在 568px 高的机器上会让抽屉顶部伸到导航栏底下 12px。
+       减掉 --sheet-top（80 + 1px 边框）之后顶部落在导航栏下沿，但**紧贴着**它；
+       会长 2026-09-24：「内容多时和顶部贴在一起了，留点空隙」→ 先让 16px，
+       再要求「上侧留白再大点」→ 24px（约等于抽屉圆角 20px 的呼吸量）。
+       内容多时由正文自己滚，不再往上顶。 */
+    max-height: calc(100vh - var(--sheet-top) - 24px);
+    max-height: calc(100dvh - var(--sheet-top) - 24px);
     border-radius: 20px 20px 0 0;
   }
   .wall-sheet__head {
@@ -1715,12 +1955,15 @@ watch(() => props.hoverCard, () => {
    这里只处理「宽但矮」的横屏形态。 */
 @media (max-height: 520px) and (min-width: 600px) {
   .wall-sheet {
-    padding: 10px;
+    /* 矮屏把留白压到 10px，但**导航栏那 80px（+1px 边框）不能省**：这一档最容易出
+       「上部被遮挡」（520px 高的窗口里导航栏占 15%）。让出来的空间从正文里扣，
+       头上那条线照旧看得见。 */
+    padding: calc(var(--sheet-top) + 10px) 10px 10px;
   }
   .wall-sheet__card {
     width: min(640px, 100%);
-    max-height: calc(100vh - 20px);
-    max-height: calc(100dvh - 20px);
+    max-height: calc(100vh - var(--sheet-top) - 20px);
+    max-height: calc(100dvh - var(--sheet-top) - 20px);
     border-radius: 14px;
   }
   .wall-sheet__head {

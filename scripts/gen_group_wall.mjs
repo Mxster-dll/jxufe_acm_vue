@@ -263,7 +263,12 @@ const sheetTagsOf = (m) => {
   const details = m.realName ? recordsToDetails(records.get(m.realName) || []) : []
   for (const d of details) {
     const text = `${d.emoji || ''}${d.title || ''}${d.medalText || ''}`
-    if (text) tags.push({ text, type: 'contest' })
+    /* `family` 是给浮窗**按赛事系列分组**用的（会长 2026-09-24：「奖项堆成一团，
+       没有布局」→ 明细改成 xCPC / 天梯赛 / 百度之星 / 蓝桥杯 各一组、一条一行）。
+       它由 recordsToDetails 从 awards 的文件名映射出来（contestTaxonomy 的
+       FAMILY_OF_FILE），是**数据**不是从标题里猜的 —— 别在组件里改成解析文案：
+       「暨江西省赛」这种标题里同时含两个段名，正则守卫拦不住（踩过）。 */
+    if (text) tags.push({ text, type: 'contest', family: d.family })
   }
 
   const seen = new Set(tags.map((t) => t.text))
@@ -378,13 +383,55 @@ if (SCORE_THRESHOLD > 0) {
    members.json 一个字都不动：它是会长手写的真源，也是本生成器的输入。 */
 const EXCELLENT_THRESHOLD = Number(rules.excellentScoreThreshold) || 0
 const memberKeys = new Set(membersJson.map((m) => String(m?.name || '').trim()))
-/* 会长不进优秀成员页（会长 2026-09-23：「自动入册不应该包含会长」）——
-   他们已经在「协会负责人」页上有一张卡，两张名单都出现就是同一批人重复曝光。
-   判据用 leaders.json 的名单（那 6 位即历任会长），与「会长身份」金色胶囊同源。
-   注意：只影响**自动入册**；members.json 里手写的人一个都不动。 */
 const leaderKeys = new Set(leadersJson.map((l) => String(l?.name || '').trim()).filter(Boolean))
+
+/* ── 历任会长钉在优秀成员页最前（会长 2026-09-24）─────────────────────
+   原话：「把几个协会负责人，也放进优秀成员，放在前面」。
+   ⚠ 这条**推翻了** 2026-09-23 的旧裁定（「自动入册不应该包含会长」，理由是
+     「他们已经在『协会负责人』页上有一张卡，两张名单都出现就是同一批人重复曝光」）。
+     新裁定：既进优秀成员页、又排在最前、并且**显示金色会长身份胶囊**。
+     改回来时删掉下面这段与 ExcellentView 的置顶分支即可，两处都留了反向指针。
+
+   为什么走「置顶」而不是手写进 members.json：
+     · members.json 是会长手写的真源，本生成器承诺一个字都不动；
+     · 「放在前面」需要跳过综合分排序 —— 只把数据塞进数组是不够的，
+       页面会用 sortByRanking 按分数把他们打散。所以带一个 pinned 标记，
+       由 ExcellentView 识别（那边同样有注释）。
+   名单与届次都取自 leaders.json（单一真源），换届只改那一个文件。 */
+const leaderEntries = leadersJson
+  .map((l) => {
+    const name = String(l?.name || '').trim()
+    const photo = String(l?.avatar || '').trim()
+    const session = String(l?.session || '').trim()
+    const achievements = (Array.isArray(l?.achievements) ? l.achievements : []).filter(
+      (a) => typeof a === 'string' && a.trim()
+    )
+    return {
+      name,
+      class: String(l?.class || '').trim(),
+      photo,
+      // 金色「会长身份」胶囊（.honor-tag--leader）打头，其余按原顺序排成就。
+      // type 显式标注，不吃 honorType.js 的关键词兜底 —— 那边刻意不把「会长」放进兜底表，
+      // 否则含「会长」二字的手写条目会整条变金色（见 utils/honorType.js 的注释）。
+      honors: [...(session ? [{ text: session, type: 'leader' }] : []), ...achievements],
+      pinned: true,
+      leader: true,
+    }
+  })
+  .filter((e) => e.name && e.photo)
+
+const leadersNoPhoto = []
+for (const e of leaderEntries) {
+  if (!existsInPublic(e.photo)) leadersNoPhoto.push(`${e.name} → ${e.photo}`)
+}
+// 缺 name / avatar 的人在 .filter 里已被丢掉 —— 那是数据错误，不是「没头像」，单独报
+const leadersDropped = leadersJson.length - leaderEntries.length
+
 const excellentAdded = []
 const excellentSkipped = []
+/* 会长**已经**由上面的 leaderEntries 置顶进去了，这里再自动入册一次就会出现两张卡。
+   所以在「自动入册」这条路径上继续把他们跳过 —— 与 2026-09-23 旧裁定的差别只在
+   「跳过之后还进不进名单」：旧裁定是彻底不进，现在是进，且走置顶。 */
 const excellentSkippedLeaders = []
 if (EXCELLENT_THRESHOLD > 0) {
   for (const [name, row] of scoreByName) {
@@ -493,9 +540,14 @@ console.log(
       ? `自动入册 ${excellentAdded.length} 人 → ${excellentAdded.map((m) => `${m.name} ${m.score}`).join('、')}`
       : '无新增（达标者都已在名单里）') +
     (excellentSkippedLeaders.length
-      ? `；${excellentSkippedLeaders.length} 位会长达标但按规则跳过（${excellentSkippedLeaders.join('、')}）`
+      ? `；${excellentSkippedLeaders.length} 位会长达标但已由置顶条目覆盖，不重复入册（${excellentSkippedLeaders.join('、')}）`
       : '') +
     (excellentSkipped.length ? `；${excellentSkipped.length} 人达标但无头像被跳过（${excellentSkipped.join('、')}）` : '')
+)
+console.log(
+  `[group-wall] 优秀成员页置顶 ${leaderEntries.length} 位历任会长：${leaderEntries.map((m) => m.name).join('、')}` +
+    (leadersNoPhoto.length ? `；⚠ ${leadersNoPhoto.length} 位头像不可用（${leadersNoPhoto.join('、')}）` : '') +
+    (leadersDropped ? `；⚠ ${leadersDropped} 位缺 name / avatar 被丢弃` : '')
 )
 
 const now = new Date().toISOString()
@@ -542,14 +594,15 @@ function checkTiles(list) {
 // 关闭时这里写 members.json 原样（excellentAdded 在 :364 那个 if 里就已为空），页面拿到未入册的名单。
 writeJson(path.join(DATA, 'excellent_members.json'), {
   _note:
-    '生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：public/data/members.json 原样 + ' +
+    '生成物，请勿手改。由 scripts/gen_group_wall.mjs 生成：leaders.json 的历任会长（pinned: true，' +
+    '钉在页面最前，会长 2026-09-24 裁定）+ public/data/members.json 原样 + ' +
     '综合分 ≥ excellentScoreThreshold 的人（auto: true）。阈值见 public/data/wall_rules.json。' +
     '分数口径与优秀成员页的卡片顺序、成员墙的 scoreThreshold 完全相同（src/utils/honorRanking.js）。' +
-    '阈值 ≤ 0（关闭规则）时 members 就是 members.json 原样。',
+    '阈值 ≤ 0（关闭规则）时 members 就是「置顶会长 + members.json 原样」。',
   generated_at: now,
   threshold: EXCELLENT_THRESHOLD,
-  count: membersJson.length + excellentAdded.length,
-  members: [...membersJson, ...excellentAdded],
+  count: leaderEntries.length + membersJson.length + excellentAdded.length,
+  members: [...leaderEntries, ...membersJson, ...excellentAdded],
 })
 
 const tagTally = items.reduce((s, x) => s + x.tile.tags.length, 0)

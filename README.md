@@ -10,7 +10,7 @@
 
 - **Vue 3 组件化** — `<script setup>` + Composition API，路由级懒加载，首屏极速
 - **内容数据驱动** — 新闻、竞赛、成员、负责人、友链等全部抽离为 JSON，增删改无需改代码
-- **首页头像墙** — hero 区底纹：协会成员的头像铺成一面缓慢漂移的墙，上滚把遮罩拉走就看全（见「维护群成员头像墙」一节）
+- **首页头像墙** — hero 区底纹：协会成员的头像铺成一面缓慢漂移的墙，点 hero 底部那颗「成员墙」按钮看全，再点一下（此时是「返回」）退出（见「维护群成员头像墙」一节）
 - **手写 CSS 体系** — 设计令牌（`tokens.css`）+ 全局基础样式 + 组件 Scoped，无 UI 框架依赖
 - **滚动入场动画** — 基于 IntersectionObserver 的 `v-reveal` 指令，声明式使用
 - **大事记 Block 渲染** — 类型化内容块系统，支持 13 种块类型（文本、图片、奖项、表格、FAQ 等）
@@ -126,9 +126,7 @@ jxufe-acm-vue/
     │   ├── useSkeleton.js         # 骨架屏占位
     │   ├── useMasonry.js          # ★ 优秀成员页瀑布流（逐张放进最短列；列数/间距走 .grid 上的 CSS 变量）
     │   ├── useHonorDisplay.js     # ★ 荣誉取数与归一化（职务 / 自动汇总战绩 / 手写荣誉 + 奖学金，两页共用）
-    │   ├── useMaskReveal.js       # ★ 首页遮罩（=除了墙和导航栏的整个页面）的位移与滚轮/触摸两套驱动
     │   ├── useSectionSnap.js      # ★ 首页滚轮「按部分对齐」吸附（#home / #about / #news 三个分界）
-    │   ├── useHeaderHint.js       # ★ 导航栏「成员墙」入口的横向让位 / 随滚动隐藏 / 切页淡入
     │   ├── useCodeTrail.js        # 代码字符拖尾特效
     │   └── useCursorRipple.js     # 光标涟漪特效
     ├── directives/
@@ -759,10 +757,10 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 | 留言（手写，只读） | `public/data/hero_wall.json` | 上游那份 37 条文案，**只有 `message` 被并进来** |
 | ↓ 生成 | `npm run data:group-wall`（= `scripts/gen_group_wall.mjs`；`predev` / `prebuild` 也会自动跑） | |
 | 产物 A | `public/data/group_wall.manifest.json` | 墙上铺哪些图：`{ source: '/images/group_members/full/', count, images[] }` |
-| 产物 B | `public/data/group_wall.json` | 每格的文案：`tiles[缩略图文件名] = { name, line, full, tags, sheetTags, message? }` |
+| 产物 B | `public/data/group_wall.json` | 每格的文案：`tiles[缩略图文件名] = { name, line, full, tags, sheetTags, message? }`（`sheetTags` 的战绩条目另带 `family`，见下文） |
 | 产物 C | `public/data/excellent_members.json` | **优秀成员页实际读的名单** = `members.json` 原样 + 自动入册的人，见「两条分数阈值」 |
 | ↓ 缩略图 | `npm run data:group-thumbs`（= `scripts/gen_group_wall_thumbs.ps1`，**本地 Windows 专用**） | 按 `tiles[].full` 出 `public/images/group_wall_thumbs/{384,256}/<基名>.jpg`，**按 mtime 增量跳过**（输出比源新就不重做；`-Force` 强制重建） |
-| ↓ 渲染 | `src/views/HomeView.vue` 里的 `<HeroAvatarWall>` | 除 `v-model:active` 外只传了 6 个 prop：`manifest-url` / `copy-url` / `thumbs-base` / `label="协会成员墙"` / `dim-opacity="1"` / `hover-card="maskOut"`，其余全用组件默认值 |
+| ↓ 渲染 | `src/views/HomeView.vue` 里的 `<HeroAvatarWall>` | 除 `v-model:active` / `:hover-card="wallOn"` 外只传了 3 个数据源 prop：`manifest-url` / `copy-url` / `thumbs-base`，其余全用组件默认值（`label` = 「成员墙」/「返回」、`dim-opacity` = `0.18`） |
 
 生成器为什么打乱顺序：名单是按身份排的、优秀成员又是追加在末尾的，不打乱就会在墙上连成一片。
 用的是**固定种子**（`seed = 20260922`）的 LCG 洗牌 —— 输出可复现，也不依赖 `Math.random()`
@@ -777,25 +775,30 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 > `deploy.bat` 打包 `public` 时带上去的就是你本地那一份缩略图 —— 本地没生成，
 > 线上就只能回退加载原图（最 1.79 MB 的 PNG），慢但不会错版。
 
-#### 首页上墙的两个状态：遮罩盖着 / 把遮罩拉走
+#### 首页上墙的两个状态：底纹 / 进入
 
-首页这面墙**从不进入组件的「激活态」**（`active` 恒为 `false`，组件自带的那枚开关按钮也在
-`.page-wall :deep(.wall-toggle)` 里被藏掉了）——「露出成员墙」是**把整层遮罩拉下去**这套手势：
-桌面在页首**往上滚一下**即整层收起（会长 2026-09-23 取消了原先「先攒一屏 10%」的阈值），
-触屏则是**手指往下拖、松手判定**（不足一屏的 10% 就回弹）。层序是
-墙（`.page-wall`，固定层 z-index 0）→ 遮罩（`.page-mask`，1）→ 导航栏（在 `App.vue`，天然在外），
-遮罩让开的位置就是墙本身。于是墙上那些参数在首页是**恒定**的：
+首页那颗「成员墙」按钮由**组件自带**（`.wall-toggle`，HomeView 一行样式都不写它）：
+桌面贴在 hero 底部居中，≤991px 收到左下角 44px 圆形只留图标，769–991px 挪到顶栏下方。
+它落在 `.hero-inner` 之外，所以文案退场后它还在原处 —— 进入和退出是同一颗按钮。
 
-| | 遮罩盖着（正常浏览） | 把遮罩拉走（露墙） |
+| | 底纹态（默认） | 激活态（点那颗按钮进入） |
 |---|---|---|
-| 漂移速度 | `11 px/s`（`speedBackdrop`，全程不变） | 同左 |
-| 组件侧透明度 | `1`（首页显式传 `:dim-opacity="1"`，**不**用默认的 `0.18`） | 同左 |
-| 悬停 | 该格放大并模糊成一团软斑（`hover-card=false`） | 弹出**预览卡**（姓名 / 班级 / 标签 / 留言前 10 行） |
-| 点击 | 无响应 | 弹出**全文卡**（留言不截断，桌面与触屏同一入口） |
-| 文案与轮播 | 正常 | 随遮罩一起让开 |
+| `active` | `false` | `true` |
+| 按钮 | 白胶囊 + 网格图标 +「成员墙」 | 蓝底反色 + 返回箭头 +「返回」← **退出口** |
+| 漂移速度 | `11 px/s`（`speedBackdrop`） | `22 px/s`（`speed`） |
+| 组件侧透明度 | `0.18`（`dimOpacity` 默认值） | `1`（`opacity` 默认值） |
+| 悬停 | 该格放大并模糊成一团软斑（`hover-card` 为 `false`） | 弹出**预览卡**（姓名 / 班级 / 身份胶囊一排 +「比赛」战绩一排 / 留言前 10 行） |
+| 点击 | 无响应 | 弹出**全文卡**（留言与战绩明细都不截断，桌面与触屏同一入口） |
+| 文案与轮播 | 正常 | 淡出退场（`.hero-inner.is-wall-on`，用 `visibility` 保留占位，墙的几何不跳） |
+| 顶栏 | 正常 | 加一层白纱 + 加重阴影（`body.hero-wall-on`，规则写在组件里） |
 
-底纹的「半透明质感」因此不是组件压暗出来的，而是来自遮罩本身与 hero 那层半透明背景 ——
-这也是为什么首页要显式传 `dim-opacity="1"`：**压暗两次会糊成灰雾**。
+进入与退出都只由这颗按钮负责，**页面不发生位移** —— hero 之外的内容照旧在原处，往下滚即到 `#about`。
+`:hover-card="wallOn"` 让弹卡跟着 `active` 走：底纹态不弹卡，进入后才弹。
+
+> 2026-09-23 → 09-24 之间曾短暂有过另一套「整页滑走」的遮罩机制（`.page-mask` / `.page-wall` /
+> `useMaskReveal.js` / `useHeaderHint.js` / 导航栏里那枚「上箭头 + 成员墙」入口 / `--mask-travel` 令牌）。
+> 会长 2026-09-24 要求回到旧版：按钮回 hero 底部、进出都靠它 —— 那套机制已整体删除，
+> 若要找回，见 git 历史（`e20f61b`）。
 
 预览卡与全文卡的分工：`message` 可以是一整段话。悬停卡只做预览 —— 超长时尾部用 `mask` 淡出并挂一行
 「点击查看全文」（**实测** `scrollHeight` vs `clientHeight` 决定要不要挂，短留言不挂）；
@@ -809,7 +812,26 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 | 字段 | 用在哪 | 战绩怎么写 | 上限 |
 |---|---|---|---|
 | `tags` | 悬停预览卡 | **计数版**：一个系列一枚（如 `🥇1🥈2`） | 最多 `MAX_TAGS = 12` 枚，超出时末位换成灰色的「…」 |
-| `sheetTags` | 点开的浮窗 | **明细版**：`recordsToDetails()` 逐条列赛事全名与奖牌（如 `🥇第47届 ICPC 亚洲区域赛（南京）金牌`） | **不设上限**（浮窗正文自己滚） |
+| `sheetTags` | 点开的浮窗 | **明细版**：`recordsToDetails()` 逐条列赛事全名与奖牌（如 `🥇第47届 ICPC 亚洲区域赛（南京）金牌`），每条带 `family` | **不设上限**（浮窗正文自己滚） |
+
+两个字段里的战绩条目都是 `{ text, type: 'contest', family? }`，`family` 是
+`contestTaxonomy.js` 的系列键（`xcpc` / `gplt` / `baidu` / `lanqiao`），由
+`recordsToDetails()` 从 **awards 的文件名**映射出来（`FAMILY_OF_FILE`）——浮窗靠它把明细
+按系列分组。**不要**改成在组件里解析文案判系列：「暨江西省赛」这种标题同时含两个段名，
+正则守卫拦不住（踩过）。
+
+浮窗正文的排布（会长 2026-09-24：「tag、奖项、寄语三者要有布局、要能区分」）：
+
+| 位置 | 内容 | 形态 |
+|---|---|---|
+| 头部（不滚） | 姓名 / 班级 + **身份类**短标签（会长身份 / 协会职务 / 学业排名 / 奖学金 / 毕业去向） | 全站分色胶囊 |
+| 正文第一节 | **寄语** | 无色底 + 一对大引号（会长 2026-09-23 裁定不许加底色），字号比正文其余部分大一档 |
+| 正文第二节 | **竞赛战绩** | 按 `family` 分组（xCPC / 天梯赛 / 百度之星 / 蓝桥杯 各一小组；没有 `family` 的手写竞赛——传智杯 / 睿抗 / 数模等——归「其他赛事」），**一条一行**的清单，不再是一堆蓝胶囊 |
+| 脚（不滚） | 关闭提示 | —— |
+
+悬停卡同理，把身份与战绩**分成两排**（战绩那排挂一枚 11px 的「比赛」小标题），各自折自己的
+`+N`（身份 ≤3、战绩 ≤2）——原先两者混在同一排里，会长身份的金色胶囊紧挨着蓝桥杯的蓝色胶囊，
+读起来是一堆没有主次的色块。
 
 早先的 `MAX_TAGS` 是 6，后来放宽到 12 —— 四个系列的战绩胶囊一到手就把 6 枚占满，
 手写的奖学金 / 保研 / 个人荣誉一律被「…」顶掉（实测 11 人如此），看起来就像「这面墙只有竞赛」。
@@ -937,7 +959,7 @@ node scripts/gen_events_articles.mjs   # 幂等：重复运行结果一致
 - 瓷砖必须 `touch-action: pan-y`，否则墙会吃掉触摸事件、手机上在 hero 区域滑不动页面。
 - 悬停穿透：`.hero-inner` 设 `pointer-events: none`，只给圆点和按钮放行；
   组件自带的「激活态」还会改用 `visibility: hidden`（保留布局占位、同时退出命中测试与绘制）——
-  不过首页**不进入激活态**（露墙让开的是遮罩），这条在本页用不到。
+  首页**进入激活态后正走这条路**：文案与轮播彻底退出命中测试，指针才能落到墙的瓷砖上点开成员卡。
 
 #### 增删图片
 
